@@ -23,6 +23,7 @@ A aplicação está sendo desenvolvida sob o padrão de desenvolvimento de softw
 ├── docker-compose.yml
 ├── .env
 ├── frontend
+│   ├── Dockerfile
 │   ├── public
 │   └── src
 │       ├── assets
