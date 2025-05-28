@@ -42,4 +42,16 @@ docker run -p 5173:5173 front
 O primeiro comando acima faz o build do codigo do front.
 
 O segundo comando faz o run da imagem gerada pelo build, fornecendo no terminal o link para acessar o frontend.
+## Informação Sobre a Estrutura de Diretórios
+
+No frontend, existe uma estrutura de pastas bem definidas para garantir que tudo esteja onde se espera. Abaixo está informado o que cada diretório serve.
+
+* **/public/** : Aqui fica dados de reconhecimento público para o navegador. De forma simplificada, o arquivo **favicon.ico** e o arquivo **robots.txt**
+* **/src/** : Aqui fica armazenado o código fonte do projeto frontend, todas as adições e alterações devem correr aqui dentro. Alterações fora do **src** são alterações sobre arquivos de configurações e nada alem disso.
+* **/src/assets/** : Neste diretório ficam armazenadas as imagens estáticas como imagens e svg.
+* **/src/components/** : Neste diretório ficam armazenados os componentes React produzidos.
+* **/src/pages/** : Aqui fica armazenado os componentes a nivel de página, para utilização de routing
+* **/src/hooks/** : Aqui fica armazenado os hooks produzidos
+* **/src/utils/** : Aqui fica armazenado as funções internas e arquivos de auxílio
+* **/src/styles** : Aqui fica armazenado os arquivos .css e outros arquivos para a estilização web. 
 

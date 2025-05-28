@@ -27,9 +27,14 @@ A aplicação está sendo desenvolvida sob o padrão de desenvolvimento de softw
 │   ├── public
 │   └── src
 │       ├── assets
-│       ├── App.css
+│       ├── components 
+│       ├── pages 
+│       ├── hooks 
+│       ├── utils 
+│       ├── styles 
+│       │   ├── App.css
+│       │   └── index.css
 │       ├── App.jsx
-│       ├── index.css
 │       └── main.jsx
 │   ├── eslint.config.js
 │   ├── index.html
