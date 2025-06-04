@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Install dependencies
         working-directory: frontend
@@ -34,3 +34,15 @@ jobs:
       - name: Run prettier
         working-directory: frontend
         run: npm run format
+
+      - name: Build Dockerfile
+        working-directory: frontend
+        run: |
+          if [ -f "Dockerfile" ]; then
+            echo "Dockerfile found. Building the Docker image..."
+            docker build -t your-image-name:latest .
+          else
+            echo "No Dockerfile found. Skipping Docker build."
+          fi
+        env:
+          DOCKER_BUILDKIT: 1
