@@ -1,57 +1,3 @@
-CREATE TYPE "tipo_usuario" AS ENUM (
-  'pesquisador',
-  'auditor',
-  'administrador'
-);
-
-CREATE TYPE "tipo_defesa" AS ENUM (
-  'mestrado',
-  'doutorado',
-  'mestrado_douturado',
-  'nenhum'
-);
-
-CREATE TYPE "tipo_veiculo" AS ENUM (
-  'evento',
-  'periodico'
-);
-
-CREATE TYPE "tipo_status" AS ENUM (
-  'pendente',
-  'negado',
-  'aceito'
-);
-
-CREATE TYPE "tipo_acao" AS ENUM (
-  'adicao',
-  'exclusao',
-  'atualizacao',
-  'cadastro_recusado',
-  'cadastro_aceito'
-);
-
-CREATE TYPE "tipo_qualis_antigo" AS ENUM (
-  'a1',
-  'a2',
-  'b1',
-  'b2',
-  'b3',
-  'b4',
-  'b5',
-  'c'
-);
-
-CREATE TYPE "tipo_classificacao" AS ENUM (
-  'a1',
-  'a2',
-  'a3',
-  'a4',
-  'a5',
-  'a6',
-  'a7',
-  'a8'
-);
-
 CREATE TABLE Usuario (
   "id_usuario" uuid,
   "id_area_pesquisa" uuid NOT NULL,
@@ -59,9 +5,10 @@ CREATE TABLE Usuario (
   "nome" varchar(255) NOT NULL,
   "email" varchar(255) UNIQUE NOT NULL,
   "senha" varchar(255) NOT NULL,
-  "tipo_perfil" tipo_usuario NOT NULL,
+  "tipo_perfil" varchar(20) NOT NULL,
 
-  CONSTRAINT primary_key_usuario PRIMARY KEY ("id_usuario")
+  CONSTRAINT primary_key_usuario PRIMARY KEY ("id_usuario"),
+  CONSTRAINT chk_usuario_tipo_perfil CHECK (tipo_perfil IN ('pesquisador', 'auditor', 'administrador'))
 );
 
 CREATE TABLE AreaPesquisa (
@@ -81,14 +28,18 @@ CREATE TABLE Programa (
 CREATE TABLE VeiculoPublicacao (
   "id_veiculo" uuid,
   "nome" varchar(255) NOT NULL,
-  "classificacao" tipo_classificacao NOT NULL,
+  "classificacao" varchar(2) NOT NULL,
   "area_conhecimento" varchar(255) NOT NULL,
   "vinculo_sbc" boolean NOT NULL,
-  "adequado_defesa" tipo_defesa NOT NULL,
-  "tipo" tipo_veiculo NOT NULL,
-  "status" tipo_status DEFAULT 'pendente',
+  "adequado_defesa" varchar(20) NOT NULL,
+  "tipo" varchar(10) NOT NULL,
+  "status" varchar(10) DEFAULT 'pendente',
 
-  CONSTRAINT primary_key_veiculopublicacao PRIMARY KEY ("id_veiculo")
+  CONSTRAINT primary_key_veiculopublicacao PRIMARY KEY ("id_veiculo"),
+  CONSTRAINT chk_veiculo_classificacao CHECK (classificacao IN ('a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8')),
+  CONSTRAINT chk_veiculo_adequado_defesa CHECK (adequado_defesa IN ('mestrado', 'doutorado', 'mestrado_douturado', 'nenhum')),
+  CONSTRAINT chk_veiculo_tipo CHECK (tipo IN ('evento', 'periodico')),
+  CONSTRAINT chk_veiculo_status CHECK (status IN ('pendente', 'negado', 'aceito'))
 );
 
 CREATE TABLE Evento (
@@ -108,20 +59,22 @@ CREATE TABLE Periodico (
   "link_jcr" varchar(255),
   "link_scopus" varchar(255),
   "link_google_scholar" varchar(255) DEFAULT null,
-  "qualis_antigo" tipo_qualis_antigo DEFAULT null,
+  "qualis_antigo" varchar(2) DEFAULT null,
   "flag_predatorio" boolean DEFAULT false,
 
-  CONSTRAINT primary_key_periodico PRIMARY KEY ("id_veiculo")
+  CONSTRAINT primary_key_periodico PRIMARY KEY ("id_veiculo"),
+  CONSTRAINT chk_periodico_qualis_antigo CHECK (qualis_antigo IS NULL OR qualis_antigo IN ('a1', 'a2', 'b1', 'b2', 'b3', 'b4', 'b5', 'c'))
 );
 
 CREATE TABLE LogSistema (
   "id_log" uuid,
   "id_usuario" uuid NOT NULL,
   "id_veiculo" uuid NOT NULL,
-  "data_hora" date NOT NULL,
-  "acao" tipo_acao NOT NULL,
+  "data_hora" timestamp NOT NULL,
+  "acao" varchar(20) NOT NULL,
 
-  CONSTRAINT primary_key_logsistema PRIMARY KEY ("id_log")
+  CONSTRAINT primary_key_logsistema PRIMARY KEY ("id_log"),
+  CONSTRAINT chk_log_acao CHECK (acao IN ('adicao', 'exclusao', 'atualizacao', 'cadastro_recusado', 'cadastro_aceito'))
 );
 
 CREATE TABLE JustificativaRecusa (
@@ -145,3 +98,4 @@ ALTER TABLE LogSistema ADD FOREIGN KEY ("id_usuario") REFERENCES Usuario ("id_us
 
 ALTER TABLE LogSistema ADD FOREIGN KEY ("id_veiculo") REFERENCES VeiculoPublicacao ("id_veiculo");
 
+commit;

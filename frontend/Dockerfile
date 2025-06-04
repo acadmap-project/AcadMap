@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y curl npm
 WORKDIR /app
 
 RUN npm install -g n
-RUN n install v18
+RUN n install v22
 
 COPY package.json package-lock.json ./
 RUN npm ci

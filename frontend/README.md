@@ -10,10 +10,10 @@ nvm -v
 ```
 Para o comando acima funcionar você precisa ter o **curl** instalado. No windows e mac se instala o nvm de outra forma.
 
-Instale e use o node v18
+Instale e use o node v22
 ```bash
-nvm install v18
-nvm use v18
+nvm install v22
+nvm use v22
 node -v
 ```
 
