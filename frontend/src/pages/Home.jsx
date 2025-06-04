@@ -18,11 +18,8 @@ const Navigation = () => {
           </Link>
         </li>
         <li>
-          <Link
-            to="/cadastro-evento-periodico"
-            style={{ textDecoration: 'none' }}
-          >
-            Cadastro Evento/Periodico
+          <Link to="/cadastro-evento" style={{ textDecoration: 'none' }}>
+            Cadastro Evento
           </Link>
         </li>
       </ul>
