@@ -7,7 +7,8 @@ function CadastroUsuario() {
       <h1>Cadastro Usuario</h1>
       <div className="card">
         <p>
-          Edite <code>src/pages/CadastroUsuario.jsx</code> para poder fazer alterações
+          Edite <code>src/pages/CadastroUsuario.jsx</code> para poder fazer
+          alterações
         </p>
       </div>
     </>
