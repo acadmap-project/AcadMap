@@ -1,17 +1,25 @@
-import './styles/App.css';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-function App() {
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import CadastroUsuario from './pages/CadastroUsuario';
+import CadastroEP from './pages/CadastroEventoPeriodico';
+
+const App = () => {
   return (
-    <>
-      <div></div>
-      <h1>AcadMap</h1>
-      <div className="card">
-        <p>
-          Edite <code>src/App.jsx</code> para poder fazer alterações
-        </p>
+    <Router>
+      <div className="App">
+        <main style={{ padding: '20px' }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cadastro-evento-periodico" element={<CadastroEP />} />
+            <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
       </div>
-    </>
+    </Router>
   );
-}
+};
 
 export default App;
