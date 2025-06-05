@@ -1,6 +1,5 @@
 package com.acadmap.model;
 import com.acadmap.model.enums.TipoPerfilUsuario;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -16,7 +15,7 @@ import java.util.*;
 @EqualsAndHashCode(of="idUsuario")
 // --- Usuario ---
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuario")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "idUsuario")
@@ -50,7 +49,7 @@ public class Usuario {
 
     @ManyToMany
     @JoinTable(
-            name = "AreaPesquisaUsuario",
+            name = "areapesquisausuario",
             joinColumns = @JoinColumn(name = "id_usuario"),
             inverseJoinColumns = @JoinColumn(name = "id_area_pesquisa")
     )

@@ -59,7 +59,7 @@ public abstract class VeiculoPublicacao {
 
     @ManyToMany
     @JoinTable(
-            name = "AreaPesquisaVeiculo",
+            name = "areapesquisaveiculo",
             joinColumns = @JoinColumn(name = "id_veiculo"),
             inverseJoinColumns = @JoinColumn(name = "id_area_pesquisa")
     )

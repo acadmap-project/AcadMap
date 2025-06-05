@@ -15,7 +15,7 @@ import lombok.*;
         property = "idLog")
 // --- LogExclusao (Subclasse de Log) ---
 @Entity
-@Table(name = "LogExclusao")
+@Table(name = "logexclusao")
 @PrimaryKeyJoinColumn(name = "id_log")
 public class LogExclusao extends Log {
 
