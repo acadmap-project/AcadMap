@@ -1,45 +1,41 @@
 package com.acadmap.model;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import java.util.List;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString(of="idPrograma")
+@EqualsAndHashCode(of="idPrograma")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idPrograma")
+
+// --- Programa ---
 @Entity
-@Table(name = "Programa")
+@Table(name = "programa")
 public class Programa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_programa")
-    private UUID id;
+    @Column(name = "id_programa", columnDefinition = "uuid")
+    private UUID idPrograma;
 
-    @Column(name = "nome", length = 255)
+    @Column(name = "nome", nullable = false, length = 255)
     private String nome;
 
-    @OneToMany(mappedBy = "programa")
-    private List<Usuario> usuarios;
+    @OneToMany(mappedBy = "programa", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<Usuario> usuarios = new HashSet<>();
 
-    // Getters and Setters
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    // Construtor Padrão
+    public Programa() {
     }
 }

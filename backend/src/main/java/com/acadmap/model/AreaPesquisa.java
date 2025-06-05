@@ -1,45 +1,41 @@
 package com.acadmap.model;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import java.util.List;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString(of="idAreaPesquisa")
+@EqualsAndHashCode(of="idAreaPesquisa")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idAreaPesquisa")
+
+// --- AreaPesquisa ---
 @Entity
 @Table(name = "areapesquisa")
 public class AreaPesquisa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_area_pesquisa")
-    private UUID id;
+    @Column(name = "id_area_pesquisa", columnDefinition = "uuid")
+    private UUID idAreaPesquisa;
 
-    @Column(name = "nome", length = 255)
+    @Column(name = "nome", nullable = false, length = 255)
     private String nome;
 
-    @OneToMany(mappedBy = "areaPesquisa")
-    private List<Usuario> usuarios;
+    @ManyToMany(mappedBy = "areasPesquisa")
+    private Set<Usuario> usuarios = new HashSet<>();
 
-    // Getters and Setters
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
+    @ManyToMany(mappedBy = "areasPesquisa")
+    @JsonManagedReference
+    private Set<VeiculoPublicacao> veiculosPublicacao = new HashSet<>();
 }

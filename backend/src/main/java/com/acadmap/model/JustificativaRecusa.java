@@ -1,45 +1,36 @@
 package com.acadmap.model;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.*;
+import java.util.Objects;
 import java.util.UUID;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString(of="idLog")
+@EqualsAndHashCode(of="idLog")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idLog")
+// --- JustificativaRecusa ---
 @Entity
-@Table(name = "JustificativaRecusa")
+@Table(name = "justificativarecusa")
 public class JustificativaRecusa {
 
     @Id
-    @Column(name = "id_log") // Esta coluna é PK e FK ao mesmo tempo
-    private UUID id;
+    @Column(name = "id_log", columnDefinition = "uuid")
+    private UUID idLog;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId // Mapeia o 'id' desta entidade para o 'id' da entidade LogSistema
+    @MapsId
     @JoinColumn(name = "id_log")
-    private LogSistema logSistema;
+    private LogVeiculo logVeiculo;
 
-    @Column(name = "justificativa", length = 1000)
+    @Column(name = "justificativa", nullable = false, length = 1000)
     private String justificativa;
 
-    // Getters and Setters
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public LogSistema getLogSistema() {
-        return logSistema;
-    }
-
-    public void setLogSistema(LogSistema logSistema) {
-        this.logSistema = logSistema;
-    }
-
-    public String getJustificativa() {
-        return justificativa;
-    }
-
-    public void setJustificativa(String justificativa) {
-        this.justificativa = justificativa;
-    }
+    // Construtores, Getters, Setters, Equals, HashCode, ToString
 }

@@ -1,19 +1,32 @@
 package com.acadmap.model;
-import com.acadmap.model.enums.TipoQualisAntigo;
+import com.acadmap.model.enums.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString(of="idVeiculo")
+@EqualsAndHashCode(of="idVeiculo")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idVeiculo")
+
+// --- Periodico (Subclasse de VeiculoPublicacao) ---
 @Entity
-@Table(name = "Periodico")
-@PrimaryKeyJoinColumn(name = "id_veiculo") // Referencia a PK da superclasse
+@Table(name = "periodico")
+@PrimaryKeyJoinColumn(name = "id_veiculo")
 public class Periodico extends VeiculoPublicacao {
 
-    // id_veiculo é herdado de VeiculoPublicacao e é a PK aqui
-
-    @Column(name = "ISSN", length = 8, unique = true, nullable = false)
+    @Column(name = "ISSN", nullable = false, length = 8, unique = true)
     private String issn;
 
     @Column(name = "percentil", nullable = false)
-    private int percentil;
+    private Integer percentil;
 
     @Column(name = "link_jcr", length = 255)
     private String linkJcr;
@@ -22,69 +35,13 @@ public class Periodico extends VeiculoPublicacao {
     private String linkScopus;
 
     @Column(name = "link_google_scholar", length = 255)
-    private String linkGoogleScholar; // default null é implícito
+    private String linkGoogleScholar;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "qualis_antigo", columnDefinition = "tipo_qualis_antigo default null")
-    private TipoQualisAntigo qualisAntigo;
+    @Column(name = "qualis_antigo", length = 2)
+    private QualisAntigo qualisAntigo;
 
-    @Column(name = "flag_predatorio", columnDefinition = "boolean default false")
-    private boolean flagPredatorio = false; // Valor padrão Java
-
-    // Getters and Setters
-    public String getIssn() {
-        return issn;
-    }
-
-    public void setIssn(String issn) {
-        this.issn = issn;
-    }
-
-    public int getPercentil() {
-        return percentil;
-    }
-
-    public void setPercentil(int percentil) {
-        this.percentil = percentil;
-    }
-
-    public String getLinkJcr() {
-        return linkJcr;
-    }
-
-    public void setLinkJcr(String linkJcr) {
-        this.linkJcr = linkJcr;
-    }
-
-    public String getLinkScopus() {
-        return linkScopus;
-    }
-
-    public void setLinkScopus(String linkScopus) {
-        this.linkScopus = linkScopus;
-    }
-
-    public String getLinkGoogleScholar() {
-        return linkGoogleScholar;
-    }
-
-    public void setLinkGoogleScholar(String linkGoogleScholar) {
-        this.linkGoogleScholar = linkGoogleScholar;
-    }
-
-    public TipoQualisAntigo getQualisAntigo() {
-        return qualisAntigo;
-    }
-
-    public void setQualisAntigo(TipoQualisAntigo qualisAntigo) {
-        this.qualisAntigo = qualisAntigo;
-    }
-
-    public boolean isFlagPredatorio() {
-        return flagPredatorio;
-    }
-
-    public void setFlagPredatorio(boolean flagPredatorio) {
-        this.flagPredatorio = flagPredatorio;
-    }
+    @Column(name = "flag_predatorio")
+    @ColumnDefault("false")
+    private Boolean flagPredatorio = false;
 }

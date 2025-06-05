@@ -1,120 +1,70 @@
 package com.acadmap.model;
-import com.acadmap.model.enums.TipoClassificacao;
-import com.acadmap.model.enums.TipoDefesa;
-import com.acadmap.model.enums.TipoStatus;
-import com.acadmap.model.enums.TipoVeiculo;
+import com.acadmap.model.enums.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import java.util.List;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(of="idVeiculo")
+@EqualsAndHashCode(of="idVeiculo")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idVeiculo")
+
+// --- VeiculoPublicacao (Superclasse Abstrata) ---
 @Entity
-@Table(name = "VeiculoPublicacao")
+@Table(name = "veiculopublicacao")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class VeiculoPublicacao { // Pode ser abstrata ou não
+public abstract class VeiculoPublicacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_veiculo")
-    private UUID id;
+    @Column(name = "id_veiculo", columnDefinition = "uuid")
+    private UUID idVeiculo;
 
-    @Column(name = "nome", length = 255, nullable = false)
+    @Column(name = "nome", nullable = false, length = 255)
     private String nome;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "classificacao", nullable = false, columnDefinition = "tipo_classificacao")
-    private TipoClassificacao classificacao;
-
-    @Column(name = "area_conhecimento", length = 255, nullable = false)
-    private String areaConhecimento;
-
-    @Column(name = "vinculo_sbc", nullable = false)
-    private boolean vinculoSbc;
+    @Column(name = "classificacao", nullable = false, length = 2)
+    private ClassificacaoVeiculo classificacao;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "adequado_defesa", nullable = false, columnDefinition = "tipo_defesa")
-    private TipoDefesa adequadoDefesa;
+    @Column(name = "vinculo_sbc", nullable = false, length = 20)
+    private VinculoSBC vinculoSbc;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo", nullable = false, columnDefinition = "tipo_veiculo")
-    private TipoVeiculo tipo; // Discriminador implícito para algumas estratégias, mas aqui é um campo normal
+    @Column(name = "adequado_defesa", nullable = false, length = 20)
+    private AdequacaoDefesa adequadoDefesa;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "tipo_status default 'pendente'")
-    private TipoStatus status = TipoStatus.pendente; // Valor padrão Java
+    @Column(name = "tipo", nullable = false, length = 10)
+    private TipoVeiculo tipo;
 
-    @OneToMany(mappedBy = "veiculoPublicacao")
-    private List<LogSistema> logs;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 10)
+    @ColumnDefault("PENDENTE")
+    private StatusVeiculo status;
 
-    // Getters and Setters
-    public UUID getId() {
-        return id;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "AreaPesquisaVeiculo",
+            joinColumns = @JoinColumn(name = "id_veiculo"),
+            inverseJoinColumns = @JoinColumn(name = "id_area_pesquisa")
+    )
+    private Set<AreaPesquisa> areasPesquisa = new HashSet<>();
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public TipoClassificacao getClassificacao() {
-        return classificacao;
-    }
-
-    public void setClassificacao(TipoClassificacao classificacao) {
-        this.classificacao = classificacao;
-    }
-
-    public String getAreaConhecimento() {
-        return areaConhecimento;
-    }
-
-    public void setAreaConhecimento(String areaConhecimento) {
-        this.areaConhecimento = areaConhecimento;
-    }
-
-    public boolean isVinculoSbc() {
-        return vinculoSbc;
-    }
-
-    public void setVinculoSbc(boolean vinculoSbc) {
-        this.vinculoSbc = vinculoSbc;
-    }
-
-    public TipoDefesa getAdequadoDefesa() {
-        return adequadoDefesa;
-    }
-
-    public void setAdequadoDefesa(TipoDefesa adequadoDefesa) {
-        this.adequadoDefesa = adequadoDefesa;
-    }
-
-    public TipoVeiculo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoVeiculo tipo) {
-        this.tipo = tipo;
-    }
-
-    public TipoStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TipoStatus status) {
-        this.status = status;
-    }
-
-    public List<LogSistema> getLogs() {
-        return logs;
-    }
-
-    public void setLogs(List<LogSistema> logs) {
-        this.logs = logs;
-    }
+    @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LogVeiculo> logsVeiculo = new HashSet<>();
 }
