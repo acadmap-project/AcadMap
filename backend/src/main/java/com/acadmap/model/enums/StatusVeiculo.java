@@ -28,8 +28,8 @@ public enum StatusVeiculo {
     @JsonCreator
     public static StatusVeiculo doValor(String codigo){
         for(StatusVeiculo statusVeiculo : StatusVeiculo.values()){
-            if(negado.getCodigo().equals(codigo.toLowerCase())){
-                return negado;
+            if(statusVeiculo.getCodigo().equals(codigo.toLowerCase())){
+                return statusVeiculo;
             }
         }
         throw new IllegalArgumentException("Ta errado o enum paizão");

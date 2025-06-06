@@ -30,7 +30,7 @@ public enum VinculoSBC {
     @JsonCreator
     public static VinculoSBC doValor(String codigo){
         for(VinculoSBC vinculoSBC : VinculoSBC.values()){
-            if(vinculoSBC.getCodigo().equals(codigo.toUpperCase())){
+            if(vinculoSBC.getCodigo().equals(codigo.toLowerCase())){
                 return vinculoSBC;
             }
         }

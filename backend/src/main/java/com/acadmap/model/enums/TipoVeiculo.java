@@ -27,7 +27,7 @@ public enum TipoVeiculo {
     @JsonCreator
     public static TipoVeiculo doValor(String codigo){
         for(TipoVeiculo tipoVeiculo : TipoVeiculo.values()){
-            if(tipoVeiculo.getCodigo().equals(codigo.toUpperCase())){
+            if(tipoVeiculo.getCodigo().equals(codigo.toLowerCase())){
                 return tipoVeiculo;
             }
         }
