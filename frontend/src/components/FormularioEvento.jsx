@@ -27,13 +27,19 @@ function FormularioEvento() {
   return (
     <>
       {dadosSalvos ? (
-        <div className="formularioEventoPeriodico" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div
+          className="formularioEventoPeriodico"
+          style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+        >
           <ul>
             {Object.entries(dadosSalvos).map(([key, value]) => (
-              <li style={{ textAlign: "left" }} key={key}>
+              <li style={{ textAlign: 'left' }} key={key}>
                 <strong>
-                  {(dadosEntradaEvento.find(item => item.name === key)?.label) || key}:
-                </strong> {value}
+                  {dadosEntradaEvento.find(item => item.name === key)?.label ||
+                    key}
+                  :
+                </strong>{' '}
+                {value}
               </li>
             ))}
           </ul>
