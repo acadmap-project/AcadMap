@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("api/veiculo")
 @AllArgsConstructor
@@ -28,9 +30,8 @@ public class VeiculoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> aprovaPublicacao(
-            @RequestHeader("X-User-Id") Long idUser,
-            @RequestBody VeiculoPublicacao veiculoPublicacao,
-            @PathVariable Long id
+            @RequestHeader("X-User-Id") UUID idUser,
+            @RequestBody VeiculoPublicacao veiculoPublicacao
     ){
         System.out.println("######################");
         System.out.println(idUser);
@@ -41,7 +42,7 @@ public class VeiculoController {
 
         Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
         if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo())){
-            return new ResponseEntity<>(aprovarVeiculoService.exec(usuario, veiculoPublicacao, id), HttpStatus.ACCEPTED) ;
+            return new ResponseEntity<>(aprovarVeiculoService.exec(veiculoPublicacao), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
                 "O usuário não possui permisão para aprovar a publicação",
