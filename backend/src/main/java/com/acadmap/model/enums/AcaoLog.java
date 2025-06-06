@@ -1,0 +1,11 @@
+package com.acadmap.model.enums;
+
+public enum AcaoLog {
+    ADICAO_VEICULO,
+    EXCLUSAO_VEICULO,
+    ATUALIZACAO_VEICULO,
+    CADASTRO_VEICULO_RECUSADO,
+    CADASTRO_VEICULO_ACEITO,
+    CADASTRO_USUARIO,
+    EXCLUSAO_USUARIO
+}
