@@ -1,10 +1,12 @@
 package com.acadmap.controller;
 
 
+import com.acadmap.model.Evento;
 import com.acadmap.model.Usuario;
 import com.acadmap.model.VeiculoPublicacao;
-import com.acadmap.model.enums.StatusPublicacao;
-import com.acadmap.model.enums.TipoPerfil;
+import com.acadmap.model.enums.StatusVeiculo;
+import com.acadmap.model.enums.TipoPerfilUsuario;
+import com.acadmap.repository.EventoRepository;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
 import com.acadmap.service.AprovarVeiculoService;
@@ -21,6 +23,7 @@ public class VeiculoController {
     private UsuarioRepository usuarioRepository;
     private AprovarVeiculoService aprovarVeiculoService;
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
+    private EventoRepository eventoRepository;
 
 
     @PutMapping("/{id}")
@@ -37,7 +40,7 @@ public class VeiculoController {
 
 
         Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfil.PESQUISADOR.getCodigo())){
+        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo())){
             return new ResponseEntity<>(aprovarVeiculoService.exec(usuario, veiculoPublicacao, id), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
@@ -45,12 +48,14 @@ public class VeiculoController {
                 HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @GetMapping
+    @GetMapping("/pendente")
     public ResponseEntity<?> veiculosPendentes(){
-        if (veiculoPublicacaoRepository.findByStatusPublicacao(StatusPublicacao.PENDENTE).isEmpty()){
+
+        System.out.println(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente));
+        if (veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente).isEmpty()){
             return new ResponseEntity<>("Não existem veiculos pendentes na base de dados", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(veiculoPublicacaoRepository.findByStatusPublicacao(StatusPublicacao.PENDENTE), HttpStatus.OK);
+        return new ResponseEntity<>(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente), HttpStatus.OK);
     }
 
 
