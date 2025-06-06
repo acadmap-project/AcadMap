@@ -20,7 +20,7 @@ public class AprovarVeiculoService {
 
         VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(id).orElseThrow();
 
-        veiculoPublicacaoAtual.setStatusPublicacao(veiculoPublicacaoAtualizado.getStatusPublicacao());
+        veiculoPublicacaoAtual.setStatus(veiculoPublicacaoAtualizado.getStatus());
 
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 

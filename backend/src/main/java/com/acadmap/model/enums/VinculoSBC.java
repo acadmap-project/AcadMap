@@ -2,13 +2,15 @@ package com.acadmap.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+
+
 public enum VinculoSBC {
 
 
     sem_vinculo("sem_vinculo"),
     vinculo_top_10("vinculo_top_10"),
     vinculo_top_20("vinculo_top_20"),
-    vinculo_comum("vinculo_comun");
+    vinculo_comum("vinculo_comum");
 
 
     private String codigo;
@@ -26,11 +28,10 @@ public enum VinculoSBC {
     }
 
 
-
     @JsonCreator
     public static VinculoSBC doValor(String codigo){
         for(VinculoSBC vinculoSBC : VinculoSBC.values()){
-            if(vinculoSBC.getCodigo().equals(codigo.toUpperCase())){
+            if(vinculoSBC.getCodigo().equals(codigo.toLowerCase())){
                 return vinculoSBC;
             }
         }
