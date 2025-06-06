@@ -2,13 +2,15 @@ package com.acadmap.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+
+
 public enum VinculoSBC {
 
 
     sem_vinculo("sem_vinculo"),
     vinculo_top_10("vinculo_top_10"),
     vinculo_top_20("vinculo_top_20"),
-    vinculo_comum("vinculo_comun");
+    vinculo_comum("vinculo_comum");
 
 
     private String codigo;
@@ -24,7 +26,6 @@ public enum VinculoSBC {
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
-
 
 
     @JsonCreator
