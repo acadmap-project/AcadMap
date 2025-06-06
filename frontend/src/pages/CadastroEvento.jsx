@@ -8,7 +8,7 @@ function CadastroEvento() {
   */
   return (
     <>
-      <h3>Cadastro Evento</h3>
+      <h2>Cadastro Evento</h2>
       <FormularioEvento />
     </>
   );
