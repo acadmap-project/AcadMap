@@ -9,6 +9,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString(of="idVeiculo")
 @EqualsAndHashCode(of="idVeiculo")
 
