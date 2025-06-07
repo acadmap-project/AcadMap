@@ -1,41 +1,18 @@
-import { Link } from 'react-router';
-
-const Navigation = () => {
-  return (
-    <nav style={{ padding: '20px' }}>
-      <ul
-        style={{
-          display: 'flex',
-          listStyle: 'none',
-          gap: '100px',
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        <li>
-          <Link to="/cadastro-usuario" style={{ textDecoration: 'none' }}>
-            Cadastro Usuario
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/cadastro-evento-periodico"
-            style={{ textDecoration: 'none' }}
-          >
-            Cadastro Evento/Periodico
-          </Link>
-        </li>
-      </ul>
-    </nav>
-  );
-};
+import HeaderSistema from '../components/HeaderSistema';
+import useLogin from '../hooks/userAuth.js';
 
 const Home = () => {
+  const { loggedIn, login, logout } = useLogin();
   return (
     <div>
-      <h1>Tela Inicial</h1>
-      <p>Bem vindo a tela inicial, para selecionar a tela pressione abaixo!</p>
-      <Navigation />
+      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
+      <h1>AcadMap</h1>
+      <p>Bem vindo a Home page, é necessário definir o que inserir aqui.</p>
+      {loggedIn.isLoggedIn ? (
+        <input type="button" value="Deslogar" onClick={logout} />
+      ) : (
+        <input type="button" value="Logar como Adm" onClick={login} />
+      )}
     </div>
   );
 };
