@@ -27,11 +27,15 @@ function HeaderSistema({ isAuditor, isCadastro }) {
   return (
     <header style={headerStyle}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-        <img src="" alt="Foto do Usuário" style={userImgStyle} />
+        <img
+          src="src/assets/pfp.svg"
+          alt="Foto do Usuário"
+          style={userImgStyle}
+        />
         <div>
-          <h4>{isCadastro ? 'Pesquisador/Auditor' : 'Role do usuário'}</h4>
+          <h4>{isCadastro ? 'Pesquisador/Auditor' : 'Não cadastrado'}</h4>
         </div>
-        {!isCadastro && (
+        {isCadastro && (
           <>
             <button onClick={() => navigate('/cadastro-evento')}>
               Cadastrar Eventos/Periódicos
