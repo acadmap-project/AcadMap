@@ -8,7 +8,7 @@ import CadastroEvento from './pages/CadastroEvento';
 const App = () => {
   return (
     <Router>
-      <div className="App">
+      <div className="App w-screen h-screen">
         <main>
           <Routes>
             <Route path="/" element={<Home />} />

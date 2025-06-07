@@ -1,53 +1,48 @@
-import { useNavigate } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 
-const headerStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  zIndex: 50,
-  background: '#2e2e2e',
-  color: 'white',
-  padding: '1rem 0 1rem 2rem',
-  display: 'flex',
-  alignItems: 'center',
-};
-
-const userImgStyle = {
-  width: 48,
-  height: 48,
-  borderRadius: '50%',
-  border: '2px solid white',
-  objectFit: 'cover',
-};
-
-function HeaderSistema({ isAuditor, isCadastro }) {
-  const navigate = useNavigate();
-
+function HeaderSistema({ isCadastro }) {
   return (
-    <header style={headerStyle}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-        <img
-          src="src/assets/pfp.svg"
-          alt="Foto do Usuário"
-          style={userImgStyle}
-        />
-        <div>
-          <h4>{isCadastro ? 'Pesquisador/Auditor' : 'Não cadastrado'}</h4>
-        </div>
-        {isCadastro && (
-          <>
-            <button onClick={() => navigate('/cadastro-evento')}>
-              Cadastrar Eventos/Periódicos
-            </button>
-            {isAuditor && <button>Validação de cadastros</button>}
-          </>
-        )}
-        <button onClick={() => navigate('/cadastro-usuario')}>
-          Cadastrar Usuário
-        </button>
-      </div>
-    </header>
+    <>
+      <header>
+        <nav className="bg-white border-gray-200 dark:bg-gray-900">
+          <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <img
+              className="w-10 h-10 rounded-full"
+              src="src/assets/pfp.svg"
+              alt="Rounded avatar"
+            ></img>
+            <div
+              className="hidden w-full md:block md:w-auto"
+              id="navbar-default"
+            >
+              <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                {isCadastro && (
+                  <li>
+                    <Link
+                      to={'/cadastro-evento'}
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0"
+                      aria-current="page"
+                    >
+                      Cadastrar Evento / Periódicos
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <Link
+                    to={'/cadastro-usuario'}
+                    className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0"
+                    aria-current="page"
+                  >
+                    Cadastrar Usuário
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <Outlet />
+    </>
   );
 }
 export default HeaderSistema;
