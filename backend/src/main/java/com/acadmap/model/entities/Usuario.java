@@ -57,4 +57,8 @@ public class Usuario {
 
   @OneToMany(mappedBy = "usuarioExcluido", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   private Set<LogExclusao> logsExclusaoUsuario = new HashSet<>();
+
+  @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+  private Set<VeiculoPublicacao> veiculosPublicacao = new HashSet<>();
+
 }
