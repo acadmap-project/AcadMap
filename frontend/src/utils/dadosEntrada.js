@@ -10,12 +10,25 @@ const areasConhecimentoDisponiveis = [
 ];
 
 const areasProgramaDisponiveis = [
-  { value : 'ppgcc', label : 'Programa de Pós-Graduação em Ciência da Computação (PPGC)'},
-  { value : 'pibic', label : 'Programa Institucional de Bolsas de Iniciação Científica (PIBIC)'},
-  { value : 'pibiti', label : 'Programa Institucional de Bolsas de Iniciação em Desenvolvimento Tecnológico e Inovação (PIBITI)'},
-  { value : 'pibex', label : 'Programa Institucional de Bolsas de Extensão (PIBEX)'},
-  { value : 'proext', label : 'Programa de Extensão Universitária (PROEXT)'},
-]
+  {
+    value: 'ppgcc',
+    label: 'Programa de Pós-Graduação em Ciência da Computação (PPGC)',
+  },
+  {
+    value: 'pibic',
+    label: 'Programa Institucional de Bolsas de Iniciação Científica (PIBIC)',
+  },
+  {
+    value: 'pibiti',
+    label:
+      'Programa Institucional de Bolsas de Iniciação em Desenvolvimento Tecnológico e Inovação (PIBITI)',
+  },
+  {
+    value: 'pibex',
+    label: 'Programa Institucional de Bolsas de Extensão (PIBEX)',
+  },
+  { value: 'proext', label: 'Programa de Extensão Universitária (PROEXT)' },
+];
 
 const vinculosSBCDisponiveis = [
   { value: 'nenhum', label: 'Nenhum' },
@@ -27,46 +40,45 @@ const vinculosSBCDisponiveis = [
 export const dadosEntradaCadastro = [
   {
     label: 'Nome Completo*',
-    name : 'cadastro-name',
-    placeholder : 'Digite...',
-    required : true
+    name: 'cadastro-name',
+    placeholder: 'Digite...',
+    required: true,
   },
   {
-    label : 'E-mail*',
-    name : 'cadastro-email',
-    placeholder : 'exemplo@exemplo.com',
-    required : true
+    label: 'E-mail*',
+    name: 'cadastro-email',
+    placeholder: 'exemplo@exemplo.com',
+    required: true,
   },
   {
-    label : 'Senha*',
-    name : 'cadastro-senha',
-    placeholder : '*******',
-    required : true
+    label: 'Senha*',
+    name: 'cadastro-senha',
+    placeholder: '*******',
+    required: true,
   },
   {
-    label : 'Confirmar Senha*',
-    name : 'cadastro-confirmar-senha',
-    placeholder : '*******',
-    required : true
+    label: 'Confirmar Senha*',
+    name: 'cadastro-confirmar-senha',
+    placeholder: '*******',
+    required: true,
   },
   {
-    label : 'Área de Pesquisa*',
-    name : 'area-pesquisa',
-    type : 'select',
-    placeholder : 'Selecione uma área de pesquisa',
-    options : areasConhecimentoDisponiveis,
-    required : true
+    label: 'Área de Pesquisa*',
+    name: 'area-pesquisa',
+    type: 'select',
+    placeholder: 'Selecione uma área de pesquisa',
+    options: areasConhecimentoDisponiveis,
+    required: true,
   },
   {
-    label : 'Programa*',
-    name : 'programa-cadastro',
-    type : 'select',
-    placeholder : 'Selecione o programa ao qual faz parte...',
-    options : areasProgramaDisponiveis,
-    required : true
+    label: 'Programa*',
+    name: 'programa-cadastro',
+    type: 'select',
+    placeholder: 'Selecione o programa ao qual faz parte...',
+    options: areasProgramaDisponiveis,
+    required: true,
   },
-  
-]
+];
 
 const dadosEntradaEvento = [
   {

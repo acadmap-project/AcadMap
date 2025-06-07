@@ -1,7 +1,7 @@
-import { enviarDadosCadastro, validarDadosCadastro } from "../utils/cadastro";
-import { dadosEntradaCadastro } from "../utils/dadosEntrada";
-import CampoEntrada from "./CampoEntrada";
-import GerarSenha from "./GerarSenha";
+import { enviarDadosCadastro, validarDadosCadastro } from '../utils/cadastro';
+import { dadosEntradaCadastro } from '../utils/dadosEntrada';
+import CampoEntrada from './CampoEntrada';
+import GerarSenha from './GerarSenha';
 
 function FormularioCadastro() {
   /*
@@ -41,11 +41,15 @@ function FormularioCadastro() {
             required={input.required}
           />
         ))}
-        
-        <GerarSenha onGerar={(senha) => {
-          const senhaInput = document.querySelector('input[name="cadastro-senha"]');
-          senhaInput.value = senha;
-        }} />
+
+        <GerarSenha
+          onGerar={senha => {
+            const senhaInput = document.querySelector(
+              'input[name="cadastro-senha"]'
+            );
+            senhaInput.value = senha;
+          }}
+        />
 
         <span className="mini-bold">Campos Obrigatórios (*)</span>
         <button type="submit">Salvar e Continuar</button>

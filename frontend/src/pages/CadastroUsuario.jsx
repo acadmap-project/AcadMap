@@ -6,7 +6,7 @@ function CadastroUsuario() {
     <>
       <div></div>
       <h1>Cadastro Usuario</h1>
-      < FormularioCadastro />
+      <FormularioCadastro />
     </>
   );
 }

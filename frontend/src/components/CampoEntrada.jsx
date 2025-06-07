@@ -97,7 +97,15 @@ function CampoCheckboxDropdown({ label, name, placeholder, options }) {
   );
 }
 
-function CampoSenha({ label, name, placeholder, required = false, value, onChange, extraComponent }){
+function CampoSenha({
+  label,
+  name,
+  placeholder,
+  required = false,
+  value,
+  onChange,
+  extraComponent,
+}) {
   /*
         Renderize um campo de senha com rótulo, nome, espaço reservado, opção de obrigatório e componente extra.
         @param {string} label - O rótulo do campo.
@@ -125,9 +133,8 @@ function CampoSenha({ label, name, placeholder, required = false, value, onChang
         )}
       </div>
     </>
-  )
+  );
 }
-
 
 function CampoEntrada(args) {
   /*
