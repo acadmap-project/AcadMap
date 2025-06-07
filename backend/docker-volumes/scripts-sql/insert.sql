@@ -183,3 +183,27 @@ INSERT INTO Programa (id_programa, nome) VALUES
 (gen_random_uuid(), 'programa de pós-graduação em neurociências e comportamento - ppgnc'),
 (gen_random_uuid(), 'programa de pós-graduação em psicologia (teoria e pesquisa do comportamento) - ppgtpc'),
 (gen_random_uuid(), 'programa de pós-graduação em música - profmus');
+
+
+INSERT INTO public.usuario(id_usuario, id_programa, nome, email, senha, tipo_perfil, flag_ativo)
+VALUES
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'João Silva', 'joao.silva@email.com', '$2a$10$xJwL5v5Jz5TZ9zQbQFzN3.QjWj6U9cKjvW7JkXr3V2mYhL1sS5XbO', 'administrador', TRUE),
+
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Maria Oliveira', 'maria.oliveira@email.com', '$2a$10$yH9sL2pP8qR3tW4eF6gV7.uJ8kI0lM2nB3vC4d5fG6hJ7kL9mN1oP', 'administrador', TRUE),
+
+-- Auditores
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Carlos Pereira', 'carlos.pereira@email.com', '$2a$10$zK8lM9nO0pQ1rS2tU3vW4.xY5zA6B7c8D9eF0gH1iJ2kL3mN4oP5q', 'auditor', TRUE),
+
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Ana Santos', 'ana.santos@email.com', '$2a$10$aB1cD2eF3gH4iJ5kL6mN7.oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7i', 'auditor', FALSE),
+
+-- Pesquisadores
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Pedro Costa', 'pedro.costa@email.com', '$2a$10$jK8lM9nO0pQ1rS2tU3vW4.xY5zA6B7c8D9eF0gH1iJ2kL3mN4oP5q', 'pesquisador', TRUE),
+
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Luísa Fernandes', 'luisa.fernandes@email.com', '$2a$10$bC1dE2fG3hI4jK5lM6nO7.pQ8rS9tU0vW1xY2zA3B4cD5eF6gH7iJ', 'pesquisador', TRUE),
+
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Rafael Almeida', 'rafael.almeida@email.com', '$2a$10$cD1eF2gH3iJ4kL5mN6oP7.qR8sT9uV0wX1yZ2aB3cD4eF5gH6iJ7k', 'pesquisador', FALSE),
+
+-- Outros exemplos variados
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Mariana Gonçalves', 'mariana.goncalves@email.com', '$2a$10$dE1fG2hI3jK4lM5nO6pP7.qR8sT9uV0wX1yZ2aB3cD4eF5gH6iJ7kL', 'administrador', FALSE),
+
+(gen_random_uuid(), 'a00e073b-a262-4cd5-b64b-0ee5d35b8455', 'Antônio Nunes', 'antonio.nunes@email.com', '$2a$10$eF1gH2iJ3kL4mN5oP6qR7.sT8uV9wX0yZ1aB2cD3eF4gH5iJ6kL7m', 'auditor', TRUE);

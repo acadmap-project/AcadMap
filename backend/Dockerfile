@@ -11,4 +11,5 @@ FROM openjdk:17.0.1-jdk-slim
 
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+ENV SPRING_DATASOURCE_URL="jdbc:postgresql://postgres:5432/dev"
 CMD ["java", "-jar", "app.jar"]
