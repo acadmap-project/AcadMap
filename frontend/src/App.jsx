@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
-import CadastroEvento from './pages/CadastroEvento/CadastroEvento';
-import HeaderSistema from './components/Navbar';
+import CadastroEvento from './pages/CadastroEvento';
 
 const App = () => {
   return (
@@ -12,12 +11,10 @@ const App = () => {
       <div className="App w-screen h-screen">
         <main>
           <Routes>
-            <Route element={<HeaderSistema />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/cadastro-evento" element={<CadastroEvento />} />
-              <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
+            <Route path="/" element={<Home />} />
+            <Route path="/cadastro-evento" element={<CadastroEvento />} />
+            <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
       </div>
