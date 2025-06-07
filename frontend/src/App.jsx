@@ -4,17 +4,20 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroEvento from './pages/CadastroEvento';
+import HeaderSistema from './components/Navbar';
 
 const App = () => {
   return (
     <Router>
-      <div className="App">
+      <div className="App w-screen h-screen">
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cadastro-evento" element={<CadastroEvento />} />
-            <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
-            <Route path="*" element={<NotFound />} />
+            <Route element={<HeaderSistema />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/cadastro-evento" element={<CadastroEvento />} />
+              <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Routes>
         </main>
       </div>

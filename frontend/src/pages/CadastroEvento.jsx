@@ -1,6 +1,6 @@
 import '../styles/App.css';
 import FormularioEvento from '../components/FormularioEvento.jsx';
-import HeaderSistema from '../components/HeaderSistema.jsx';
+import HeaderSistema from '../components/Navbar.jsx';
 
 function CadastroEvento() {
   /* 
@@ -9,7 +9,6 @@ function CadastroEvento() {
   */
   return (
     <>
-      <HeaderSistema isCadastro={true} />
       <h3>Cadastro Evento</h3>
       <FormularioEvento />
     </>

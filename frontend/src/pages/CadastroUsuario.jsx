@@ -1,4 +1,4 @@
-import HeaderSistema from '../components/HeaderSistema';
+import HeaderSistema from '../components/Navbar';
 import '../styles/App.css';
 
 function handleSubmit(e) {
