@@ -18,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/veiculo")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class VeiculoController {
 
     private UsuarioRepository usuarioRepository;
