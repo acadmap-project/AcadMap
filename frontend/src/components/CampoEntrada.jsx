@@ -97,6 +97,45 @@ function CampoCheckboxDropdown({ label, name, placeholder, options }) {
   );
 }
 
+function CampoSenha({
+  label,
+  name,
+  placeholder,
+  required = false,
+  value,
+  onChange,
+  extraComponent,
+}) {
+  /*
+        Renderize um campo de senha com rótulo, nome, espaço reservado, opção de obrigatório e componente extra.
+        @param {string} label - O rótulo do campo.
+        @param {string} name - O nome do campo.
+        @param {string} placeholder - O texto de espaço reservado do campo.
+        @param {boolean} required - Indica se o campo é obrigatório.
+        @param {string} value - O valor atual do campo de senha.
+        @param {function} onChange - Função para lidar com mudanças no valor do campo.
+        @param {JSX.Element} extraComponent - Componente extra a ser renderizado ao lado do campo de senha.
+        Retorna um elemento JSX representando o campo de senha. */
+  return (
+    <>
+      <label>{label}</label>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input
+          type="password"
+          name={name}
+          placeholder={placeholder}
+          required={required}
+          value={value}
+          onChange={onChange}
+        />
+        {extraComponent && (
+          <span style={{ marginLeft: 8 }}>{extraComponent}</span>
+        )}
+      </div>
+    </>
+  );
+}
+
 function CampoEntrada(args) {
   /*
     Renderize um campo de entrada com base no tipo especificado.
@@ -120,6 +159,16 @@ function CampoEntrada(args) {
           name={args.name}
           placeholder={args.placeholder}
           options={args.options}
+        />
+      ) : args.type === 'password' ? (
+        <CampoSenha
+          label={args.label}
+          name={args.name}
+          placeholder={args.placeholder}
+          required={args.required}
+          value={args.value}
+          onChange={args.onChange}
+          extraComponent={args.extraComponent}
         />
       ) : (
         <CampoTexto

@@ -1,5 +1,6 @@
 import HeaderSistema from '../components/HeaderSistema';
 import '../styles/App.css';
+import FormularioCadastro from '../components/FormularioCadastro';
 
 function handleSubmit(e) {
   e.preventDefault();
@@ -13,13 +14,7 @@ function CadastroUsuario() {
       <HeaderSistema isCadastro={true} />
       <div></div>
       <h1>Cadastro Usuario</h1>
-      <div className="card">
-        <p>
-          Edite <code>src/pages/CadastroUsuario.jsx</code> para poder fazer
-          alterações
-        </p>
-        <form onSubmit={handleSubmit}></form>
-      </div>
+      <FormularioCadastro />
     </>
   );
 }
