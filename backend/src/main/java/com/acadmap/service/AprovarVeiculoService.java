@@ -1,27 +1,35 @@
 package com.acadmap.service;
 
 
-import com.acadmap.model.Usuario;
 import com.acadmap.model.VeiculoPublicacao;
-import com.acadmap.repository.UsuarioRepository;
+import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class AprovarVeiculoService {
 
-    private UsuarioRepository usuarioRepository;
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
 
 
-    public VeiculoPublicacao exec(Usuario usuarioPublicador, VeiculoPublicacao veiculoPublicacaoAtualizado, Long id){
+    public VeiculoPublicacao aprovar(UUID uuid){
 
-        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(id).orElseThrow();
+        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(uuid).orElseThrow();
+        veiculoPublicacaoAtual.setStatus(StatusVeiculo.aceito);
+        veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 
-        veiculoPublicacaoAtual.setStatus(veiculoPublicacaoAtualizado.getStatus());
+        return veiculoPublicacaoAtual;
+    }
 
+
+    public VeiculoPublicacao negar(UUID uuid){
+
+        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(uuid).orElseThrow();
+        veiculoPublicacaoAtual.setStatus(StatusVeiculo.negado);
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 
         return veiculoPublicacaoAtual;

@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, UUID> {
 
-    List<Evento> findByStatusVeiculo(StatusVeiculo statusVeiculo);
+    List<Evento> findByStatus(StatusVeiculo statusVeiculo);
 
     List<Evento> findByNomeContainingIgnoreCase(String nome);
 }
