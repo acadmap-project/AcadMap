@@ -1,7 +1,6 @@
 package com.acadmap.repository;
 
-import com.acadmap.model.Evento;
-import com.acadmap.model.Periodico;
+import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.enums.StatusVeiculo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
