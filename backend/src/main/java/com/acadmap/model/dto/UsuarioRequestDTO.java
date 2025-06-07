@@ -1,4 +1,4 @@
-package com.acadmap.model.dto.usuario;
+package com.acadmap.model.dto;
 
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import java.util.Set;

@@ -1,9 +1,9 @@
 package com.acadmap.service;
 
 import com.acadmap.exception.EventoDuplicadoException;
-import com.acadmap.model.AreaPesquisa;
 import com.acadmap.model.dto.EventoCreateDTO;
-import com.acadmap.model.Evento;
+import com.acadmap.model.entities.AreaPesquisa;
+import com.acadmap.model.entities.Evento;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoVeiculo;
 import com.acadmap.repository.AreaPesquisaRepository;
