@@ -1,4 +1,6 @@
 import { Link } from 'react-router';
+import HeaderSistema from '../components/HeaderSistema';
+import { useState } from 'react';
 
 const Navigation = () => {
   return (
@@ -28,11 +30,20 @@ const Navigation = () => {
 };
 
 const Home = () => {
+  const [logar, setLogar] = useState(false);
+
+  const handleLogIn = () => setLogar(true);
+  const handleLogOut = () => setLogar(false);
   return (
     <div>
-      <h1>Tela Inicial</h1>
-      <p>Bem vindo a tela inicial, para selecionar a tela pressione abaixo!</p>
-      <Navigation />
+      <HeaderSistema isCadastro={logar} />
+      <h1>AcadMap</h1>
+      <p>Bem vindo a Home page, é necessário definir o que inserir aqui.</p>
+      {logar ? (
+        <input type="button" value="Deslogar" onClick={handleLogOut} />
+      ) : (
+        <input type="button" value="Logar como Adm" onClick={handleLogIn} />
+      )}
     </div>
   );
 };
