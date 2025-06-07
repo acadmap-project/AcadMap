@@ -1,8 +1,8 @@
 package com.acadmap.controller;
 
 
-import com.acadmap.model.Usuario;
-import com.acadmap.model.VeiculoPublicacao;
+import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import com.acadmap.repository.EventoRepository;

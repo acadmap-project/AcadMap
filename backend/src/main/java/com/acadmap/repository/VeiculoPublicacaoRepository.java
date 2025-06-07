@@ -1,6 +1,6 @@
 package com.acadmap.repository;
 
-import com.acadmap.model.VeiculoPublicacao;
+import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.StatusVeiculo;
 import java.util.List;
 import java.util.UUID;

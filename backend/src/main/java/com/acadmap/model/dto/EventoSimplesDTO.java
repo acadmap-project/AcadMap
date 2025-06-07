@@ -1,6 +1,6 @@
 package com.acadmap.model.dto;
 
-import com.acadmap.model.Evento;
+import com.acadmap.model.entities.Evento;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

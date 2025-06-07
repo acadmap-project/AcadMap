@@ -1,7 +1,7 @@
-package com.acadmap.model.dto.usuario;
+package com.acadmap.model.dto;
 
-import com.acadmap.model.AreaPesquisa;
-import com.acadmap.model.Usuario;
+import com.acadmap.model.entities.AreaPesquisa;
+import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import java.util.Set;
 import java.util.UUID;

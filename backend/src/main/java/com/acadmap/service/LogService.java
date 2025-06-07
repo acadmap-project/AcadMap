@@ -1,7 +1,7 @@
 package com.acadmap.service;
 
-import com.acadmap.model.Log;
-import com.acadmap.model.Usuario;
+import com.acadmap.model.entities.Log;
+import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.repository.LogRepository;
 import jakarta.transaction.Transactional;

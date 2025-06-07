@@ -1,6 +1,6 @@
 package com.acadmap.repository;
 
-import com.acadmap.model.Log;
+import com.acadmap.model.entities.Log;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

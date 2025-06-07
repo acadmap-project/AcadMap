@@ -1,8 +1,8 @@
 package com.acadmap.service;
 
 
-import com.acadmap.model.Usuario;
-import com.acadmap.model.VeiculoPublicacao;
+import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
 import java.util.UUID;
