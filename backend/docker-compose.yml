@@ -2,10 +2,10 @@ version: '3.8'
 
 networks:
   postgres-net:
-    name: up
+    name: postgres-net
 
 services:
-  db:
+  postgres:
     image: postgres:15
     container_name: postgres
     restart: always
