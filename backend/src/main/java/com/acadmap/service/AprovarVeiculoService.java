@@ -5,6 +5,7 @@ import com.acadmap.model.Usuario;
 import com.acadmap.model.VeiculoPublicacao;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +13,20 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AprovarVeiculoService {
 
-    private UsuarioRepository usuarioRepository;
-    private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
+  private UsuarioRepository usuarioRepository;
+  private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
 
 
-    public VeiculoPublicacao exec(Usuario usuarioPublicador, VeiculoPublicacao veiculoPublicacaoAtualizado, Long id){
+  public VeiculoPublicacao exec(Usuario usuarioPublicador,
+      VeiculoPublicacao veiculoPublicacaoAtualizado, UUID id) {
 
-        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(id).orElseThrow();
+    VeiculoPublicacao veiculoPublicacaoAtual =
+        this.veiculoPublicacaoRepository.findById(id).orElseThrow();
 
-        veiculoPublicacaoAtual.setStatus(veiculoPublicacaoAtualizado.getStatus());
+    veiculoPublicacaoAtual.setStatus(veiculoPublicacaoAtualizado.getStatus());
 
-        veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
+    this.veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 
-        return veiculoPublicacaoAtual;
-    }
+    return veiculoPublicacaoAtual;
+  }
 }
