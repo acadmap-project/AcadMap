@@ -43,6 +43,9 @@ function HeaderSistema({ isAuditor, isCadastro }) {
             {isAuditor && <button>Validação de cadastros</button>}
           </>
         )}
+        <button onClick={() => navigate('/cadastro-usuario')}>
+          Cadastrar Usuário
+        </button>
       </div>
     </header>
   );
