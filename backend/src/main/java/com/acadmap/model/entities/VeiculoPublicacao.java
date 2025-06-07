@@ -28,14 +28,15 @@ import java.util.UUID;
 @Entity
 @Table(name = "veiculopublicacao")
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "tipo")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Evento.class, name = "evento"),
-        @JsonSubTypes.Type(value = Periodico.class, name = "periodico")
-})
+//@JsonTypeInfo(
+//        use = JsonTypeInfo.Id.NAME,
+//        include = JsonTypeInfo.As.PROPERTY,
+//        property = "tipo")
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value = Evento.class, name = "evento"),
+//        @JsonSubTypes.Type(value = Periodico.class, name = "periodico")
+//})
+@JsonDeserialize(as = Periodico.class)
 public abstract class VeiculoPublicacao {
 
   @Id
