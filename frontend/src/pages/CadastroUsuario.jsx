@@ -1,17 +1,13 @@
-import HeaderSistema from '../components/HeaderSistema';
 import '../styles/App.css';
+import HeaderSistema from '../components/HeaderSistema';
 import FormularioCadastro from '../components/FormularioCadastro';
-
-function handleSubmit(e) {
-  e.preventDefault();
-  console.log('Formulário enviado');
-  window.location.href = '/eventos';
-}
+import useLogin from '../hooks/userAuth.js';
 
 function CadastroUsuario() {
+  const { loggedIn } = useLogin();
   return (
     <>
-      <HeaderSistema isCadastro={true} />
+      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
       <div></div>
       <h1>Cadastro Usuario</h1>
       <FormularioCadastro />
