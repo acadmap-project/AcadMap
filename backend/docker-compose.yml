@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  postgres-net:
+    name: up
+
 services:
   db:
     image: postgres:15
@@ -14,5 +18,17 @@ services:
       - ./docker-volumes/scripts-sql:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
+    networks:
+      - postgres-net
 
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "yuriluiz557@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: 12345678
+    ports:
+      - 8081:80
+    networks:
+      - postgres-net
