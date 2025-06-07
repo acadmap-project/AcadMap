@@ -15,9 +15,10 @@ public class AprovarVeiculoService {
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
 
 
-    public VeiculoPublicacao aprovar(UUID uuid){
+    public VeiculoPublicacao aprovar(UUID veiculoUuid){
 
-        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(uuid).orElseThrow();
+
+        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow();
         veiculoPublicacaoAtual.setStatus(StatusVeiculo.aceito);
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 

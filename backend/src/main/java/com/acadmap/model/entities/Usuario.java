@@ -26,10 +26,6 @@ public class Usuario {
   @Column(name = "id_usuario", columnDefinition = "uuid")
   private UUID idUsuario;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_programa", nullable = false)
-  private Programa programa;
-
   @Column(name = "nome", nullable = false, length = 255)
   private String nome;
 
@@ -47,11 +43,6 @@ public class Usuario {
   @ColumnDefault("true")
   private Boolean flagAtivo = true;
 
-  @ManyToMany
-  @JoinTable(name = "areapesquisausuario", joinColumns = @JoinColumn(name = "id_usuario"),
-      inverseJoinColumns = @JoinColumn(name = "id_area_pesquisa"))
-  private Set<AreaPesquisa> areasPesquisa = new HashSet<>();
-
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   private Set<Log> logs = new HashSet<>();
 
@@ -60,5 +51,14 @@ public class Usuario {
 
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
   private Set<VeiculoPublicacao> veiculosPublicacao = new HashSet<>();
+
+  @ManyToMany
+  @JoinTable(name = "areapesquisausuario", joinColumns = @JoinColumn(name = "id_usuario"),
+          inverseJoinColumns = @JoinColumn(name = "id_area_pesquisa"))
+  private Set<AreaPesquisa> areasPesquisa = new HashSet<>();
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_programa", nullable = false)
+  private Programa programa;
 
 }

@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString(of = "idVeiculo")
 @EqualsAndHashCode(of = "idVeiculo")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idVeiculo")

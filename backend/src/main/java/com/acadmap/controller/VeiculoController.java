@@ -2,7 +2,6 @@ package com.acadmap.controller;
 
 
 import com.acadmap.model.entities.Usuario;
-import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import com.acadmap.repository.EventoRepository;
@@ -30,11 +29,12 @@ public class VeiculoController {
     @PutMapping("/aprovar-veiculo/{id}")
     public ResponseEntity<?> aprovaPublicacao(
             @RequestHeader("X-User-Id") UUID idUser,
-            @PathVariable("id") UUID uuid
+            @PathVariable("id") UUID idVeiculo
     ){
         Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo())){
-            return new ResponseEntity<>(aprovarVeiculoService.aprovar(uuid), HttpStatus.ACCEPTED) ;
+        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo()) &&
+                veiculoPublicacaoRepository.existsByUsuario(usuario)){
+            return new ResponseEntity<>(aprovarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
                 ResponseEntity.badRequest().build(),
@@ -58,11 +58,12 @@ public class VeiculoController {
 
 
 
-    @GetMapping("/pendente")
-    public ResponseEntity<?> veiculosPendentes(){
-
-        System.out.println(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente));
-        if (veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente).isEmpty()){
+    @GetMapping("/periodico-pendente")
+    public ResponseEntity<?> veiculosPendentes(
+            @RequestHeader("X-User-Id") UUID idUser
+    ){
+        System.out.println(veiculoPublicacaoRepository.findAll());
+        if (veiculoPublicacaoRepository.findAll().isEmpty()){
             return new ResponseEntity<>(ResponseEntity.notFound().build(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente), HttpStatus.OK);
