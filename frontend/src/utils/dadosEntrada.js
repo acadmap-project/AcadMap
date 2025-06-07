@@ -44,6 +44,12 @@ export const dadosEntradaCadastro = [
     required : true
   },
   {
+    label : 'Confirmar Senha*',
+    name : 'cadastro-confirmar-senha',
+    placeholder : '*******',
+    required : true
+  },
+  {
     label : 'Área de Pesquisa*',
     name : 'area-pesquisa',
     type : 'select',
@@ -59,12 +65,7 @@ export const dadosEntradaCadastro = [
     options : areasProgramaDisponiveis,
     required : true
   },
-  {
-    label : 'Confirmar Senha*',
-    name : 'cadastro-confirmar-senha',
-    placeholder : '*******',
-    required : true
-  }
+  
 ]
 
 const dadosEntradaEvento = [
