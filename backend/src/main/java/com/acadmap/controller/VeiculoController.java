@@ -32,9 +32,8 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser,
             @PathVariable("id") UUID idVeiculo
     ){
-        Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo()) &&
-                veiculoPublicacaoRepository.existsByUsuario(usuario)){
+        if (!this.isPesquisador(idUser) &&
+                !this.existeUsuarioPublicacao(idUser)){
             return new ResponseEntity<>(aprovarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
@@ -48,8 +47,8 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser,
             @PathVariable("id") UUID uuid
     ){
-        Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo())){
+        if (!this.isPesquisador(idUser) &&
+                !this.existeUsuarioPublicacao(idUser)){
             return new ResponseEntity<>(aprovarVeiculoService.negar(uuid), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
@@ -71,6 +70,13 @@ public class VeiculoController {
     }
 
 
+    private boolean isPesquisador(UUID idUser){
+        Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
+        return usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo());
+    }
 
+    private boolean existeUsuarioPublicacao(UUID idUser){
+        return veiculoPublicacaoRepository.existsByUsuario(usuarioRepository.findById(idUser).orElseThrow());
+    }
 
 }
