@@ -1,36 +1,10 @@
-import { useState,useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
-import axios from 'axios';
-import renomearKey from '../utils/renomearKey';
+import useAreas from '../hooks/useAreas';
 
 function FormularioEvento() {
-  const [areas, setAreas] = useState([]);
-  // use effect to get areas
-  useEffect(() => {
-    /*
-      Efeito colateral para buscar áreas disponíveis no sistema.
-      Pode ser usado para popular campos de seleção ou dropdowns.
-    */
-    const fetchAreas = async () => {
-      try {
-        const response = await axios.get(
-          'http://localhost:8080/api/areas/listar'
-        );
-        let dados = response.data;
-        for (let i = 0; i < dados.length; i++) {
-          dados[i] = renomearKey(dados[i], "nome", "label");
-          dados[i] = renomearKey(dados[i], "id", "value");
-        }
-        setAreas(dados);
-      } catch (error) {
-        console.error('Erro ao carregar áreas:', error);
-      }
-    };
-
-    fetchAreas();
-  }, []);
+  const areas = useAreas();
 
   const methods = useForm({
     resolver: zodResolver(CadastrarEventoSchema),

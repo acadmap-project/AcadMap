@@ -1,60 +1,17 @@
-import { useState, useEffect } from 'react';
 import { enviarDadosCadastro, validarDadosCadastro } from '../utils/cadastro';
 import { dadosEntradaCadastro } from '../utils/dadosEntrada';
 import CampoEntrada from './CampoEntrada';
 import GerarSenha from './GerarSenha';
-import axios from 'axios';
-import renomearKey from '../utils/renomearKey';
+import useAreas from '../hooks/useAreas';
+import useProgramas from '../hooks/useProgramas';
 
 function FormularioCadastro() {
   /*
     Componente de formulário para cadastro de usuários do sistema.
     Renderiza campos de entrada com base nos dados fornecidos.
   */
-  const [areas, setAreas] = useState([]);
-  const [programas, setProgramas] = useState([]);
-
-  // use effect to get areas
-  useEffect(() => {
-    /*
-      Efeito colateral para buscar áreas disponíveis no sistema.
-      Pode ser usado para popular campos de seleção ou dropdowns.
-    */
-    const fetchAreas = async () => {
-      try {
-        const response = await axios.get(
-          'http://localhost:8080/api/areas/listar'
-        );
-        let dados = response.data;
-        for (let i = 0; i < dados.length; i++) {
-          dados[i] = renomearKey(dados[i], "nome", "label");
-          dados[i] = renomearKey(dados[i], "id", "value");
-        }
-        setAreas(dados);
-      } catch (error) {
-        console.error('Erro ao carregar áreas:', error);
-      }
-    };
-
-    const fetchProgramas = async () => {
-      try {
-        const response = await axios.get(
-          'http://localhost:8080/api/programa/listar'
-        );
-        let dados = response.data;
-        for (let i = 0; i < dados.length; i++) {
-          dados[i] = renomearKey(dados[i], "nome", "label");
-          dados[i] = renomearKey(dados[i], "id", "value");
-        }
-        setProgramas(dados);
-      } catch (error) {
-        console.error('Erro ao carregar programas:', error);
-      }
-    };
-
-    fetchAreas();
-    fetchProgramas();
-  }, []);
+  const areas = useAreas();
+  const programas = useProgramas();
   function handleSubmit(e) {
     /* 
       Manipula o envio do formulário, impedindo o comportamento padrão e processando os dados do formulário.
