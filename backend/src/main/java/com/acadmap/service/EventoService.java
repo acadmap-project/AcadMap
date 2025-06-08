@@ -4,11 +4,18 @@ import com.acadmap.exception.EventoDuplicadoException;
 import com.acadmap.model.dto.EventoCreateDTO;
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Evento;
+import com.acadmap.model.entities.Programa;
+import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoVeiculo;
 import com.acadmap.repository.AreaPesquisaRepository;
 import com.acadmap.repository.EventoRepository;
+import com.acadmap.repository.ProgramaRepository;
+import com.acadmap.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +25,17 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class EventoService {
 
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final EventoRepository eventoRepository;
+  private final UsuarioRepository usuarioRepository;
+  private final ProgramaRepository programaRepository;
 
-  public EventoService(AreaPesquisaRepository areaPesquisaRepository,
-      EventoRepository eventoRepository) {
-    this.areaPesquisaRepository = areaPesquisaRepository;
-    this.eventoRepository = eventoRepository;
-  }
 
   @Transactional
-  public Evento criarEvento(EventoCreateDTO dto) {
+  public Evento criarEvento(EventoCreateDTO dto, UUID uuid) {
     try {
       // 🔍 Verificar duplicidade por nome aproximado
       List<Evento> eventosSimilares =
@@ -51,6 +56,8 @@ public class EventoService {
       evento.setTipo(TipoVeiculo.evento);
       evento.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusVeiculo.pendente);
       evento.setAreasPesquisa(areasPesquisa);
+      Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(uuid).orElseThrow(EntityNotFoundException::new);
+      evento.setUsuario(usuario);
 
       evento.setH5(dto.getH5());
       evento.setLinkEvento(dto.getLinkEvento());
