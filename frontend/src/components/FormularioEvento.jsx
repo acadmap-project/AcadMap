@@ -1,8 +1,37 @@
+import { useState,useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
+import axios from 'axios';
+import renomearKey from '../utils/renomearKey';
 
 function FormularioEvento() {
+  const [areas, setAreas] = useState([]);
+  // use effect to get areas
+  useEffect(() => {
+    /*
+      Efeito colateral para buscar áreas disponíveis no sistema.
+      Pode ser usado para popular campos de seleção ou dropdowns.
+    */
+    const fetchAreas = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:8080/api/areas/listar'
+        );
+        let dados = response.data;
+        for (let i = 0; i < dados.length; i++) {
+          dados[i] = renomearKey(dados[i], "nome", "label");
+          dados[i] = renomearKey(dados[i], "id", "value");
+        }
+        setAreas(dados);
+      } catch (error) {
+        console.error('Erro ao carregar áreas:', error);
+      }
+    };
+
+    fetchAreas();
+  }, []);
+
   const methods = useForm({
     resolver: zodResolver(CadastrarEventoSchema),
   });
@@ -56,7 +85,11 @@ function FormularioEvento() {
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
             {...register('cnpq')}
           >
-            <option value="">Selecione</option>
+            {areas.map(area => (
+              <option key={area.value} value={area.value}>
+                {area.label}
+              </option>
+            ))}
           </select>
           {errors.cnpq && (
             <p className="text-red-500 text-sm mt-1 text-left">

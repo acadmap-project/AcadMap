@@ -62,22 +62,6 @@ export const dadosEntradaCadastro = [
     placeholder: '*******',
     required: true,
   },
-  {
-    label: 'Área de Pesquisa*',
-    name: 'area-pesquisa',
-    type: 'select',
-    placeholder: 'Selecione uma área de pesquisa',
-    options: areasConhecimentoDisponiveis,
-    required: true,
-  },
-  {
-    label: 'Programa*',
-    name: 'programa-cadastro',
-    type: 'select',
-    placeholder: 'Selecione o programa ao qual faz parte...',
-    options: areasProgramaDisponiveis,
-    required: true,
-  },
 ];
 
 const dadosEntradaEvento = [
@@ -85,14 +69,6 @@ const dadosEntradaEvento = [
     label: 'Nome do Evento*',
     name: 'evento-name',
     placeholder: 'Digite o nome do evento...',
-    required: true,
-  },
-  {
-    label: 'Área de Conhecimento*',
-    name: 'area-conhecimento',
-    type: 'select',
-    placeholder: 'Selecione uma área de conhecimento...',
-    options: areasConhecimentoDisponiveis,
     required: true,
   },
   {
@@ -116,15 +92,7 @@ const dadosEntradaEvento = [
     label: 'Link de Repositório (SOL-SBC)',
     name: 'repo-sol-sbc',
     placeholder: 'Digite uma URL válida...',
-  },
-  {
-    label: 'Vínculo com a SBC',
-    name: 'vinculo-sbc',
-    type: 'checkbox-dropdown',
-    placeholder: 'Nenhum',
-    options: vinculosSBCDisponiveis,
-    required: true,
-  },
+  }
 ];
 
 export default dadosEntradaEvento;
