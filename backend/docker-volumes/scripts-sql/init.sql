@@ -35,7 +35,7 @@ CREATE TABLE VeiculoPublicacao (
   CONSTRAINT pk_veiculo_publicacao PRIMARY KEY (id_veiculo),
   CONSTRAINT chk_veiculo_classificacao CHECK (classificacao IN ('a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8')),
   CONSTRAINT chk_veiculo_vinculo_sbc CHECK (vinculo_sbc IN ('sem_vinculo', 'vinculo_top_10', 'vinculo_top_20', 'vinculo_comum')),
-  CONSTRAINT chk_veiculo_adequado_defesa CHECK (adequado_defesa IN ('mestrado', 'doutorado', 'mestrado_douturado', 'nenhum')),
+  CONSTRAINT chk_veiculo_adequado_defesa CHECK (adequado_defesa IN ('mestrado', 'doutorado', 'mestrado_doutorado', 'nenhum')),
   CONSTRAINT chk_veiculo_tipo CHECK (tipo IN ('evento', 'periodico')),
   CONSTRAINT chk_veiculo_status CHECK (status IN ('pendente', 'negado', 'aceito', 'excluido'))
 );
