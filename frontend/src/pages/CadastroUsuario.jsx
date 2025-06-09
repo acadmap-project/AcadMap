@@ -7,6 +7,7 @@ function CadastroUsuario() {
   const { loggedIn } = useLogin();
   return (
     <>
+      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
       <h1>Cadastro Usuario</h1>
       <FormularioCadastro />
     </>
