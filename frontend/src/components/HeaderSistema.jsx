@@ -27,6 +27,17 @@ function HeaderSistema({ isCadastro }) {
                     </Link>
                   </li>
                 )}
+                { isCadastro && (
+                  <li>
+                    <Link
+                      to={'/registros-pendentes'}
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0"
+                      aria-current="page"
+                    >
+                      Registros Pendentes
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link
                     to={'/cadastro-usuario'}
