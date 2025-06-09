@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
-import CadastroEvento from './pages/CadastroEvento';
+import CadastroEvento from './pages/CadastroEvento/CadastroEvento';
+import HeaderSistema from './components/HeaderSistema';
 
 const App = () => {
   return (
