@@ -1,6 +1,7 @@
 package com.acadmap.controller;
 
 
+import com.acadmap.model.dto.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoPerfilUsuario;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -63,11 +65,10 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser
     ){
         usuarioRepository.findByAllAndFetchProgramaEagerly();
-        System.out.println(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente));
         if (veiculoPublicacaoRepository.findAll().isEmpty()){
             return new ResponseEntity<>(ResponseEntity.notFound().build(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente), HttpStatus.OK);
+        return new ResponseEntity<>(this.getVeiculosPendentes(), HttpStatus.OK);
     }
 
 
@@ -80,5 +81,11 @@ public class VeiculoController {
         boolean teste = veiculoPublicacaoRepository.existsByIdVeiculoAndUsuarioIdUsuario(idVeiculo, idUsuario);
         return teste;
     }
+
+    private List<VeiculoPublicacaoDTO> getVeiculosPendentes(){
+        return veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente)
+                .stream().map(VeiculoPublicacaoDTO::new).toList();
+    }
+
 
 }
