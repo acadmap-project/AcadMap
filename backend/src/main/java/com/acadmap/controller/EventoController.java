@@ -21,8 +21,9 @@ public class EventoController {
   private final EventoService eventoService;
 
   @PostMapping("/{id}")
-  public ResponseEntity<Evento> criarEvento(@RequestBody EventoCreateDTO dto, @PathVariable("id") UUID uuid) {
-    Evento evento = this.eventoService.criarEvento(dto, uuid);
+  public ResponseEntity<Evento> criarEvento(@RequestBody EventoCreateDTO dto,
+                                            @RequestHeader("X-User-Id") UUID idUser) {
+    Evento evento = this.eventoService.criarEvento(dto, idUser);
     return ResponseEntity.status(HttpStatus.CREATED).body(evento);
   }
 }
