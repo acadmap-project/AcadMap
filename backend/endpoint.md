@@ -148,3 +148,98 @@ X-User-Id: <UUID do usuário solicitante>
 - `nome`, `email`, `tipoPerfil`, `idPrograma`, `idsAreasPesquisa`: mesmos campos enviados, com confirmação do que foi salvo.
 
 ---
+
+# 📘 API - Cadastro de Evento
+
+**Endpoint:**
+```
+POST /api/eventos/cadastro/{id}
+```
+
+**Descrição:**  
+Cria um novo evento no sistema, *deve ser um usuario já cadastrado no sistema*.
+
+**Headers obrigatórios:**
+```http
+X-User-Id: <UUID do usuário que está tentando aprovar>
+```
+
+**Path Parameters:**
+- `id` – UUID do usuário que está tentando inserir o evento.
+
+**Resposta:**
+- `202 Accepted` – Evento criado com sucesso.
+- `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
+- `400 Bad Request` – Erro na requisição.
+
+---
+
+## 🔸 Requisição
+
+**Corpo esperado:**
+
+```json
+{
+  "nome": "Congresso Nacional de Tecnologia",
+  "classificacao": "A1",
+  "vinculoSbc": "sem_vinculo",
+  "adequadoDefesa": "nenhum",
+  "areasPesquisaIds": [
+    "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "4fb85f64-5717-4562-b3fc-2c963f66afb7"
+  ],
+  "h5": 42,
+  "linkEvento": "https://congresso-tecnologia.org",
+  "linkGoogleScholar": "https://scholar.google.com/congresso-tecnologia",
+  "linkSolSbc": "https://sol.sbc.org.br/congresso-tecnologia"
+}
+```
+
+### Campos:
+- `nome` (string): Nome do evento.
+- `classificação` (string): Classificação em que o evento está (Enum = "a1", "a2"..."a8").
+- `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
+- `adequadoDefesa` (string):  (Enum = "mestrado", "doutorado", "nenhum", "mestrado_doutorado)
+- `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
+- `h5` (integer): Índice H5 do evento.
+- `linkEvento` (string): Link do evento o qual está sendo inserido.
+- `linkGoogleScholar` (string) : Link do googlescholar referente ao evento o qual está sendo inserido
+- `linkSolSbc` (string) : Link repositório SOL-SBC referente ao evento o qual está sendo inserido.
+---
+
+## ✅ Resposta
+
+**Status:** `201 Created`  
+**Body:**
+
+```json
+{
+  "idVeiculo": "1077ced6-3f23-444d-b341-4750cf2bd1e8",
+  "nome": "Congresso Nacional de Tecnologia",
+  "classificacao": "a1",
+  "vinculoSbc": "sem_vinculo",
+  "adequadoDefesa": "nenhum",
+  "tipo": "evento",
+  "status": "pendente",
+  "areasPesquisa": [],
+  "logsVeiculo": [],
+  "h5": 42,
+  "linkEvento": "https://congresso-tecnologia.org",
+  "linkGoogleScholar": "https://scholar.google.com/congresso-tecnologia",
+  "linkSolSbc": "https://sol.sbc.org.br/congresso-tecnologia"
+}
+```
+
+### Campos:
+- `idVeiculo` (UUID): Identificador único do evento criado.
+- `nome`, `classificacao`, `vinculoSbc`, `adequacaoDefesa`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `tipo`, `status` : Valores padrões na criação de Evento. (Evento, Pendente) 
+- `areasPesquisa` : Mesmos campos enviados, com confirmação do que foi salvo.
+- `logsVeiculo` : Na criação de evento é em branco, pois é informação após a verificação realizada pelo auditor ou administrador.
+- `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` : Mesmos campos enviados, com confirmação do que foi salvo.
+
+---
+
+
+
+

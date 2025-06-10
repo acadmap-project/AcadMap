@@ -2,23 +2,20 @@ package com.acadmap.service;
 
 import com.acadmap.exception.EventoDuplicadoException;
 import com.acadmap.model.dto.EventoCreateDTO;
-import com.acadmap.model.entities.AreaPesquisa;
-import com.acadmap.model.entities.Evento;
-import com.acadmap.model.entities.Programa;
-import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.entities.*;
+import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoVeiculo;
-import com.acadmap.repository.AreaPesquisaRepository;
-import com.acadmap.repository.EventoRepository;
-import com.acadmap.repository.ProgramaRepository;
-import com.acadmap.repository.UsuarioRepository;
+import com.acadmap.repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.GeneratedValue;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +29,7 @@ public class EventoService {
   private final EventoRepository eventoRepository;
   private final UsuarioRepository usuarioRepository;
   private final ProgramaRepository programaRepository;
+  private final LogRepository logRepository;
 
 
   @Transactional
@@ -64,7 +62,21 @@ public class EventoService {
       evento.setLinkGoogleScholar(dto.getLinkGoogleScholar());
       evento.setLinkSolSbc(dto.getLinkSolSbc());
 
-      return this.eventoRepository.save(evento);
+
+      Evento eventoSalvo =  this.eventoRepository.save(evento);
+
+      LogVeiculo log = new LogVeiculo();
+      log.setIdLog(UUID.randomUUID());
+      log.setUsuario(usuario);
+      log.setDataHora(LocalDateTime.now());
+      log.setAcao(AcaoLog.adicao_veiculo);
+
+      logRepository.save(log);
+
+      eventoSalvo.getLogsVeiculo().add(log);
+
+      return eventoSalvo;
+
 
     } catch (EventoDuplicadoException e) {
       throw e;

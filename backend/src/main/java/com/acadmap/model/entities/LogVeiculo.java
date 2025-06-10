@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 
 // --- LogVeiculo (Subclasse de Log) ---
 @Entity
+@NoArgsConstructor
 @Table(name = "logveiculo")
 @PrimaryKeyJoinColumn(name = "id_log")
 public class LogVeiculo extends Log {
