@@ -182,4 +182,67 @@ INSERT INTO public.veiculopublicacao (id_veiculo, id_usuario, nome, classificaca
 ('00000000-aaaa-bbbb-cccc-000000000010', '11111111-aaaa-bbbb-cccc-000000000010', 'Colóquio de Redes Neurais', 'a1', 'sem_vinculo', 'nenhum', 'evento', 'negado');
 INSERT INTO public.evento (id_veiculo, h5, link_evento, link_google_scholar, link_sol_sbc) VALUES
 ('00000000-aaaa-bbbb-cccc-000000000010', 12, 'https://evento10.com', 'https://scholar.google.com/evento10', 'https://sol.sbc.org.br/evento10');
-
+INSERT INTO public.veiculopublicacao (
+    id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status
+) VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000011', '11111111-aaaa-bbbb-cccc-000000000011', 'Revista Brasileira de Computação', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito'
+);
+INSERT INTO public.periodico (
+    id_veiculo, issn, percentil, link_jcr, link_scopus, link_google_scholar, qualis_antigo, flag_predatorio
+) VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000011', 9, 90, 'https://jcr1.com', 'https://scopus1.com', 'https://scholar.google.com/per1', 'a1', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000012', '11111111-aaaa-bbbb-cccc-000000000012', 'Journal of Advanced Software', 'a2', 'vinculo_top_20', 'mestrado', 'periodico', 'pendente'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000012', 4, 75, 'https://jcr2.com', 'https://scopus2.com', 'https://scholar.google.com/per2', 'a2', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000013', '11111111-aaaa-bbbb-cccc-000000000013', 'Revista de Inteligência Artificial', 'a2', 'sem_vinculo', 'nenhum', 'periodico', 'aceito'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000013', 6, 85, 'https://jcr3.com', 'https://scopus3.com', 'https://scholar.google.com/per3', 'a1', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000014', '11111111-aaaa-bbbb-cccc-000000000014', 'International Journal of Big Data', 'a2', 'vinculo_comum', 'doutorado', 'periodico', 'negado'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000014', 8, 60, 'https://jcr4.com', 'https://scopus4.com', 'https://scholar.google.com/per4', 'b1', true
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000015', '11111111-aaaa-bbbb-cccc-000000000015', 'Machine Learning Journal', 'a1', 'vinculo_top_10', 'mestrado_doutorado', 'periodico', 'aceito'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000015', 3, 95, 'https://jcr5.com', 'https://scopus5.com', 'https://scholar.google.com/per5', 'a1', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000016', '11111111-aaaa-bbbb-cccc-000000000016', 'Revista de Redes Neurais', 'a1', 'sem_vinculo', 'mestrado', 'periodico', 'pendente'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000016', 2, 70, 'https://jcr6.com', 'https://scopus6.com', 'https://scholar.google.com/per6', 'b2', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000017', '11111111-aaaa-bbbb-cccc-000000000017', 'Journal of Cloud Computing', 'a8', 'vinculo_top_20', 'nenhum', 'periodico', 'aceito'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000017', 123, 80, 'https://jcr7.com', 'https://scopus7.com', 'https://scholar.google.com/per7', 'a2', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000018', '11111111-aaaa-bbbb-cccc-000000000018', 'Revista Brasileira de Engenharia de Software', 'a7', 'vinculo_comum', 'mestrado', 'periodico', 'excluido'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000018', 23, 65, 'https://jcr8.com', 'https://scopus8.com', 'https://scholar.google.com/per8', 'b3', true
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000019', '11111111-aaaa-bbbb-cccc-000000000019', 'Computação e Sociedade', 'a4', 'sem_vinculo', 'nenhum', 'periodico', 'negado'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000019', 124, 50, 'https://jcr9.com', 'https://scopus9.com', 'https://scholar.google.com/per9', 'b4', false
+);
+INSERT INTO public.veiculopublicacao VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000020', '11111111-aaaa-bbbb-cccc-000000000020', 'Journal of Programming Languages', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito'
+);
+INSERT INTO public.periodico VALUES (
+    '00000000-aaaa-bbbb-dddd-000000000020', 4321, 88, 'https://jcr10.com', 'https://scopus10.com', 'https://scholar.google.com/per10', 'a2', false
+);
