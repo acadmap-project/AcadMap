@@ -185,8 +185,8 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
   "vinculoSbc": "sem_vinculo",
   "adequadoDefesa": "nenhum",
   "areasPesquisaIds": [
-    "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "4fb85f64-5717-4562-b3fc-2c963f66afb7"
+    "c3398a61-b985-42af-9fe5-d6bddd971a87",
+    "a3c5f2a4-081a-4a17-8c8b-9a60c431c931"
   ],
   "h5": 42,
   "linkEvento": "https://congresso-tecnologia.org",
@@ -221,23 +221,27 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
   "adequadoDefesa": "nenhum",
   "tipo": "evento",
   "status": "pendente",
-  "areasPesquisa": [],
-  "logsVeiculo": [],
   "h5": 42,
   "linkEvento": "https://congresso-tecnologia.org",
   "linkGoogleScholar": "https://scholar.google.com/congresso-tecnologia",
-  "linkSolSbc": "https://sol.sbc.org.br/congresso-tecnologia"
+  "linkSolSbc": "https://sol.sbc.org.br/congresso-tecnologia",
+  "areasPesquisaIds": [
+    "a3c5f2a4-081a-4a17-8c8b-9a60c431c931",
+    "c3398a61-b985-42af-9fe5-d6bddd971a87"
+  ],
+  "usuario": {
+    "idUsuario": "11111111-aaaa-bbbb-cccc-000000000027",
+    "nome": "Isabela Neves"
+  }
 }
 ```
 
 ### Campos:
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome`, `classificacao`, `vinculoSbc`, `adequacaoDefesa`: Mesmos campos enviados, com confirmação do que foi salvo.
-- `tipo`, `status` : Valores padrões na criação de Evento. (Evento, Pendente) 
-- `areasPesquisa` : Mesmos campos enviados, com confirmação do que foi salvo.
-- `logsVeiculo` : Na criação de evento é em branco, pois é informação após a verificação realizada pelo auditor ou administrador.
-- `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` : Mesmos campos enviados, com confirmação do que foi salvo.
-
+- `tipo`, `status` : Valores padrões na criação de Evento. (Evento, Pendente)
+- `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` , `areaPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
 ---
 
 

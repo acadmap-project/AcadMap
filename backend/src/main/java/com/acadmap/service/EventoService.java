@@ -2,6 +2,8 @@ package com.acadmap.service;
 
 import com.acadmap.exception.EventoDuplicadoException;
 import com.acadmap.model.dto.EventoCreateDTO;
+import com.acadmap.model.dto.EventoResponseDTO;
+import com.acadmap.model.dto.UsuarioResponseDTO;
 import com.acadmap.model.entities.*;
 import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.model.enums.StatusVeiculo;
@@ -12,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.jdbc.Expectation;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +33,11 @@ public class EventoService {
   private final UsuarioRepository usuarioRepository;
   private final ProgramaRepository programaRepository;
   private final LogRepository logRepository;
+  private final LogService logService;
 
 
   @Transactional
-  public Evento criarEvento(EventoCreateDTO dto, UUID uuid) {
+  public EventoResponseDTO criarEvento(EventoCreateDTO dto, UUID uuid) {
     try {
       // 🔍 Verificar duplicidade por nome aproximado
       List<Evento> eventosSimilares =
@@ -65,17 +69,9 @@ public class EventoService {
 
       Evento eventoSalvo =  this.eventoRepository.save(evento);
 
-      LogVeiculo log = new LogVeiculo();
-      log.setIdLog(UUID.randomUUID());
-      log.setUsuario(usuario);
-      log.setDataHora(LocalDateTime.now());
-      log.setAcao(AcaoLog.adicao_veiculo);
+      this.logService.registrarCadastroEvento(eventoSalvo, usuario);
 
-      logRepository.save(log);
-
-      eventoSalvo.getLogsVeiculo().add(log);
-
-      return eventoSalvo;
+      return new EventoResponseDTO(eventoSalvo);
 
 
     } catch (EventoDuplicadoException e) {

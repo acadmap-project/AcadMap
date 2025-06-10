@@ -28,8 +28,6 @@ public class EventoCreateDTO {
 
   private Set<UUID> areasPesquisaIds;
 
-  private Set<LogVeiculo> log ;
-
   private Integer h5;
 
   private String linkEvento;
