@@ -27,7 +27,7 @@ function HeaderSistema({ isCadastro }) {
                     </Link>
                   </li>
                 )}
-                { isCadastro && (
+                {isCadastro && (
                   <li>
                     <Link
                       to={'/registros-pendentes'}
@@ -55,7 +55,7 @@ function HeaderSistema({ isCadastro }) {
                   >
                     Cadastrar Evento
                   </Link>
-                </li>                
+                </li>
               </ul>
             </div>
           </div>

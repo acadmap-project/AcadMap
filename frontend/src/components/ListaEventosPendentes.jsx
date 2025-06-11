@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 function ListaEventosPendentes() {
-    /*
+  /*
         Lista de eventos pendentes para o usuário autenticado.
         Faz uma requisição para a API para buscar pendências
         e exibe uma lista com o nome e status de cada evento.

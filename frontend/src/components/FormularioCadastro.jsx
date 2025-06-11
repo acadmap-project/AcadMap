@@ -1,11 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { dadosEntradaCadastro } from '../utils/dadosEntrada';
-import CampoEntrada from './CampoEntrada';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
+import { FormProvider, useForm } from 'react-hook-form';
 import useProgramas from '../hooks/useProgramas';
-
-import { useForm } from 'react-hook-form';
+import { validarDadosCadastro, enviarDadosCadastro } from '../utils/cadastro';
 import { CadastrarUsuarioSchema } from '../schemas/CadastrarUsuarioSchema';
 
 function FormularioCadastro() {
@@ -15,7 +13,7 @@ function FormularioCadastro() {
   */
   const areas = useAreas();
   const programas = useProgramas();
-  function handleSubmit(e) {
+  function submeterCadastro(e) {
     /* 
       Manipula o envio do formulário, impedindo o comportamento padrão e processando os dados do formulário.
       @param {Event} e - O evento de envio do formulário.
@@ -27,21 +25,25 @@ function FormularioCadastro() {
     const parsedData = validarDadosCadastro(data);
     enviarDadosCadastro(parsedData);
     console.log('Form data log:', parsedData);
-
-  const { handleSubmit, register, formState: {errors} } = useForm({
-    resolver: zodResolver(CadastrarUsuarioSchema)
-  })
   }
 
+  const methods = useForm({
+    resolver: zodResolver(CadastrarUsuarioSchema),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = methods;
+
   return (
-    <>
+    <FormProvider {...methods}>
       <form
-        onSubmit={
-    
-    (handleSubmit)}
+        onSubmit={handleSubmit(submeterCadastro)}
         className="grid grid-cols-2 items-end max-w-lg gap-5 mx-auto mt-8"
-      >        
-      <div className="flex flex-col items-start">
+      >
+        <div className="flex flex-col items-start">
           <label
             htmlFor="fullName"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -61,7 +63,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="searchArea"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -83,7 +86,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="searchArea"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -103,7 +107,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="program"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -125,7 +130,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="password"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -144,8 +150,21 @@ function FormularioCadastro() {
                 {errors.password.message}
               </p>
             )}
+            <GerarSenha
+              onGerar={senha => {
+                const senhaInput = document.querySelector(
+                  'input[name="password"]'
+                );
+                senhaInput.value = senha;
+                const confirmSenhaInput = document.querySelector(
+                  'input[name="confirmPassword"]'
+                );
+                confirmSenhaInput.value = senha;
+              }}
+            />
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="confirmPassword"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -166,9 +185,11 @@ function FormularioCadastro() {
             )}
           </div>
         </div>
-        <button className='col-span-2 justify-self-center w-2xs' type="submit">Cadastrar</button>
+        <button className="col-span-2 justify-self-center w-2xs" type="submit">
+          Cadastrar
+        </button>
       </form>
-    </>
+    </FormProvider>
   );
 }
 
