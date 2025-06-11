@@ -77,6 +77,36 @@ X-User-Id: <UUID do usuário solicitante>
 
 **Resposta:**
 - `200 OK` – Lista de veículos pendentes
+- Resposta de exemplo:
+```json
+[
+  {
+    "idVeiculo": "66666666-6666-6666-6666-666666666666",
+    "nome": "International Conference on Algorithms",
+    "classificacao": "a2",
+    "vinculoSbc": "vinculo_comum",
+    "adequadoDefesa": "mestrado_doutorado",
+    "tipo": "evento",
+    "status": "pendente",
+    "usuario": {
+      "idUsuario": "22222222-2222-2222-2222-222222222222",
+      "nome": "Dr. Alan Turing",
+      "email": "alan.turing@email.com",
+      "tipoPerfil": "pesquisador",
+      "idPrograma": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      "idsAreasPesquisa": [
+        "a111a111-b222-c333-d444-e555e555e555"
+      ]
+    },
+    "areasPesquisa": [
+      {
+        "id": "a111a111-b222-c333-d444-e555e555e555",
+        "nome": "Ciência da Computação"
+      }
+    ]
+  }
+]
+```
 - `404 Not Found` – Nenhum veículo pendente encontrado
 
 ---
