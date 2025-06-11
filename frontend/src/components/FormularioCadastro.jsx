@@ -37,14 +37,13 @@ function FormularioCadastro() {
     formState: { errors },
   } = methods;
 
-
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(submeterCadastro)}
         className="grid grid-cols-2 items-end max-w-lg gap-5 mx-auto mt-8"
-      >        
-      <div className="flex flex-col items-start">
+      >
+        <div className="flex flex-col items-start">
           <label
             htmlFor="fullName"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -64,7 +63,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="searchArea"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -86,7 +86,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="searchArea"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -106,7 +107,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="program"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -128,7 +130,8 @@ function FormularioCadastro() {
               </p>
             )}
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="password"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -160,7 +163,8 @@ function FormularioCadastro() {
               }}
             />
           </div>
-        </div>        <div className="flex flex-col items-start">
+        </div>{' '}
+        <div className="flex flex-col items-start">
           <label
             htmlFor="confirmPassword"
             className="block mb-2 text-sm font-medium text-white text-start"
@@ -181,9 +185,11 @@ function FormularioCadastro() {
             )}
           </div>
         </div>
-        <button className='col-span-2 justify-self-center w-2xs' type="submit">Cadastrar</button>
+        <button className="col-span-2 justify-self-center w-2xs" type="submit">
+          Cadastrar
+        </button>
       </form>
-    </ FormProvider>
+    </FormProvider>
   );
 }
 
