@@ -1,8 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
+import useAreas from '../hooks/useAreas';
 
 function FormularioEvento() {
+  const areas = useAreas();
+
   const methods = useForm({
     resolver: zodResolver(CadastrarEventoSchema),
   });
@@ -56,7 +59,11 @@ function FormularioEvento() {
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
             {...register('cnpq')}
           >
-            <option value="">Selecione</option>
+            {areas.map(area => (
+              <option key={area.value} value={area.value}>
+                {area.label}
+              </option>
+            ))}
           </select>
           {errors.cnpq && (
             <p className="text-red-500 text-sm mt-1 text-left">

@@ -2,25 +2,43 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { dadosEntradaCadastro } from '../utils/dadosEntrada';
 import CampoEntrada from './CampoEntrada';
 import GerarSenha from './GerarSenha';
+import useAreas from '../hooks/useAreas';
+import useProgramas from '../hooks/useProgramas';
 
 import { useForm } from 'react-hook-form';
 import { CadastrarUsuarioSchema } from '../schemas/CadastrarUsuarioSchema';
 
 function FormularioCadastro() {
+  /*
+    Componente de formulário para cadastro de usuários do sistema.
+    Renderiza campos de entrada com base nos dados fornecidos.
+  */
+  const areas = useAreas();
+  const programas = useProgramas();
+  function handleSubmit(e) {
+    /* 
+      Manipula o envio do formulário, impedindo o comportamento padrão e processando os dados do formulário.
+      @param {Event} e - O evento de envio do formulário.
+    */
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const parsedData = validarDadosCadastro(data);
+    enviarDadosCadastro(parsedData);
+    console.log('Form data log:', parsedData);
 
   const { handleSubmit, register, formState: {errors} } = useForm({
     resolver: zodResolver(CadastrarUsuarioSchema)
   })
-
-  const testSubmit = (data) => {
-    console.log('cadastro usuário, dados')
-    console.log(data)
   }
 
   return (
     <>
       <form
-        onSubmit={handleSubmit(testSubmit)}
+        onSubmit={
+    
+    (handleSubmit)}
         className="grid grid-cols-2 items-end max-w-lg gap-5 mx-auto mt-8"
       >        
       <div className="flex flex-col items-start">
@@ -54,6 +72,7 @@ function FormularioCadastro() {
             id="cnpq"
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
             {...register('searchArea')}
+            options={areas}
           >
             <option value="">Selecione</option>
           </select>
@@ -95,6 +114,7 @@ function FormularioCadastro() {
             id="cnpq"
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
             {...register('program')}
+            options={programas}
           >
             <option value="">Selecione</option>
           </select>
@@ -146,7 +166,6 @@ function FormularioCadastro() {
             )}
           </div>
         </div>
-
         <button className='col-span-2 justify-self-center w-2xs' type="submit">Cadastrar</button>
       </form>
     </>
