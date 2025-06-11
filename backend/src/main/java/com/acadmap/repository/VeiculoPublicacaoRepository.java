@@ -16,4 +16,6 @@ public interface VeiculoPublicacaoRepository extends JpaRepository<VeiculoPublic
 
   boolean existsByUsuario(Usuario usuario);
 
+  boolean existsByIdVeiculoAndUsuarioIdUsuario(UUID idVeiculo, UUID idUsuario);
+
 }

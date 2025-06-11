@@ -16,22 +16,21 @@ public class AprovarVeiculoService {
 
 
     public VeiculoPublicacao aprovar(UUID veiculoUuid){
+        return this.avaliarPublicacao(veiculoUuid, StatusVeiculo.aceito);
+    }
 
+
+    public VeiculoPublicacao negar(UUID veiculoUuid){
+        return this.avaliarPublicacao(veiculoUuid, StatusVeiculo.negado);
+    }
+
+    public VeiculoPublicacao avaliarPublicacao(UUID veiculoUuid, StatusVeiculo statusVeiculo){
 
         VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow();
-        veiculoPublicacaoAtual.setStatus(StatusVeiculo.aceito);
+        veiculoPublicacaoAtual.setStatus(statusVeiculo);
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 
         return veiculoPublicacaoAtual;
     }
 
-
-    public VeiculoPublicacao negar(UUID uuid){
-
-        VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(uuid).orElseThrow();
-        veiculoPublicacaoAtual.setStatus(StatusVeiculo.negado);
-        veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
-
-        return veiculoPublicacaoAtual;
-    }
 }

@@ -1,9 +1,12 @@
-import { enviarDadosCadastro, validarDadosCadastro } from '../utils/cadastro';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { dadosEntradaCadastro } from '../utils/dadosEntrada';
 import CampoEntrada from './CampoEntrada';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
 import useProgramas from '../hooks/useProgramas';
+
+import { useForm } from 'react-hook-form';
+import { CadastrarUsuarioSchema } from '../schemas/CadastrarUsuarioSchema';
 
 function FormularioCadastro() {
   /*
@@ -24,56 +27,146 @@ function FormularioCadastro() {
     const parsedData = validarDadosCadastro(data);
     enviarDadosCadastro(parsedData);
     console.log('Form data log:', parsedData);
+
+  const { handleSubmit, register, formState: {errors} } = useForm({
+    resolver: zodResolver(CadastrarUsuarioSchema)
+  })
   }
 
   return (
     <>
       <form
-        method="post"
-        onSubmit={handleSubmit}
-        className="formularioCadastro"
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-      >
-        {dadosEntradaCadastro.map((input, index) => (
-          <CampoEntrada
-            key={index}
-            label={input.label}
-            name={input.name}
-            placeholder={input.placeholder}
-            type={input.type}
-            options={input.options}
-            required={input.required}
+        onSubmit={
+    
+    (handleSubmit)}
+        className="grid grid-cols-2 items-end max-w-lg gap-5 mx-auto mt-8"
+      >        
+      <div className="flex flex-col items-start">
+          <label
+            htmlFor="fullName"
+            className="block mb-2 text-sm font-medium text-white text-start"
+          >
+            Nome Completo
+          </label>
+          <input
+            type="text"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Digite..."
+            {...register('fullName')}
           />
-        ))}
-
-        <CampoEntrada
-          label="Área de Atuação"
-          name="cadastro-area"
-          placeholder="Selecione uma área"
-          type="select"
-          options={areas}
-          required={true}
-        />
-        <CampoEntrada
-          label="Programa"
-          name="programa-cadastro"
-          placeholder="Selecione o programa ao qual faz parte..."
-          type="select"
-          options={programas}
-          required={true}
-        />
-
-        <GerarSenha
-          onGerar={senha => {
-            const senhaInput = document.querySelector(
-              'input[name="cadastro-senha"]'
-            );
-            senhaInput.value = senha;
-          }}
-        />
-
-        <span className="mini-bold">Campos Obrigatórios (*)</span>
-        <button type="submit">Salvar e Continuar</button>
+          <div className="h-6 mt-1">
+            {errors.fullName && (
+              <p className="text-red-600 text-sm text-left">
+                {errors.fullName.message}
+              </p>
+            )}
+          </div>
+        </div>        <div className="flex flex-col items-start">
+          <label
+            htmlFor="searchArea"
+            className="block mb-2 text-sm font-medium text-white text-start"
+          >
+            Área de Pesquisa
+          </label>
+          <select
+            id="cnpq"
+            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
+            {...register('searchArea')}
+            options={areas}
+          >
+            <option value="">Selecione</option>
+          </select>
+          <div className="h-6 mt-1">
+            {errors.searchArea && (
+              <p className="text-red-500 text-sm text-left">
+                {errors.searchArea.message}
+              </p>
+            )}
+          </div>
+        </div>        <div className="flex flex-col items-start">
+          <label
+            htmlFor="searchArea"
+            className="block mb-2 text-sm font-medium text-white text-start"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Digite..."
+            {...register('email')}
+          />
+          <div className="h-6 mt-1">
+            {errors.email && (
+              <p className="text-red-600 text-sm text-left">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+        </div>        <div className="flex flex-col items-start">
+          <label
+            htmlFor="program"
+            className="block mb-2 text-sm font-medium text-white text-start"
+          >
+            Programa
+          </label>
+          <select
+            id="cnpq"
+            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
+            {...register('program')}
+            options={programas}
+          >
+            <option value="">Selecione</option>
+          </select>
+          <div className="h-6 mt-1">
+            {errors.program && (
+              <p className="text-red-500 text-sm text-left">
+                {errors.program.message}
+              </p>
+            )}
+          </div>
+        </div>        <div className="flex flex-col items-start">
+          <label
+            htmlFor="password"
+            className="block mb-2 text-sm font-medium text-white text-start"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Digite..."
+            {...register('password')}
+          />
+          <div className="h-6 mt-1">
+            {errors.password && (
+              <p className="text-red-600 text-sm text-left">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+        </div>        <div className="flex flex-col items-start">
+          <label
+            htmlFor="confirmPassword"
+            className="block mb-2 text-sm font-medium text-white text-start"
+          >
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Digite..."
+            {...register('confirmPassword')}
+          />
+          <div className="h-6 mt-1">
+            {errors.confirmPassword && (
+              <p className="text-red-600 text-sm text-left">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
+        </div>
+        <button className='col-span-2 justify-self-center w-2xs' type="submit">Cadastrar</button>
       </form>
     </>
   );

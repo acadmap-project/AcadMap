@@ -2,6 +2,7 @@ package com.acadmap.model.entities;
 
 import com.acadmap.model.enums.AcaoLog;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,11 +18,13 @@ import java.time.LocalDateTime;
 
 // --- LogVeiculo (Subclasse de Log) ---
 @Entity
+@NoArgsConstructor
 @Table(name = "logveiculo")
 @PrimaryKeyJoinColumn(name = "id_log")
 public class LogVeiculo extends Log {
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   @JoinColumn(name = "id_veiculo")
   private VeiculoPublicacao veiculo;
 

@@ -5,13 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,15 +26,15 @@ import java.util.UUID;
 @Entity
 @Table(name = "veiculopublicacao")
 @Inheritance(strategy = InheritanceType.JOINED)
-//@JsonTypeInfo(
-//        use = JsonTypeInfo.Id.NAME,
-//        include = JsonTypeInfo.As.PROPERTY,
-//        property = "tipo")
-//@JsonSubTypes({
-//        @JsonSubTypes.Type(value = Evento.class, name = "evento"),
-//        @JsonSubTypes.Type(value = Periodico.class, name = "periodico")
-//})
-@JsonDeserialize(as = Periodico.class)
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "tipo")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Evento.class, name = "evento"),
+        @JsonSubTypes.Type(value = Periodico.class, name = "periodico")
+})
+//@JsonDeserialize(as = Periodico.class)
 public abstract class VeiculoPublicacao {
 
   @Id

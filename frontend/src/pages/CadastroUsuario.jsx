@@ -4,6 +4,10 @@ import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
 
 function CadastroUsuario() {
+  /* 
+    Página de cadastro de usuário.
+    Exibe o formulário para cadastro de usuários.
+  */
   const { loggedIn } = useLogin();
   return (
     <>

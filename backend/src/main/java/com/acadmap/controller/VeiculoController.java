@@ -1,6 +1,7 @@
 package com.acadmap.controller;
 
 
+import com.acadmap.model.dto.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoPerfilUsuario;
@@ -8,11 +9,13 @@ import com.acadmap.repository.EventoRepository;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
 import com.acadmap.service.AprovarVeiculoService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,9 +35,8 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser,
             @PathVariable("id") UUID idVeiculo
     ){
-        Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo()) &&
-                veiculoPublicacaoRepository.existsByUsuario(usuario)){
+        usuarioRepository.findByAllAndFetchProgramaEagerly();
+        if (!this.isPesquisador(idUser) && !this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
             return new ResponseEntity<>(aprovarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
@@ -46,11 +48,10 @@ public class VeiculoController {
     @PutMapping("/negar-veiculo/{id}")
     public ResponseEntity<?> negarPublicacao(
             @RequestHeader("X-User-Id") UUID idUser,
-            @PathVariable("id") UUID uuid
+            @PathVariable("id") UUID idVeiculo
     ){
-        Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (!usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo())){
-            return new ResponseEntity<>(aprovarVeiculoService.negar(uuid), HttpStatus.ACCEPTED) ;
+        if (!this.isPesquisador(idUser) && !this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
+            return new ResponseEntity<>(aprovarVeiculoService.negar(idVeiculo), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
                 ResponseEntity.badRequest().build(),
@@ -63,14 +64,28 @@ public class VeiculoController {
     public ResponseEntity<?> veiculosPendentes(
             @RequestHeader("X-User-Id") UUID idUser
     ){
-        System.out.println(veiculoPublicacaoRepository.findAll());
+        usuarioRepository.findByAllAndFetchProgramaEagerly();
         if (veiculoPublicacaoRepository.findAll().isEmpty()){
             return new ResponseEntity<>(ResponseEntity.notFound().build(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente), HttpStatus.OK);
+        return new ResponseEntity<>(this.getVeiculosPendentes(), HttpStatus.OK);
     }
 
 
+    private boolean isPesquisador(UUID idUser){
+        Usuario usuario = usuarioRepository.findById(idUser).orElseThrow(EntityNotFoundException::new);
+        return usuario.getTipoPerfil().getCodigo().contains(TipoPerfilUsuario.pesquisador.getCodigo());
+    }
+
+    private boolean usuarioVinculadoPublicacao(UUID idVeiculo, UUID idUsuario){
+        boolean teste = veiculoPublicacaoRepository.existsByIdVeiculoAndUsuarioIdUsuario(idVeiculo, idUsuario);
+        return teste;
+    }
+
+    private List<VeiculoPublicacaoDTO> getVeiculosPendentes(){
+        return veiculoPublicacaoRepository.findByStatus(StatusVeiculo.pendente)
+                .stream().map(VeiculoPublicacaoDTO::new).toList();
+    }
 
 
 }
