@@ -20,7 +20,7 @@ function HeaderSistema({ isCadastro }) {
                   <li>
                     <Link
                       to={'/cadastro-evento'}
-                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0"
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
                       aria-current="page"
                     >
                       Cadastrar Evento / Periódicos
@@ -31,7 +31,7 @@ function HeaderSistema({ isCadastro }) {
                   <li>
                     <Link
                       to={'/registros-pendentes'}
-                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0"
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
                       aria-current="page"
                     >
                       Registros Pendentes
@@ -45,15 +45,6 @@ function HeaderSistema({ isCadastro }) {
                     aria-current="page"
                   >
                     Cadastrar Usuário
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to={'/cadastro-evento'}
-                    className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
-                    aria-current="page"
-                  >
-                    Cadastrar Evento
                   </Link>
                 </li>
               </ul>
