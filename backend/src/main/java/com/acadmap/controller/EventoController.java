@@ -21,7 +21,7 @@ public class EventoController {
 
   private final EventoService eventoService;
 
-  @PostMapping("/{id}")
+  @PostMapping
   public ResponseEntity<EventoResponseDTO> criarEvento(@RequestBody EventoCreateDTO dto,
                                                        @RequestHeader("X-User-Id") UUID idUser) {
     EventoResponseDTO dtoreponseevento = this.eventoService.criarEvento(dto, idUser);

@@ -183,7 +183,7 @@ X-User-Id: <UUID do usuário solicitante>
 
 **Endpoint:**
 ```
-POST /api/eventos/cadastro/{id}
+POST /api/eventos/cadastro/
 ```
 
 **Descrição:**  
