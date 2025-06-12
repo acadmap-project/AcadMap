@@ -9,7 +9,7 @@ volumes:
     name: postgres-vol
 
 services:
-  app:
+  backend:
     build: ./backend
     container_name: acadmap-backend
     restart: on-failure
@@ -24,6 +24,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: "87654321"
     networks:
       - acadmap-net
+    
+  frontend:
+    build: ./frontend
+    container_name: acadmap-frontend
+    ports:
+      - 80:5173
+    networks:
+      - acadmap-net
 
   postgres:
     image: postgres:15
@@ -36,8 +44,8 @@ services:
     volumes:
       - postgres-vol:/var/lib/postgresql/data
       - ./backend/docker-volumes/scripts-sql:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     networks:
       - acadmap-net
     healthcheck:
