@@ -7,13 +7,21 @@ function CadastroUsuario() {
   /* 
     Página de cadastro de usuário.
     Exibe o formulário para cadastro de usuários.
+    Se o usuário logado for admin, mostra opção de seleção de tipo de perfil.
   */
   const { loggedIn } = useLogin();
+
+  // Check if the logged user is an admin
+  const isAdmin = loggedIn.isLoggedIn && loggedIn.userType === 'ADMINISTRADOR';
+
   return (
     <>
-      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
+      <HeaderSistema
+        userType={loggedIn.userType}
+        userName={loggedIn.userName}
+      />
       <h1>Cadastro Usuario</h1>
-      <FormularioCadastro />
+      <FormularioCadastro isAdmin={isAdmin} />
     </>
   );
 }

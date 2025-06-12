@@ -13,7 +13,10 @@ function RegistrosPendentes() {
 
   return (
     <>
-      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
+      <HeaderSistema
+        userType={loggedIn.userType}
+        userName={loggedIn.userName}
+      />
       <h1 className="text-xl">Registros Pendentes</h1>
       <ListaEventosPendentes />
       <ListaPeriodicosPendentes />

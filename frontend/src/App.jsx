@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroEvento from './pages/CadastroEvento';
 import RegistrosPendentes from './pages/RegistrosPendentes';
+import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
 
 const App = () => {
   return (
@@ -18,6 +18,10 @@ const App = () => {
             <Route
               path="/registros-pendentes"
               element={<RegistrosPendentes />}
+            />
+            <Route
+              path="/revisao-cadastro-evento"
+              element={<RevisaoCadastroEvento />}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
