@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
-import { FormProvider, useForm } from 'react-hook-form';
 import useProgramas from '../hooks/useProgramas';
+import { FormProvider, useForm } from 'react-hook-form';
 import { validarDadosCadastro, enviarDadosCadastro } from '../utils/cadastro';
 import { CadastrarUsuarioSchema } from '../schemas/CadastrarUsuarioSchema';
 
@@ -77,7 +77,11 @@ function FormularioCadastro() {
             {...register('searchArea')}
             options={areas}
           >
-            <option value="">Selecione</option>
+            {areas.map(area => (
+              <option key={area.value} value={area.value}>
+                {area.label}
+              </option>
+            ))}
           </select>
           <div className="h-6 mt-1">
             {errors.searchArea && (
@@ -119,9 +123,12 @@ function FormularioCadastro() {
             id="cnpq"
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
             {...register('program')}
-            options={programas}
           >
-            <option value="">Selecione</option>
+            {programas.map(programa => (
+              <option key={programa.value} value={programa.value}>
+                {programa.label}
+              </option>
+            ))}
           </select>
           <div className="h-6 mt-1">
             {errors.program && (
