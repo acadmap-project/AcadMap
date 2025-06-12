@@ -211,9 +211,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```json
 {
   "nome": "Congresso Nacional de Tecnologia",
-  "classificacao": "A1",
   "vinculoSbc": "sem_vinculo",
-  "adequadoDefesa": "nenhum",
   "areasPesquisaIds": [
     "c3398a61-b985-42af-9fe5-d6bddd971a87",
     "a3c5f2a4-081a-4a17-8c8b-9a60c431c931"
@@ -227,9 +225,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 
 ### Campos:
 - `nome` (string): Nome do evento.
-- `classificação` (string): Classificação em que o evento está (Enum = "a1", "a2"..."a8").
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
-- `adequadoDefesa` (string):  (Enum = "mestrado", "doutorado", "nenhum", "mestrado_doutorado)
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
 - `h5` (integer): Índice H5 do evento.
 - `linkEvento` (string): Link do evento o qual está sendo inserido.
@@ -268,7 +264,8 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 
 ### Campos:
 - `idVeiculo` (UUID): Identificador único do evento criado.
-- `nome`, `classificacao`, `vinculoSbc`, `adequacaoDefesa`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `classificacao`, `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
 - `tipo`, `status` : Valores padrões na criação de Evento. (Evento, Pendente)
 - `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` , `areaPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
