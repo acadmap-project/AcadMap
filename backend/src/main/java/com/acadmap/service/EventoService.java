@@ -5,9 +5,7 @@ import com.acadmap.model.dto.EventoCreateDTO;
 import com.acadmap.model.dto.EventoResponseDTO;
 import com.acadmap.model.dto.UsuarioResponseDTO;
 import com.acadmap.model.entities.*;
-import com.acadmap.model.enums.AcaoLog;
-import com.acadmap.model.enums.StatusVeiculo;
-import com.acadmap.model.enums.TipoVeiculo;
+import com.acadmap.model.enums.*;
 import com.acadmap.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.GeneratedValue;
@@ -51,8 +49,8 @@ public class EventoService {
 
       Evento evento = new Evento();
       evento.setIdVeiculo(UUID.randomUUID());
-      evento.setAdequadoDefesa(dto.getAdequadoDefesa());
-      evento.setClassificacao(dto.getClassificacao());
+      evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
+      evento.setClassificacao(ClassificacaoVeiculo.a8);
       evento.setNome(dto.getNome());
       evento.setVinculoSbc(dto.getVinculoSbc());
       evento.setTipo(TipoVeiculo.evento);
