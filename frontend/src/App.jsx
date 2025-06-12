@@ -19,9 +19,9 @@ const App = () => {
               path="/registros-pendentes"
               element={<RegistrosPendentes />}
             />
-            <Route 
-              path="/revisao-cadastro-evento" 
-              element={<RevisaoCadastroEvento />} 
+            <Route
+              path="/revisao-cadastro-evento"
+              element={<RevisaoCadastroEvento />}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>

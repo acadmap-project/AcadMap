@@ -2,25 +2,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
 import useAreas from '../hooks/useAreas';
-import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+} from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 
 const queryClient = new QueryClient();
 
-const postEvent = async (eventData) => {
+const postEvent = async eventData => {
   console.log(eventData);
-  const response = await fetch(
-    'http://localhost:8080/api/eventos/cadastro', {
-    method: "POST",
+  const response = await fetch('http://localhost:8080/api/eventos/cadastro', {
+    method: 'POST',
     headers: {
       'X-User-Id': '11111111-1111-1111-1111-111111111111', // TODO: Implementar lógica para pegar o ID do usuário logado
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(eventData),
-    }
-  );
+  });
 
   if (!response.ok) {
     const errorData = await response.text();
@@ -37,7 +39,11 @@ function FormularioEventoContent() {
   const areas = useAreas();
   const navigate = useNavigate();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [errorInfo, setErrorInfo] = useState({ title: '', message: '', type: 'error' });
+  const [errorInfo, setErrorInfo] = useState({
+    title: '',
+    message: '',
+    type: 'error',
+  });
 
   const methods = useForm({
     resolver: zodResolver(CadastrarEventoSchema),
@@ -51,31 +57,35 @@ function FormularioEventoContent() {
 
   const createEventMutation = useMutation({
     mutationFn: postEvent,
-    onSuccess: (data) => {
+    onSuccess: data => {
       console.log('Api utilizada com sucesso:', data);
       // Navigate to review page with the event data
-      navigate('/revisao-cadastro-evento', { 
-        state: { eventData: data }
+      navigate('/revisao-cadastro-evento', {
+        state: { eventData: data },
       });
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Endpoint para cadastrar evento com erro:', error);
-      
+
       // Handle 409 Conflict error
       if (error.status === 409) {
         setErrorInfo({
           title: 'Evento Já Existe',
-          message: 'Um evento com este nome já foi cadastrado no sistema. Por favor, verifique se não é um evento duplicado ou altere o nome do evento.',
-          type: 'warning'
+          message:
+            'Um evento com este nome já foi cadastrado no sistema. Por favor, verifique se não é um evento duplicado ou altere o nome do evento.',
+          type: 'warning',
         });
         setShowErrorPopup(true);
       } else {
         // Handle other errors
-        const errorMessage = error.response?.data || error.message || 'Erro desconhecido ao cadastrar evento';
+        const errorMessage =
+          error.response?.data ||
+          error.message ||
+          'Erro desconhecido ao cadastrar evento';
         setErrorInfo({
           title: 'Erro ao Cadastrar Evento',
           message: `Ocorreu um erro ao tentar cadastrar o evento: ${errorMessage}`,
-          type: 'error'
+          type: 'error',
         });
         setShowErrorPopup(true);
       }
@@ -86,11 +96,10 @@ function FormularioEventoContent() {
     setShowErrorPopup(false);
   };
 
-
   const onSubmit = data => {
     const eventData = {
       ...data,
-      vinculoSbc: "sem_vinculo", // TODO: Implementar lógica para vincular com a dropdown SBC,
+      vinculoSbc: 'sem_vinculo', // TODO: Implementar lógica para vincular com a dropdown SBC,
       areasPesquisaIds: [data.areasPesquisaIds], // TODO: Implementar lógica para permitir multiplas areas selecionadas
     };
     console.log('Submitting event data:', eventData);

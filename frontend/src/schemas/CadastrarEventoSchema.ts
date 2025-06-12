@@ -14,6 +14,8 @@ export const CadastrarEventoSchema = z.object({
     .int('O índice deve ser um número inteiro'),
   vinculoSBC: z.boolean().optional(), // checkbox é opcional
   linkEvento: z.string().url('Link de acesso deve ser uma URL válida'),
-  linkGoogleScholar: z.string().url('Link do Google Scholar deve ser uma URL válida'),
+  linkGoogleScholar: z
+    .string()
+    .url('Link do Google Scholar deve ser uma URL válida'),
   linkSolSbc: z.string().url('Link do SOL-SBC deve ser uma URL válida'),
 });

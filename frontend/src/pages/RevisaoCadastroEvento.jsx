@@ -10,10 +10,9 @@ function RevisaoCadastroEvento() {
   const location = useLocation();
   const navigate = useNavigate();
   const areas = useAreas();
-  
+
   // Get event data from location state (passed from form)
-  const [eventData, setEventData] = useState(location.state?.eventData || null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [eventData, _] = useState(location.state?.eventData || null);
 
   useEffect(() => {
     // If no event data was passed, redirect back to form
@@ -22,31 +21,31 @@ function RevisaoCadastroEvento() {
     }
   }, [eventData, navigate]);
 
-  const formatVinculoSbc = (vinculo) => {
+  const formatVinculoSbc = vinculo => {
     if (typeof vinculo === 'boolean') {
       return vinculo ? 'Sim' : 'Não';
     }
     return vinculo === 'sem_vinculo' ? 'Sem vínculo' : vinculo;
   };
 
-  const formatStatus = (status) => {
+  const formatStatus = status => {
     const statusMap = {
-      'pendente': 'Pendente',
-      'aprovado': 'Aprovado', 
-      'rejeitado': 'Rejeitado'
+      pendente: 'Pendente',
+      aprovado: 'Aprovado',
+      rejeitado: 'Rejeitado',
     };
     return statusMap[status] || status;
   };
 
-  const formatTipo = (tipo) => {
+  const formatTipo = tipo => {
     const tipoMap = {
-      'evento': 'Evento',
-      'periodico': 'Periódico'
+      evento: 'Evento',
+      periodico: 'Periódico',
     };
     return tipoMap[tipo] || tipo;
   };
 
-  const getAreaName = (areaId) => {
+  const getAreaName = areaId => {
     const area = areas.find(a => a.value === areaId);
     return area ? area.label : areaId;
   };
@@ -65,9 +64,14 @@ function RevisaoCadastroEvento() {
   if (!eventData) {
     return (
       <>
-        <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
+        <HeaderSistema
+          userType={loggedIn.userType}
+          userName={loggedIn.userName}
+        />
         <div className="max-w-4xl mx-auto mt-8 p-6">
-          <p className="text-white text-center">Carregando dados do evento...</p>
+          <p className="text-white text-center">
+            Carregando dados do evento...
+          </p>
         </div>
       </>
     );
@@ -75,7 +79,10 @@ function RevisaoCadastroEvento() {
 
   return (
     <>
-      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
+      <HeaderSistema
+        userType={loggedIn.userType}
+        userName={loggedIn.userName}
+      />
       <div className="max-w-4xl mx-auto mt-8 p-6">
         <h1 className="text-2xl font-bold text-white mb-8 text-center">
           Revisão do Cadastro de Evento
@@ -130,11 +137,17 @@ function RevisaoCadastroEvento() {
                   Status
                 </label>
                 <p className="text-white bg-gray-700 rounded p-2">
-                  <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                    eventData.status === 'pendente' ? 'bg-yellow-600' :
-                    eventData.status === 'aprovado' ? 'bg-green-600' :
-                    eventData.status === 'rejeitado' ? 'bg-red-600' : 'bg-gray-600'
-                  }`}>
+                  <span
+                    className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                      eventData.status === 'pendente'
+                        ? 'bg-yellow-600'
+                        : eventData.status === 'aprovado'
+                          ? 'bg-green-600'
+                          : eventData.status === 'rejeitado'
+                            ? 'bg-red-600'
+                            : 'bg-gray-600'
+                    }`}
+                  >
                     {formatStatus(eventData.status)}
                   </span>
                 </p>
@@ -158,15 +171,17 @@ function RevisaoCadastroEvento() {
                 </label>
                 <p className="text-white bg-gray-700 rounded p-2 break-all">
                   {eventData.linkEvento ? (
-                    <a 
-                      href={eventData.linkEvento} 
-                      target="_blank" 
+                    <a
+                      href={eventData.linkEvento}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-400 hover:text-blue-300 underline"
                     >
                       {eventData.linkEvento}
                     </a>
-                  ) : 'N/A'}
+                  ) : (
+                    'N/A'
+                  )}
                 </p>
               </div>
 
@@ -176,15 +191,17 @@ function RevisaoCadastroEvento() {
                 </label>
                 <p className="text-white bg-gray-700 rounded p-2 break-all">
                   {eventData.linkGoogleScholar ? (
-                    <a 
-                      href={eventData.linkGoogleScholar} 
-                      target="_blank" 
+                    <a
+                      href={eventData.linkGoogleScholar}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-400 hover:text-blue-300 underline"
                     >
                       {eventData.linkGoogleScholar}
                     </a>
-                  ) : 'N/A'}
+                  ) : (
+                    'N/A'
+                  )}
                 </p>
               </div>
 
@@ -194,15 +211,17 @@ function RevisaoCadastroEvento() {
                 </label>
                 <p className="text-white bg-gray-700 rounded p-2 break-all">
                   {eventData.linkSolSbc ? (
-                    <a 
-                      href={eventData.linkSolSbc} 
-                      target="_blank" 
+                    <a
+                      href={eventData.linkSolSbc}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-400 hover:text-blue-300 underline"
                     >
                       {eventData.linkSolSbc}
                     </a>
-                  ) : 'N/A'}
+                  ) : (
+                    'N/A'
+                  )}
                 </p>
               </div>
 
@@ -211,10 +230,11 @@ function RevisaoCadastroEvento() {
                   Áreas de Pesquisa
                 </label>
                 <div className="bg-gray-700 rounded p-2">
-                  {eventData.areasPesquisaIds && eventData.areasPesquisaIds.length > 0 ? (
+                  {eventData.areasPesquisaIds &&
+                  eventData.areasPesquisaIds.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {eventData.areasPesquisaIds.map((areaId, index) => (
-                        <span 
+                        <span
                           key={index}
                           className="bg-blue-600 text-white px-2 py-1 rounded text-sm"
                         >
@@ -235,8 +255,12 @@ function RevisaoCadastroEvento() {
                     Usuário Responsável
                   </label>
                   <div className="bg-gray-700 rounded p-2">
-                    <p className="text-white font-medium">{eventData.usuario.nome}</p>
-                    <p className="text-gray-300 text-sm font-mono">ID: {eventData.usuario.idUsuario}</p>
+                    <p className="text-white font-medium">
+                      {eventData.usuario.nome}
+                    </p>
+                    <p className="text-gray-300 text-sm font-mono">
+                      ID: {eventData.usuario.idUsuario}
+                    </p>
                   </div>
                 </div>
               )}
@@ -246,7 +270,9 @@ function RevisaoCadastroEvento() {
           {/* Classification and Adequacy (if available) */}
           {(eventData.classificacao || eventData.adequadoDefesa) && (
             <div className="mt-6 pt-6 border-t border-gray-600">
-              <h3 className="text-lg font-semibold text-white mb-4">Informações Adicionais</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Informações Adicionais
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {eventData.classificacao && (
                   <div>
