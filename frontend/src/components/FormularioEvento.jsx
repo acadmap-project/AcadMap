@@ -3,6 +3,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
 import useAreas from '../hooks/useAreas';
 import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ErrorPopup from './ErrorPopup';
 
 const queryClient = new QueryClient();
 
@@ -19,11 +22,22 @@ const postEvent = async (eventData) => {
     }
   );
 
+  if (!response.ok) {
+    const errorData = await response.text();
+    const error = new Error(`HTTP ${response.status}: ${errorData}`);
+    error.status = response.status;
+    error.response = { status: response.status, data: errorData };
+    throw error;
+  }
+
   return response.json();
 };
 
 function FormularioEventoContent() {
   const areas = useAreas();
+  const navigate = useNavigate();
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorInfo, setErrorInfo] = useState({ title: '', message: '', type: 'error' });
 
   const methods = useForm({
     resolver: zodResolver(CadastrarEventoSchema),
@@ -39,11 +53,38 @@ function FormularioEventoContent() {
     mutationFn: postEvent,
     onSuccess: (data) => {
       console.log('Api utilizada com sucesso:', data);
+      // Navigate to review page with the event data
+      navigate('/revisao-cadastro-evento', { 
+        state: { eventData: data }
+      });
     },
     onError: (error) => {
       console.error('Endpoint para cadastrar evento com erro:', error);
+      
+      // Handle 409 Conflict error
+      if (error.status === 409) {
+        setErrorInfo({
+          title: 'Evento Já Existe',
+          message: 'Um evento com este nome já foi cadastrado no sistema. Por favor, verifique se não é um evento duplicado ou altere o nome do evento.',
+          type: 'warning'
+        });
+        setShowErrorPopup(true);
+      } else {
+        // Handle other errors
+        const errorMessage = error.response?.data || error.message || 'Erro desconhecido ao cadastrar evento';
+        setErrorInfo({
+          title: 'Erro ao Cadastrar Evento',
+          message: `Ocorreu um erro ao tentar cadastrar o evento: ${errorMessage}`,
+          type: 'error'
+        });
+        setShowErrorPopup(true);
+      }
     },
   });
+
+  const closeErrorPopup = () => {
+    setShowErrorPopup(false);
+  };
 
 
   const onSubmit = data => {
@@ -93,7 +134,11 @@ function FormularioEventoContent() {
             id="areasPesquisaIds"
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
             {...register('areasPesquisaIds')}
+            defaultValue=""
           >
+            <option value="" disabled className="text-gray-400">
+              Selecione
+            </option>
             {areas.map(area => (
               <option key={area.value} value={area.value}>
                 {area.label}
@@ -209,6 +254,15 @@ function FormularioEventoContent() {
           {createEventMutation.isPending ? 'Saving...' : 'Salvar e Continuar'}
         </button>
       </form>
+
+      {/* Error Popup */}
+      <ErrorPopup
+        isOpen={showErrorPopup}
+        onClose={closeErrorPopup}
+        title={errorInfo.title}
+        message={errorInfo.message}
+        type={errorInfo.type}
+      />
     </FormProvider>
   );
 }

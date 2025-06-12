@@ -4,7 +4,9 @@ export const CadastrarEventoSchema = z.object({
   nome: z.string().nonempty({
     message: 'O Título do Evento é obrigatório',
   }),
-  areasPesquisaIds: z.string().optional(),
+  areasPesquisaIds: z.string().nonempty({
+    message: 'Selecione uma área de conhecimento',
+  }),
   h5: z.coerce
     .number({
       message: 'O índice deve ser um número',
