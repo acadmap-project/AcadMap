@@ -2,8 +2,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
 import useAreas from '../hooks/useAreas';
+import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
 
-function FormularioEvento() {
+const queryClient = new QueryClient();
+
+const postEvent = async (eventData) => {
+  console.log(eventData);
+  const response = await fetch(
+    'http://localhost:8080/api/eventos/cadastro', {
+    method: "POST",
+    headers: {
+      'X-User-Id': '11111111-1111-1111-1111-111111111111', // TODO: Implementar lógica para pegar o ID do usuário logado
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(eventData),
+    }
+  );
+
+  return response.json();
+};
+
+function FormularioEventoContent() {
   const areas = useAreas();
 
   const methods = useForm({
@@ -16,20 +35,36 @@ function FormularioEvento() {
     formState: { errors },
   } = methods;
 
-  const testSubmit = data => {
-    console.log('está enviando os dados');
-    console.log(data);
+  const createEventMutation = useMutation({
+    mutationFn: postEvent,
+    onSuccess: (data) => {
+      console.log('Api utilizada com sucesso:', data);
+    },
+    onError: (error) => {
+      console.error('Endpoint para cadastrar evento com erro:', error);
+    },
+  });
+
+
+  const onSubmit = data => {
+    const eventData = {
+      ...data,
+      vinculoSbc: "sem_vinculo", // TODO: Implementar lógica para vincular com a dropdown SBC,
+      areasPesquisaIds: [data.areasPesquisaIds], // TODO: Implementar lógica para permitir multiplas areas selecionadas
+    };
+    console.log('Submitting event data:', eventData);
+    createEventMutation.mutate(eventData);
   };
 
   return (
     <FormProvider {...methods}>
       <form
         className="grid grid-cols-3 gap-5 max-w-lg mx-auto mt-8 items-end"
-        onSubmit={handleSubmit(testSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="col-span-2 flex flex-col items-start">
           <label
-            htmlFor="event"
+            htmlFor="nome"
             className="block mb-2 text-sm font-medium text-white text-start"
           >
             Nome do Evento
@@ -38,26 +73,26 @@ function FormularioEvento() {
             type="text"
             className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
-            {...register('event')}
+            {...register('nome')}
           />
-          {errors.event && (
+          {errors.nome && (
             <p className="text-red-600 text-sm mt-1 text-left">
-              {errors.event.message}
+              {errors.nome.message}
             </p>
           )}
         </div>
 
         <div className="flex flex-col items-start">
           <label
-            htmlFor="cnpq"
+            htmlFor="areasPesquisaIds"
             className="block mb-2 text-sm font-medium text-white text-start"
           >
             Selecione a área de conhecimento
           </label>
           <select
-            id="cnpq"
+            id="areasPesquisaIds"
             className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
-            {...register('cnpq')}
+            {...register('areasPesquisaIds')}
           >
             {areas.map(area => (
               <option key={area.value} value={area.value}>
@@ -65,16 +100,16 @@ function FormularioEvento() {
               </option>
             ))}
           </select>
-          {errors.cnpq && (
+          {errors.areasPesquisaIds && (
             <p className="text-red-500 text-sm mt-1 text-left">
-              {errors.cnpq.message}
+              {errors.areasPesquisaIds.message}
             </p>
           )}
         </div>
 
         <div className="flex flex-col items-start">
           <label
-            htmlFor="indice"
+            htmlFor="h5"
             className="block mb-2 text-sm font-medium text-white text-start"
           >
             Índice H5
@@ -83,11 +118,11 @@ function FormularioEvento() {
             type="text"
             className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500"
             placeholder="númerico (campo)"
-            {...register('indice')}
+            {...register('h5')}
           />
-          {errors.indice && (
+          {errors.h5 && (
             <p className="text-red-500 text-sm mt-1 text-left">
-              {errors.indice.message}
+              {errors.h5.message}
             </p>
           )}
         </div>
@@ -108,7 +143,7 @@ function FormularioEvento() {
 
         <div className="flex flex-col items-start">
           <label
-            htmlFor="accessLink"
+            htmlFor="linkEvento"
             className="block mb-2 text-sm font-medium text-white text-start"
           >
             Link de Acesso
@@ -117,18 +152,18 @@ function FormularioEvento() {
             type="url"
             className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
-            {...register('accessLink')}
+            {...register('linkEvento')}
           />
-          {errors.accessLink && (
+          {errors.linkEvento && (
             <p className="text-red-500 text-sm mt-1 text-left">
-              {errors.accessLink.message}
+              {errors.linkEvento.message}
             </p>
           )}
         </div>
 
         <div className="flex flex-col items-start">
           <label
-            htmlFor="repoScholar"
+            htmlFor="linkGoogleScholar"
             className="block mb-2 text-sm font-medium text-white text-start"
           >
             Link de Repositório (GOOGLE-SCHOLAR)
@@ -137,18 +172,18 @@ function FormularioEvento() {
             type="url"
             className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
-            {...register('repoScholar')}
+            {...register('linkGoogleScholar')}
           />
-          {errors.repoScholar && (
+          {errors.linkGoogleScholar && (
             <p className="text-red-500 text-sm mt-1 text-left">
-              {errors.repoScholar.message}
+              {errors.linkGoogleScholar.message}
             </p>
           )}
         </div>
 
         <div className="flex flex-col items-start">
           <label
-            htmlFor="repoSolSBC"
+            htmlFor="linkSolSbc"
             className="block mb-2 text-sm font-medium text-white text-start"
           >
             Link de Repositório (SOL-SBC)
@@ -157,23 +192,32 @@ function FormularioEvento() {
             type="url"
             className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
-            {...register('repoSolSBC')}
+            {...register('linkSolSbc')}
           />
-          {errors.repoSolSBC && (
+          {errors.linkSolSbc && (
             <p className="text-red-500 text-sm mt-1 text-left">
-              {errors.repoSolSBC.message}
+              {errors.linkSolSbc.message}
             </p>
           )}
         </div>
 
         <button
           type="submit"
+          disabled={createEventMutation.isPending}
           className="col-start-2 text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 border border-gray-700"
         >
-          Salvar e Continuar
+          {createEventMutation.isPending ? 'Saving...' : 'Salvar e Continuar'}
         </button>
       </form>
     </FormProvider>
+  );
+}
+
+function FormularioEvento() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <FormularioEventoContent />
+    </QueryClientProvider>
   );
 }
 
