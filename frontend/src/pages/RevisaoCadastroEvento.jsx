@@ -311,16 +311,15 @@ function RevisaoCadastroEvento() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 mt-8 pt-6 border-t border-gray-600">
-            <button
+          <div className="flex gap-4 mt-8 pt-6 border-t border-gray-600">            <button
               onClick={handleGoBack}
-              className="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+              className="flex-1 !bg-gray-600 hover:!bg-gray-500 !text-white font-medium py-3 px-6 rounded-lg transition-colors"
             >
               Voltar ao Formulário
             </button>
             <button
               onClick={handleConfirm}
-              className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+              className="flex-1 !bg-blue-600 hover:!bg-blue-500 !text-white font-medium py-3 px-6 rounded-lg transition-colors"
             >
               Confirmar e Continuar
             </button>

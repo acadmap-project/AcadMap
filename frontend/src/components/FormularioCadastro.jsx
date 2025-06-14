@@ -168,17 +168,16 @@ function FormularioCadastroContent({ isAdmin = false }) {
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-2 items-end max-w-lg gap-5 mx-auto mt-8"
-      >
-        <div className="flex flex-col items-start">
+      >        <div className="flex flex-col items-start">
           <label
             htmlFor="fullName"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Nome Completo
           </label>
           <input
             type="text"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('fullName')}
           />
@@ -191,21 +190,20 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </div>
         </div>
         {/* User Type Dropdown - Only for Admin */}
-        {isAdmin && (
-          <div className="flex flex-col items-start">
+        {isAdmin && (          <div className="flex flex-col items-start">
             <label
               htmlFor="tipoPerfil"
-              className="block mb-2 text-sm font-medium text-white text-start"
+              className="block mb-2 text-sm font-medium text-gray-900 text-start"
             >
               Tipo de Perfil
             </label>
             <select
               id="tipoPerfil"
-              className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
               {...register('tipoPerfil')}
               defaultValue=""
             >
-              <option value="" disabled className="text-gray-400">
+              <option value="" disabled className="text-gray-500">
                 Selecione
               </option>
               <option value="PESQUISADOR">Pesquisador</option>
@@ -219,21 +217,20 @@ function FormularioCadastroContent({ isAdmin = false }) {
               )}
             </div>
           </div>
-        )}
-        <div className="flex flex-col items-start">
+        )}        <div className="flex flex-col items-start">
           <label
             htmlFor="searchArea"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Área de Pesquisa
           </label>
           <select
             id="searchArea"
-            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
             {...register('searchArea')}
             defaultValue=""
           >
-            <option value="" disabled className="text-gray-400">
+            <option value="" disabled className="text-gray-500">
               Selecione
             </option>
             {areas.map(area => (
@@ -249,17 +246,16 @@ function FormularioCadastroContent({ isAdmin = false }) {
               </p>
             )}
           </div>
-        </div>{' '}
-        <div className="flex flex-col items-start">
+        </div>{' '}        <div className="flex flex-col items-start">
           <label
             htmlFor="searchArea"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Email
           </label>
           <input
             type="email"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('email')}
           />
@@ -270,21 +266,20 @@ function FormularioCadastroContent({ isAdmin = false }) {
               </p>
             )}
           </div>
-        </div>{' '}
-        <div className="flex flex-col items-start">
+        </div>{' '}        <div className="flex flex-col items-start">
           <label
             htmlFor="program"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Programa
           </label>
           <select
             id="program"
-            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
             {...register('program')}
             defaultValue=""
           >
-            <option value="" disabled className="text-gray-400">
+            <option value="" disabled className="text-gray-500">
               Selecione
             </option>
             {programas.map(programa => (
@@ -300,44 +295,45 @@ function FormularioCadastroContent({ isAdmin = false }) {
               </p>
             )}
           </div>
-        </div>{' '}
-        <div className="flex flex-col items-start">
+        </div>{' '}        <div className="flex flex-col items-start">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Password
-          </label>
-          <input
-            type="password"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Digite..."
-            {...register('password')}
-          />
+          </label>          <div className="flex items-center w-full gap-2">
+            <input
+              type="password"
+              className="border text-sm rounded-lg block flex-1 p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Digite..."
+              {...register('password')}
+            />
+            <div className="w-1/4">
+              <GerarSenha
+                onGerar={senha => {
+                  setValue('password', senha);
+                  setValue('confirmPassword', senha);
+                }}
+              />
+            </div>
+          </div>
           <div className="h-6 mt-1">
             {errors.password && (
               <p className="text-red-600 text-sm text-left">
                 {errors.password.message}
               </p>
             )}
-            <GerarSenha
-              onGerar={senha => {
-                setValue('password', senha);
-                setValue('confirmPassword', senha);
-              }}
-            />
           </div>
-        </div>{' '}
-        <div className="flex flex-col items-start">
+        </div>{' '}<div className="flex flex-col items-start">
           <label
             htmlFor="confirmPassword"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Confirm Password
           </label>
           <input
             type="password"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('confirmPassword')}
           />
@@ -348,9 +344,8 @@ function FormularioCadastroContent({ isAdmin = false }) {
               </p>
             )}
           </div>
-        </div>
-        <button
-          className="col-span-2 justify-self-center w-2xs bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+        </div>        <button
+          className="col-span-2 justify-self-center w-2xs !bg-blue-600 hover:!bg-blue-700 !text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
           type="submit"
           disabled={createUserMutation.isPending}
         >

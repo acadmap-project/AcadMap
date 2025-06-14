@@ -13,9 +13,10 @@ export default function GerarSenha({ onGerar }) {
     <button
       type="button"
       onClick={() => onGerar(gerarSenha())}
-      style={{ marginLeft: 8 }}
+      className="w-full !bg-blue-500 hover:!bg-blue-600 !text-white font-medium py-2 px-2 rounded-lg transition-colors text-xs whitespace-nowrap"
+      title="Gerar Senha Automaticamente"
     >
-      Gerar Senha
+       ⟳
     </button>
   );
 }
