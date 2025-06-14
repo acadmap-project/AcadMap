@@ -16,7 +16,7 @@ export default function GerarSenha({ onGerar }) {
       className="w-full !bg-black hover:!bg-gray-800 !text-white font-medium py-2 px-2 !rounded-none transition-colors text-xs whitespace-nowrap"
       title="Gerar Senha Automaticamente"
     >
-       ⟳
+      ⟳
     </button>
   );
 }

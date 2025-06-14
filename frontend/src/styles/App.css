@@ -10,7 +10,7 @@
 .App {
   background-color: #ffffff;
   min-height: 100vh;
-  color: #213547;
+  color: #000000;
 }
 
 .logo {
@@ -21,7 +21,7 @@
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #000000aa);
 }
 
 .logo.react:hover {

@@ -10,12 +10,12 @@ function CadastroEvento() {
   */
   const { loggedIn } = useLogin();
   return (
-    <>      
-    <HeaderSistema
+    <>
+      <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      <h1 className="text-xl mt-8">Cadastro Evento</h1>
+      <h1 className="mt-8 mb-12">Cadastro de Eventos</h1>
       <FormularioEvento />
     </>
   );

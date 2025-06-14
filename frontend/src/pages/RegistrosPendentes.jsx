@@ -17,7 +17,7 @@ function RegistrosPendentes() {
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      <h1 className="text-xl mt-8">Registros Pendentes</h1>
+      <h1 className="mt-8 mb-12">Registros Pendentes</h1>
       <ListaEventosPendentes />
       <ListaPeriodicosPendentes />
     </>

@@ -3,23 +3,24 @@ import { useTransition } from '@react-spring/web';
 
 let id = 0;
 
-function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
+function Popup({ isOpen, onClose, title, message, type = 'success' }) {
   const refMap = useMemo(() => new WeakMap(), []);
   const cancelMap = useMemo(() => new WeakMap(), []);
   const [items, setItems] = useState([]);
+  const [hasShownCurrent, setHasShownCurrent] = useState(false);
 
   const transitions = useTransition(items, {
-    from: { opacity: 0, transform: 'translateY(-100%)', height: 0 },
+    from: { opacity: 0, transform: 'translateX(100%)', height: 0 },
     keys: item => item.key,
     enter: item => async (next, cancel) => {
       cancelMap.set(item, cancel);
       await next({
         opacity: 1,
-        transform: 'translateY(0%)',
+        transform: 'translateX(0%)',
         height: refMap.get(item)?.offsetHeight || 'auto',
       });
     },
-    leave: { opacity: 0, transform: 'translateY(-100%)', height: 0 },
+    leave: { opacity: 0, transform: 'translateX(100%)', height: 0 },
     onRest: (result, ctrl, item) => {
       setItems(state => state.filter(i => i.key !== item.key));
       if (items.length === 1) {
@@ -28,8 +29,6 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
     },
     config: { tension: 125, friction: 20, precision: 0.1 },
   });
-
-  const [hasShownCurrent, setHasShownCurrent] = useState(false);
 
   useEffect(() => {
     if (isOpen && !hasShownCurrent) {
@@ -54,33 +53,33 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
 
   const getIconColor = itemType => {
     switch (itemType) {
-      case 'error':
-        return 'text-red-600';
-      case 'warning':
-        return 'text-red-600';
+      case 'success':
+        return 'text-green-500';
       case 'info':
-        return 'text-red-600';
+        return 'text-blue-500';
+      case 'warning':
+        return 'text-yellow-500';
       default:
-        return 'text-red-600';
+        return 'text-green-500';
     }
   };
 
   const getBorderColor = itemType => {
     switch (itemType) {
-      case 'error':
-        return 'border-l-red-600';
-      case 'warning':
-        return 'border-l-red-600';
+      case 'success':
+        return 'border-l-green-500';
       case 'info':
-        return 'border-l-red-600';
+        return 'border-l-blue-500';
+      case 'warning':
+        return 'border-l-yellow-500';
       default:
-        return 'border-l-red-600';
+        return 'border-l-green-500';
     }
   };
 
   return (
     <div
-      className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 space-y-2 w-full max-w-2xl px-4"
+      className="fixed top-4 right-4 z-50 space-y-2"
       style={{ pointerEvents: 'none' }}
     >
       {transitions((style, item) => (
@@ -90,13 +89,13 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
             pointerEvents: 'auto',
             willChange: 'transform, opacity, height',
           }}
-          className={`bg-yellow-100 rounded-lg shadow-xl border-l-4 ${getBorderColor(item.type)} w-full overflow-hidden`}
+          className={`bg-white rounded-lg shadow-xl border-l-4 ${getBorderColor(item.type)} max-w-sm w-full mx-4 overflow-hidden`}
         >
-          <div ref={ref => ref && refMap.set(item, ref)} className="p-3 py-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3 flex-1">
-                <div className={`${getIconColor(item.type)}`}>
-                  {item.type === 'error' && (
+          <div ref={ref => ref && refMap.set(item, ref)} className="p-4">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3 flex-1">
+                <div className={`mt-0.5 ${getIconColor(item.type)}`}>
+                  {item.type === 'success' && (
                     <svg
                       className="w-5 h-5"
                       fill="currentColor"
@@ -104,7 +103,7 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
                     >
                       <path
                         fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                         clipRule="evenodd"
                       />
                     </svg>
@@ -137,10 +136,10 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-medium text-red-600 mb-1">
+                  <h3 className="text-sm font-medium text-gray-900 mb-1">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-red-600 leading-relaxed">
+                  <p className="text-sm text-gray-600 leading-relaxed">
                     {item.message}
                   </p>
                 </div>
@@ -151,7 +150,7 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
                     cancelMap.get(item)();
                   }
                 }}
-                className="ml-3 text-red-500 hover:text-red-700 transition-colors flex-shrink-0"
+                className="ml-3 text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
               >
                 <svg
                   className="w-4 h-4"
@@ -175,4 +174,4 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
   );
 }
 
-export default ErrorPopup;
+export default Popup;
