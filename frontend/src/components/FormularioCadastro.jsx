@@ -348,9 +348,8 @@ function FormularioCadastroContent({ isAdmin = false }) {
               </p>
             )}
           </div>
-        </div>
-        <button
-          className="col-span-2 justify-self-center w-2xs bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+        </div>        <button
+          className="col-span-2 justify-self-center w-2xs !bg-blue-600 hover:!bg-blue-700 !text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
           type="submit"
           disabled={createUserMutation.isPending}
         >

@@ -253,12 +253,10 @@ function FormularioEventoContent() {
               {errors.linkSolSbc.message}
             </p>
           )}
-        </div>
-
-        <button
+        </div>        <button
           type="submit"
           disabled={createEventMutation.isPending}
-          className="col-start-2 text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 border border-gray-700"
+          className="col-start-2 !text-white !bg-gray-800 hover:!bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 border border-gray-700"
         >
           {createEventMutation.isPending ? 'Saving...' : 'Salvar e Continuar'}
         </button>
