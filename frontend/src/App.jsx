@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroEvento from './pages/CadastroEvento';
+import ValidacaoCadastro from './components/ValidacaoCadastro';
+import GerenciadorCadastros from './pages/GerenciadorCadastros';
 import RegistrosPendentes from './pages/RegistrosPendentes';
 import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
 import CadastroPeriodico from './pages/CadastroPeriodico';
@@ -26,6 +28,8 @@ const App = () => {
               element={<RevisaoCadastroEvento />}
             />
             <Route path="*" element={<NotFound />} />
+            <Route path="/cadastro-pendente" element={<GerenciadorCadastros />} />
+            <Route path="/pendente/:id" element={<ValidacaoCadastro />} />
           </Routes>
         </main>
       </div>
