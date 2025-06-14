@@ -33,6 +33,17 @@ function HeaderSistema({ userType, userName }) {
                     </Link>
                   </li>
                 )}
+                {(userType === 'AUDITOR' || userType === 'PESQUISADOR') && (
+                  <li>
+                    <Link
+                      to={'/cadastro-periodico'}
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
+                      aria-current="page"
+                    >
+                      Cadastrar Periódico
+                    </Link>
+                  </li>
+                )}
                 {userType === 'AUDITOR' && (
                   <li>
                     <Link
