@@ -111,17 +111,16 @@ function FormularioEventoContent() {
       <form
         className="grid grid-cols-3 gap-5 max-w-lg mx-auto mt-8 items-end"
         onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="col-span-2 flex flex-col items-start">
+      >        <div className="col-span-2 flex flex-col items-start">
           <label
             htmlFor="nome"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Nome do Evento
           </label>
           <input
             type="text"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('nome')}
           />
@@ -130,22 +129,20 @@ function FormularioEventoContent() {
               {errors.nome.message}
             </p>
           )}
-        </div>
-
-        <div className="flex flex-col items-start">
+        </div>        <div className="flex flex-col items-start">
           <label
             htmlFor="areasPesquisaIds"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Selecione a área de conhecimento
           </label>
           <select
             id="areasPesquisaIds"
-            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-400"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
             {...register('areasPesquisaIds')}
             defaultValue=""
           >
-            <option value="" disabled className="text-gray-400">
+            <option value="" disabled className="text-gray-500">
               Selecione
             </option>
             {areas.map(area => (
@@ -159,18 +156,16 @@ function FormularioEventoContent() {
               {errors.areasPesquisaIds.message}
             </p>
           )}
-        </div>
-
-        <div className="flex flex-col items-start">
+        </div>        <div className="flex flex-col items-start">
           <label
             htmlFor="h5"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Índice H5
           </label>
           <input
             type="text"
-            className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500"
+            className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
             placeholder="númerico (campo)"
             {...register('h5')}
           />
@@ -179,32 +174,28 @@ function FormularioEventoContent() {
               {errors.h5.message}
             </p>
           )}
-        </div>
-
-        <div className="col-span-2 flex flex-col items-start">
+        </div>        <div className="col-span-2 flex flex-col items-start">
           <label className="inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
               className="sr-only peer"
               {...register('vinculoSBC')}
             />
-            <div className="relative w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            <span className="ms-3 text-sm font-medium text-gray-300">
+            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            <span className="ms-3 text-sm font-medium text-gray-900">
               Vínculo com a SBC
             </span>
           </label>
-        </div>
-
-        <div className="flex flex-col items-start">
+        </div>        <div className="flex flex-col items-start">
           <label
             htmlFor="linkEvento"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Link de Acesso
           </label>
           <input
             type="url"
-            className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border text-sm rounded-lg block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
             {...register('linkEvento')}
           />
@@ -213,18 +204,16 @@ function FormularioEventoContent() {
               {errors.linkEvento.message}
             </p>
           )}
-        </div>
-
-        <div className="flex flex-col items-start">
+        </div>        <div className="flex flex-col items-start">
           <label
             htmlFor="linkGoogleScholar"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Link de Repositório (GOOGLE-SCHOLAR)
           </label>
           <input
             type="url"
-            className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border text-sm rounded-lg block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
             {...register('linkGoogleScholar')}
           />
@@ -233,18 +222,16 @@ function FormularioEventoContent() {
               {errors.linkGoogleScholar.message}
             </p>
           )}
-        </div>
-
-        <div className="flex flex-col items-start">
+        </div>        <div className="flex flex-col items-start">
           <label
             htmlFor="linkSolSbc"
-            className="block mb-2 text-sm font-medium text-white text-start"
+            className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
             Link de Repositório (SOL-SBC)
           </label>
           <input
             type="url"
-            className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            className="border text-sm rounded-lg block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
             {...register('linkSolSbc')}
           />
