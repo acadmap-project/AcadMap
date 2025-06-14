@@ -19,11 +19,11 @@ function HeaderSistema({ userType, userName }) {
               className="hidden w-full md:block md:w-auto"
               id="navbar-default"
             >
-              <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-600 rounded-lg bg-gray-700 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-800 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+              <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-600 rounded-none bg-gray-700 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-800 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                 {(userType === 'AUDITOR' || userType === 'PESQUISADOR') && (
                   <li>                    <Link
                       to={'/cadastro-evento'}
-                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0 md:text-blue-400 hover:text-blue-300"
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
                       aria-current="page"
                     >
                       Cadastrar Evento
@@ -44,7 +44,7 @@ function HeaderSistema({ userType, userName }) {
                 {userType === 'AUDITOR' && (
                   <li>                    <Link
                       to={'/registros-pendentes'}
-                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0 md:text-blue-400 hover:text-blue-300"
+                      className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
                       aria-current="page"
                     >
                       Registros Pendentes
@@ -53,7 +53,7 @@ function HeaderSistema({ userType, userName }) {
                 )}
                 <li>                  <Link
                     to={'/cadastro-usuario'}
-                    className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0 md:text-blue-400 hover:text-blue-300"
+                    className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:p-0"
                     aria-current="page"
                   >
                     Cadastrar Usuário

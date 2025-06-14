@@ -102,7 +102,7 @@ function FormularioPeriodicoContent() {
             <input
               type="text"
               id="periodicoNome"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite o nome do periódico..."
               {...register("periodicoNome")}
             />
@@ -119,19 +119,18 @@ function FormularioPeriodicoContent() {
             </label>
             <select 
               id="areaConhecimento" 
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
               {...register("areaConhecimento")}
+              defaultValue=""
             >
               <option value="" disabled className="text-gray-500">
                 Selecione
               </option>
-              {areas && areas.length > 0 ? areas.map((area) => (
+              {areas.map((area) => (
                 <option key={area.key} value={area.value}>
                   {area.label}
                 </option>
-              )) : (
-                <option value="" disabled>Carregando áreas...</option>
-              )}
+              ))}
             </select>
             {errors.areaConhecimento && (
               <p className="text-red-500 text-sm mt-1">{errors.areaConhecimento.message}</p>
@@ -147,7 +146,7 @@ function FormularioPeriodicoContent() {
             <input
               type="text"
               id="issn"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Ex: 1234-5678"
               {...register("issn")}
             />
@@ -178,7 +177,7 @@ function FormularioPeriodicoContent() {
             <input
               type="url"
               id="linkPeriodico"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite uma URL válida..."
               {...register("linkPeriodico")}
             />
@@ -197,7 +196,7 @@ function FormularioPeriodicoContent() {
             <input
               type="url"
               id="linkRepoScholar"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite uma URL válida..."
               {...register("linkRepoScholar")}
             />
@@ -216,7 +215,7 @@ function FormularioPeriodicoContent() {
             <input
               type="url"
               id="linkRepoJCR"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite uma URL válida..."
               {...register("linkRepoJCR")}
             />
@@ -234,7 +233,7 @@ function FormularioPeriodicoContent() {
             <input
               type="url"
               id="linkRepoScopus"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite uma URL válida..."
               {...register("linkRepoScopus")}
             />
@@ -252,7 +251,7 @@ function FormularioPeriodicoContent() {
             <input
               type="number"
               id="qualis"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite a nota do periódico no antigo QUALIS"
               {...register("qualis")}
             />
@@ -270,7 +269,7 @@ function FormularioPeriodicoContent() {
             <input
               type="number"
               id="percentil"
-              className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
               placeholder="Digite o percentil do periódico (0-100)..."
               min="0"
               max="100"

@@ -163,12 +163,11 @@ function FormularioCadastroContent({ isAdmin = false }) {
     setShowSuccessPopup(false);
   };
 
-  return (
-    <FormProvider {...methods}>
+  return (    <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-2 items-end max-w-lg gap-5 mx-auto mt-8"
-      >        <div className="flex flex-col items-start">
+        className="grid grid-cols-2 items-end max-w-xl gap-x-15 gap-y-2 mx-auto mt-8"
+      ><div className="flex flex-col items-start">
           <label
             htmlFor="fullName"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
@@ -177,7 +176,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </label>
           <input
             type="text"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('fullName')}
           />
@@ -199,7 +198,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
             </label>
             <select
               id="tipoPerfil"
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
               {...register('tipoPerfil')}
               defaultValue=""
             >
@@ -226,7 +225,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </label>
           <select
             id="searchArea"
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
             {...register('searchArea')}
             defaultValue=""
           >
@@ -255,7 +254,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </label>
           <input
             type="email"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('email')}
           />
@@ -275,7 +274,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </label>
           <select
             id="program"
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
             {...register('program')}
             defaultValue=""
           >
@@ -304,7 +303,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </label>          <div className="flex items-center w-full gap-2">
             <input
               type="password"
-              className="border text-sm rounded-lg block flex-1 p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+              className="border text-sm rounded-none block flex-1 p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Digite..."
               {...register('password')}
             />
@@ -333,7 +332,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </label>
           <input
             type="password"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('confirmPassword')}
           />
@@ -343,14 +342,17 @@ function FormularioCadastroContent({ isAdmin = false }) {
                 {errors.confirmPassword.message}
               </p>
             )}
-          </div>
-        </div>        <button
-          className="col-span-2 justify-self-center w-2xs !bg-blue-600 hover:!bg-blue-700 !text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
-          type="submit"
-          disabled={createUserMutation.isPending}
-        >
-          {createUserMutation.isPending ? 'Cadastrando...' : 'Cadastrar'}
-        </button>
+          </div>        </div>        
+
+        <div className="col-span-2 flex justify-center mt-6">
+          <button
+            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50 !font-medium"
+            type="submit"
+            disabled={createUserMutation.isPending}
+          >
+            {createUserMutation.isPending ? 'Cadastrando...' : 'Salvar e Continuar'}
+          </button>
+        </div>
       </form>
 
       <ErrorPopup

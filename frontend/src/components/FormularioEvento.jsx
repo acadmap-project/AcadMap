@@ -106,21 +106,20 @@ function FormularioEventoContent() {
     createEventMutation.mutate(eventData);
   };
 
-  return (
-    <FormProvider {...methods}>
+  return (    <FormProvider {...methods}>
       <form
-        className="grid grid-cols-3 gap-5 max-w-lg mx-auto mt-8 items-end"
+        className="grid grid-cols-3 gap-5 max-w-4xl mx-auto mt-8 items-end"
         onSubmit={handleSubmit(onSubmit)}
-      >        <div className="col-span-2 flex flex-col items-start">
+      >
+        <div className="col-span-2 flex flex-col items-start">
           <label
             htmlFor="nome"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
-            Nome do Evento
-          </label>
-          <input
+            NOME DO EVENTO*
+          </label>          <input
             type="text"
-            className="border  text-sm rounded-lg  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Digite..."
             {...register('nome')}
           />
@@ -134,11 +133,10 @@ function FormularioEventoContent() {
             htmlFor="areasPesquisaIds"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
-            Selecione a área de conhecimento
-          </label>
-          <select
+            ÁREA DE CONHECIMENTO (CNPQ)*
+          </label>          <select
             id="areasPesquisaIds"
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
             {...register('areasPesquisaIds')}
             defaultValue=""
           >
@@ -161,11 +159,10 @@ function FormularioEventoContent() {
             htmlFor="h5"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
-            Índice H5
-          </label>
-          <input
+            ÍNDICE H5*
+          </label>          <input
             type="text"
-            className="border text-sm rounded-lg focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+            className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
             placeholder="númerico (campo)"
             {...register('h5')}
           />
@@ -181,9 +178,8 @@ function FormularioEventoContent() {
               className="sr-only peer"
               {...register('vinculoSBC')}
             />
-            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            <span className="ms-3 text-sm font-medium text-gray-900">
-              Vínculo com a SBC
+            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>            <span className="ms-3 text-sm font-medium text-gray-900">
+              VÍNCULO COM A SBC
             </span>
           </label>
         </div>        <div className="flex flex-col items-start">
@@ -191,11 +187,10 @@ function FormularioEventoContent() {
             htmlFor="linkEvento"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
-            Link de Acesso
-          </label>
-          <input
+            LINK DE ACESSO*
+          </label>          <input
             type="url"
-            className="border text-sm rounded-lg block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
             {...register('linkEvento')}
           />
@@ -209,11 +204,10 @@ function FormularioEventoContent() {
             htmlFor="linkGoogleScholar"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
-            Link de Repositório (GOOGLE-SCHOLAR)
-          </label>
-          <input
+            LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
+          </label>          <input
             type="url"
-            className="border text-sm rounded-lg block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
             {...register('linkGoogleScholar')}
           />
@@ -227,11 +221,10 @@ function FormularioEventoContent() {
             htmlFor="linkSolSbc"
             className="block mb-2 text-sm font-medium text-gray-900 text-start"
           >
-            Link de Repositório (SOL-SBC)
-          </label>
-          <input
+            LINK DE REPOSITÓRIO (SOL-SBC)
+          </label>          <input
             type="url"
-            className="border text-sm rounded-lg block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
             placeholder="URL válida"
             {...register('linkSolSbc')}
           />
@@ -239,14 +232,17 @@ function FormularioEventoContent() {
             <p className="text-red-500 text-sm mt-1 text-left">
               {errors.linkSolSbc.message}
             </p>
-          )}
-        </div>        <button
-          type="submit"
-          disabled={createEventMutation.isPending}
-          className="col-start-2 !text-white !bg-gray-800 hover:!bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 border border-gray-700"
-        >
-          {createEventMutation.isPending ? 'Saving...' : 'Salvar e Continuar'}
-        </button>
+          )}        </div>
+
+        <div className="col-span-3 flex justify-center mt-6">
+          <button
+            type="submit"
+            disabled={createEventMutation.isPending}
+            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50 !font-medium"
+          >
+            {createEventMutation.isPending ? 'Saving...' : 'Salvar e Continuar'}
+          </button>
+        </div>
       </form>
 
       {/* Error Popup */}
@@ -264,6 +260,9 @@ function FormularioEventoContent() {
 function FormularioEvento() {
   return (
     <QueryClientProvider client={queryClient}>
+      <div className="max-w-6xl mx-auto mt-4">
+        <h2 className="text-gray-900 text-lg font-bold mb-4">Campos Obrigatórios (*)</h2>
+      </div>
       <FormularioEventoContent />
     </QueryClientProvider>
   );

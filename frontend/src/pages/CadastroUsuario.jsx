@@ -11,8 +11,7 @@ function CadastroUsuario() {
   */
   const { loggedIn } = useLogin();
 
-  // Check if the logged user is an admin
-  const isAdmin = loggedIn.isLoggedIn && loggedIn.userType === 'ADMINISTRADOR';
+  const isAdmin = loggedIn.userType === 'ADMINISTRADOR';
 
   return (
     <>      

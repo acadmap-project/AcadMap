@@ -17,7 +17,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div className="bg-white p-8 rounded-none shadow-lg max-w-md w-full">
           {loggedIn.isLoggedIn ? (
             <div className="text-center space-y-4">
               <p className="text-lg text-gray-700">
@@ -28,7 +28,7 @@ const Home = () => {
               </p>              <button
                 type="button"
                 onClick={logout}
-                className="w-full !bg-red-500 hover:!bg-red-600 !text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                className="w-full !bg-red-500 hover:!bg-red-600 !text-white font-medium py-3 px-6 rounded-none transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               >
                 Deslogar
               </button>
@@ -40,13 +40,13 @@ const Home = () => {
               </h2>              <button
                 type="button"
                 onClick={() => login({ userType: 'PESQUISADOR' })}
-                className="w-full !bg-blue-500 hover:!bg-blue-600 !text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                className="w-full !bg-blue-500 hover:!bg-blue-600 !text-white font-medium py-3 px-6 rounded-none transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               >
                 Logar como Pesquisador
               </button>              <button
                 type="button"
                 onClick={() => login({ userType: 'AUDITOR' })}
-                className="w-full !bg-green-500 hover:!bg-green-600 !text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                className="w-full !bg-green-500 hover:!bg-green-600 !text-white font-medium py-3 px-6 rounded-none transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
               >
                 Logar como Administrador
               </button>

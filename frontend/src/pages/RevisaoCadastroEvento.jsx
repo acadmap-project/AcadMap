@@ -88,7 +88,7 @@ function RevisaoCadastroEvento() {
           Revisão do Cadastro de Evento
         </h1>
 
-        <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
+        <div className="bg-gray-800 rounded-none p-6 shadow-lg">
           <h2 className="text-xl font-semibold text-white mb-6 border-b border-gray-600 pb-2">
             Dados do Evento Registrado
           </h2>
@@ -313,13 +313,13 @@ function RevisaoCadastroEvento() {
           {/* Action Buttons */}
           <div className="flex gap-4 mt-8 pt-6 border-t border-gray-600">            <button
               onClick={handleGoBack}
-              className="flex-1 !bg-gray-600 hover:!bg-gray-500 !text-white font-medium py-3 px-6 rounded-lg transition-colors"
+              className="flex-1 !bg-gray-600 hover:!bg-gray-500 !text-white font-medium py-3 px-6 rounded-none transition-colors"
             >
               Voltar ao Formulário
             </button>
             <button
               onClick={handleConfirm}
-              className="flex-1 !bg-blue-600 hover:!bg-blue-500 !text-white font-medium py-3 px-6 rounded-lg transition-colors"
+              className="flex-1 !bg-blue-600 hover:!bg-blue-500 !text-white font-medium py-3 px-6 rounded-none transition-colors"
             >
               Confirmar e Continuar
             </button>
