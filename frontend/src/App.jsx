@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroEvento from './pages/CadastroEvento';
+import ValidacaoCadastro from './components/ValidacaoCadastro';
+import GerenciadorCadastros from './pages/GerenciadorCadastros';
 
 const App = () => {
   return (
@@ -15,6 +17,8 @@ const App = () => {
             <Route path="/cadastro-evento" element={<CadastroEvento />} />
             <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/cadastro-pendente" element={<GerenciadorCadastros />} />
+            <Route path="/pendente/:id" element={<ValidacaoCadastro />} />
           </Routes>
         </main>
       </div>
