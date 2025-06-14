@@ -1,5 +1,4 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import HeaderSistema from './HeaderSistema';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function ValidacaoCadastro() {
     const { state } = useLocation();
