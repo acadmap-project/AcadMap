@@ -7,11 +7,11 @@ function useLogin() {
       if (saved && saved !== 'undefined' && saved !== 'null') {
         return JSON.parse(saved);
       }
-      return { isLoggedIn: false };
+      return { isLoggedIn: false, userType: null, userName: null };
     } catch (error) {
       console.error('Error parsing login data from localStorage:', error);
       localStorage.removeItem('login');
-      return { isLoggedIn: false };
+      return { isLoggedIn: false, userType: null, userName: null };
     }
   });
 
@@ -19,14 +19,17 @@ function useLogin() {
     localStorage.setItem('login', JSON.stringify(loggedIn));
   }, [loggedIn]);
 
-  const login = () => {
+  const login = (userData = {}) => {
     setLoggedState({
       isLoggedIn: true,
+      userType: userData.userType || 'PESQUISADOR',
+      userName: userData.userName || null,
+      ...userData,
     });
   };
 
   const logout = () => {
-    setLoggedState({ isLoggedIn: false });
+    setLoggedState({ isLoggedIn: false, userType: null, userName: null });
     localStorage.removeItem('login');
   };
 

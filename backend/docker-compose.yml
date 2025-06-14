@@ -4,6 +4,9 @@ networks:
   postgres-net:
     name: postgres-net
 
+volumes:
+  postgres-vol:
+
 services:
   postgres:
     image: postgres:15
@@ -14,7 +17,7 @@ services:
       POSTGRES_PASSWORD: 87654321
       POSTGRES_DB: dev
     volumes:
-      - ./docker-volumes/postgres-vol:/var/lib/postgresql/data
+      - postgres-vol:/var/lib/postgresql/data
       - ./docker-volumes/scripts-sql:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432

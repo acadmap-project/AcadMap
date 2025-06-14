@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString(of = "idLog")
 @EqualsAndHashCode(of = "idLog")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idLog")

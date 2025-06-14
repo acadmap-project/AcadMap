@@ -10,9 +10,12 @@ function CadastroEvento() {
   */
   const { loggedIn } = useLogin();
   return (
-    <>
-      <HeaderSistema isCadastro={loggedIn.isLoggedIn} />
-      <h1 className="text-xl">Cadastro Evento</h1>
+    <>      
+    <HeaderSistema
+        userType={loggedIn.userType}
+        userName={loggedIn.userName}
+      />
+      <h1 className="text-xl mt-8">Cadastro Evento</h1>
       <FormularioEvento />
     </>
   );

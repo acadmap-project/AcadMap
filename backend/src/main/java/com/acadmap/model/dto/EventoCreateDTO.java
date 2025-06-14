@@ -1,5 +1,6 @@
 package com.acadmap.model.dto;
 
+import com.acadmap.model.entities.LogVeiculo;
 import com.acadmap.model.enums.*;
 import lombok.*;
 
@@ -17,9 +18,7 @@ public class EventoCreateDTO {
 
   private ClassificacaoVeiculo classificacao;
 
-
   private VinculoSBC vinculoSbc;
-
 
   private AdequacaoDefesa adequadoDefesa;
 
@@ -30,7 +29,6 @@ public class EventoCreateDTO {
   private Set<UUID> areasPesquisaIds;
 
   private Integer h5;
-
 
   private String linkEvento;
 

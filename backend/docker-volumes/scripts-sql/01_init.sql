@@ -25,7 +25,7 @@ CREATE TABLE AreaPesquisa (
 
 CREATE TABLE VeiculoPublicacao (
   id_veiculo uuid,
-  id_usuario uuid,
+  id_usuario uuid NOT NULL,
   nome varchar(255) NOT NULL,
   classificacao varchar(2) NOT NULL,
   vinculo_sbc varchar(20) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE Evento (
 
 CREATE TABLE Log (
   id_log uuid,
-  id_usuario uuid,
+  id_usuario uuid NOT NULL,
   data_hora timestamp NOT NULL,
   acao varchar(30) NOT NULL,
   CONSTRAINT pk_log PRIMARY KEY (id_log),
@@ -68,7 +68,7 @@ CREATE TABLE Log (
 
 CREATE TABLE LogExclusao (
   id_log uuid,
-  id_usuario_excluido uuid,
+  id_usuario_excluido uuid NOT NULL,
   CONSTRAINT pk_log_exclusao PRIMARY KEY (id_log)
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE Periodico (
 
 CREATE TABLE LogVeiculo (
   id_log uuid,
-  id_veiculo uuid,
+  id_veiculo uuid NOT NULL,
   CONSTRAINT pk_log_veiculo PRIMARY KEY (id_log)
 );
 
