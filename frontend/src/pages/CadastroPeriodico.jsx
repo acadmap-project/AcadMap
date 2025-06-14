@@ -15,7 +15,7 @@ function CadastroPeriodico() {
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      <h1 className="text-xl">Cadastro Periódico</h1>
+      <h1 className="text-xl mt-8">Cadastro Periódico</h1>
       <FormularioPeriodico />
     </>
   );
