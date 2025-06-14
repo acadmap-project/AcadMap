@@ -11,16 +11,15 @@ function CadastroUsuario() {
   */
   const { loggedIn } = useLogin();
 
-  // Check if the logged user is an admin
-  const isAdmin = loggedIn.isLoggedIn && loggedIn.userType === 'ADMINISTRADOR';
+  const isAdmin = loggedIn.userType === 'ADMINISTRADOR';
 
   return (
-    <>
-      <HeaderSistema
+    <>      
+    <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      <h1>Cadastro Usuario</h1>
+      <h1 className="mt-8">Cadastro Usuario</h1>
       <FormularioCadastro isAdmin={isAdmin} />
     </>
   );
