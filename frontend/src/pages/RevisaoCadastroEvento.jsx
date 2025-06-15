@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
+import SemPermissao from '../components/SemPermissao';
 import useLogin from '../hooks/userAuth';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from '../components/ErrorPopup';
@@ -157,116 +158,123 @@ function RevisaoCadastroEventoContent() {
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      <h1 className="mt-8 mb-25">Cadastro de Evento</h1>
+      {!['AUDITOR', 'ADMINISTRADOR'].includes(loggedIn.userType) ? (
+        <SemPermissao />
+      ) : (
+        <>
+          <h1 className="mt-8 mb-25">Cadastro de Evento</h1>
 
-      <div
-        className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
-        style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-      >
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">NOME DO EVENTO*:</span>{' '}
-          {eventData.nome || 'N/A'}
-        </div>
-
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
-          {eventData.areasPesquisaIds && eventData.areasPesquisaIds.length > 0
-            ? eventData.areasPesquisaIds
-                .map(areaId => getAreaName(areaId))
-                .join(', ')
-            : 'N/A'}
-        </div>
-
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">ÍNDICE H5*:</span>{' '}
-          {eventData.h5 || 'N/A'}
-        </div>
-
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-          {formatVinculoSbc(eventData.vinculoSbc)}
-        </div>
-
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">LINK DE ACESSO*:</span>{' '}
-          {eventData.linkEvento ? (
-            <a
-              href={eventData.linkEvento}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline ml-1"
-            >
-              {eventData.linkEvento}
-            </a>
-          ) : (
-            ' N/A'
-          )}
-        </div>
-
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">
-            LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
-          </span>{' '}
-          {eventData.linkGoogleScholar ? (
-            <a
-              href={eventData.linkGoogleScholar}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline ml-1"
-            >
-              {eventData.linkGoogleScholar}
-            </a>
-          ) : (
-            ' N/A'
-          )}
-        </div>
-
-        <div className="text-sm text-gray-900">
-          <span className="font-medium">LINK DE REPOSITÓRIO (SOL-SBC):</span>{' '}
-          {eventData.linkSolSbc ? (
-            <a
-              href={eventData.linkSolSbc}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline ml-1"
-            >
-              {eventData.linkSolSbc}
-            </a>
-          ) : (
-            ' N/A'
-          )}
-        </div>
-
-        {/* Button - centered */}
-        <div className="w-full flex justify-center mt-6">
-          <button
-            onClick={handleConfirm}
-            disabled={createEventMutation.isPending}
-            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+          <div
+            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
-            {createEventMutation.isPending
-              ? 'Salvando...'
-              : 'Salvar e Continuar'}
-          </button>
-        </div>
-      </div>
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">NOME DO EVENTO*:</span>{' '}
+              {eventData.nome || 'N/A'}
+            </div>
 
-      <ErrorPopup
-        isOpen={showErrorPopup}
-        onClose={closeErrorPopup}
-        title={errorInfo.title}
-        message={errorInfo.message}
-        type={errorInfo.type}
-      />
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
+              {eventData.areasPesquisaIds &&
+              eventData.areasPesquisaIds.length > 0
+                ? eventData.areasPesquisaIds
+                    .map(areaId => getAreaName(areaId))
+                    .join(', ')
+                : 'N/A'}
+            </div>
 
-      <Popup
-        isOpen={showSuccessPopup}
-        onClose={closeSuccessPopup}
-        title={successInfo.title}
-        message={successInfo.message}
-        type={successInfo.type}
-      />
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">ÍNDICE H5*:</span>{' '}
+              {eventData.h5 || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
+              {formatVinculoSbc(eventData.vinculoSbc)}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">LINK DE ACESSO*:</span>{' '}
+              {eventData.linkEvento ? (
+                <a
+                  href={eventData.linkEvento}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {eventData.linkEvento}
+                </a>
+              ) : (
+                ' N/A'
+              )}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">
+                LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
+              </span>{' '}
+              {eventData.linkGoogleScholar ? (
+                <a
+                  href={eventData.linkGoogleScholar}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {eventData.linkGoogleScholar}
+                </a>
+              ) : (
+                ' N/A'
+              )}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">
+                LINK DE REPOSITÓRIO (SOL-SBC):
+              </span>{' '}
+              {eventData.linkSolSbc ? (
+                <a
+                  href={eventData.linkSolSbc}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {eventData.linkSolSbc}
+                </a>
+              ) : (
+                ' N/A'
+              )}
+            </div>
+            <div className="w-full flex justify-center mt-6">
+              <button
+                onClick={handleConfirm}
+                disabled={createEventMutation.isPending}
+                className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+              >
+                {createEventMutation.isPending
+                  ? 'Salvando...'
+                  : 'Salvar e Continuar'}
+              </button>
+            </div>
+          </div>
+
+          <ErrorPopup
+            isOpen={showErrorPopup}
+            onClose={closeErrorPopup}
+            title={errorInfo.title}
+            message={errorInfo.message}
+            type={errorInfo.type}
+          />
+
+          <Popup
+            isOpen={showSuccessPopup}
+            onClose={closeSuccessPopup}
+            title={successInfo.title}
+            message={successInfo.message}
+            type={successInfo.type}
+          />
+        </>
+      )}
     </>
   );
 }
