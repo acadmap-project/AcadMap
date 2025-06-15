@@ -238,14 +238,14 @@ function DetalhePendenteContent() {
         </div>
         <div className="text-sm text-gray-900">
           <span className="font-medium">LINK DE ACESSO:</span>{' '}
-          {registro.linkAcesso ? (
+          {registro.linkEvento ? (
             <a
-              href={registro.linkAcesso}
+              href={registro.linkEvento}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 underline ml-1"
             >
-              {registro.linkAcesso}
+              {registro.linkEvento}
             </a>
           ) : (
             ' N/A'
