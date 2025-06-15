@@ -1,1 +1,3 @@
 frontend/node_modules/
+backend/docker-volumes/postgres-vol
+.vscode/
