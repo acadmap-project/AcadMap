@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CadastrarPeriodicoSchema } from '../schemas/CadastrarPeriodicoSchema';
 import useAreas from '../hooks/useAreas';
+import useLogin from '../hooks/userAuth';
 import {
   QueryClient,
   QueryClientProvider,
@@ -14,14 +15,14 @@ import Popup from './Popup';
 
 const queryClient = new QueryClient();
 
-const postPeriodico = async periodicoData => {
+const postPeriodico = async ({ periodicoData, userId }) => {
   console.log(periodicoData);
   const response = await fetch(
     'http://localhost:8080/api/periodicos/cadastro',
     {
       method: 'POST',
       headers: {
-        'X-User-Id': '11111111-1111-1111-1111-111111111111', // TODO: Implementar lógica para pegar o ID do usuário logado
+        'X-User-Id': userId,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(periodicoData),
@@ -41,6 +42,7 @@ const postPeriodico = async periodicoData => {
 
 function FormularioPeriodicoContent() {
   const areas = useAreas();
+  const { loggedIn } = useLogin();
   const navigate = useNavigate();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
@@ -99,9 +101,11 @@ function FormularioPeriodicoContent() {
       setShowErrorPopup(true);
     },
   });
-
   const onSubmit = data => {
-    createPeriodicoMutation.mutate(data);
+    createPeriodicoMutation.mutate({
+      periodicoData: data,
+      userId: loggedIn.id,
+    });
   };
 
   const closeSuccessPopup = () => {

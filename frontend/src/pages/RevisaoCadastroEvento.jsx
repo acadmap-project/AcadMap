@@ -14,12 +14,12 @@ import '../styles/App.css';
 
 const queryClient = new QueryClient();
 
-const postEvent = async eventData => {
+const postEvent = async ({ eventData, userId }) => {
   console.log(eventData);
   const response = await fetch('http://localhost:8080/api/eventos/cadastro', {
     method: 'POST',
     headers: {
-      'X-User-Id': '11111111-1111-1111-1111-111111111111', // TODO: Implementar lógica para pegar o ID do usuário logado
+      'X-User-Id': userId,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(eventData),
@@ -128,11 +128,13 @@ function RevisaoCadastroEventoContent() {
     const area = areas.find(a => a.value === areaId);
     return area ? area.label : areaId;
   };
-
   const handleConfirm = () => {
     // Handle confirmation logic here
     console.log('Event confirmed:', eventData);
-    createEventMutation.mutate(eventData);
+    createEventMutation.mutate({
+      eventData: eventData,
+      userId: loggedIn.id,
+    });
   };
 
   if (!eventData) {

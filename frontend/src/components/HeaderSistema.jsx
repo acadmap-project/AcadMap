@@ -1,4 +1,5 @@
 import { Outlet, Link } from 'react-router-dom';
+import pfpImage from '../assets/pfp.svg';
 
 function HeaderSistema({ userType, userName }) {
   return (
@@ -13,9 +14,10 @@ function HeaderSistema({ userType, userName }) {
               className="flex items-center space-x-3 pl-4"
               aria-current="page"
             >
+              {' '}
               <img
                 className="w-10 h-10 rounded-full"
-                src="src/assets/pfp.svg"
+                src={pfpImage}
                 alt="Rounded avatar"
               ></img>{' '}
               <span

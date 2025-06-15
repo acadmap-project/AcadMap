@@ -8,6 +8,7 @@ import GerenciadorCadastros from './pages/GerenciadorCadastros';
 import RegistrosPendentes from './pages/RegistrosPendentes';
 import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
 import CadastroPeriodico from './pages/CadastroPeriodico';
+import DetalhePendente from './pages/DetalhePendente';
 
 const App = () => {
   return (
@@ -26,10 +27,13 @@ const App = () => {
             <Route
               path="/revisao-cadastro-evento"
               element={<RevisaoCadastroEvento />}
-            />
+            />{' '}
             <Route path="*" element={<NotFound />} />
-            <Route path="/cadastro-pendente" element={<GerenciadorCadastros />} />
-            <Route path="/pendente/:id" element={<ValidacaoCadastro />} />
+            <Route
+              path="/cadastro-pendente"
+              element={<GerenciadorCadastros />}
+            />
+            <Route path="/pendente/:id" element={<DetalhePendente />} />
           </Routes>
         </main>
       </div>
