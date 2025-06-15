@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
 
 function FormularioEventoContent() {
-  // const areas = useAreas();
   const navigate = useNavigate();
 
   const methods = useForm({
@@ -30,11 +29,7 @@ function FormularioEventoContent() {
     { value: 'vinculo_top_10', label: 'Top 10' },
   ];
 
-  const areas = [
-    { value: 'teste', label: 'Teste' },
-    { value: 'andrey', label: 'Andrey' },
-    { value: 'cardoso', label: 'Cardoso' },
-  ];
+  const areas = useAreas();
 
   const onSubmit = data => {
     const eventData = {

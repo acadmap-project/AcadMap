@@ -5,8 +5,9 @@ export const CadastrarEventoSchema = z
     nome: z.string().nonempty({
       message: 'O Título do Evento é obrigatório',
     }),
-    areasPesquisaIds: z.array(z.string())
-    .min(1, 'Selecione uma área de conhecimento'),
+    areasPesquisaIds: z
+      .array(z.string())
+      .min(1, 'Selecione uma área de conhecimento'),
     h5: z
       .string()
       .nonempty({

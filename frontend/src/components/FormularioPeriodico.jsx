@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Controller } from 'react-hook-form';
 import { CadastrarPeriodicoSchema } from '../schemas/CadastrarPeriodicoSchema';
 import useAreas from '../hooks/useAreas';
 import useLogin from '../hooks/userAuth';
+import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import {
   QueryClient,
   QueryClientProvider,
@@ -66,6 +67,7 @@ function FormularioPeriodicoContent() {
     register,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = methods;
 
@@ -157,21 +159,18 @@ function FormularioPeriodicoContent() {
               >
                 ÁREA DE CONHECIMENTO (CNPQ)*
               </label>
-              <select
-                id="areaConhecimento"
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-                {...register('areaConhecimento')}
-                defaultValue=""
-              >
-                <option value="" disabled className="text-gray-500">
-                  Selecione
-                </option>
-                {areas.map(area => (
-                  <option key={area.key} value={area.value}>
-                    {area.label}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                control={control}
+                name="areaConhecimento"
+                defaultValue={[]}
+                render={({ field }) => (
+                  <MultiSelectDropdown
+                    options={areas}
+                    value={field.value || []}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
               {errors.areaConhecimento && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.areaConhecimento.message}

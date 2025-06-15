@@ -9,7 +9,9 @@ export const CadastrarUsuarioSchema = z
       .nonempty('Informe seu email'),
     password: z.string().nonempty('Informe uma senha'),
     confirmPassword: z.string().nonempty('Confirme sua senha'),
-    searchArea: z.string().nonempty('Selecione uma área de pesquisa'),
+    searchArea: z
+      .array(z.string())
+      .min(1, 'Selecione pelo menos uma área de pesquisa'),
     program: z.string().nonempty('Selecione um programa'),
     tipoPerfil: z.string().optional(),
   })
@@ -28,7 +30,9 @@ export const CadastrarUsuarioAdminSchema = z
       .nonempty('Informe seu email'),
     password: z.string().nonempty('Informe uma senha'),
     confirmPassword: z.string().nonempty('Confirme sua senha'),
-    searchArea: z.string().nonempty('Selecione uma área de pesquisa'),
+    searchArea: z
+      .array(z.string())
+      .min(1, 'Selecione pelo menos uma área de pesquisa'),
     program: z.string().nonempty('Selecione um programa'),
     tipoPerfil: z.string().nonempty('Selecione o tipo de perfil'),
   })
