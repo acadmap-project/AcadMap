@@ -27,7 +27,8 @@ const App = () => {
             <Route
               path="/revisao-cadastro-evento"
               element={<RevisaoCadastroEvento />}
-            />{' '}
+            />
+            <Route path="/validacao-cadastro" element={<ValidacaoCadastro />} />
             <Route path="*" element={<NotFound />} />
             <Route
               path="/cadastro-pendente"

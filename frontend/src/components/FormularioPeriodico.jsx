@@ -17,7 +17,7 @@ import Popup from './Popup';
 const queryClient = new QueryClient();
 
 const postPeriodico = async ({ periodicoData, userId }) => {
-  console.log(periodicoData);
+  console.log('Sending data to API:', periodicoData);
   const response = await fetch(
     'http://localhost:8080/api/periodicos/cadastro',
     {
@@ -78,7 +78,6 @@ function FormularioPeriodicoContent() {
     { value: 'vinculo_top_20', label: 'Top 20' },
     { value: 'vinculo_top_10', label: 'Top 10' },
   ];
-
   const createPeriodicoMutation = useMutation({
     mutationFn: postPeriodico,
     onSuccess: data => {
@@ -90,7 +89,19 @@ function FormularioPeriodicoContent() {
       });
       setShowSuccessPopup(true);
       setTimeout(() => {
-        navigate('/');
+        // Navigate to validation page with the response data
+        navigate('/validacao-cadastro', {
+          state: {
+            id: data.idVeiculo,
+            usuario: data.usuario?.nome || 'Usuario',
+            nomeVeiculo: data.nome,
+            tipo: data.tipo || 'periodico',
+            indice: data.classificacao || 'N/A',
+            link:
+              data.linkJcr || data.linkScopus || data.linkGoogleScholar || '#',
+            ...data,
+          },
+        });
       }, 2000);
     },
     onError: error => {
@@ -104,8 +115,18 @@ function FormularioPeriodicoContent() {
     },
   });
   const onSubmit = data => {
+    // Handle vinculoSBC logic and convert percentil to number
+    const formData = {
+      ...data,
+      vinculoSBC:
+        data.vinculoSbcCheckbox && data.vinculoSBC && data.vinculoSBC !== ''
+          ? data.vinculoSBC
+          : 'sem_vinculo',
+      percentil: Number(data.percentil),
+    };
+
     createPeriodicoMutation.mutate({
-      periodicoData: data,
+      periodicoData: formData,
       userId: loggedIn.id,
     });
   };
@@ -132,36 +153,37 @@ function FormularioPeriodicoContent() {
           style={{ fontFamily: 'Poppins', fontWeight: '400' }}
         >
           <div className="w-3/4 mx-auto grid grid-cols-2 gap-4">
+            {' '}
             <div>
               <label
-                htmlFor="periodicoNome"
+                htmlFor="nome"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 NOME DO PERIÓDICO*
               </label>
               <input
                 type="text"
-                id="periodicoNome"
+                id="nome"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite o nome do periódico..."
-                {...register('periodicoNome')}
+                {...register('nome')}
               />
-              {errors.periodicoNome && (
+              {errors.nome && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.periodicoNome.message}
+                  {errors.nome.message}
                 </p>
               )}
             </div>
             <div>
               <label
-                htmlFor="areaConhecimento"
+                htmlFor="areasPesquisaIds"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 ÁREA DE CONHECIMENTO (CNPQ)*
               </label>
               <Controller
                 control={control}
-                name="areaConhecimento"
+                name="areasPesquisaIds"
                 defaultValue={[]}
                 render={({ field }) => (
                   <MultiSelectDropdown
@@ -171,14 +193,13 @@ function FormularioPeriodicoContent() {
                   />
                 )}
               />
-              {errors.areaConhecimento && (
+              {errors.areasPesquisaIds && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.areaConhecimento.message}
+                  {errors.areasPesquisaIds.message}
                 </p>
               )}
             </div>
           </div>
-
           <div className="w-3/4 mx-auto grid grid-cols-2 gap-4">
             <div>
               <label
@@ -214,7 +235,7 @@ function FormularioPeriodicoContent() {
                         {...register('vinculoSbcCheckbox', {
                           onChange: e => {
                             if (!e.target.checked) {
-                              setValue('vinculoSbc', '');
+                              setValue('vinculoSBC', '');
                             }
                           },
                         })}
@@ -223,16 +244,16 @@ function FormularioPeriodicoContent() {
                       <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
                     </div>
                   </label>
-                </div>
+                </div>{' '}
                 <div className="flex-1">
                   <select
-                    id="vinculoSbc"
+                    id="vinculoSBC"
                     className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300 ${
                       vinculoSbcCheckbox
                         ? 'opacity-100'
                         : 'opacity-0 pointer-events-none'
                     }`}
-                    {...register('vinculoSbc')}
+                    {...register('vinculoSBC')}
                     defaultValue=""
                     disabled={!vinculoSbcCheckbox}
                   >
@@ -245,115 +266,96 @@ function FormularioPeriodicoContent() {
                       </option>
                     ))}
                   </select>
-                  {errors.vinculoSbc && vinculoSbcCheckbox && (
+                  {errors.vinculoSBC && vinculoSbcCheckbox && (
                     <p className="text-red-500 text-sm mt-1 text-left">
-                      {errors.vinculoSbc.message}
+                      {errors.vinculoSBC.message}
                     </p>
                   )}
                 </div>
               </div>
             </div>
-          </div>
+          </div>{' '}
           <div className="w-full grid grid-cols-3 gap-4">
             <div>
               <label
-                htmlFor="linkPeriodico"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE ACESSO*
-              </label>
-              <input
-                type="url"
-                id="linkPeriodico"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite uma URL válida..."
-                {...register('linkPeriodico')}
-              />
-              {errors.linkPeriodico && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.linkPeriodico.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="linkRepoScholar"
+                htmlFor="linkGoogleScholar"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
               </label>
               <input
                 type="url"
-                id="linkRepoScholar"
+                id="linkGoogleScholar"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite uma URL válida..."
-                {...register('linkRepoScholar')}
+                {...register('linkGoogleScholar')}
               />
-              {errors.linkRepoScholar && (
+              {errors.linkGoogleScholar && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.linkRepoScholar.message}
+                  {errors.linkGoogleScholar.message}
                 </p>
               )}
             </div>
             <div>
               <label
-                htmlFor="linkRepoJCR"
+                htmlFor="linkJcr"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 LINK DE REPOSITÓRIO (JCR)
               </label>
               <input
                 type="url"
-                id="linkRepoJCR"
+                id="linkJcr"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite uma URL válida..."
-                {...register('linkRepoJCR')}
+                {...register('linkJcr')}
               />
-              {errors.linkRepoJCR && (
+              {errors.linkJcr && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.linkRepoJCR.message}
+                  {errors.linkJcr.message}
                 </p>
               )}
             </div>
-          </div>
-          <div className="w-full grid grid-cols-3 gap-4">
             <div>
               <label
-                htmlFor="linkRepoScopus"
+                htmlFor="linkScopus"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 LINK DE REPOSITÓRIO (SCOPUS)
               </label>
               <input
                 type="url"
-                id="linkRepoScopus"
+                id="linkScopus"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite uma URL válida..."
-                {...register('linkRepoScopus')}
+                {...register('linkScopus')}
               />
-              {errors.linkRepoScopus && (
+              {errors.linkScopus && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.linkRepoScopus.message}
+                  {errors.linkScopus.message}
                 </p>
               )}
-            </div>
+            </div>{' '}
+          </div>
+          <div className="w-full grid grid-cols-2 gap-4">
+            {' '}
             <div>
               <label
-                htmlFor="qualis"
+                htmlFor="qualisAntigo"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                NOTA NO ANTIGO QUALIS
+                NOTA NO ANTIGO QUALIS*
               </label>
               <input
-                type="number"
-                id="qualis"
+                type="text"
+                id="qualisAntigo"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite a nota do periódico no antigo QUALIS"
-                {...register('qualis')}
+                {...register('qualisAntigo')}
               />
-              {errors.qualis && (
+              {errors.qualisAntigo && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.qualis.message}
+                  {errors.qualisAntigo.message}
                 </p>
               )}
             </div>
@@ -363,14 +365,12 @@ function FormularioPeriodicoContent() {
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 PERCENTIL*
-              </label>
+              </label>{' '}
               <input
-                type="number"
+                type="text"
                 id="percentil"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite o percentil do periódico (0-100)..."
-                min="0"
-                max="100"
                 {...register('percentil')}
               />
               {errors.percentil && (
