@@ -4,9 +4,8 @@ export const CadastrarPeriodicoSchema = z.object({
   periodicoNome: z.string().nonempty({
     message: 'O nome do periódico é obrigatório',
   }),
-  areaConhecimento: z.string().nonempty({
-    message: 'Selecione uma área de conhecimento',
-  }),
+  areaConhecimento: z.array(z.string().min(1, 
+    'Selecione pelo menos uma área de conhecimento')),
   issn: z.string().nonempty({
     message: 'O ISSN é obrigatório',
   }),

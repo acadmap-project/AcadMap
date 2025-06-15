@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Controller } from 'react-hook-form';
 import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
+import { MultiSelectDropdown } from './MultipleSelectDropdown';
 
 function FormularioEventoContent() {
-  const areas = useAreas();
+  // const areas = useAreas();
   const navigate = useNavigate();
 
   const methods = useForm({
@@ -17,6 +18,7 @@ function FormularioEventoContent() {
     register,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = methods;
 
@@ -28,11 +30,17 @@ function FormularioEventoContent() {
     { value: 'vinculo_top_10', label: 'Top 10' },
   ];
 
+  const areas = [
+    { value: 'teste', label: 'Teste' },
+    { value: 'andrey', label: 'Andrey' },
+    { value: 'cardoso', label: 'Cardoso' },
+  ];
+
   const onSubmit = data => {
     const eventData = {
       ...data,
       vinculoSbc: vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo',
-      areasPesquisaIds: [data.areasPesquisaIds], // TODO: Implementar lógica para permitir multiplas areas selecionadas
+      areasPesquisaIds: data.areasPesquisaIds || [],
     };
     console.log('Submitting event data:', eventData);
     navigate('/revisao-cadastro-evento', {
@@ -74,21 +82,18 @@ function FormularioEventoContent() {
             >
               ÁREA DE CONHECIMENTO (CNPQ)*
             </label>
-            <select
-              id="areasPesquisaIds"
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-              {...register('areasPesquisaIds')}
-              defaultValue=""
-            >
-              <option value="" disabled className="text-gray-500">
-                Selecione
-              </option>
-              {areas.map(area => (
-                <option key={area.value} value={area.value}>
-                  {area.label}
-                </option>
-              ))}
-            </select>
+            <Controller
+              control={control}
+              name="areasPesquisaIds"
+              defaultValue={[]}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={areas}
+                  value={field.value || []}
+                  onChange={field.onChange}
+                />
+              )}
+            />
             {errors.areasPesquisaIds && (
               <p className="text-red-500 text-sm mt-1 text-left">
                 {errors.areasPesquisaIds.message}
