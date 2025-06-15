@@ -14,6 +14,7 @@ import {
 } from '@tanstack/react-query';
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
+import Popup from './Popup';
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,11 @@ function FormularioCadastroContent({ isAdmin = false }) {
     type: 'error',
   });
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [successInfo, setSuccessInfo] = useState({
+    title: '',
+    message: '',
+    type: 'success',
+  });
 
   const methods = useForm({
     resolver: zodResolver(
@@ -75,15 +81,16 @@ function FormularioCadastroContent({ isAdmin = false }) {
     reset,
     setValue,
   } = methods;
-
   const createUserMutation = useMutation({
     mutationFn: postUser,
     onSuccess: data => {
-      console.log('Usuário cadastrado com sucesso:', data);
-      setErrorInfo({
+      console.log('Usuário cadastrado com sucesso:', data); // Close any existing error popup first
+      setShowErrorPopup(false);
+      // Set success info and show success popup
+      setSuccessInfo({
         title: 'Usuário Cadastrado',
         message: 'O usuário foi cadastrado com sucesso no sistema.',
-        type: 'info',
+        type: 'success',
       });
       setShowSuccessPopup(true);
       reset(); // Reset form after successful submission
@@ -141,6 +148,14 @@ function FormularioCadastroContent({ isAdmin = false }) {
     },
   });
 
+  const closeErrorPopup = () => {
+    setShowErrorPopup(false);
+  };
+
+  const closeSuccessPopup = () => {
+    setShowSuccessPopup(false);
+  };
+
   const onSubmit = data => {
     const userData = {
       nome: data.fullName,
@@ -154,47 +169,20 @@ function FormularioCadastroContent({ isAdmin = false }) {
     console.log('Submitting user data:', userData);
     createUserMutation.mutate(userData);
   };
-
-  const closeErrorPopup = () => {
-    setShowErrorPopup(false);
-  };
-
-  const closeSuccessPopup = () => {
-    setShowSuccessPopup(false);
-  };
-
-  return (    <FormProvider {...methods}>
+  return (
+    <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-2 items-end max-w-xl gap-x-15 gap-y-2 mx-auto mt-8"
-      ><div className="flex flex-col items-start">
-          <label
-            htmlFor="fullName"
-            className="block mb-2 text-sm font-medium text-gray-900 text-start"
-          >
-            Nome Completo
-          </label>
-          <input
-            type="text"
-            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Digite..."
-            {...register('fullName')}
-          />
-          <div className="h-6 mt-1">
-            {errors.fullName && (
-              <p className="text-red-600 text-sm text-left">
-                {errors.fullName.message}
-              </p>
-            )}
-          </div>
-        </div>
-        {/* User Type Dropdown - Only for Admin */}
-        {isAdmin && (          <div className="flex flex-col items-start">
+        className="flex flex-col max-w-xl mx-auto mt-8"
+      >
+        {isAdmin && (
+          <div className="w-3/5 mx-auto flex flex-col items-start">
+            {' '}
             <label
               htmlFor="tipoPerfil"
-              className="block mb-2 text-sm font-medium text-gray-900 text-start"
+              className="block mb-2 text-sm text-gray-900 text-start"
             >
-              Tipo de Perfil
+              CADASTRAR
             </label>
             <select
               id="tipoPerfil"
@@ -207,8 +195,8 @@ function FormularioCadastroContent({ isAdmin = false }) {
               </option>
               <option value="PESQUISADOR">Pesquisador</option>
               <option value="AUDITOR">Auditor</option>
-            </select>
-            <div className="h-6 mt-1">
+            </select>{' '}
+            <div className="h-6">
               {errors.tipoPerfil && (
                 <p className="text-red-500 text-sm text-left">
                   {errors.tipoPerfil.message}
@@ -216,145 +204,177 @@ function FormularioCadastroContent({ isAdmin = false }) {
               )}
             </div>
           </div>
-        )}        <div className="flex flex-col items-start">
-          <label
-            htmlFor="searchArea"
-            className="block mb-2 text-sm font-medium text-gray-900 text-start"
-          >
-            Área de Pesquisa
-          </label>
-          <select
-            id="searchArea"
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-            {...register('searchArea')}
-            defaultValue=""
-          >
-            <option value="" disabled className="text-gray-500">
-              Selecione
-            </option>
-            {areas.map(area => (
-              <option key={area.value} value={area.value}>
-                {area.label}
-              </option>
-            ))}
-          </select>
-          <div className="h-6 mt-1">
-            {errors.searchArea && (
-              <p className="text-red-500 text-sm text-left">
-                {errors.searchArea.message}
-              </p>
-            )}
-          </div>
-        </div>{' '}        <div className="flex flex-col items-start">
-          <label
-            htmlFor="searchArea"
-            className="block mb-2 text-sm font-medium text-gray-900 text-start"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Digite..."
-            {...register('email')}
-          />
-          <div className="h-6 mt-1">
-            {errors.email && (
-              <p className="text-red-600 text-sm text-left">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-        </div>{' '}        <div className="flex flex-col items-start">
-          <label
-            htmlFor="program"
-            className="block mb-2 text-sm font-medium text-gray-900 text-start"
-          >
-            Programa
-          </label>
-          <select
-            id="program"
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-            {...register('program')}
-            defaultValue=""
-          >
-            <option value="" disabled className="text-gray-500">
-              Selecione
-            </option>
-            {programas.map(programa => (
-              <option key={programa.value} value={programa.value}>
-                {programa.label}
-              </option>
-            ))}
-          </select>
-          <div className="h-6 mt-1">
-            {errors.program && (
-              <p className="text-red-500 text-sm text-left">
-                {errors.program.message}
-              </p>
-            )}
-          </div>
-        </div>{' '}        <div className="flex flex-col items-start">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 text-start"
-          >
-            Password
-          </label>          <div className="flex items-center w-full gap-2">
+        )}
+
+        <div className="grid grid-cols-2 items-end gap-x-15">
+          {' '}
+          <div className="flex flex-col items-start">
+            <label
+              htmlFor="fullName"
+              className="block mb-2 text-sm text-gray-900 text-start"
+            >
+              NOME COMPLETO
+            </label>
             <input
-              type="password"
-              className="border text-sm rounded-none block flex-1 p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+              type="text"
+              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Digite..."
-              {...register('password')}
-            />
-            <div className="w-1/4">
-              <GerarSenha
-                onGerar={senha => {
-                  setValue('password', senha);
-                  setValue('confirmPassword', senha);
-                }}
-              />
+              {...register('fullName')}
+            />{' '}
+            <div className="h-6">
+              {errors.fullName && (
+                <p className="text-red-600 text-sm text-left">
+                  {errors.fullName.message}
+                </p>
+              )}
+            </div>
+          </div>{' '}
+          <div className="flex flex-col items-start">
+            <label
+              htmlFor="searchArea"
+              className="block mb-2 text-sm text-gray-900 text-start"
+            >
+              ÁREA DE PESQUISA
+            </label>
+            <select
+              id="searchArea"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+              {...register('searchArea')}
+              defaultValue=""
+            >
+              <option value="" disabled className="text-gray-500">
+                Selecione
+              </option>
+              {areas.map(area => (
+                <option key={area.value} value={area.value}>
+                  {area.label}
+                </option>
+              ))}
+            </select>{' '}
+            <div className="h-6">
+              {errors.searchArea && (
+                <p className="text-red-500 text-sm text-left">
+                  {errors.searchArea.message}
+                </p>
+              )}
             </div>
           </div>
-          <div className="h-6 mt-1">
-            {errors.password && (
-              <p className="text-red-600 text-sm text-left">
-                {errors.password.message}
-              </p>
-            )}
+          <div className="flex flex-col items-start">
+            {' '}
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm text-gray-900 text-start"
+            >
+              EMAIL
+            </label>
+            <input
+              type="email"
+              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Digite..."
+              {...register('email')}
+            />{' '}
+            <div className="h-6">
+              {errors.email && (
+                <p className="text-red-600 text-sm text-left">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
           </div>
-        </div>{' '}<div className="flex flex-col items-start">
-          <label
-            htmlFor="confirmPassword"
-            className="block mb-2 text-sm font-medium text-gray-900 text-start"
-          >
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="border  text-sm rounded-none  block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Digite..."
-            {...register('confirmPassword')}
-          />
-          <div className="h-6 mt-1">
-            {errors.confirmPassword && (
-              <p className="text-red-600 text-sm text-left">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>        </div>        
-
-        <div className="col-span-2 flex justify-center mt-6">
-          <button
-            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50 !font-medium"
-            type="submit"
-            disabled={createUserMutation.isPending}
-          >
-            {createUserMutation.isPending ? 'Cadastrando...' : 'Salvar e Continuar'}
-          </button>
+          <div className="flex flex-col items-start">
+            <label
+              htmlFor="program"
+              className="block mb-2 text-sm text-gray-900 text-start"
+            >
+              PROGRAMA
+            </label>
+            <select
+              id="program"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
+              {...register('program')}
+              defaultValue=""
+            >
+              <option value="" disabled className="text-gray-500">
+                Selecione
+              </option>
+              {programas.map(programa => (
+                <option key={programa.value} value={programa.value}>
+                  {programa.label}
+                </option>
+              ))}
+            </select>{' '}
+            <div className="h-6">
+              {errors.program && (
+                <p className="text-red-500 text-sm text-left">
+                  {errors.program.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col items-start">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm text-gray-900 text-start"
+            >
+              SENHA
+            </label>
+            <div className="flex items-center w-full gap-2">
+              <input
+                type="password"
+                className="border text-sm rounded-none block flex-1 p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Digite..."
+                {...register('password')}
+              />
+              <div className="w-1/4">
+                <GerarSenha
+                  onGerar={senha => {
+                    setValue('password', senha);
+                    setValue('confirmPassword', senha);
+                  }}
+                />
+              </div>
+            </div>{' '}
+            <div className="h-6">
+              {errors.password && (
+                <p className="text-red-600 text-sm text-left">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col items-start">
+            <label
+              htmlFor="confirmPassword"
+              className="block mb-2 text-sm text-gray-900 text-start"
+            >
+              CONFIRMAR SENHA
+            </label>
+            <input
+              type="password"
+              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Digite..."
+              {...register('confirmPassword')}
+            />{' '}
+            <div className="h-6">
+              {errors.confirmPassword && (
+                <p className="text-red-600 text-sm text-left">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="col-span-2 flex justify-center mt-6">
+            <button
+              type="submit"
+              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+              disabled={createUserMutation.isPending}
+            >
+              {createUserMutation.isPending ? 'Cadastrando...' : 'Cadastrar'}
+            </button>
+          </div>
         </div>
       </form>
-
       <ErrorPopup
         isOpen={showErrorPopup}
         onClose={closeErrorPopup}
@@ -363,12 +383,12 @@ function FormularioCadastroContent({ isAdmin = false }) {
         type={errorInfo.type}
       />
 
-      <ErrorPopup
+      <Popup
         isOpen={showSuccessPopup}
         onClose={closeSuccessPopup}
-        title={errorInfo.title}
-        message={errorInfo.message}
-        type={errorInfo.type}
+        title={successInfo.title}
+        message={successInfo.message}
+        type={successInfo.type}
       />
     </FormProvider>
   );
