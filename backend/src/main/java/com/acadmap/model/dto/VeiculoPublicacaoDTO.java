@@ -1,5 +1,6 @@
 package com.acadmap.model.dto;
 
+import com.acadmap.model.entities.Evento;
 import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class VeiculoPublicacaoDTO {
     private StatusVeiculo status;
     private UsuarioResponseDTO usuario;
     private Set<AreaPesquisaDTO> areasPesquisa;
+    private String linkEvento;
 
     public VeiculoPublicacaoDTO(VeiculoPublicacao veiculo) {
         this.setIdVeiculo(veiculo.getIdVeiculo());
@@ -39,6 +41,7 @@ public class VeiculoPublicacaoDTO {
         this.setAreasPesquisa(veiculo.getAreasPesquisa().stream()
                 .map(AreaPesquisaDTO::new)
                 .collect(Collectors.toSet()));
+        this.setLinkEvento(veiculo.getLinkEvento());
     }
 
 }

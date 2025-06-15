@@ -74,7 +74,11 @@ public abstract class VeiculoPublicacao {
   @JoinTable(name = "areapesquisaveiculo", joinColumns = @JoinColumn(name = "id_veiculo"),
       inverseJoinColumns = @JoinColumn(name = "id_area_pesquisa"))
   private Set<AreaPesquisa> areasPesquisa = new HashSet<>();
-
   @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<LogVeiculo> logsVeiculo = new HashSet<>();
+
+  // Default implementation returns null, overridden in Evento subclass
+  public String getLinkEvento() {
+    return null;
+  }
 }
