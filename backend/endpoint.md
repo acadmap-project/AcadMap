@@ -103,7 +103,8 @@ X-User-Id: <UUID do usuário solicitante>
         "id": "a111a111-b222-c333-d444-e555e555e555",
         "nome": "Ciência da Computação"
       }
-    ]
+    ],
+    "linkEvento": "http://localhost:5173/cadastro-evento"
   }
 ]
 ```

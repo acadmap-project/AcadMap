@@ -2,11 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
 import useProgramas from '../hooks/useProgramas';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Controller } from 'react-hook-form';
 import {
   CadastrarUsuarioSchema,
   CadastrarUsuarioAdminSchema,
 } from '../schemas/CadastrarUsuarioSchema';
+import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import {
   QueryClient,
   QueryClientProvider,
@@ -80,6 +81,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     formState: { errors },
     reset,
     setValue,
+    control,
   } = methods;
   const createUserMutation = useMutation({
     mutationFn: postUser,
@@ -163,7 +165,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
       senha: data.password,
       tipoPerfil: isAdmin ? data.tipoPerfil : 'PESQUISADOR', // Use selected type if admin, default to PESQUISADOR
       idPrograma: data.program,
-      idsAreasPesquisa: [data.searchArea],
+      idsAreasPesquisa: data.searchArea || [],
     };
 
     console.log('Submitting user data:', userData);
@@ -236,21 +238,18 @@ function FormularioCadastroContent({ isAdmin = false }) {
             >
               ÁREA DE PESQUISA
             </label>
-            <select
-              id="searchArea"
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-              {...register('searchArea')}
-              defaultValue=""
-            >
-              <option value="" disabled className="text-gray-500">
-                Selecione
-              </option>
-              {areas.map(area => (
-                <option key={area.value} value={area.value}>
-                  {area.label}
-                </option>
-              ))}
-            </select>{' '}
+            <Controller
+              control={control}
+              name="searchArea"
+              defaultValue={[]}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={areas}
+                  value={field.value || []}
+                  onChange={field.onChange}
+                />
+              )}
+            />
             <div className="h-6">
               {errors.searchArea && (
                 <p className="text-red-500 text-sm text-left">
