@@ -1,13 +1,9 @@
-FROM ubuntu:22.04
-
-RUN apt-get update && apt-get install -y curl npm
+FROM node:22-alpine
 
 WORKDIR /app
 
-RUN npm install -g n
-RUN n install v22
+COPY package*.json ./
 
-COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
