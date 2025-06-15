@@ -29,8 +29,6 @@ public class EventoService {
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final EventoRepository eventoRepository;
   private final UsuarioRepository usuarioRepository;
-  private final ProgramaRepository programaRepository;
-  private final LogRepository logRepository;
   private final LogService logService;
 
 
