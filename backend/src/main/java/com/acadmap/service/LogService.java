@@ -1,9 +1,6 @@
 package com.acadmap.service;
 
-import com.acadmap.model.entities.Evento;
-import com.acadmap.model.entities.Log;
-import com.acadmap.model.entities.LogVeiculo;
-import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.entities.*;
 import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.repository.LogRepository;
 import com.acadmap.repository.LogVeiculoRepository;
@@ -36,6 +33,17 @@ public class LogService {
     logVeiculo.setDataHora(LocalDateTime.now());
     logVeiculo.setAcao(AcaoLog.adicao_veiculo);
     logVeiculo.setVeiculo(evento);
+
+    this.logVeiculoRepository.save(logVeiculo);
+  }
+
+  @Transactional
+  public void registrarCadastroPeriodico(Periodico periodico, Usuario usuario) {
+    LogVeiculo logVeiculo = new LogVeiculo();
+    logVeiculo.setUsuario(usuario);
+    logVeiculo.setDataHora(LocalDateTime.now());
+    logVeiculo.setAcao(AcaoLog.adicao_veiculo);
+    logVeiculo.setVeiculo(periodico);
 
     this.logVeiculoRepository.save(logVeiculo);
   }

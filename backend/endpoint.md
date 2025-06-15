@@ -271,6 +271,105 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
 ---
 
+# 📘 API - Cadastro de Periodico
+
+**Endpoint:**
+```
+POST /api/periodicos/cadastro
+```
+
+**Descrição:**  
+Cria um novo periódico no sistema, *deve ser um usuario já cadastrado no sistema*.
+
+**Headers obrigatórios:**
+```http
+X-User-Id: <UUID do usuário que está tentando aprovar>
+```
+
+**Path Parameters:**
+- `id` – UUID do usuário que está tentando inserir o evento.
+
+**Resposta:**
+- `202 Accepted` – Evento criado com sucesso.
+- `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
+- `400 Bad Request` – Erro na requisição.
+
+---
+
+## 🔸 Requisição
+
+**Corpo esperado:**
+
+```json
+{
+  "nome": "Journal of Academic Studies2",
+  "vinculoSBC": "sem_vinculo",
+  "issn": "12345698",
+  "percentil": 75,
+  "linkJcr": "https://jcr.example.com/journal123",
+  "linkScopus": "https://scopus.example.com/journal123",
+  "linkGoogleScholar": "https://scholar.google.com/journal123",
+  "qualisAntigo": "B1",
+  "areasPesquisaIds": [
+    "c3398a61-b985-42af-9fe5-d6bddd971a87",
+    "a3c5f2a4-081a-4a17-8c8b-9a60c431c931"
+  ]
+}
+```
+
+### Campos:
+- `nome` (string): Nome do evento.
+- `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
+- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números.
+- `percentil` (Integer): Valor numérico.
+- `linkJrc` (string) : Link do Jrc referente ao periódico o qual está sendo inserido
+- `linkScopus` (string) : Link repositório Scopus referente ao periodico o qual está sendo inserido.
+- `linkGoogleScholar` (string) : Link do googlescholar referente ao periódico o qual está sendo inserido
+- `qualisAntigo` (string) : Pontuação do Qualis antigo (Enum= "a1", "a2", "b1", "b2", "b3", "b4", "b5', "c").
+- `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
+---
+
+## ✅ Resposta
+
+**Status:** `201 Created`  
+**Body:**
+
+```json
+{
+  "idVeiculo": "ae759c9a-5db1-456b-ae45-22ba5e2568a7",
+  "nome": "Journal of Academic Studies2",
+  "classificacao": "a8",
+  "vinculoSBC": "sem_vinculo",
+  "adequadoDefesa": "nenhum",
+  "tipo": "periodico",
+  "status": "pendente",
+  "issn": "12345698",
+  "percentil": 75,
+  "linkJcr": "https://jcr.example.com/journal123",
+  "linkScopus": "https://scopus.example.com/journal123",
+  "linkGoogleScholar": "https://scholar.google.com/journal123",
+  "qualisAntigo": "b1",
+  "areasPesquisaIds": [
+    "c3398a61-b985-42af-9fe5-d6bddd971a87",
+    "a3c5f2a4-081a-4a17-8c8b-9a60c431c931"
+  ],
+  "usuario": {
+    "idUsuario": "11111111-1111-1111-1111-111111111111",
+    "nome": "Dra. Ada Lovelace"
+  }
+  }
+}
+```
+
+### Campos:
+- `idVeiculo` (UUID): Identificador único do evento criado.
+- `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `classificacao`, `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
+- `tipo`, `status` : Valores padrões na criação de Evento. (Periodico, Pendente)
+- `issn`, `percentil`, `linkJrc`, `linkScopus` , `linkGoogleScholar`, `qualisAntigo`, `areasPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
+---
+
 
 
 
