@@ -8,7 +8,7 @@ import com.acadmap.model.enums.TipoPerfilUsuario;
 import com.acadmap.repository.EventoRepository;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
-import com.acadmap.service.AprovarVeiculoService;
+import com.acadmap.service.AvaliarVeiculoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.UUID;
 public class VeiculoController {
 
     private UsuarioRepository usuarioRepository;
-    private AprovarVeiculoService aprovarVeiculoService;
+    private AvaliarVeiculoService avaliarVeiculoService;
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
     private EventoRepository eventoRepository;
 
@@ -35,9 +35,8 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser,
             @PathVariable("id") UUID idVeiculo
     ){
-        usuarioRepository.findByAllAndFetchProgramaEagerly();
         if (!this.isPesquisador(idUser) && !this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
-            return new ResponseEntity<>(aprovarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED) ;
+            return new ResponseEntity<>(avaliarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
                 ResponseEntity.badRequest().build(),
@@ -51,7 +50,7 @@ public class VeiculoController {
             @PathVariable("id") UUID idVeiculo
     ){
         if (!this.isPesquisador(idUser) && !this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
-            return new ResponseEntity<>(aprovarVeiculoService.negar(idVeiculo), HttpStatus.ACCEPTED) ;
+            return new ResponseEntity<>(avaliarVeiculoService.negar(idVeiculo), HttpStatus.ACCEPTED) ;
         }
         return new ResponseEntity<>(
                 ResponseEntity.badRequest().build(),

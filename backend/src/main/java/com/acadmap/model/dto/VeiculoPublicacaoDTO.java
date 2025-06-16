@@ -41,5 +41,9 @@ public class VeiculoPublicacaoDTO {
                 .collect(Collectors.toSet()));
     }
 
+    public static VeiculoPublicacaoDTO buildVeiculoDto(VeiculoPublicacao veiculo){
+        return new VeiculoPublicacaoDTO(veiculo);
+    }
+
 }
 
