@@ -25,6 +25,8 @@ A aplicação está sendo desenvolvida sob o padrão de desenvolvimento de softw
 ├── frontend
 │   ├── Dockerfile
 │   ├── public
+│   └── .husky
+│       └── pre-commit
 │   └── src
 │       ├── assets
 │       ├── components 
@@ -41,6 +43,10 @@ A aplicação está sendo desenvolvida sob o padrão de desenvolvimento de softw
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── vite.config.js
+│   ├── .eslintrc.json
+│   ├── .prettierrc
+│   ├── .eslintignore
+│   ├── .prettierignore
 │   └── README.md
 ├── .github
 │   └── workflows

@@ -10,10 +10,10 @@ nvm -v
 ```
 Para o comando acima funcionar você precisa ter o **curl** instalado. No windows e mac se instala o nvm de outra forma.
 
-Instale e use o node v18
+Instale e use o node v22
 ```bash
-nvm install v18
-nvm use v18
+nvm install v22
+nvm use v22
 node -v
 ```
 
@@ -21,10 +21,29 @@ Com isso, já e possível fazer o clone do repo, entrar na pasta frontend e inst
 ```bash
 git clone https://github.com/SainyGb/AcadMap.git 
 cd AcadMap/frontend
-npm install
+npm install 
+npm run prepare
+npm run lint
+npm run format:check
 npm run dev
 ```
+
+* npm install : instala as bibliotecas necessarias
+* npm run prepare : faz a iniciação do husky para automatizar pre comitts evitando codigos nao desejados
+* npm run lint : faz o lint para verificar se tudo esta como o desejado
+* npm run format:check : faz a verificação da formatação para verificar se esta como o esperado
+* npm run dev : roda a aplicação frontend
+
 Após o **npm run dev** já é possível ver o link para acessar no terminal.
+## Usando prettier e eslint
+
+Para garantir que o código esteja formatado corretamente foi usado o prettier e eslint.
+Para rodar basta executar os comandos ja definidos no package.json
+```bash
+npm run lint
+npm run format:check
+```
+O npm run lint vai verificar se o código está de acordo com as regras do eslint, e o npm run format:check vai verificar se o código está formatado de acordo com as regras do prettier. Ambos somente irão apontar onde estão os problemas, mas não irão corrigir.
 ## Evitando Problemas Utilizando Docker
 
 Para evitar problemas do frontend não estar executando em diferentes maquinas, foi feita conteirização com Docker.
