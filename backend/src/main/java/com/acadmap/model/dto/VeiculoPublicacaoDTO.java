@@ -44,5 +44,9 @@ public class VeiculoPublicacaoDTO {
         this.setLinkEvento(veiculo.getLinkEvento());
     }
 
+    public static VeiculoPublicacaoDTO buildVeiculoDto(VeiculoPublicacao veiculo){
+        return new VeiculoPublicacaoDTO(veiculo);
+    }
+
 }
 
