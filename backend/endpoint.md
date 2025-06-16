@@ -321,7 +321,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Campos:
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
-- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números.
+- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação. 
 - `percentil` (Integer): Valor numérico.
 - `linkJrc` (string) : Link do Jrc referente ao periódico o qual está sendo inserido
 - `linkScopus` (string) : Link repositório Scopus referente ao periodico o qual está sendo inserido.
