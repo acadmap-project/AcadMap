@@ -1,0 +1,209 @@
+@startuml
+
+' ==== Estado Atual do Sistema ====
+
+
+
+
+' ==== Programa ====
+object "PPGCC : Programa" as programa1 {
+  id_programa = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "programa de pós-graduação em ciência da computação - ppgcc"
+}
+
+
+' ==== Usuários ====
+object "Admin Mestre : Usuario" as usuarioAdmin {
+  id_usuario   = "00000000-0000-0000-0000-000000000001"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Admin Mestre"
+  email        = "admin@email.com"
+  tipo_perfil  = "administrador"
+  flag_ativo   = true
+}
+
+object "Dra. Ada Lovelace : Usuario" as usuarioAda {
+  id_usuario   = "11111111-1111-1111-1111-111111111111"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Dra. Ada Lovelace"
+  email        = "ada.lovelace@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = true
+}
+
+object "Dr. Alan Turing : Usuario" as usuarioTuring {
+  id_usuario   = "22222222-2222-2222-2222-222222222222"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Dr. Alan Turing"
+  email        = "alan.turing@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = true
+}
+
+object "Grace Hopper : Usuario" as usuarioGrace {
+  id_usuario   = "33333333-3333-3333-3333-333333333333"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Grace Hopper"
+  email        = "grace.hopper@email.com"
+  tipo_perfil  = "auditor"
+  flag_ativo   = true
+}
+
+object "Usuário Antigo : Usuario" as usuarioAntigo {
+  id_usuario   = "44444444-4444-4444-4444-444444444444"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Usuário Antigo"
+  email        = "antigo@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = false
+}
+
+' ==== AreaPesquisa ====
+object "Ciência da Computação : AreaPesquisa" as areaComp {
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+  nome             = "Ciência da Computação"
+}
+
+object "Engenharia Elétrica : AreaPesquisa" as areaEE {
+  id_area_pesquisa = "b222b222-c333-d444-e555-f666f666f666"
+  nome             = "Engenharia Elétrica"
+}
+
+
+' ==== VeiculoPublicação, Periódico e evento ====
+object "Journal of Advanced AI : VeiculoPublicacao" as veiculo1 {
+  id_veiculo      = "55555555-5555-5555-5555-555555555555"
+  id_usuario      = "11111111-1111-1111-1111-111111111111"
+  nome            = "Journal of Advanced AI"
+  tipo            = "periodico"
+  status          = "aceito"
+  classificacao   = "a1"
+  vinculo_sbc     = "vinculo_top_10"
+  adequado_defesa = "doutorado"
+}
+
+object "Journal of Advanced AI : Periodico" as periodico1 {
+  id_veiculo      = "55555555-5555-5555-5555-555555555555"
+  ISSN            = "12345678"
+  percentil       = 95
+  link_jcr        = "http://jcr.com/jai"
+  link_scopus     = "http://scopus.com/jai"
+  qualis_antigo   = "a1"
+  flag_predatorio = false
+}
+
+object "International Conference on Algorithms : VeiculoPublicacao" as veiculo2 {
+  id_veiculo      = "66666666-6666-6666-6666-666666666666"
+  id_usuario      = "22222222-2222-2222-2222-222222222222"
+  nome            = "International Conference on Algorithms"
+  tipo            = "evento"
+  status          = "pendente"
+  classificacao   = "a2"
+  vinculo_sbc     = "vinculo_comum"
+  adequado_defesa = "mestrado_doutorado"
+}
+
+object "International Conference on Algorithms : Evento" as evento2 {
+  id_veiculo          = "66666666-6666-6666-6666-666666666666"
+  h5                  = 42
+  link_evento         = "http://ica.com/2024"
+  link_google_scholar = "http://scholar.google.com/ica"
+}
+
+object "Workshop on Obscure Topics : VeiculoPublicacao" as veiculo3 {
+  id_veiculo      = "77777777-7777-7777-7777-777777777777"
+  id_usuario      = "11111111-1111-1111-1111-111111111111"
+  nome            = "Workshop on Obscure Topics"
+  tipo            = "evento"
+  status          = "negado"
+  classificacao   = "a8"
+  vinculo_sbc     = "sem_vinculo"
+  adequado_defesa = "nenhum"
+}
+
+object "Workshop on Obscure Topics : Evento" as evento3 {
+  id_veiculo      = "77777777-7777-7777-7777-777777777777"
+  h5              = 5
+  link_evento     = "http://woto.com/2023"
+}
+
+
+' ==== Associação Usuário ↔ ÁreaPesquisa (tabela de junção) =		===
+object "APU1 : AreaPesquisaUsuario" as apu1 {
+  id_usuario       = "11111111-1111-1111-1111-111111111111"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+object "APU2 : AreaPesquisaUsuario" as apu2 {
+  id_usuario       = "11111111-1111-1111-1111-111111111111"
+  id_area_pesquisa = "b222b222-c333-d444-e555-f666f666f666"
+}
+
+object "APU3 : AreaPesquisaUsuario" as apu3 {
+  id_usuario       = "22222222-2222-2222-2222-222222222222"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+
+
+' ==== Associação Veículo ↔ ÁreaPesquisa (tabela de junção) ====
+
+object "APV1 : AreaPesquisaVeiculo" as apv1 {
+  id_veiculo      = "55555555-5555-5555-5555-555555555555"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+object "APV2 : AreaPesquisaVeiculo" as apv2 {
+  id_veiculo      = "55555555-5555-5555-5555-555555555555"
+  id_area_pesquisa = "b222b222-c333-d444-e555-f666f666f666"
+}
+
+object "APV3 : AreaPesquisaVeiculo" as apv3 {
+  id_veiculo      = "66666666-6666-6666-6666-666666666666"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+object "APV4 : AreaPesquisaVeiculo" as apv4 {
+  id_veiculo      = "77777777-7777-7777-7777-777777777777"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+' ---- Associações ----
+programa1       -- usuarioAdmin
+programa1       -- usuarioAda
+programa1       -- usuarioTuring
+programa1       -- usuarioGrace
+programa1       -- usuarioAntigo
+
+usuarioAda      -- veiculo1
+usuarioTuring   -- veiculo2
+usuarioAda      -- veiculo3
+
+veiculo1        -- periodico1
+veiculo2        -- evento2
+veiculo3        -- evento3
+
+
+usuarioAda      -- apu1
+areaComp        -- apu1
+
+usuarioAda      -- apu2
+areaEE          -- apu2
+
+usuarioTuring   -- apu3
+areaComp        -- apu3
+
+
+veiculo1        -- apv1
+areaComp        -- apv1
+
+veiculo1        -- apv2
+areaEE          -- apv2
+
+veiculo2        -- apv3
+areaComp        -- apv3
+
+veiculo3        -- apv4
+areaComp        -- apv4
+
+@enduml
