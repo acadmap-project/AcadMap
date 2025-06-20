@@ -2,6 +2,7 @@ package com.acadmap.exception;
 
 import com.acadmap.model.dto.EventoSimplesDTO;
 import com.acadmap.model.dto.PeriodicoSimplesDTO;
+import com.acadmap.model.dto.VeiculoPublicacaoDTO;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,30 @@ public class GlobalExceptionHandler {
             new PeriodicoDuplicadoResponse(ex.getMessage(), periodicoSimples);
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+  }
+
+  @ExceptionHandler(VeiculoVinculadoException.class)
+  public ResponseEntity<VeiculoVinculadoResponse> handleUsuarioVinculado(
+          VeiculoVinculadoException ex
+  ){
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO =
+            new VeiculoPublicacaoDTO(ex.getVeiculoPublicacaoVinculado());
+    VeiculoVinculadoResponse veiculoVinculadoResponse =
+            new VeiculoVinculadoResponse(ex.getMessage(), veiculoPublicacaoDTO);
+
+    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(veiculoVinculadoResponse);
+  }
+
+  @ExceptionHandler(PesquisadorUnauthorizedException.class)
+  public ResponseEntity<PesquisadorUnauthorizedResponse> handleUsuarioVinculado(
+          PesquisadorUnauthorizedException ex
+  ){
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO =
+            new VeiculoPublicacaoDTO(ex.getPesquisadorUnauthorized());
+    PesquisadorUnauthorizedResponse pesquisadorUnauthorizedResponse =
+            new PesquisadorUnauthorizedResponse(ex.getMessage(), veiculoPublicacaoDTO);
+
+    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(pesquisadorUnauthorizedResponse);
   }
 
 }
