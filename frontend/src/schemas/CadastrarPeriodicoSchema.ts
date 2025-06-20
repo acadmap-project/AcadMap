@@ -15,17 +15,14 @@ export const CadastrarPeriodicoSchema = z
     vinculoSBC: z.string().default('sem_vinculo'),
     linkJcr: z
       .string()
-      .url('Link do repositório JCR deve ser uma URL válida')
       .optional()
       .or(z.literal('')),
     linkScopus: z
       .string()
-      .url('Link do repositório SCOPUS deve ser uma URL válida')
       .optional()
       .or(z.literal('')),
     linkGoogleScholar: z
       .string()
-      .url('Link do repositório Google Scholar deve ser uma URL válida')
       .optional()
       .or(z.literal('')),
     qualisAntigo: z.string().nonempty({

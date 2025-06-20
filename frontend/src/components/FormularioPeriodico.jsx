@@ -284,7 +284,7 @@ function FormularioPeriodicoContent() {
                 LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
               </label>
               <input
-                type="url"
+                type="text"
                 id="linkGoogleScholar"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite uma URL válida..."
@@ -304,7 +304,7 @@ function FormularioPeriodicoContent() {
                 LINK DE REPOSITÓRIO (JCR)
               </label>
               <input
-                type="url"
+                type="text"
                 id="linkJcr"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite uma URL válida..."
@@ -324,7 +324,7 @@ function FormularioPeriodicoContent() {
                 LINK DE REPOSITÓRIO (SCOPUS)
               </label>
               <input
-                type="url"
+                type="text"
                 id="linkScopus"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite uma URL válida..."
