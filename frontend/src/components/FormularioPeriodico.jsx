@@ -429,14 +429,13 @@ function FormularioPeriodicoContent() {
           </div>
         </form>
       </FormProvider>
-      {showErrorPopup && (
-        <ErrorPopup
-          title={errorInfo.title}
-          message={errorInfo.message}
-          type={errorInfo.type}
-          onClose={() => setShowErrorPopup(false)}
-        />
-      )}
+      <ErrorPopup
+        isOpen={showErrorPopup}
+        title={errorInfo.title}
+        message={errorInfo.message}
+        type={errorInfo.type}
+        onClose={() => setShowErrorPopup(false)}
+      />
       <Popup
         isOpen={showSuccessPopup}
         onClose={closeSuccessPopup}

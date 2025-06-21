@@ -26,7 +26,7 @@ function ValidacaoCadastro() {
       <div className="bg-[#161b2d] w-full max-w-4xl rounded-md shadow-lg p-6 space-y-4">
         <div>
           <p className="text-gray-400 text-sm">Nome do Usuário que Cadastrou</p>
-          <p className="text-lg font-medium">{state.usuario}</p>
+          <p className="text-lg font-medium">{state.usuario?.nome || ''}</p>
         </div>
 
         <div>
