@@ -6,14 +6,13 @@ import com.acadmap.repository.LogRepository;
 import com.acadmap.repository.LogVeiculoRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LogService {
+public class RegistrarLogService {
   private final LogRepository logRepository;
   private final LogVeiculoRepository logVeiculoRepository;
 

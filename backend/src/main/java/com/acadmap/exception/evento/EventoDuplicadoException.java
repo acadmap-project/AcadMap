@@ -1,9 +1,13 @@
-package com.acadmap.exception;
+package com.acadmap.exception.evento;
 
 
 import com.acadmap.model.entities.Evento;
+import lombok.Getter;
+
 import java.util.List;
 
+
+@Getter
 public class EventoDuplicadoException extends RuntimeException {
   private final List<Evento> eventosSimilares;
 
@@ -12,7 +16,4 @@ public class EventoDuplicadoException extends RuntimeException {
     this.eventosSimilares = eventosSimilares;
   }
 
-  public List<Evento> getEventosSimilares() {
-    return this.eventosSimilares;
-  }
 }

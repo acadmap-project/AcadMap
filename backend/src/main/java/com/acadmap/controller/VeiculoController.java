@@ -1,8 +1,8 @@
 package com.acadmap.controller;
 
 
-import com.acadmap.exception.PesquisadorUnauthorizedException;
-import com.acadmap.exception.VeiculoVinculadoException;
+import com.acadmap.exception.pesquisador.PesquisadorUnauthorizedException;
+import com.acadmap.exception.veiculo.VeiculoVinculadoException;
 import com.acadmap.model.dto.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
@@ -47,7 +47,7 @@ public class VeiculoController {
                     "O usuario está vinculado ao veiculo de publicação, não é possível aprova-lo",
                     veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
         }
-        return new ResponseEntity<>(avaliarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(avaliarVeiculoService.aceito(idVeiculo), HttpStatus.ACCEPTED);
     }
 
 

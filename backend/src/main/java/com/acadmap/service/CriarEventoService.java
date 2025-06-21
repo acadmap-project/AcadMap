@@ -1,22 +1,17 @@
 package com.acadmap.service;
 
-import com.acadmap.exception.EventoDuplicadoException;
+import com.acadmap.exception.evento.EventoDuplicadoException;
 import com.acadmap.model.dto.EventoCreateDTO;
 import com.acadmap.model.dto.EventoResponseDTO;
-import com.acadmap.model.dto.UsuarioResponseDTO;
 import com.acadmap.model.entities.*;
 import com.acadmap.model.enums.*;
 import com.acadmap.repository.*;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.GeneratedValue;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.hibernate.Hibernate;
-import org.hibernate.jdbc.Expectation;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,12 +19,12 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class EventoService {
+public class CriarEventoService {
 
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final EventoRepository eventoRepository;
   private final UsuarioRepository usuarioRepository;
-  private final LogService logService;
+  private final RegistrarLogService registrarLogService;
 
 
   @Transactional
@@ -65,7 +60,7 @@ public class EventoService {
 
       Evento eventoSalvo =  this.eventoRepository.save(evento);
 
-      this.logService.registrarCadastroEvento(eventoSalvo, usuario);
+      this.registrarLogService.registrarCadastroEvento(eventoSalvo, usuario);
 
       return new EventoResponseDTO(eventoSalvo);
 

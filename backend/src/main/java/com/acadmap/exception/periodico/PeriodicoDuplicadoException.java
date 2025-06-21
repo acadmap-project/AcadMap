@@ -1,9 +1,12 @@
-package com.acadmap.exception;
+package com.acadmap.exception.periodico;
 
 import com.acadmap.model.entities.Periodico;
+import lombok.Getter;
 
 import java.util.List;
 
+
+@Getter
 public class PeriodicoDuplicadoException extends RuntimeException {
     private final List<Periodico> periodicosSimilares;
 
@@ -12,5 +15,4 @@ public class PeriodicoDuplicadoException extends RuntimeException {
         this.periodicosSimilares = periodicosSimilares;
     }
 
-    public List<Periodico> getPeriodicosSimilares (){return this.periodicosSimilares;}
 }

@@ -1,7 +1,6 @@
 package com.acadmap.service;
 
-import com.acadmap.exception.EventoDuplicadoException;
-import com.acadmap.exception.PeriodicoDuplicadoException;
+import com.acadmap.exception.periodico.PeriodicoDuplicadoException;
 import com.acadmap.model.dto.PeriodicoResponseDTO;
 import com.acadmap.model.dto.PeriodicoResquestDTO;
 import com.acadmap.model.entities.AreaPesquisa;
@@ -27,12 +26,12 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class PeriodicoService {
+public class CriarPeriodicoService {
 
     private final AreaPesquisaRepository areaPesquisaRepository;
     private final PeriodicoRepository periodicoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final LogService logService;
+    private final RegistrarLogService registrarLogService;
 
     @Transactional
     public PeriodicoResponseDTO criarPeriodico(PeriodicoResquestDTO dto, UUID uuid){
@@ -68,7 +67,7 @@ public class PeriodicoService {
 
             Periodico periodicoSavo = this.periodicoRepository.save(periodico);
 
-            this.logService.registrarCadastroPeriodico(periodicoSavo, usuario);
+            this.registrarLogService.registrarCadastroPeriodico(periodicoSavo, usuario);
 
             return new PeriodicoResponseDTO(periodicoSavo);
 

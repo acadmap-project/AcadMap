@@ -18,7 +18,7 @@ public class AvaliarVeiculoService {
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
 
 
-    public VeiculoPublicacaoDTO aprovar(UUID veiculoUuid){
+    public VeiculoPublicacaoDTO aceito(UUID veiculoUuid){
         return VeiculoPublicacaoDTO.buildVeiculoDto(avaliarPublicacao(veiculoUuid, StatusVeiculo.aceito));
     }
 
