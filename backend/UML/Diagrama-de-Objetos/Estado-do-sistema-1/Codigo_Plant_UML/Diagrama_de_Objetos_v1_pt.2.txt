@@ -1,0 +1,133 @@
+@startuml
+
+' ==== Estado Atual do Sistema ====
+
+' ==== Programa ====
+object "PPGCC : Programa" as programa1 {
+  id_programa = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome        = "programa de pós-graduação em ciência da computação - ppgcc"
+}
+
+' ==== Usuários ====
+object "Prof. Barbara Liskov : Usuario" as usuarioBarbara {
+  id_usuario   = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Prof. Barbara Liskov"
+  email        = "barbara.liskov@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = true
+}
+
+object "John von Neumann : Usuario" as usuarioNeumann {
+  id_usuario   = "66666666-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "John von Neumann"
+  email        = "john.neumann@email.com"
+  tipo_perfil  = "auditor"
+  flag_ativo   = true
+}
+
+' ==== AreaPesquisa ====
+object "Ciência da Computação : AreaPesquisa" as areaComp {
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+  nome             = "Ciência da Computação"
+}
+
+object "Engenharia Elétrica : AreaPesquisa" as areaEE {
+  id_area_pesquisa = "b222b222-c333-d444-e555-f666f666f666"
+  nome             = "Engenharia Elétrica"
+}
+
+' ==== VeiculoPublicação, Periódico e Evento ====
+object "Computing Systems Journal : VeiculoPublicacao" as veiculo4 {
+  id_veiculo      = "88888888-cccc-cccc-cccc-cccccccccccc"
+  id_usuario      = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  nome            = "Computing Systems Journal"
+  tipo            = "periodico"
+  status          = "pendente"
+  classificacao   = "a3"
+  vinculo_sbc     = "vinculo_top_20"
+  adequado_defesa = "mestrado"
+}
+
+object "Computing Systems Journal : Periodico" as periodico4 {
+  id_veiculo      = "88888888-cccc-cccc-cccc-cccccccccccc"
+  ISSN            = "87654321"
+  percentil       = 75
+  link_jcr        = "http://jcr.com/csj"
+  link_scopus     = "http://scopus.com/csj"
+  qualis_antigo   = "b1"
+  flag_predatorio = false
+}
+
+object "Symposium on Distributed Computing : VeiculoPublicacao" as veiculo5 {
+  id_veiculo      = "99999999-dddd-dddd-dddd-dddddddddddd"
+  id_usuario      = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  nome            = "Symposium on Distributed Computing"
+  tipo            = "evento"
+  status          = "aceito"
+  classificacao   = "a2"
+  vinculo_sbc     = "vinculo_top_10"
+  adequado_defesa = "doutorado"
+}
+
+object "Symposium on Distributed Computing : Evento" as evento5 {
+  id_veiculo          = "99999999-dddd-dddd-dddd-dddddddddddd"
+  h5                  = 50
+  link_evento         = "http://sdc.com/2024"
+  link_google_scholar = "http://scholar.google.com/sdc"
+}
+
+' ==== Associação Usuário ↔ ÁreaPesquisa ====
+object "APU4 : AreaPesquisaUsuario" as apu4 {
+  id_usuario       = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+object "APU5 : AreaPesquisaUsuario" as apu5 {
+  id_usuario       = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  id_area_pesquisa = "b222b222-c333-d444-e555-f666f666f666"
+}
+
+' ==== Associação Veículo ↔ ÁreaPesquisa ====
+object "APV5 : AreaPesquisaVeiculo" as apv5 {
+  id_veiculo      = "88888888-cccc-cccc-cccc-cccccccccccc"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+object "APV6 : AreaPesquisaVeiculo" as apv6 {
+  id_veiculo      = "99999999-dddd-dddd-dddd-dddddddddddd"
+  id_area_pesquisa = "a111a111-b222-c333-d444-e555e555e555"
+}
+
+object "APV7 : AreaPesquisaVeiculo" as apv7 {
+  id_veiculo      = "99999999-dddd-dddd-dddd-dddddddddddd"
+  id_area_pesquisa = "b222b222-c333-d444-e555-f666f666f666"
+}
+
+' ---- Associações ----
+programa1       -- usuarioBarbara
+programa1       -- usuarioNeumann
+
+usuarioBarbara  -- veiculo4
+usuarioBarbara  -- veiculo5
+
+veiculo4        -- periodico4
+veiculo5        -- evento5
+
+usuarioBarbara  -- apu4
+areaComp        -- apu4
+
+usuarioBarbara  -- apu5
+areaEE          -- apu5
+
+veiculo4        -- apv5
+areaComp        -- apv5
+
+veiculo5        -- apv6
+areaComp        -- apv6
+
+veiculo5        -- apv7
+areaEE          -- apv7
+
+@enduml

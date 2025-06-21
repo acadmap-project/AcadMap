@@ -1,0 +1,64 @@
+@startuml
+
+object "Prof. Barbara Liskov : Usuario" as usuarioBarbara {
+  id_usuario   = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Prof. Barbara Liskov"
+  email        = "barbara.liskov@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = true
+}
+
+object "John von Neumann : Usuario" as usuarioNeumann {
+  id_usuario   = "66666666-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "John von Neumann"
+  email        = "john.neumann@email.com"
+  tipo_perfil  = "auditor"
+  flag_ativo   = true
+}
+
+' ==== Logs ====
+object "Log 7 : Log" as log7 {
+  id_log       = "77777777-eeee-eeee-eeee-eeeeeeeeeeee"
+  id_usuario   = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  acao         = "adicao_veiculo"
+}
+
+object "LogVeiculo 7:LogVeiculo" as logveic7 {
+  id_log       = "77777777-eeee-eeee-eeee-eeeeeeeeeeee"
+  id_veiculo   = "88888888-cccc-cccc-cccc-cccccccccccc"
+}
+
+object "Log 8 : Log" as log8 {
+  id_log       = "88888888-ffff-ffff-ffff-ffffffffffff"
+  id_usuario   = "55555555-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  acao         = "adicao_veiculo"
+}
+
+object "LogVeiculo 8:LogVeiculo" as logveic8 {
+  id_log       = "88888888-ffff-ffff-ffff-ffffffffffff"
+  id_veiculo   = "99999999-dddd-dddd-dddd-dddddddddddd"
+}
+
+object "Log 9 : Log" as log9 {
+  id_log       = "99999999-1111-1111-1111-111111111111"
+  id_usuario   = "66666666-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  acao         = "cadastro_veiculo_aceito"
+}
+
+object "LogVeiculo 9:LogVeiculo" as logveic9 {
+  id_log       = "99999999-1111-1111-1111-111111111111"
+  id_veiculo   = "99999999-dddd-dddd-dddd-dddddddddddd"
+}
+
+' ---- Associações ----
+log7 -- logveic7
+log8 -- logveic8
+log9 -- logveic9
+
+log7 -- usuarioBarbara
+log8 -- usuarioBarbara
+log9 -- usuarioNeumann
+
+@enduml
