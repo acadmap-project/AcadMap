@@ -98,8 +98,8 @@ function FormularioPeriodicoContent() {
             nomeVeiculo: data.nome,
             tipo: data.tipo || 'periodico',
             indice: data.classificacao || 'N/A',
-            link:
-              data.linkJcr || data.linkScopus || data.linkGoogleScholar || '#',
+            // link:
+            //   data.linkJcr || data.linkScopus || data.linkGoogleScholar || '#',
             ...data,
           },
         });
