@@ -20,11 +20,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioService {
+public class CriarUsuarioService {
   private final UsuarioRepository usuarioRepository;
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final ProgramaRepository programaRepository;
-  private final LogService logService;
+  private final RegistrarLogService registrarLogService;
 
   public UsuarioResponseDTO criarUsuario(UsuarioRequestDTO usuarioRequestDTO) {
     Programa programa = this.buscaPrograma(usuarioRequestDTO.idPrograma());
@@ -40,7 +40,7 @@ public class UsuarioService {
     usuario.setPrograma(programa);
     usuario.setAreasPesquisa(areas);
     Usuario usuarioPersistido = this.usuarioRepository.save(usuario);
-    this.logService.registraCadastroUsuario(usuarioPersistido);
+    this.registrarLogService.registraCadastroUsuario(usuarioPersistido);
 
     return new UsuarioResponseDTO(usuarioPersistido);
   }

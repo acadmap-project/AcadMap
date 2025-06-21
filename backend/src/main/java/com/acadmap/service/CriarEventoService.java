@@ -19,12 +19,12 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class EventoService {
+public class CriarEventoService {
 
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final EventoRepository eventoRepository;
   private final UsuarioRepository usuarioRepository;
-  private final LogService logService;
+  private final RegistrarLogService registrarLogService;
 
 
   @Transactional
@@ -60,7 +60,7 @@ public class EventoService {
 
       Evento eventoSalvo =  this.eventoRepository.save(evento);
 
-      this.logService.registrarCadastroEvento(eventoSalvo, usuario);
+      this.registrarLogService.registrarCadastroEvento(eventoSalvo, usuario);
 
       return new EventoResponseDTO(eventoSalvo);
 
