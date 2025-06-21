@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 import Popup from './Popup';
+import { a } from '@react-spring/web';
 
 const queryClient = new QueryClient();
 
@@ -116,8 +117,9 @@ function FormularioPeriodicoContent() {
   });
   const onSubmit = data => {
     // Handle vinculoSBC logic and convert percentil to number
+    const { vinculoSbcCheckbox, ...rest } = data; // Remove vinculoSbcCheckbox
     const formData = {
-      ...data,
+      ...rest,
       vinculoSBC:
         data.vinculoSbcCheckbox && data.vinculoSBC && data.vinculoSBC !== ''
           ? data.vinculoSBC
@@ -134,6 +136,18 @@ function FormularioPeriodicoContent() {
   const closeSuccessPopup = () => {
     setShowSuccessPopup(false);
   };
+
+  const qualisOptions = [
+    {value: 'a1'},
+    {value: 'a2'},
+    {value: 'b1'},
+    {value: 'b2'},
+    {value: 'b3'},
+    {value: 'b4'},
+    {value: 'b5'},
+    {value: 'c'},
+  ]
+  
 
   return (
     <>
@@ -346,7 +360,7 @@ function FormularioPeriodicoContent() {
               >
                 NOTA NO ANTIGO QUALIS*
               </label>
-              <input
+              {/* <input
                 type="text"
                 id="qualisAntigo"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
@@ -356,6 +370,27 @@ function FormularioPeriodicoContent() {
               {errors.qualisAntigo && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.qualisAntigo.message}
+                </p>
+              )} */}
+              <select
+                id="qualisAntigo"
+                className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300`
+                }
+                {...register('qualisAntigo')}
+                defaultValue=""
+              >
+                <option value="" disabled className="text-gray-500">
+                  Selecione tipo de vínculo
+                </option>
+                {qualisOptions.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.value}
+                  </option>
+                ))}
+              </select>
+              {errors.vinculoSBC && vinculoSbcCheckbox && (
+                <p className="text-red-500 text-sm mt-1 text-left">
+                  {errors.vinculoSBC.message}
                 </p>
               )}
             </div>
