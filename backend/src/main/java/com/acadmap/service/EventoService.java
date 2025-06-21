@@ -1,22 +1,17 @@
 package com.acadmap.service;
 
-import com.acadmap.exception.EventoDuplicadoException;
+import com.acadmap.exception.evento.EventoDuplicadoException;
 import com.acadmap.model.dto.EventoCreateDTO;
 import com.acadmap.model.dto.EventoResponseDTO;
-import com.acadmap.model.dto.UsuarioResponseDTO;
 import com.acadmap.model.entities.*;
 import com.acadmap.model.enums.*;
 import com.acadmap.repository.*;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.GeneratedValue;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.hibernate.Hibernate;
-import org.hibernate.jdbc.Expectation;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

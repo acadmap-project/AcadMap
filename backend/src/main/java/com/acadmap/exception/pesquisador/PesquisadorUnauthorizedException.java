@@ -1,7 +1,9 @@
-package com.acadmap.exception;
+package com.acadmap.exception.pesquisador;
 
 import com.acadmap.model.entities.VeiculoPublicacao;
+import lombok.Getter;
 
+@Getter
 public class PesquisadorUnauthorizedException extends RuntimeException {
     private final VeiculoPublicacao veiculoPublicacao;
 
@@ -10,7 +12,4 @@ public class PesquisadorUnauthorizedException extends RuntimeException {
         this.veiculoPublicacao = veiculoPublicacao;
     }
 
-    public VeiculoPublicacao getPesquisadorUnauthorized(){
-        return this.veiculoPublicacao;
-    }
 }

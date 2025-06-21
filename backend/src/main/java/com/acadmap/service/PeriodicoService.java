@@ -1,7 +1,6 @@
 package com.acadmap.service;
 
-import com.acadmap.exception.EventoDuplicadoException;
-import com.acadmap.exception.PeriodicoDuplicadoException;
+import com.acadmap.exception.periodico.PeriodicoDuplicadoException;
 import com.acadmap.model.dto.PeriodicoResponseDTO;
 import com.acadmap.model.dto.PeriodicoResquestDTO;
 import com.acadmap.model.entities.AreaPesquisa;
