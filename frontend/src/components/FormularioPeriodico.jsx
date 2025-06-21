@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 import Popup from './Popup';
-import { a } from '@react-spring/web';
 
 const queryClient = new QueryClient();
 
@@ -109,7 +108,7 @@ function FormularioPeriodicoContent() {
       console.error('Erro ao cadastrar periódico:', error);
       setErrorInfo({
         title: 'Erro!',
-        message: error.message || 'Erro ao cadastrar periódico',
+        message: 'O cadastro já encontra presente no sistema',
         type: 'error',
       });
       setShowErrorPopup(true);
