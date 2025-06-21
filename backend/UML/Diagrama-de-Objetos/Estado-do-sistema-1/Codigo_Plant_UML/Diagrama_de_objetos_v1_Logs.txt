@@ -1,0 +1,129 @@
+@startuml
+
+object "Admin Mestre : Usuario" as usuarioAdmin {
+  id_usuario   = "00000000-0000-0000-0000-000000000001"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Admin Mestre"
+  email        = "admin@email.com"
+  tipo_perfil  = "administrador"
+  flag_ativo   = true
+}
+
+object "Dra. Ada Lovelace : Usuario" as usuarioAda {
+  id_usuario   = "11111111-1111-1111-1111-111111111111"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Dra. Ada Lovelace"
+  email        = "ada.lovelace@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = true
+}
+
+object "Dr. Alan Turing : Usuario" as usuarioTuring {
+  id_usuario   = "22222222-2222-2222-2222-222222222222"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Dr. Alan Turing"
+  email        = "alan.turing@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = true
+}
+
+object "Grace Hopper : Usuario" as usuarioGrace {
+  id_usuario   = "33333333-3333-3333-3333-333333333333"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Grace Hopper"
+  email        = "grace.hopper@email.com"
+  tipo_perfil  = "auditor"
+  flag_ativo   = true
+}
+
+object "Usuário Antigo : Usuario" as usuarioAntigo {
+  id_usuario   = "44444444-4444-4444-4444-444444444444"
+  id_programa  = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+  nome         = "Usuário Antigo"
+  email        = "antigo@email.com"
+  tipo_perfil  = "pesquisador"
+  flag_ativo   = false
+}
+
+object "Log 1 : Log" as log1 {
+  id_log       = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  id_usuario   = "00000000-0000-0000-0000-000000000001"
+  acao         = "cadastro_usuario"
+}
+
+object "Log 2 : Log" as log2 {
+  id_log       = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  id_usuario   = "11111111-1111-1111-1111-111111111111"
+  acao         = "adicao_veiculo"
+}
+
+object "LogVeiculo 2:LogVeiculo" as logveic2 {
+  id_log       = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  id_veiculo   = "55555555-5555-5555-5555-555555555555"
+}
+
+object "Log 3 : Log" as log3 {
+  id_log       = "cccccccc-cccc-cccc-cccc-cccccccccccc"
+  id_usuario   = "00000000-0000-0000-0000-000000000001"
+  acao         = "cadastro_veiculo_aceito"
+}
+
+object "LogVeiculo 3:LogVeiculo" as logveic3 {
+  id_log       = "cccccccc-cccc-cccc-cccc-cccccccccccc"
+  id_veiculo   = "55555555-5555-5555-5555-555555555555"
+}
+
+object "Log 4 : Log" as log4 {
+  id_log       = "dddddddd-dddd-dddd-dddd-dddddddddddd"
+  id_usuario   = "33333333-3333-3333-3333-333333333333"
+  acao         = "cadastro_veiculo_recusado"
+}
+
+object "LogVeiculo 4:LogVeiculo" as logveic4 {
+  id_log       = "dddddddd-dddd-dddd-dddd-dddddddddddd"
+  id_veiculo   = "77777777-7777-7777-7777-777777777777"
+}
+
+object "JustificativaRecusa 4:JustificativaRecusa" as just4 {
+  id_log        = "dddddddd-dddd-dddd-dddd-dddddddddddd"
+  justificativa = "O veículo não possui relevância acadêmica comprovada para o programa. O índice h5 é muito baixo e não possui vínculo com a SBC."
+}
+
+object "Log 5 : Log" as log5 {
+  id_log       = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
+  id_usuario   = "22222222-2222-2222-2222-222222222222"
+  acao         = "adicao_veiculo"
+}
+
+object "LogVeiculo 5:LogVeiculo" as logveic5 {
+  id_log       = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
+  id_veiculo   = "66666666-6666-6666-6666-666666666666"
+}
+
+object "Log 6 : Log" as log6 {
+  id_log       = "ffffffff-ffff-ffff-ffff-ffffffffffff"
+  id_usuario   = "00000000-0000-0000-0000-000000000001"
+  acao         = "exclusao_usuario"
+}
+
+object "LogExclusao 6:LogExclusao" as logexc6 {
+  id_log             = "ffffffff-ffff-ffff-ffff-ffffffffffff"
+  id_usuario_excluido = "44444444-4444-4444-4444-444444444444"
+}
+
+' ---- Associações ----
+log2 -- logveic2
+log3 -- logveic3
+log4 -- logveic4
+log4 -- just4
+log5 -- logveic5
+log6 -- logexc6
+
+log1 -- usuarioAdmin
+log2 -- usuarioAda
+log3 -- usuarioAdmin
+log4 -- usuarioGrace
+log5 -- usuarioTuring
+log6 -- usuarioAdmin
+
+@enduml
