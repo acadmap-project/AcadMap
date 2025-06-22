@@ -1,7 +1,7 @@
 package com.acadmap.controller;
 
-import com.acadmap.model.dto.EventoCreateDTO;
-import com.acadmap.model.dto.EventoResponseDTO;
+import com.acadmap.model.dto.evento.EventoCreateDTO;
+import com.acadmap.model.dto.evento.EventoResponseDTO;
 import com.acadmap.service.CriarEventoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

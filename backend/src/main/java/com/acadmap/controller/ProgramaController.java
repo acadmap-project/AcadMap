@@ -1,6 +1,6 @@
 package com.acadmap.controller;
 
-import com.acadmap.model.dto.ProgramaDTO;
+import com.acadmap.model.dto.programa.ProgramaDTO;
 import com.acadmap.repository.ProgramaRepository;
 import java.util.Comparator;
 import java.util.List;

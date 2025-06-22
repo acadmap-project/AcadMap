@@ -1,6 +1,5 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.periodico;
 
-import com.acadmap.model.entities.Evento;
 import com.acadmap.model.entities.Periodico;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

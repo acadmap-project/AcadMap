@@ -1,7 +1,7 @@
 package com.acadmap.controller;
 
-import com.acadmap.model.dto.PeriodicoResponseDTO;
-import com.acadmap.model.dto.PeriodicoResquestDTO;
+import com.acadmap.model.dto.periodico.PeriodicoResponseDTO;
+import com.acadmap.model.dto.periodico.PeriodicoResquestDTO;
 import com.acadmap.service.CriarPeriodicoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

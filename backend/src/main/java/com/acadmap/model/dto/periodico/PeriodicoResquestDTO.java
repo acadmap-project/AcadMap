@@ -1,4 +1,4 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.periodico;
 
 import com.acadmap.model.enums.*;
 
