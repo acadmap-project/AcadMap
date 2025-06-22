@@ -19,17 +19,9 @@ export const CadastrarEventoSchema = z
       .transform(val => Number(val)),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
-    linkEvento: z.string().url('Link de acesso deve ser uma URL válida'),
-    linkGoogleScholar: z
-      .string()
-      .url('Link do Google Scholar deve ser uma URL válida')
-      .optional()
-      .or(z.literal('')),
-    linkSolSbc: z
-      .string()
-      .url('Link do SOL-SBC deve ser uma URL válida')
-      .optional()
-      .or(z.literal('')),
+    linkEvento: z.string(),
+    linkGoogleScholar: z.string().optional().or(z.literal('')),
+    linkSolSbc: z.string().optional().or(z.literal('')),
   })
   .refine(
     data => {

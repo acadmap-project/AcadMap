@@ -48,7 +48,7 @@ function HeaderSistema({ userType, userName }) {
                     </Link>
                   </li>
                 )}
-                {/* {(userType === 'AUDITOR' ||
+                {(userType === 'AUDITOR' ||
                   userType === 'PESQUISADOR' ||
                   userType === 'ADMINISTRADOR') && (
                   <li>
@@ -61,7 +61,7 @@ function HeaderSistema({ userType, userName }) {
                       Cadastrar Periódico
                     </Link>
                   </li>
-                )} */}
+                )}
                 {(userType === 'AUDITOR' || userType === 'ADMINISTRADOR') && (
                   <li>
                     {' '}

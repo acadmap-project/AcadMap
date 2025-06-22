@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroEvento from './pages/CadastroEvento';
-import ValidacaoCadastro from './components/ValidacaoCadastro';
+import ValidacaoPeriodico from './pages/ValidacaoPeriodico';
 import GerenciadorCadastros from './pages/GerenciadorCadastros';
 import RegistrosPendentes from './pages/RegistrosPendentes';
 import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
@@ -28,7 +28,10 @@ const App = () => {
               path="/revisao-cadastro-evento"
               element={<RevisaoCadastroEvento />}
             />
-            <Route path="/validacao-cadastro" element={<ValidacaoCadastro />} />
+            <Route
+              path="/validacao-cadastro"
+              element={<ValidacaoPeriodico />}
+            />
             <Route path="*" element={<NotFound />} />
             <Route
               path="/cadastro-pendente"
