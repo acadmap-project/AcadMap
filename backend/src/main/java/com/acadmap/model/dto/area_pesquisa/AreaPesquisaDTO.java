@@ -1,4 +1,4 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.area_pesquisa;
 
 import java.util.UUID;
 import com.acadmap.model.entities.AreaPesquisa;

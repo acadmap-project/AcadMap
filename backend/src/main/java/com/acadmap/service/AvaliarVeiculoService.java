@@ -1,7 +1,7 @@
 package com.acadmap.service;
 
 
-import com.acadmap.model.dto.VeiculoPublicacaoDTO;
+import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.VeiculoPublicacaoRepository;

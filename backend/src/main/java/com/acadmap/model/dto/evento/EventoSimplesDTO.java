@@ -1,4 +1,4 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.evento;
 
 import com.acadmap.model.entities.Evento;
 import java.util.UUID;

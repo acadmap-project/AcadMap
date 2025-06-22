@@ -3,7 +3,7 @@ package com.acadmap.controller;
 
 import com.acadmap.exception.pesquisador.PesquisadorUnauthorizedException;
 import com.acadmap.exception.veiculo.VeiculoVinculadoException;
-import com.acadmap.model.dto.VeiculoPublicacaoDTO;
+import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoPerfilUsuario;

@@ -1,7 +1,7 @@
 package com.acadmap.service;
 
-import com.acadmap.model.dto.UsuarioRequestDTO;
-import com.acadmap.model.dto.UsuarioResponseDTO;
+import com.acadmap.model.dto.usuario.UsuarioRequestDTO;
+import com.acadmap.model.dto.usuario.UsuarioResponseDTO;
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Programa;
 import com.acadmap.model.entities.Usuario;

@@ -1,4 +1,4 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.programa;
 
 import com.acadmap.model.entities.Programa;
 import java.util.UUID;

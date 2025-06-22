@@ -1,7 +1,7 @@
 package com.acadmap.controller;
 
-import com.acadmap.model.dto.UsuarioRequestDTO;
-import com.acadmap.model.dto.UsuarioResponseDTO;
+import com.acadmap.model.dto.usuario.UsuarioRequestDTO;
+import com.acadmap.model.dto.usuario.UsuarioResponseDTO;
 import com.acadmap.service.CriarUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

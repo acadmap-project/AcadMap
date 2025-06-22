@@ -1,6 +1,7 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.veiculo;
 
-import com.acadmap.model.entities.Evento;
+import com.acadmap.model.dto.area_pesquisa.AreaPesquisaDTO;
+import com.acadmap.model.dto.usuario.UsuarioResponseDTO;
 import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.*;
 import lombok.AllArgsConstructor;
