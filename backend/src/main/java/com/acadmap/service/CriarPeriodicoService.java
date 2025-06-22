@@ -39,11 +39,9 @@ public class CriarPeriodicoService {
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
 
-            if (dto.forcar() == null || !dto.forcar()) {
-                if (!periodicosSimilares.isEmpty()) {
+            if (!dto.forcar() && !periodicosSimilares.isEmpty()) {
                     throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
                             periodicosSimilares);
-                }
             }
 
             Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.areasPesquisaIds());
