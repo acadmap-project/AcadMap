@@ -20,14 +20,8 @@ export const CadastrarEventoSchema = z
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
     linkEvento: z.string(),
-    linkGoogleScholar: z
-      .string()
-      .optional()
-      .or(z.literal('')),
-    linkSolSbc: z
-      .string()
-      .optional()
-      .or(z.literal('')),
+    linkGoogleScholar: z.string().optional().or(z.literal('')),
+    linkSolSbc: z.string().optional().or(z.literal('')),
   })
   .refine(
     data => {

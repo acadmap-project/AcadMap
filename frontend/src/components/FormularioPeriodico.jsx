@@ -2,61 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm, Controller } from 'react-hook-form';
 import { CadastrarPeriodicoSchema } from '../schemas/CadastrarPeriodicoSchema';
 import useAreas from '../hooks/useAreas';
-import useLogin from '../hooks/userAuth';
-import { MultiSelectDropdown } from './MultipleSelectDropdown';
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-} from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import ErrorPopup from './ErrorPopup';
-import Popup from './Popup';
-
-const queryClient = new QueryClient();
-
-const postPeriodico = async ({ periodicoData, userId }) => {
-  console.log('Sending data to API:', periodicoData);
-  const response = await fetch(
-    'http://localhost:8080/api/periodicos/cadastro',
-    {
-      method: 'POST',
-      headers: {
-        'X-User-Id': userId,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(periodicoData),
-    }
-  );
-
-  if (!response.ok) {
-    const errorData = await response.text();
-    const error = new Error(`HTTP ${response.status}: ${errorData}`);
-    error.status = response.status;
-    error.response = { status: response.status, data: errorData };
-    throw error;
-  }
-
-  return response.json();
-};
+import { MultiSelectDropdown } from './MultipleSelectDropdown';
 
 function FormularioPeriodicoContent() {
   const areas = useAreas();
-  const { loggedIn } = useLogin();
   const navigate = useNavigate();
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [errorInfo, setErrorInfo] = useState({
-    title: '',
-    message: '',
-    type: 'error',
-  });
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [successInfo, setSuccessInfo] = useState({
-    title: '',
-    message: '',
-    type: 'success',
-  });
 
   const methods = useForm({
     resolver: zodResolver(CadastrarPeriodicoSchema),
@@ -78,46 +29,11 @@ function FormularioPeriodicoContent() {
     { value: 'vinculo_top_20', label: 'Top 20' },
     { value: 'vinculo_top_10', label: 'Top 10' },
   ];
-  const createPeriodicoMutation = useMutation({
-    mutationFn: postPeriodico,
-    onSuccess: data => {
-      console.log('Periódico cadastrado com sucesso:', data);
-      setSuccessInfo({
-        title: 'Periódico Cadastrado',
-        message: 'O periódico foi cadastrado com sucesso no sistema.',
-        type: 'success',
-      });
-      setShowSuccessPopup(true);
-      setTimeout(() => {
-        // Navigate to validation page with the response data
-        navigate('/validacao-cadastro', {
-          state: {
-            id: data.idVeiculo,
-            usuario: data.usuario?.nome || 'Usuario',
-            nomeVeiculo: data.nome,
-            tipo: data.tipo || 'periodico',
-            indice: data.classificacao || 'N/A',
-            // link:
-            //   data.linkJcr || data.linkScopus || data.linkGoogleScholar || '#',
-            ...data,
-          },
-        });
-      }, 2000);
-    },
-    onError: error => {
-      console.error('Erro ao cadastrar periódico:', error);
-      setErrorInfo({
-        title: 'Erro!',
-        message: 'O cadastro já encontra presente no sistema',
-        type: 'error',
-      });
-      setShowErrorPopup(true);
-    },
-  });
+
   const onSubmit = data => {
     // Handle vinculoSBC logic and convert percentil to number
-    const { vinculoSbcCheckbox, ...rest } = data; // Remove vinculoSbcCheckbox
-    const formData = {
+    const { vinculoSbcCheckbox: _, ...rest } = data; // Remove vinculoSbcCheckbox
+    const periodicoData = {
       ...rest,
       vinculoSBC:
         data.vinculoSbcCheckbox && data.vinculoSBC && data.vinculoSBC !== ''
@@ -126,27 +42,22 @@ function FormularioPeriodicoContent() {
       percentil: Number(data.percentil),
     };
 
-    createPeriodicoMutation.mutate({
-      periodicoData: formData,
-      userId: loggedIn.id,
+    console.log('Submitting periodico data:', periodicoData);
+    navigate('/validacao-cadastro', {
+      state: periodicoData,
     });
   };
 
-  const closeSuccessPopup = () => {
-    setShowSuccessPopup(false);
-  };
-
   const qualisOptions = [
-    {value: 'a1'},
-    {value: 'a2'},
-    {value: 'b1'},
-    {value: 'b2'},
-    {value: 'b3'},
-    {value: 'b4'},
-    {value: 'b5'},
-    {value: 'c'},
-  ]
-  
+    { value: 'a1' },
+    { value: 'a2' },
+    { value: 'b1' },
+    { value: 'b2' },
+    { value: 'b3' },
+    { value: 'b4' },
+    { value: 'b5' },
+    { value: 'c' },
+  ];
 
   return (
     <>
@@ -373,8 +284,7 @@ function FormularioPeriodicoContent() {
               )} */}
               <select
                 id="qualisAntigo"
-                className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300`
-                }
+                className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300`}
                 {...register('qualisAntigo')}
                 defaultValue=""
               >
@@ -418,38 +328,17 @@ function FormularioPeriodicoContent() {
             <button
               type="submit"
               className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              disabled={createPeriodicoMutation.isPending}
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
-              {createPeriodicoMutation.isPending
-                ? 'Salvando...'
-                : 'Salvar e Continuar'}
+              Salvar e Continuar
             </button>
           </div>
         </form>
       </FormProvider>
-      <ErrorPopup
-        isOpen={showErrorPopup}
-        title={errorInfo.title}
-        message={errorInfo.message}
-        type={errorInfo.type}
-        onClose={() => setShowErrorPopup(false)}
-      />
-      <Popup
-        isOpen={showSuccessPopup}
-        onClose={closeSuccessPopup}
-        title={successInfo.title}
-        message={successInfo.message}
-        type={successInfo.type}
-      />
     </>
   );
 }
 
 export default function FormularioPeriodico() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <FormularioPeriodicoContent />
-    </QueryClientProvider>
-  );
+  return <FormularioPeriodicoContent />;
 }
