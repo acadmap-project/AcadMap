@@ -38,11 +38,13 @@ public class CriarPeriodicoService {
 
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
-            if (!periodicosSimilares.isEmpty()) {
-                throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
-                        periodicosSimilares);
-            }
 
+            if (dto.forcar() == null || !dto.forcar()) {
+                if (!periodicosSimilares.isEmpty()) {
+                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
+                            periodicosSimilares);
+                }
+            }
 
             Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.areasPesquisaIds());
 
@@ -71,9 +73,9 @@ public class CriarPeriodicoService {
 
             return new PeriodicoResponseDTO(periodicoSavo);
 
-        } catch (PeriodicoDuplicadoException e) {
-            throw e;
-        } catch (IllegalArgumentException e ){
+
+        }
+        catch (IllegalArgumentException e ){
             throw new RuntimeException("Erro de validação: " + e.getMessage());
         } catch (DataAccessException e) {
             throw new RuntimeException("Erro ao acessar o banco de dados: " + e.getMessage());
@@ -96,4 +98,5 @@ public class CriarPeriodicoService {
 
         return new HashSet<>(areas);
         }
+
     }
