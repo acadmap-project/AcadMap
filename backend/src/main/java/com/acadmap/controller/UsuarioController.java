@@ -2,11 +2,14 @@ package com.acadmap.controller;
 
 import com.acadmap.model.dto.UsuarioRequestDTO;
 import com.acadmap.model.dto.UsuarioResponseDTO;
+import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.service.CriarUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -14,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class UsuarioController {
+
   private final CriarUsuarioService criarUsuarioService;
+  private final UsuarioRepository usuarioRepository;
 
   @PostMapping("/cadastro")
   public ResponseEntity<UsuarioResponseDTO> criarUsuario(
@@ -23,5 +28,17 @@ public class UsuarioController {
     return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
   }
 
+  @GetMapping
+  public ResponseEntity<?> retornarUsuarios(){
+
+    List<UsuarioResponseDTO> listaDeUsuarios = usuarioRepository.findAll().stream()
+            .map(UsuarioResponseDTO::new).collect(Collectors.toList());
+
+    if (listaDeUsuarios.isEmpty()){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.status(HttpStatus.FOUND).body(listaDeUsuarios);
+
+  }
 
 }
