@@ -158,7 +158,7 @@ function RevisaoCadastroEventoContent() {
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      {!['AUDITOR', 'ADMINISTRADOR'].includes(loggedIn.userType) ? (
+      {!['AUDITOR', 'ADMINISTRADOR', 'PESQUISADOR'].includes(loggedIn.userType) ? (
         <SemPermissao />
       ) : (
         <>
