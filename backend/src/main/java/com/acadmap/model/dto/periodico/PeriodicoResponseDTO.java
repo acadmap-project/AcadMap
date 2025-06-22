@@ -1,4 +1,4 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.periodico;
 
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Periodico;

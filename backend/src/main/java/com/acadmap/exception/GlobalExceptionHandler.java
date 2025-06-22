@@ -4,9 +4,9 @@ import com.acadmap.exception.evento.EventoDuplicadoException;
 import com.acadmap.exception.periodico.PeriodicoDuplicadoException;
 import com.acadmap.exception.pesquisador.PesquisadorUnauthorizedException;
 import com.acadmap.exception.veiculo.VeiculoVinculadoException;
-import com.acadmap.model.dto.EventoSimplesDTO;
-import com.acadmap.model.dto.PeriodicoSimplesDTO;
-import com.acadmap.model.dto.VeiculoPublicacaoDTO;
+import com.acadmap.model.dto.evento.EventoSimplesDTO;
+import com.acadmap.model.dto.periodico.PeriodicoSimplesDTO;
+import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,11 +49,10 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(VeiculoVinculadoException.class)
-  public ResponseEntity<PersonalizedResponse<VeiculoPublicacaoDTO>> handleUsuarioVinculado(
+  public ResponseEntity<PersonalizedResponse<VeiculoPublicacaoDTO>> handleVeiculoVinculado(
           VeiculoVinculadoException ex
   ){
-    VeiculoPublicacaoDTO veiculoPublicacaoDTO =
-            new VeiculoPublicacaoDTO(ex.getVeiculoPublicacao());
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO = VeiculoPublicacaoDTO.buildVeiculoDto(ex.getVeiculoPublicacao());
     PersonalizedResponse<VeiculoPublicacaoDTO> veiculoVinculadoResponse =
             new PersonalizedResponse<>(ex.getMessage(), veiculoPublicacaoDTO);
 
@@ -61,11 +60,10 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(PesquisadorUnauthorizedException.class)
-  public ResponseEntity<PersonalizedResponse> handleUsuarioVinculado(
+  public ResponseEntity<PersonalizedResponse<VeiculoPublicacaoDTO>> handleUsuarioVinculado(
           PesquisadorUnauthorizedException ex
   ){
-    VeiculoPublicacaoDTO veiculoPublicacaoDTO =
-            new VeiculoPublicacaoDTO(ex.getVeiculoPublicacao());
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO = VeiculoPublicacaoDTO.buildVeiculoDto(ex.getVeiculoPublicacao());
     PersonalizedResponse<VeiculoPublicacaoDTO> personalizedResponse =
             new PersonalizedResponse<>(ex.getMessage(), veiculoPublicacaoDTO);
 

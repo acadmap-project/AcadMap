@@ -1,6 +1,5 @@
-package com.acadmap.model.dto;
+package com.acadmap.model.dto.evento;
 
-import com.acadmap.model.entities.LogVeiculo;
 import com.acadmap.model.enums.*;
 import lombok.*;
 

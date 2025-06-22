@@ -1,8 +1,8 @@
 package com.acadmap.service;
 
 import com.acadmap.exception.evento.EventoDuplicadoException;
-import com.acadmap.model.dto.EventoCreateDTO;
-import com.acadmap.model.dto.EventoResponseDTO;
+import com.acadmap.model.dto.evento.EventoCreateDTO;
+import com.acadmap.model.dto.evento.EventoResponseDTO;
 import com.acadmap.model.entities.*;
 import com.acadmap.model.enums.*;
 import com.acadmap.repository.*;
