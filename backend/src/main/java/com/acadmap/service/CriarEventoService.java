@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class CriarEventoService {
 
   private final AreaPesquisaRepository areaPesquisaRepository;
@@ -27,13 +28,12 @@ public class CriarEventoService {
   private final RegistrarLogService registrarLogService;
 
 
-  @Transactional
-  public EventoResponseDTO criarEvento(EventoCreateDTO dto, UUID uuid) {
+
+  public EventoResponseDTO criarEvento(EventoCreateDTO dto, UUID uuid, boolean forcar) {
     try {
-      // 🔍 Verificar duplicidade por nome aproximado
-      List<Evento> eventosSimilares =
-          this.eventoRepository.findByNomeContainingIgnoreCase(dto.getNome());
-      if (!eventosSimilares.isEmpty()) {
+
+      List<Evento> eventosSimilares = this.eventoRepository.findByNomeContainingIgnoreCase(dto.getNome());
+      if (!eventosSimilares.isEmpty() && !forcar) {
         throw new EventoDuplicadoException("Erro de duplicidade de evento detectado.",
             eventosSimilares);
       }
@@ -67,7 +67,8 @@ public class CriarEventoService {
 
     } catch (EventoDuplicadoException e) {
       throw e;
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       throw new RuntimeException("Erro de validação: " + e.getMessage());
     } catch (DataAccessException e) {
       throw new RuntimeException("Erro ao acessar o banco de dados: " + e.getMessage());
