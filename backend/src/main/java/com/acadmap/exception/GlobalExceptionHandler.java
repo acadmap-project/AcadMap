@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<PersonalizedListResponse<EventoSimplesDTO>> handleEventoDuplicado(
           EventoDuplicadoException ex) {
 
-    // Converte os eventos da exceção para EventoSimplesDTO
+
     var eventosSimples =
             ex.getEventosSimilares().stream().map(EventoSimplesDTO::new).collect(Collectors.toList());
 
@@ -36,7 +36,6 @@ public class GlobalExceptionHandler {
   public ResponseEntity<PersonalizedListResponse<PeriodicoSimplesDTO>> handlePeriodicoDuplicado(
           PeriodicoDuplicadoException ex) {
 
-    // Converte os Periodico para DTO
     var periodicoSimples =
             ex.getPeriodicosSimilares().stream()
                     .map(PeriodicoSimplesDTO::new)

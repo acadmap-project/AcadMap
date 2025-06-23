@@ -270,6 +270,13 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `tipo`, `status` : Valores padrões na criação de Evento. (Evento, Pendente)
 - `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` , `areaPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
+
+### Forçar inserção mesmo com erro de duplicação : 
+
+```
+POST /api/eventos/cadastro?forcar=true
+```
+
 ---
 
 # 📘 API - Cadastro de Periodico
@@ -369,6 +376,12 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `tipo`, `status` : Valores padrões na criação de Evento. (Periodico, Pendente)
 - `issn`, `percentil`, `linkJrc`, `linkScopus` , `linkGoogleScholar`, `qualisAntigo`, `areasPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
+
+### Forçar inserção mesmo com erro de duplicação :
+
+```
+POST /api/periodicos/cadastro?forcar=true
+```
 ---
 
 
