@@ -1,5 +1,6 @@
 package com.acadmap.controller;
 
+import com.acadmap.model.entities.Usuario;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.model.dto.usuario.UsuarioRequestDTO;
 import com.acadmap.model.dto.usuario.UsuarioResponseDTO;
@@ -9,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 
 @RestController
@@ -41,4 +44,18 @@ public class UsuarioController {
 
   }
 
+  @GetMapping("/{idUser}")
+  public ResponseEntity<?> retornarUsuario(@PathVariable UUID idUser){
+
+    Optional<Usuario> optionalUsuario = usuarioRepository.findById(idUser);
+
+    if (optionalUsuario.isPresent()) {
+      Usuario usuarioEncontrado = optionalUsuario.get();
+      UsuarioResponseDTO usuarioDTO = new UsuarioResponseDTO(usuarioEncontrado);
+      return ResponseEntity.status(HttpStatus.FOUND).body(usuarioDTO);
+
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+  }
 }
