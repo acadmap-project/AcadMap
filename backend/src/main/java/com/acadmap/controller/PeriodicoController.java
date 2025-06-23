@@ -20,9 +20,10 @@ public class PeriodicoController {
 
     @PostMapping
     public ResponseEntity<PeriodicoResponseDTO> criarPeriodico(@RequestBody PeriodicoResquestDTO dto,
-                                                               @RequestHeader ("X-User-Id")UUID idUser){
-
-        PeriodicoResponseDTO dtoresponseperiodico = this.criarPeriodicoService.criarPeriodico(dto, idUser);
+                                                               @RequestHeader ("X-User-Id")UUID idUser,
+                                                               @RequestParam(defaultValue = "false") boolean forcar){
+        System.out.println("FORCAR: " + forcar);
+        PeriodicoResponseDTO dtoresponseperiodico = this.criarPeriodicoService.criarPeriodico(dto, idUser, forcar);
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoresponseperiodico);
     }
 

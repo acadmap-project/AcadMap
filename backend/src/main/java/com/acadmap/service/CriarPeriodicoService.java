@@ -26,6 +26,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class CriarPeriodicoService {
 
     private final AreaPesquisaRepository areaPesquisaRepository;
@@ -33,13 +34,12 @@ public class CriarPeriodicoService {
     private final UsuarioRepository usuarioRepository;
     private final RegistrarLogService registrarLogService;
 
-    @Transactional
-    public PeriodicoResponseDTO criarPeriodico(PeriodicoResquestDTO dto, UUID uuid){
+
+    public PeriodicoResponseDTO criarPeriodico(PeriodicoResquestDTO dto, UUID uuid, boolean forcar){
 
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
-
-            if (!dto.forcar() && !periodicosSimilares.isEmpty()) {
+            if (!periodicosSimilares.isEmpty() && !forcar) {
                     throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
                             periodicosSimilares);
             }
@@ -72,6 +72,9 @@ public class CriarPeriodicoService {
             return new PeriodicoResponseDTO(periodicoSavo);
 
 
+        }
+        catch (PeriodicoDuplicadoException e){
+            throw e;
         }
         catch (IllegalArgumentException e ){
             throw new RuntimeException("Erro de validação: " + e.getMessage());

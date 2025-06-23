@@ -17,7 +17,7 @@ public record PeriodicoResquestDTO(String nome,
                                    String linkJcr,
                                    String linkScopus,
                                    String linkGoogleScholar,
-                                   QualisAntigo qualisAntigo,
-                                   Boolean forcar) {
+                                   QualisAntigo qualisAntigo
+                                   ) {
 
 }
