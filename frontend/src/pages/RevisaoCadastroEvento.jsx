@@ -246,6 +246,13 @@ function RevisaoCadastroEventoContent() {
                 ' N/A'
               )}
             </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">CLASSIFICAÇÃO BASE:</span>{' '}
+              {eventData.classificacao
+                ? eventData.classificacao.toUpperCase()
+                : 'N/A'}
+            </div>
             <div className="w-full flex justify-center mt-6">
               <button
                 onClick={handleConfirm}

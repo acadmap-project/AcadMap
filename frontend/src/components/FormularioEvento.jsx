@@ -4,6 +4,7 @@ import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
+import { calcularClassificacaoEvento } from '../utils/classificacaoBase';
 
 function FormularioEventoContent() {
   const navigate = useNavigate();
@@ -32,10 +33,12 @@ function FormularioEventoContent() {
   const areas = useAreas();
 
   const onSubmit = data => {
+    const vinculoFinal = vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo';
     const eventData = {
       ...data,
-      vinculoSbc: vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo',
+      vinculoSbc: vinculoFinal,
       areasPesquisaIds: data.areasPesquisaIds || [],
+      classificacao: calcularClassificacaoEvento(data.h5, vinculoFinal),
     };
     console.log('Submitting event data:', eventData);
     navigate('/revisao-cadastro-evento', {

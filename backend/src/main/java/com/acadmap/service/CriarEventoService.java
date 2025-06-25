@@ -43,7 +43,7 @@ public class CriarEventoService {
       Evento evento = new Evento();
       evento.setIdVeiculo(UUID.randomUUID());
       evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
-      evento.setClassificacao(ClassificacaoVeiculo.a8);
+      evento.setClassificacao(dto.getClassificacao());
       evento.setNome(dto.getNome());
       evento.setVinculoSbc(dto.getVinculoSbc());
       evento.setTipo(TipoVeiculo.evento);

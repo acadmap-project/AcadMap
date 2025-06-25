@@ -4,6 +4,7 @@ import { CadastrarPeriodicoSchema } from '../schemas/CadastrarPeriodicoSchema';
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
+import { calcularClassificacaoPeriodico } from '../utils/classificacaoBase';
 
 function FormularioPeriodicoContent() {
   const areas = useAreas();
@@ -40,6 +41,7 @@ function FormularioPeriodicoContent() {
           ? data.vinculoSBC
           : 'sem_vinculo',
       percentil: Number(data.percentil),
+      classificacao: calcularClassificacaoPeriodico(data.percentil),
     };
 
     console.log('Submitting periodico data:', periodicoData);
@@ -49,14 +51,14 @@ function FormularioPeriodicoContent() {
   };
 
   const qualisOptions = [
-    { value: 'a1' },
-    { value: 'a2' },
-    { value: 'b1' },
-    { value: 'b2' },
-    { value: 'b3' },
-    { value: 'b4' },
-    { value: 'b5' },
-    { value: 'c' },
+    { value: 'a1', label: 'A1' },
+    { value: 'a2', label: 'A2' },
+    { value: 'b1', label: 'B1' },
+    { value: 'b2', label: 'B2' },
+    { value: 'b3', label: 'B3' },
+    { value: 'b4', label: 'B4' },
+    { value: 'b5', label: 'B5' },
+    { value: 'c', label: 'C' },
   ];
 
   return (
@@ -270,18 +272,6 @@ function FormularioPeriodicoContent() {
               >
                 NOTA NO ANTIGO QUALIS*
               </label>
-              {/* <input
-                type="text"
-                id="qualisAntigo"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite a nota do periódico no antigo QUALIS"
-                {...register('qualisAntigo')}
-              />
-              {errors.qualisAntigo && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.qualisAntigo.message}
-                </p>
-              )} */}
               <select
                 id="qualisAntigo"
                 className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300`}
@@ -289,11 +279,11 @@ function FormularioPeriodicoContent() {
                 defaultValue=""
               >
                 <option value="" disabled className="text-gray-500">
-                  Selecione tipo de vínculo
+                  Selecione a nota do QUALIS
                 </option>
                 {qualisOptions.map(option => (
                   <option key={option.value} value={option.value}>
-                    {option.value}
+                    {option.label}
                   </option>
                 ))}
               </select>
