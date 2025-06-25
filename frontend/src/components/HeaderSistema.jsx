@@ -1,5 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 import pfpImage from '../assets/pfp.svg';
+import EventPeriodDropdown from './EventPeriodDropdown';
 
 function HeaderSistema({ userType, userName }) {
   return (
@@ -38,30 +39,9 @@ function HeaderSistema({ userType, userName }) {
                   userType === 'PESQUISADOR' ||
                   userType === 'ADMINISTRADOR') && (
                   <li>
-                    {' '}
-                    <Link
-                      to={'/cadastro-evento'}
-                      className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                      aria-current="page"
-                    >
-                      Cadastrar Evento
-                    </Link>
+                    <EventPeriodDropdown />
                   </li>
                 )}
-                {/* {(userType === 'AUDITOR' ||
-                  userType === 'PESQUISADOR' ||
-                  userType === 'ADMINISTRADOR') && (
-                  <li>
-                    {' '}
-                    <Link
-                      to={'/cadastro-periodico'}
-                      className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                      aria-current="page"
-                    >
-                      Cadastrar Periódico
-                    </Link>
-                  </li>
-                )} */}
                 {(userType === 'AUDITOR' || userType === 'ADMINISTRADOR') && (
                   <li>
                     {' '}

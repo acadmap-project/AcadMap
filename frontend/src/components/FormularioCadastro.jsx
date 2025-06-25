@@ -16,6 +16,7 @@ import {
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 import Popup from './Popup';
+import { criptografarSenha } from './CriptografiaSenha';
 
 const queryClient = new QueryClient();
 
@@ -162,7 +163,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     const userData = {
       nome: data.fullName,
       email: data.email,
-      senha: data.password,
+      senha: criptografarSenha(data.password), // Criptografia de senha antes de enviar ao backend
       tipoPerfil: isAdmin ? data.tipoPerfil : 'PESQUISADOR', // Use selected type if admin, default to PESQUISADOR
       idPrograma: data.program,
       idsAreasPesquisa: data.searchArea || [],

@@ -1,7 +1,12 @@
 package com.acadmap.exception;
 
-import com.acadmap.model.dto.EventoSimplesDTO;
-import com.acadmap.model.dto.PeriodicoSimplesDTO;
+import com.acadmap.exception.evento.EventoDuplicadoException;
+import com.acadmap.exception.periodico.PeriodicoDuplicadoException;
+import com.acadmap.exception.pesquisador.PesquisadorUnauthorizedException;
+import com.acadmap.exception.veiculo.VeiculoVinculadoException;
+import com.acadmap.model.dto.evento.EventoSimplesDTO;
+import com.acadmap.model.dto.periodico.PeriodicoSimplesDTO;
+import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,32 +20,53 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(EventoDuplicadoException.class)
-  public ResponseEntity<EventoDuplicadoResponse> handleEventoDuplicado(
+  public ResponseEntity<PersonalizedListResponse<EventoSimplesDTO>> handleEventoDuplicado(
           EventoDuplicadoException ex) {
 
-    // Converte os eventos da exceção para EventoSimplesDTO
+
     var eventosSimples =
             ex.getEventosSimilares().stream().map(EventoSimplesDTO::new).collect(Collectors.toList());
 
-    EventoDuplicadoResponse response = new EventoDuplicadoResponse(ex.getMessage(), eventosSimples);
+    PersonalizedListResponse<EventoSimplesDTO> response = new PersonalizedListResponse<>(ex.getMessage(), eventosSimples);
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
 
   @ExceptionHandler(PeriodicoDuplicadoException.class)
-  public ResponseEntity<PeriodicoDuplicadoResponse> handlePeriodicoDuplicado(
+  public ResponseEntity<PersonalizedListResponse<PeriodicoSimplesDTO>> handlePeriodicoDuplicado(
           PeriodicoDuplicadoException ex) {
 
-    // Converte os Periodico para DTO
     var periodicoSimples =
             ex.getPeriodicosSimilares().stream()
                     .map(PeriodicoSimplesDTO::new)
                     .collect(Collectors.toList());
 
-    PeriodicoDuplicadoResponse response =
-            new PeriodicoDuplicadoResponse(ex.getMessage(), periodicoSimples);
+    PersonalizedListResponse<PeriodicoSimplesDTO> response =
+            new PersonalizedListResponse<>(ex.getMessage(), periodicoSimples);
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+  }
+
+  @ExceptionHandler(VeiculoVinculadoException.class)
+  public ResponseEntity<PersonalizedResponse<VeiculoPublicacaoDTO>> handleVeiculoVinculado(
+          VeiculoVinculadoException ex
+  ){
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO = VeiculoPublicacaoDTO.buildVeiculoDto(ex.getVeiculoPublicacao());
+    PersonalizedResponse<VeiculoPublicacaoDTO> veiculoVinculadoResponse =
+            new PersonalizedResponse<>(ex.getMessage(), veiculoPublicacaoDTO);
+
+    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(veiculoVinculadoResponse);
+  }
+
+  @ExceptionHandler(PesquisadorUnauthorizedException.class)
+  public ResponseEntity<PersonalizedResponse<VeiculoPublicacaoDTO>> handleUsuarioVinculado(
+          PesquisadorUnauthorizedException ex
+  ){
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO = VeiculoPublicacaoDTO.buildVeiculoDto(ex.getVeiculoPublicacao());
+    PersonalizedResponse<VeiculoPublicacaoDTO> personalizedResponse =
+            new PersonalizedResponse<>(ex.getMessage(), veiculoPublicacaoDTO);
+
+    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(personalizedResponse);
   }
 
 }

@@ -4,6 +4,7 @@ import { CadastrarEventoSchema } from '../schemas/CadastrarEventoSchema';
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
+import { calcularClassificacaoEvento } from '../utils/classificacaoBase';
 
 function FormularioEventoContent() {
   const navigate = useNavigate();
@@ -32,10 +33,12 @@ function FormularioEventoContent() {
   const areas = useAreas();
 
   const onSubmit = data => {
+    const vinculoFinal = vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo';
     const eventData = {
       ...data,
-      vinculoSbc: vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo',
+      vinculoSbc: vinculoFinal,
       areasPesquisaIds: data.areasPesquisaIds || [],
+      classificacao: calcularClassificacaoEvento(data.h5, vinculoFinal),
     };
     console.log('Submitting event data:', eventData);
     navigate('/revisao-cadastro-evento', {
@@ -179,7 +182,7 @@ function FormularioEventoContent() {
               LINK DE ACESSO*
             </label>
             <input
-              type="url"
+              type="text"
               className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="URL válida"
               {...register('linkEvento')}
@@ -198,7 +201,7 @@ function FormularioEventoContent() {
               LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
             </label>
             <input
-              type="url"
+              type="text"
               className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="URL válida"
               {...register('linkGoogleScholar')}
@@ -217,7 +220,7 @@ function FormularioEventoContent() {
               LINK DE REPOSITÓRIO (SOL-SBC)
             </label>
             <input
-              type="url"
+              type="text"
               className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="URL válida"
               {...register('linkSolSbc')}

@@ -44,8 +44,8 @@ services:
     volumes:
       - postgres-vol:/var/lib/postgresql/data
       - ./backend/docker-volumes/scripts-sql:/docker-entrypoint-initdb.d
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     networks:
       - acadmap-net
     healthcheck:

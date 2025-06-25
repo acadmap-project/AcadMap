@@ -8,26 +8,19 @@ export const CadastrarPeriodicoSchema = z
     areasPesquisaIds: z
       .array(z.string().min(1, 'Selecione pelo menos uma área de conhecimento'))
       .min(1, 'Selecione pelo menos uma área de conhecimento'),
-    issn: z.string().nonempty({
-      message: 'O ISSN é obrigatório',
-    }),
+    issn: z.coerce
+      .number({
+        required_error: 'O ISSN é obrigatório',
+        invalid_type_error: 'O ISSN deve ser um número',
+      })
+      .refine(val => val.toString().length === 8, {
+        message: 'O ISSN deve ter exatamente 8 digítos',
+      }),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSBC: z.string().default('sem_vinculo'),
-    linkJcr: z
-      .string()
-      .url('Link do repositório JCR deve ser uma URL válida')
-      .optional()
-      .or(z.literal('')),
-    linkScopus: z
-      .string()
-      .url('Link do repositório SCOPUS deve ser uma URL válida')
-      .optional()
-      .or(z.literal('')),
-    linkGoogleScholar: z
-      .string()
-      .url('Link do repositório Google Scholar deve ser uma URL válida')
-      .optional()
-      .or(z.literal('')),
+    linkJcr: z.string().optional().or(z.literal('')),
+    linkScopus: z.string().optional().or(z.literal('')),
+    linkGoogleScholar: z.string().optional().or(z.literal('')),
     qualisAntigo: z.string().nonempty({
       message: 'A nota no antigo QUALIS é obrigatória',
     }),

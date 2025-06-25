@@ -1,14 +1,16 @@
 package com.acadmap.controller;
 
 
-import com.acadmap.model.dto.VeiculoPublicacaoDTO;
+import com.acadmap.exception.pesquisador.PesquisadorUnauthorizedException;
+import com.acadmap.exception.veiculo.VeiculoVinculadoException;
+import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import com.acadmap.repository.EventoRepository;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
-import com.acadmap.service.AprovarVeiculoService;
+import com.acadmap.service.AvaliarVeiculoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,7 @@ import java.util.UUID;
 public class VeiculoController {
 
     private UsuarioRepository usuarioRepository;
-    private AprovarVeiculoService aprovarVeiculoService;
+    private AvaliarVeiculoService avaliarVeiculoService;
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
     private EventoRepository eventoRepository;
 
@@ -35,13 +37,17 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser,
             @PathVariable("id") UUID idVeiculo
     ){
-        usuarioRepository.findByAllAndFetchProgramaEagerly();
-        if (!this.isPesquisador(idUser) && !this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
-            return new ResponseEntity<>(aprovarVeiculoService.aprovar(idVeiculo), HttpStatus.ACCEPTED) ;
+        if (this.isPesquisador(idUser)){
+            throw new PesquisadorUnauthorizedException(
+                    "Pesquisador não possui permissão para aprovar um veiculo",
+                    veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
         }
-        return new ResponseEntity<>(
-                ResponseEntity.badRequest().build(),
-                HttpStatus.METHOD_NOT_ALLOWED);
+        else if(this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
+            throw new VeiculoVinculadoException(
+                    "O usuario está vinculado ao veiculo de publicação, não é possível aprova-lo",
+                    veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
+        }
+        return new ResponseEntity<>(avaliarVeiculoService.aceito(idVeiculo), HttpStatus.ACCEPTED);
     }
 
 
@@ -50,12 +56,17 @@ public class VeiculoController {
             @RequestHeader("X-User-Id") UUID idUser,
             @PathVariable("id") UUID idVeiculo
     ){
-        if (!this.isPesquisador(idUser) && !this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
-            return new ResponseEntity<>(aprovarVeiculoService.negar(idVeiculo), HttpStatus.ACCEPTED) ;
+        if (this.isPesquisador(idUser)){
+            throw new PesquisadorUnauthorizedException(
+                    "Pesquisador não possui permissão para negar um veiculo",
+                    veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
         }
-        return new ResponseEntity<>(
-                ResponseEntity.badRequest().build(),
-                HttpStatus.METHOD_NOT_ALLOWED);
+        else if(this.usuarioVinculadoPublicacao(idVeiculo, idUser)){
+            throw new VeiculoVinculadoException(
+                    "O usuario está vinculado ao veiculo de publicação, não é possível nega-lo",
+                    veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
+        }
+        return new ResponseEntity<>(avaliarVeiculoService.negar(idVeiculo), HttpStatus.ACCEPTED);
     }
 
 

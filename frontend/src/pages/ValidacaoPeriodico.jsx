@@ -6,6 +6,7 @@ import useLogin from '../hooks/userAuth';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from '../components/ErrorPopup';
 import Popup from '../components/Popup';
+import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import {
   QueryClient,
   QueryClientProvider,
@@ -15,16 +16,19 @@ import '../styles/App.css';
 
 const queryClient = new QueryClient();
 
-const postEvent = async ({ eventData, userId }) => {
-  console.log(eventData);
-  const response = await fetch('http://localhost:8080/api/eventos/cadastro', {
-    method: 'POST',
-    headers: {
-      'X-User-Id': userId,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(eventData),
-  });
+const postPeriodico = async ({ periodicoData, userId }) => {
+  console.log('Sending data to API:', periodicoData);
+  const response = await fetch(
+    'http://localhost:8080/api/periodicos/cadastro',
+    {
+      method: 'POST',
+      headers: {
+        'X-User-Id': userId,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(periodicoData),
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response.text();
@@ -37,7 +41,7 @@ const postEvent = async ({ eventData, userId }) => {
   return response.json();
 };
 
-function RevisaoCadastroEventoContent() {
+function ValidacaoPeriodicoContent() {
   const { loggedIn } = useLogin();
   const location = useLocation();
   const navigate = useNavigate();
@@ -55,45 +59,28 @@ function RevisaoCadastroEventoContent() {
     type: 'success',
   });
 
-  // Get event data from location state (passed from form)
-  const [eventData, _] = useState(location.state?.eventData || null);
+  // Get periodico data from location state (passed from form)
+  const [periodicoData, _] = useState(location.state || null);
 
-  const createEventMutation = useMutation({
-    mutationFn: postEvent,
+  const createPeriodicoMutation = useMutation({
+    mutationFn: postPeriodico,
     onSuccess: data => {
-      console.log('Api utilizada com sucesso:', data);
+      console.log('Periódico cadastrado com sucesso:', data);
       setSuccessInfo({
-        title: 'Evento Cadastrado com Sucesso!',
-        message: 'O evento foi cadastrado no sistema com sucesso.',
+        title: 'Periódico Cadastrado',
+        message: 'O periódico foi cadastrado com sucesso no sistema.',
         type: 'success',
       });
       setShowSuccessPopup(true);
     },
     onError: error => {
-      console.error('Endpoint para cadastrar evento com erro:', error);
-
-      // Handle 409 Conflict error
-      if (error.status === 409) {
-        setErrorInfo({
-          title: 'Evento Já Existe',
-          message:
-            'Um evento com este nome já foi cadastrado no sistema. Por favor, verifique se não é um evento duplicado ou altere o nome do evento.',
-          type: 'warning',
-        });
-        setShowErrorPopup(true);
-      } else {
-        // Handle other errors
-        const errorMessage =
-          error.response?.data ||
-          error.message ||
-          'Erro desconhecido ao cadastrar evento';
-        setErrorInfo({
-          title: 'Erro ao Cadastrar Evento',
-          message: `Ocorreu um erro ao tentar cadastrar o evento: ${errorMessage}`,
-          type: 'error',
-        });
-        setShowErrorPopup(true);
-      }
+      console.error('Erro ao cadastrar periódico:', error);
+      setErrorInfo({
+        title: 'Erro!',
+        message: 'O cadastro já encontra presente no sistema',
+        type: 'error',
+      });
+      setShowErrorPopup(true);
     },
   });
 
@@ -106,39 +93,27 @@ function RevisaoCadastroEventoContent() {
   };
 
   useEffect(() => {
-    // If no event data was passed, redirect back to form
-    if (!eventData) {
-      navigate('/cadastro-evento');
+    // If no periodico data was passed, redirect back to form
+    if (!periodicoData) {
+      navigate('/cadastro-periodico');
     }
-  }, [eventData, navigate]);
-
-  const formatVinculoSbc = vinculo => {
-    if (typeof vinculo === 'boolean') {
-      return vinculo ? 'Sim' : 'Não';
-    }
-    const vinculoMap = {
-      sem_vinculo: 'Sem vínculo',
-      vinculo_comum: 'Comum',
-      vinculo_top_20: 'Top 20',
-      vinculo_top_10: 'Top 10',
-    };
-    return vinculoMap[vinculo] || vinculo;
-  };
+  }, [periodicoData, navigate]);
 
   const getAreaName = areaId => {
     const area = areas.find(a => a.value === areaId);
     return area ? area.label : areaId;
   };
+
   const handleConfirm = () => {
     // Handle confirmation logic here
-    console.log('Event confirmed:', eventData);
-    createEventMutation.mutate({
-      eventData: eventData,
+    console.log('Periodico confirmed:', periodicoData);
+    createPeriodicoMutation.mutate({
+      periodicoData: periodicoData,
       userId: loggedIn.id,
     });
   };
 
-  if (!eventData) {
+  if (!periodicoData) {
     return (
       <>
         <HeaderSistema
@@ -146,7 +121,7 @@ function RevisaoCadastroEventoContent() {
           userName={loggedIn.userName}
         />
         <div className="max-w-4xl mx-auto mt-8 p-6">
-          <p className="text-center">Carregando dados do evento...</p>
+          <p className="text-center">Carregando dados do periódico...</p>
         </div>
       </>
     );
@@ -164,47 +139,47 @@ function RevisaoCadastroEventoContent() {
         <SemPermissao />
       ) : (
         <>
-          <h1 className="mt-8 mb-25">Cadastro de Evento</h1>
+          <h1 className="mt-8 mb-8">Cadastro de Periódicos</h1>
 
           <div
             className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
             <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO EVENTO*:</span>{' '}
-              {eventData.nome || 'N/A'}
+              <span className="font-medium">NOME DO PERIÓDICO*:</span>{' '}
+              {periodicoData.nome || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
-              {eventData.areasPesquisaIds &&
-              eventData.areasPesquisaIds.length > 0
-                ? eventData.areasPesquisaIds
+              {periodicoData.areasPesquisaIds &&
+              periodicoData.areasPesquisaIds.length > 0
+                ? periodicoData.areasPesquisaIds
                     .map(areaId => getAreaName(areaId))
                     .join(', ')
                 : 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ÍNDICE H5*:</span>{' '}
-              {eventData.h5 || 'N/A'}
+              <span className="font-medium">ISSN*:</span>{' '}
+              {periodicoData.issn || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {formatVinculoSbc(eventData.vinculoSbc)}
+              <span className="font-medium">Vínculo com a SBC:</span>{' '}
+              {periodicoData.vinculoSBC || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">LINK DE ACESSO*:</span>{' '}
-              {eventData.linkEvento ? (
+              {periodicoData.link ? (
                 <a
-                  href={eventData.linkEvento}
+                  href={periodicoData.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800 underline ml-1"
                 >
-                  {eventData.linkEvento}
+                  {periodicoData.link}
                 </a>
               ) : (
                 ' N/A'
@@ -215,14 +190,14 @@ function RevisaoCadastroEventoContent() {
               <span className="font-medium">
                 LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
               </span>{' '}
-              {eventData.linkGoogleScholar ? (
+              {periodicoData.linkGoogleScholar ? (
                 <a
-                  href={eventData.linkGoogleScholar}
+                  href={periodicoData.linkGoogleScholar}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800 underline ml-1"
                 >
-                  {eventData.linkGoogleScholar}
+                  {periodicoData.linkGoogleScholar}
                 </a>
               ) : (
                 ' N/A'
@@ -230,37 +205,62 @@ function RevisaoCadastroEventoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                LINK DE REPOSITÓRIO (SOL-SBC):
-              </span>{' '}
-              {eventData.linkSolSbc ? (
+              <span className="font-medium">LINK DE REPOSITÓRIO (JCR):</span>{' '}
+              {periodicoData.linkJcr ? (
                 <a
-                  href={eventData.linkSolSbc}
+                  href={periodicoData.linkJcr}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800 underline ml-1"
                 >
-                  {eventData.linkSolSbc}
+                  {periodicoData.linkJcr}
                 </a>
               ) : (
                 ' N/A'
               )}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">LINK DE REPOSITÓRIO (SCOPUS):</span>{' '}
+              {periodicoData.linkScopus ? (
+                <a
+                  href={periodicoData.linkScopus}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {periodicoData.linkScopus}
+                </a>
+              ) : (
+                ' N/A'
+              )}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
+              {periodicoData.qualisAntigo
+                ? periodicoData.qualisAntigo.toUpperCase()
+                : 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL:</span>{' '}
+              {periodicoData.percentil || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">CLASSIFICAÇÃO BASE:</span>{' '}
-              {eventData.classificacao
-                ? eventData.classificacao.toUpperCase()
-                : 'N/A'}
+              {formatarClassificacaoParaExibicao(periodicoData.classificacao)}
             </div>
+
             <div className="w-full flex justify-center mt-6">
               <button
                 onClick={handleConfirm}
-                disabled={createEventMutation.isPending}
+                disabled={createPeriodicoMutation.isPending}
                 className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
                 style={{ fontFamily: 'Poppins', fontWeight: '400' }}
               >
-                {createEventMutation.isPending
+                {createPeriodicoMutation.isPending
                   ? 'Salvando...'
                   : 'Salvar e Continuar'}
               </button>
@@ -288,12 +288,12 @@ function RevisaoCadastroEventoContent() {
   );
 }
 
-function RevisaoCadastroEvento() {
+function ValidacaoPeriodico() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RevisaoCadastroEventoContent />
+      <ValidacaoPeriodicoContent />
     </QueryClientProvider>
   );
 }
 
-export default RevisaoCadastroEvento;
+export default ValidacaoPeriodico;

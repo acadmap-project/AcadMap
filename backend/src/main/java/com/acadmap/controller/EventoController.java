@@ -1,12 +1,9 @@
 package com.acadmap.controller;
 
-import com.acadmap.model.dto.EventoCreateDTO;
-import com.acadmap.model.dto.EventoResponseDTO;
-import com.acadmap.model.entities.Evento;
-import com.acadmap.model.entities.Usuario;
-import com.acadmap.service.EventoService;
+import com.acadmap.model.dto.evento.EventoCreateDTO;
+import com.acadmap.model.dto.evento.EventoResponseDTO;
+import com.acadmap.service.CriarEventoService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +16,13 @@ import java.util.UUID;
 @CrossOrigin(origins = "*")
 public class EventoController {
 
-  private final EventoService eventoService;
+  private final CriarEventoService criarEventoService;
 
   @PostMapping
   public ResponseEntity<EventoResponseDTO> criarEvento(@RequestBody EventoCreateDTO dto,
-                                                       @RequestHeader("X-User-Id") UUID idUser) {
-    EventoResponseDTO dtoreponseevento = this.eventoService.criarEvento(dto, idUser);
+                                                       @RequestHeader("X-User-Id") UUID idUser,
+                                                       @RequestParam(defaultValue = "false") boolean forcar) {
+    EventoResponseDTO dtoreponseevento = this.criarEventoService.criarEvento(dto, idUser, forcar);
     return ResponseEntity.status(HttpStatus.CREATED).body(dtoreponseevento);
   }
 }

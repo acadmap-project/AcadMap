@@ -1,6 +1,6 @@
 package com.acadmap.controller;
 
-import com.acadmap.model.dto.AreaPesquisaDTO;
+import com.acadmap.model.dto.area_pesquisa.AreaPesquisaDTO;
 import com.acadmap.repository.AreaPesquisaRepository;
 import java.util.Comparator;
 import java.util.List;
