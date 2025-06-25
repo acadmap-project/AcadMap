@@ -33,11 +33,12 @@ function FormularioEventoContent() {
   const areas = useAreas();
 
   const onSubmit = data => {
+    const vinculoFinal = vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo';
     const eventData = {
       ...data,
-      vinculoSbc: vinculoSbcCheckbox ? data.vinculoSbc : 'sem_vinculo',
+      vinculoSbc: vinculoFinal,
       areasPesquisaIds: data.areasPesquisaIds || [],
-      classificacao: calcularClassificacaoEvento(data.h5),
+      classificacao: calcularClassificacaoEvento(data.h5, vinculoFinal),
     };
     console.log('Submitting event data:', eventData);
     navigate('/revisao-cadastro-evento', {
