@@ -4,6 +4,7 @@ import SemPermissao from '../components/SemPermissao';
 import useLogin from '../hooks/userAuth';
 import { useNavigate } from 'react-router-dom';
 import usePendencias from '../hooks/usePendencias';
+import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 
 function RegistrosPendentes() {
   /*
@@ -74,7 +75,11 @@ function RegistrosPendentes() {
                               {registro.tipo}
                             </td>
                             <td className="px-4 py-3 border-t border-black text-center uppercase">
-                              {registro.classificacao || 'N/A'}
+                              {registro.tipo == 'periodico'
+                                ? formatarClassificacaoParaExibicao(
+                                    registro.classificacao
+                                  )
+                                : registro.classificacao}
                             </td>
                             <td className="px-4 py-3 border-t border-black text-center">
                               <div>{registro.usuario?.nome || 'N/A'}</div>

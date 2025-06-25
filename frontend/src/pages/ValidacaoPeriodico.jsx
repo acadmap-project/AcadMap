@@ -6,6 +6,7 @@ import useLogin from '../hooks/userAuth';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from '../components/ErrorPopup';
 import Popup from '../components/Popup';
+import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import {
   QueryClient,
   QueryClientProvider,
@@ -138,7 +139,7 @@ function ValidacaoPeriodicoContent() {
         <SemPermissao />
       ) : (
         <>
-          <h1 className="mt-8 mb-25">Cadastro de Periódicos</h1>
+          <h1 className="mt-8 mb-8">Cadastro de Periódicos</h1>
 
           <div
             className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
@@ -237,12 +238,19 @@ function ValidacaoPeriodicoContent() {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
-              {periodicoData.qualisAntigo || 'N/A'}
+              {periodicoData.qualisAntigo
+                ? periodicoData.qualisAntigo.toUpperCase()
+                : 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">PERCENTIL:</span>{' '}
               {periodicoData.percentil || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">CLASSIFICAÇÃO BASE:</span>{' '}
+              {formatarClassificacaoParaExibicao(periodicoData.classificacao)}
             </div>
 
             <div className="w-full flex justify-center mt-6">

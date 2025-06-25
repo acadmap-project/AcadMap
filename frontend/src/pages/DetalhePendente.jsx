@@ -5,6 +5,7 @@ import useLogin from '../hooks/userAuth';
 import usePendencias from '../hooks/usePendencias';
 import ErrorPopup from '../components/ErrorPopup';
 import Popup from '../components/Popup';
+import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -235,7 +236,12 @@ function DetalhePendenteContent() {
                 CÁLCULO PARA VERIFICAÇÃO DE ÍNDICE:
               </span>{' '}
               <div className="mt-1">
-                <div>Classificação: {registro.classificacao || 'N/A'}</div>
+                <div>
+                  Classificação:{' '}
+                  {registro.tipo == 'periodico'
+                    ? formatarClassificacaoParaExibicao(registro.classificacao)
+                    : registro.classificacao}
+                </div>
                 {registro.areaPesquisa && (
                   <div>Área de Pesquisa: {registro.areaPesquisa.nome}</div>
                 )}

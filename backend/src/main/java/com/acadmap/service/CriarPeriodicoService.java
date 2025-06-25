@@ -49,7 +49,7 @@ public class CriarPeriodicoService {
             Periodico periodico = new Periodico();
             periodico.setIdVeiculo(UUID.randomUUID());
             periodico.setAdequadoDefesa(AdequacaoDefesa.nenhum);
-            periodico.setClassificacao(ClassificacaoVeiculo.a8);
+            periodico.setClassificacao(dto.classificacao());
             periodico.setNome(dto.nome());
             periodico.setVinculoSbc(dto.vinculoSBC());
             periodico.setTipo(TipoVeiculo.periodico);
