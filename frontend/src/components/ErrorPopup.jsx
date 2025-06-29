@@ -8,6 +8,8 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
   const cancelMap = useMemo(() => new WeakMap(), []);
   const [items, setItems] = useState([]);
 
+  const POPUP_DURATION = 5000; 
+
   const transitions = useTransition(items, {
     from: { opacity: 0, transform: 'translateY(-100%)', height: 0 },
     keys: item => item.key,
@@ -18,6 +20,8 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
         transform: 'translateY(0%)',
         height: refMap.get(item)?.offsetHeight || 'auto',
       });
+
+      await new Promise(resolve => setTimeout(resolve, POPUP_DURATION));
     },
     leave: { opacity: 0, transform: 'translateY(-100%)', height: 0 },
     onRest: (result, ctrl, item) => {
