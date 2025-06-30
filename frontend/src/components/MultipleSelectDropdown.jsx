@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { IoClose } from "react-icons/io5";
+import closeIcon from '../assets/close.svg';
 
 export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
   const [searchText, setSearchText] = useState('');
@@ -54,13 +54,15 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
               return (
                 <span key={opt} className="flex items-center px-2 my-1.5 rounded-md bg-gray-200">
                   {option ? option.label : opt}
-                  <IoClose 
+                  <div 
                     className='cursor-pointer hover:text-red-500 ml-1' 
                     onClick={(e) => {
                       e.stopPropagation();
                       deleteItem(opt);
                     }}
-                  />
+                  >
+                    <img src={closeIcon} alt="close" className="w-3 h-3" />
+                  </div>
                 </span>
               );
             })}
