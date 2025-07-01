@@ -6,10 +6,7 @@ import com.acadmap.model.dto.periodico.PeriodicoResquestDTO;
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.entities.Usuario;
-import com.acadmap.model.enums.AdequacaoDefesa;
-import com.acadmap.model.enums.ClassificacaoVeiculo;
-import com.acadmap.model.enums.StatusVeiculo;
-import com.acadmap.model.enums.TipoVeiculo;
+import com.acadmap.model.enums.*;
 import com.acadmap.repository.AreaPesquisaRepository;
 import com.acadmap.repository.PeriodicoRepository;
 import com.acadmap.repository.UsuarioRepository;
@@ -17,7 +14,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +36,27 @@ public class CriarPeriodicoService {
 
     public PeriodicoResponseDTO criarPeriodico(PeriodicoResquestDTO dto, UUID uuid, boolean forcar){
 
+        if ((dto.linkJcr() != null) ^ (dto.percentilJcr() != null)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Se preencher linkJcr, deve-se preencher percentilJcr e vice‑versa");
+        }
+        if ((dto.linkScopus() != null) ^ (dto.percentilScopus() != null)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Se preencher linkScopus, deve-se preencher percentilScopus e vice‑versa");
+        }
+        boolean hasJcrOrScopus = dto.linkJcr() != null || dto.linkScopus() != null;
+        if (hasJcrOrScopus && (dto.qualisAntigo() != null)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não pode cadastrar QualisAntigo quando há JCR ou Scopus");
+        }
+        if (dto.linkGoogleScholar() != null ^ dto.vinculoSBC() != VinculoSBC.sem_vinculo) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Se o periódico tiver vínculo com a SBC, deve-se preencher linkGoogleScholar e vice‑versa");
+        }
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
             if (!periodicosSimilares.isEmpty() && !forcar) {
@@ -59,7 +79,8 @@ public class CriarPeriodicoService {
             periodico.setUsuario(usuario);
 
             periodico.setIssn(dto.issn());
-            periodico.setPercentil(dto.percentil());
+            periodico.setPercentilJcr(dto.percentilJcr());
+            periodico.setPercentilScopus(dto.percentilScopus());
             periodico.setLinkJcr(dto.linkJcr());
             periodico.setLinkScopus(dto.linkScopus());
             periodico.setLinkGoogleScholar(dto.linkGoogleScholar());

@@ -79,8 +79,8 @@ INSERT INTO AreaPesquisaUsuario (id_usuario, id_area_pesquisa) VALUES (id_usuari
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
 VALUES (id_veiculo_periodico_aceito, id_usuario_pesquisador_1, 'Journal of Advanced AI', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
 
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, link_jcr, link_scopus, qualis_antigo, flag_predatorio)
-VALUES (id_veiculo_periodico_aceito, '12345678', 95, 'http://jcr.com/jai', 'http://scopus.com/jai', 'a1', false);
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr,	percentil_scopus, link_jcr, link_scopus, flag_predatorio)
+VALUES (id_veiculo_periodico_aceito, '12345678', 95, 83, 'http://jcr.com/jai', 'http://scopus.com/jai', false);
 
 -- Cenário 2: Evento submetido pelo Dr. Alan e ainda PENDENTE
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
