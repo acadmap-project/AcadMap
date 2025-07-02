@@ -201,7 +201,27 @@ function FormularioPeriodicoContent() {
               </div>
             </div>
           </div>{' '}
-          <div className="w-full grid grid-cols-2 gap-4">
+          <div className="w-full grid grid-cols-3 gap-4">
+            <div>
+              <label
+                htmlFor="linkScopus"
+                className="block mb-2 text-sm text-gray-900 text-start"
+              >
+                LINK DE REPOSITÓRIO (SCOPUS)
+              </label>
+              <input
+                type="text"
+                id="linkScopus"
+                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                placeholder="Digite uma URL válida..."
+                {...register('linkScopus')}
+              />
+              {errors.linkScopus && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.linkScopus.message}
+                </p>
+              )}
+            </div>{' '}
             <div>
               <label
                 htmlFor="linkGoogleScholar"
@@ -222,6 +242,29 @@ function FormularioPeriodicoContent() {
                 </p>
               )}
             </div>
+            <div>
+              <label
+                htmlFor="linkJcr"
+                className="block mb-2 text-sm text-gray-900 text-start"
+              >
+                LINK DE REPOSITÓRIO (JCR)
+              </label>
+              <input
+                type="text"
+                id="linkJcr"
+                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                placeholder="Digite uma URL válida..."
+                {...register('linkJcr')}
+              />
+              {errors.linkJcr && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.linkJcr.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="w-full grid grid-cols-3 gap-4">
+            {' '}
             <div>
               <label
                 htmlFor="qualisAntigo"
@@ -252,30 +295,30 @@ function FormularioPeriodicoContent() {
             </div>
             <div>
               <label
-                htmlFor="linkScopus"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE REPOSITÓRIO (SCOPUS)
-              </label>
-              <input
-                type="text"
-                id="linkScopus"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite uma URL válida..."
-                {...register('linkScopus')}
-              />
-              {errors.linkScopus && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.linkScopus.message}
-                </p>
-              )}
-            </div>{' '}
-            <div>
-              <label
-                htmlFor="percentil"
+                htmlFor="percentilJcr"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 PERCENTIL JCR*
+              </label>{' '}
+              <input
+                type="text"
+                id="percentilJcr"
+                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                placeholder="Digite o percentil do periódico (0-100)..."
+                {...register('percentilJcr')}
+              />
+              {errors.percentilJcr && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.percentilJcr.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="percentilScopus"
+                className="block mb-2 text-sm text-gray-900 text-start"
+              >
+                PERCENTIL SCOPUS*
               </label>{' '}
               <input
                 type="text"
@@ -284,52 +327,9 @@ function FormularioPeriodicoContent() {
                 placeholder="Digite o percentil do periódico (0-100)..."
                 {...register('percentilScopus')}
               />
-              {errors.percentil && (
+              {errors.percentilScopus && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.percentil.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="w-full grid grid-cols-2 gap-4">
-            {' '}
-            <div>
-              <label
-                htmlFor="linkJcr"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE REPOSITÓRIO (JCR)
-              </label>
-              <input
-                type="text"
-                id="linkJcr"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite uma URL válida..."
-                {...register('linkJcr')}
-              />
-              {errors.linkJcr && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.linkJcr.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="percentil"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                PERCENTIL JCR*
-              </label>{' '}
-              <input
-                type="text"
-                id="percentil"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite o percentil do periódico (0-100)..."
-                {...register('percentilJcr')}
-              />
-              {errors.percentil && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.percentil.message}
+                  {errors.percentilScopus.message}
                 </p>
               )}
             </div>

@@ -24,20 +24,16 @@ export const CadastrarPeriodicoSchema = z
     qualisAntigo: z.string().nonempty({
       message: 'A nota no antigo QUALIS é obrigatória',
     }),
-    percentil: z
-      .string()
-      .nonempty({
-        message: 'O percentil é obrigatório',
-      })
-      .refine(
-        val => {
-          const num = Number(val);
-          return !isNaN(num) && num >= 0 && num <= 100;
-        },
-        {
-          message: 'O percentil deve ser um número entre 0 e 100',
-        }
-      ),
+    percentilJcr: z.coerce
+      .number({ message: 'Deve ser um número' })
+      .int({ message: 'Deve ser um inteiro' })
+      .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
+      .max(100, { message: 'O percentil Scopus deve estar entre 0 e 100' }),
+    percentilScopus: z.coerce
+    .number({ message: 'Deve ser um número' })
+    .int({ message: 'Deve ser um inteiro' })
+    .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
+    .max(100, { message: 'O percentil Scopus deve estar entre 0 e 100' }),
   })
   .refine(
     data => {
@@ -55,5 +51,29 @@ export const CadastrarPeriodicoSchema = z
     {
       message: 'Selecione o tipo de vínculo com a SBC',
       path: ['vinculoSBC'],
+    }
+  )
+  .refine(
+    data => {
+      if ((data.linkJcr && data.linkJcr !== '') && !data.percentilJcr) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'O percentil JCR é obrigatório se o link JCR for preenchido',
+      path: ['percentilJcr'],
+    },
+  )
+  .refine(
+    data => {
+      if ((data.linkScopus && data.linkScopus !== '') && !data.percentilScopus) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'O percentil Scopus é obrigatório se o link Scopus for preenchido',
+      path: ['percentilScopus'],
     }
   );
