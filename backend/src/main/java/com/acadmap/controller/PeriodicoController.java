@@ -32,6 +32,7 @@ public class PeriodicoController {
     }
 
     @PatchMapping("/{idPeriodico}/classificar")
+    @Deprecated
     public ResponseEntity<PeriodicoResponseDTO> classificarPeriodico(@PathVariable UUID idPeriodico,
                                                                      @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO,
                                                                      @RequestHeader("X-User-Id") UUID idUser) {

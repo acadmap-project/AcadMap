@@ -3,6 +3,7 @@ package com.acadmap.controller;
 
 import com.acadmap.exception.pesquisador.PesquisadorUnauthorizedException;
 import com.acadmap.exception.veiculo.VeiculoVinculadoException;
+import com.acadmap.model.dto.periodico.ClassificacaoPeriodicoRequestDTO;
 import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.enums.StatusVeiculo;
@@ -35,7 +36,8 @@ public class VeiculoController {
     @PutMapping("/aprovar-veiculo/{id}")
     public ResponseEntity<?> aprovaPublicacao(
             @RequestHeader("X-User-Id") UUID idUser,
-            @PathVariable("id") UUID idVeiculo
+            @PathVariable("id") UUID idVeiculo,
+            @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO
     ){
         if (this.isPesquisador(idUser)){
             throw new PesquisadorUnauthorizedException(
@@ -47,14 +49,16 @@ public class VeiculoController {
                     "O usuario está vinculado ao veiculo de publicação, não é possível aprova-lo",
                     veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
         }
-        return new ResponseEntity<>(avaliarVeiculoService.aceito(idVeiculo), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(avaliarVeiculoService.aceito(idVeiculo, classificacaoPeriodicoRequestDTO, idUser), HttpStatus.ACCEPTED);
     }
 
 
     @PutMapping("/negar-veiculo/{id}")
     public ResponseEntity<?> negarPublicacao(
             @RequestHeader("X-User-Id") UUID idUser,
-            @PathVariable("id") UUID idVeiculo
+            @PathVariable("id") UUID idVeiculo,
+            @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO
+
     ){
         if (this.isPesquisador(idUser)){
             throw new PesquisadorUnauthorizedException(
@@ -66,7 +70,7 @@ public class VeiculoController {
                     "O usuario está vinculado ao veiculo de publicação, não é possível nega-lo",
                     veiculoPublicacaoRepository.findById(idVeiculo).orElseThrow(EntityNotFoundException::new));
         }
-        return new ResponseEntity<>(avaliarVeiculoService.negar(idVeiculo), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(avaliarVeiculoService.negar(idVeiculo, classificacaoPeriodicoRequestDTO, idUser), HttpStatus.ACCEPTED);
     }
 
 
