@@ -237,15 +237,20 @@ function ValidacaoPeriodicoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL (JCR):</span>{' '}
+              {periodicoData.percentil_jcr || 'N/A'}
+            </div>
+      
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
+              {periodicoData.percentil_scopus || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
               <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
               {periodicoData.qualisAntigo
                 ? periodicoData.qualisAntigo.toUpperCase()
                 : 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">PERCENTIL:</span>{' '}
-              {periodicoData.percentil || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">

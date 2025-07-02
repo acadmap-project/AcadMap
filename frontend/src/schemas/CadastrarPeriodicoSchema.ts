@@ -1,3 +1,4 @@
+import { data } from 'react-router-dom';
 import { z } from 'zod';
 
 export const CadastrarPeriodicoSchema = z
@@ -24,12 +25,12 @@ export const CadastrarPeriodicoSchema = z
     qualisAntigo: z.string().nonempty({
       message: 'A nota no antigo QUALIS é obrigatória',
     }),
-    percentilJcr: z.coerce
+    percentil_jcr: z.coerce
       .number({ message: 'Deve ser um número' })
       .int({ message: 'Deve ser um inteiro' })
       .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
       .max(100, { message: 'O percentil Scopus deve estar entre 0 e 100' }),
-    percentilScopus: z.coerce
+    percentil_scopus: z.coerce
     .number({ message: 'Deve ser um número' })
     .int({ message: 'Deve ser um inteiro' })
     .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
@@ -55,25 +56,25 @@ export const CadastrarPeriodicoSchema = z
   )
   .refine(
     data => {
-      if ((data.linkJcr && data.linkJcr !== '') && !data.percentilJcr) {
+      if ((data.linkJcr && data.linkJcr !== '') && !data.percentil_jcr) {
         return false;
       }
       return true;
     },
     {
       message: 'O percentil JCR é obrigatório se o link JCR for preenchido',
-      path: ['percentilJcr'],
+      path: ['percentil_jcr'],
     },
   )
   .refine(
     data => {
-      if ((data.linkScopus && data.linkScopus !== '') && !data.percentilScopus) {
+      if ((data.linkScopus && data.linkScopus !== '') && !data.percentil_scopus) {
         return false;
       }
       return true;
     },
     {
       message: 'O percentil Scopus é obrigatório se o link Scopus for preenchido',
-      path: ['percentilScopus'],
+      path: ['percentil_scopus'],
     }
   );

@@ -40,8 +40,6 @@ function FormularioPeriodicoContent() {
         data.vinculoSbcCheckbox && data.vinculoSBC && data.vinculoSBC !== ''
           ? data.vinculoSBC
           : 'sem_vinculo',
-      percentil: Number(data.percentil),
-      classificacao: calcularClassificacaoPeriodico(data.percentil),
     };
 
     console.log('Submitting periodico data:', periodicoData);
@@ -295,41 +293,41 @@ function FormularioPeriodicoContent() {
             </div>
             <div>
               <label
-                htmlFor="percentilJcr"
+                htmlFor="percentil_jcr"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 PERCENTIL JCR*
               </label>{' '}
               <input
                 type="text"
-                id="percentilJcr"
+                id="percentil_jcr"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite o percentil do periódico (0-100)..."
-                {...register('percentilJcr')}
+                {...register('percentil_jcr')}
               />
-              {errors.percentilJcr && (
+              {errors.percentil_jcr && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.percentilJcr.message}
+                  {errors.percentil_jcr.message}
                 </p>
               )}
             </div>
             <div>
               <label
-                htmlFor="percentilScopus"
+                htmlFor="percentil_scopus"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 PERCENTIL SCOPUS*
               </label>{' '}
               <input
                 type="text"
-                id="percentil"
+                id="percentil_scopus"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite o percentil do periódico (0-100)..."
-                {...register('percentilScopus')}
+                {...register('percentil_scopus')}
               />
-              {errors.percentilScopus && (
+              {errors.percentil_scopus && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.percentilScopus.message}
+                  {errors.percentil_scopus.message}
                 </p>
               )}
             </div>
