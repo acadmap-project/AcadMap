@@ -16,8 +16,28 @@ import '../styles/App.css';
 
 const queryClient = new QueryClient();
 
+// Helper to convert empty string/undefined to null for all fields
+const normalizeToNull = obj => {
+  if (!obj || typeof obj !== 'object') return obj;
+  const normalized = {};
+  for (const key in obj) {
+    if (Array.isArray(obj[key])) {
+      normalized[key] = obj[key].length === 0 ? null : obj[key];
+    } else if (obj[key] === '' || obj[key] === undefined) {
+      normalized[key] = null;
+    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+      normalized[key] = normalizeToNull(obj[key]);
+    } else {
+      normalized[key] = obj[key];
+    }
+  }
+  return normalized;
+};
+
 const postPeriodico = async ({ periodicoData, userId }) => {
-  console.log('Sending data to API:', periodicoData);
+  // Normalize all empty/undefined values to null
+  const normalizedData = normalizeToNull(periodicoData);
+  console.log('Sending data to API:', normalizedData);
   const response = await fetch(
     'http://localhost:8080/api/periodicos/cadastro',
     {
@@ -26,7 +46,7 @@ const postPeriodico = async ({ periodicoData, userId }) => {
         'X-User-Id': userId,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(periodicoData),
+      body: JSON.stringify(normalizedData),
     }
   );
 
