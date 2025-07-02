@@ -24,7 +24,8 @@ public record PeriodicoResponseDTO(UUID idVeiculo,
                                    String linkGoogleScholar,
                                    QualisAntigo qualisAntigo,
                                    Set<UUID> areasPesquisaIds,
-                                   UsuarioResumoDTO usuario) {
+                                   UsuarioResumoDTO usuario,
+                                   Boolean flagPredatorio) {
 
     public PeriodicoResponseDTO(Periodico periodico){
         this(
@@ -45,7 +46,8 @@ public record PeriodicoResponseDTO(UUID idVeiculo,
                 periodico.getAreasPesquisa().stream()
                         .map(AreaPesquisa::getIdAreaPesquisa)
                         .collect(Collectors.toSet()),
-                new UsuarioResumoDTO(periodico.getUsuario())
+                new UsuarioResumoDTO(periodico.getUsuario()),
+                periodico.getFlagPredatorio()
         );
     }
     public record UsuarioResumoDTO(
