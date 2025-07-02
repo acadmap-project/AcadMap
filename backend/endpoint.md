@@ -28,6 +28,13 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 **Path Parameters:**
 - `id` – UUID do veículo a ser aprovado
 
+**Corpo esperado:**
+```json
+{
+  "flagPredatorio": true
+}
+```
+
 **Resposta:**
 - `202 Accepted` – Veículo aprovado com sucesso
 - `405 Method Not Allowed` – Usuário sem permissão para aprovar
@@ -52,6 +59,13 @@ X-User-Id: <UUID do usuário que está tentando negar>
 
 **Path Parameters:**
 - `id` – UUID do veículo a ser negado
+
+**Corpo esperado:**
+```json
+{
+  "flagPredatorio": true
+}
+```
 
 **Resposta:**
 - `202 Accepted` – Veículo negado com sucesso
@@ -115,7 +129,7 @@ X-User-Id: <UUID do usuário solicitante>
 ## ⚙️ Regras internas de negócio
 
 - **Permissões de ação** (aprovar/negar) são negadas se o usuário:
-  - Tem perfil de **pesquisador**; ou
+  - Tem perfil de **pesquisador**
   - Está **vinculado** ao veículo (`id_usuario` do veículo = `X-User-Id`).
 
 

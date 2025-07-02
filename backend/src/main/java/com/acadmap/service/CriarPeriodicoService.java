@@ -2,7 +2,7 @@ package com.acadmap.service;
 
 import com.acadmap.exception.periodico.PeriodicoDuplicadoException;
 import com.acadmap.model.dto.periodico.PeriodicoResponseDTO;
-import com.acadmap.model.dto.periodico.PeriodicoResquestDTO;
+import com.acadmap.model.dto.periodico.PeriodicoRequestDTO;
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.entities.Usuario;
@@ -34,7 +34,7 @@ public class CriarPeriodicoService {
     private final RegistrarLogService registrarLogService;
 
 
-    public PeriodicoResponseDTO criarPeriodico(PeriodicoResquestDTO dto, UUID uuid, boolean forcar){
+    public PeriodicoResponseDTO criarPeriodico(PeriodicoRequestDTO dto, UUID uuid, boolean forcar){
 
         if ((dto.linkJcr() != null) ^ (dto.percentilJcr() != null)) {
             throw new ResponseStatusException(
