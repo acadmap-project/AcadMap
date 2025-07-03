@@ -136,7 +136,19 @@ function ValidacaoPeriodicoContent() {
     onError: error => {
       console.error('Erro ao cadastrar periódico:', error);
 
-      // Extract error message from backend response
+      // Handle 500 Internal Server Error
+      if (error.status === 500) {
+        setErrorInfo({
+          title: 'Erro no Servidor',
+          message:
+            'Ocorreu um erro ao tentar salvar os dados do periódico. Por favor, tente novamente mais tarde.',
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+        return;
+      }
+
+      // Extract error message from backend response for other errors
       let errorMessage = 'Erro desconhecido ao processar o cadastro';
 
       if (error.response?.data) {

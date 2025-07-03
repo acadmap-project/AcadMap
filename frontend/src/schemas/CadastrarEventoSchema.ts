@@ -15,7 +15,7 @@ export const CadastrarEventoSchema = z
       .refine(val => !val || val === '' || !isNaN(Number(val)), {
         message: 'O índice deve ser um número',
       })
-      .transform(val => val && val !== '' ? Number(val) : undefined),
+      .transform(val => (val && val !== '' ? Number(val) : undefined)),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
     linkEvento: z

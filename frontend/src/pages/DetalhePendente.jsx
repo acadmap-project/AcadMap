@@ -37,8 +37,8 @@ function DetalhePendenteContent() {
     title: '',
     message: '',
     type: 'success',
-  }); 
-  
+  });
+
   // Check if current user is the same as the registro creator
   const isCreatorSameAsCurrentUser =
     registro.usuario?.idUsuario === loggedIn.id;
@@ -62,8 +62,8 @@ function DetalhePendenteContent() {
         navigate('/registros-pendentes');
       }, 3000);
     }
-  }, [registro, navigate]); 
-  
+  }, [registro, navigate]);
+
   // Mutations for approve and reject actions
   const aprovarMutation = useMutation({
     mutationFn: aprovarPendencias,
@@ -274,7 +274,6 @@ function DetalhePendenteContent() {
                 ' N/A'
               )}
             </div>
-            
             {registro.tipo === 'periodico' && (
               <div className="text-sm text-gray-900 mt-2">
                 <label className="flex items-center cursor-pointer">
@@ -288,7 +287,6 @@ function DetalhePendenteContent() {
                 </label>
               </div>
             )}
-            
             <div className="text-sm text-gray-900">
               <span className="font-medium">STATUS ATUAL:</span>{' '}
               {registro.status}
