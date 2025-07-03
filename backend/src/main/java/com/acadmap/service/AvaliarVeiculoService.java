@@ -37,7 +37,6 @@ public class AvaliarVeiculoService {
         if (veiculoPublicacaoAtual.getTipo() == TipoVeiculo.periodico){
             classificarPeriodicoService.classificarPeriodico(veiculoUuid, classificacaoPeriodicoRequestDTO, idUser);
         }
-
         veiculoPublicacaoAtual.setStatus(statusVeiculo);
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 
