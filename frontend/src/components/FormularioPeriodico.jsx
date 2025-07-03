@@ -40,7 +40,9 @@ function FormularioPeriodicoContent() {
         data.vinculoSbcCheckbox && data.vinculoSBC && data.vinculoSBC !== ''
           ? data.vinculoSBC
           : 'sem_vinculo',
-          classificacao: calcularClassificacaoPeriodico(Math.max(data.percentil_jcr, data.percentil_scopus)),
+      classificacao: calcularClassificacaoPeriodico(
+        Math.max(data.percentil_jcr, data.percentil_scopus)
+      ),
     };
 
     console.log('Submitting periodico data:', periodicoData);

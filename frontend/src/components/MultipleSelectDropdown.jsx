@@ -39,10 +39,10 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
     };
   }, []);
 
-  const deleteItem = (optValue) => {
+  const deleteItem = optValue => {
     const newValue = value.filter(item => item !== optValue);
     onChange(newValue);
-  }
+  };
 
   return (
     <div className="relative border border-gray-200 rounded-md" ref={selectref}>
@@ -52,11 +52,14 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
             {value.map(opt => {
               const option = options.find(option => option.value === opt);
               return (
-                <span key={opt} className="flex items-center px-2 my-1.5 rounded-md bg-gray-200">
+                <span
+                  key={opt}
+                  className="flex items-center px-2 my-1.5 rounded-md bg-gray-200"
+                >
                   {option ? option.label : opt}
-                  <div 
-                    className='cursor-pointer hover:text-red-500 ml-1' 
-                    onClick={(e) => {
+                  <div
+                    className="cursor-pointer hover:text-red-500 ml-1"
+                    onClick={e => {
                       e.stopPropagation();
                       deleteItem(opt);
                     }}

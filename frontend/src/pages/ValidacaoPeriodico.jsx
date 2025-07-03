@@ -95,23 +95,23 @@ function ValidacaoPeriodicoContent() {
     },
     onError: error => {
       console.error('Erro ao cadastrar periódico:', error);
-      
+
       // Extract error message from backend response
       let errorMessage = 'Erro desconhecido ao processar o cadastro';
-      
+
       if (error.response?.data) {
         try {
           // Try to parse JSON response and extract the "error" field
           const errorData = JSON.parse(error.response.data);
           errorMessage = errorData.error || error.response.data;
-        } catch (parseError) {
+        } catch {
           // If parsing fails, use the raw response data
           errorMessage = error.response.data;
         }
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       setErrorInfo({
         title: 'Erro!',
         message: errorMessage,
@@ -277,7 +277,7 @@ function ValidacaoPeriodicoContent() {
               <span className="font-medium">PERCENTIL (JCR):</span>{' '}
               {periodicoData.percentil_jcr || 'N/A'}
             </div>
-      
+
             <div className="text-sm text-gray-900">
               <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
               {periodicoData.percentil_scopus || 'N/A'}

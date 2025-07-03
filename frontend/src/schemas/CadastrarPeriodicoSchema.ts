@@ -31,10 +31,10 @@ export const CadastrarPeriodicoSchema = z
       .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
       .max(100, { message: 'O percentil Scopus deve estar entre 0 e 100' }),
     percentil_scopus: z.coerce
-    .number({ message: 'Deve ser um número' })
-    .int({ message: 'Deve ser um inteiro' })
-    .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
-    .max(100, { message: 'O percentil Scopus deve estar entre 0 e 100' }),
+      .number({ message: 'Deve ser um número' })
+      .int({ message: 'Deve ser um inteiro' })
+      .min(0, { message: 'O percentil Scopus deve estar entre 0 e 100' })
+      .max(100, { message: 'O percentil Scopus deve estar entre 0 e 100' }),
   })
   .refine(
     data => {
@@ -56,7 +56,7 @@ export const CadastrarPeriodicoSchema = z
   )
   .refine(
     data => {
-      if ((data.linkJcr && data.linkJcr !== '') && !data.percentil_jcr) {
+      if (data.linkJcr && data.linkJcr !== '' && !data.percentil_jcr) {
         return false;
       }
       return true;
@@ -64,17 +64,18 @@ export const CadastrarPeriodicoSchema = z
     {
       message: 'O percentil JCR é obrigatório se o link JCR for preenchido',
       path: ['percentil_jcr'],
-    },
+    }
   )
   .refine(
     data => {
-      if ((data.linkScopus && data.linkScopus !== '') && !data.percentil_scopus) {
+      if (data.linkScopus && data.linkScopus !== '' && !data.percentil_scopus) {
         return false;
       }
       return true;
     },
     {
-      message: 'O percentil Scopus é obrigatório se o link Scopus for preenchido',
+      message:
+        'O percentil Scopus é obrigatório se o link Scopus for preenchido',
       path: ['percentil_scopus'],
     }
   );

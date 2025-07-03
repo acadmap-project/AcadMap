@@ -8,7 +8,7 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
   const cancelMap = useMemo(() => new WeakMap(), []);
   const [items, setItems] = useState([]);
 
-  const POPUP_DURATION = 5000; 
+  const POPUP_DURATION = 5000;
 
   const transitions = useTransition(items, {
     from: { opacity: 0, transform: 'translateY(-100%)', height: 0 },
