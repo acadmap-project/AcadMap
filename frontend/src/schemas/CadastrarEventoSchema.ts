@@ -19,7 +19,14 @@ export const CadastrarEventoSchema = z
       .transform(val => Number(val)),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
-    linkEvento: z.string(),
+    linkEvento: z
+      .string()
+      .nonempty({
+        message: 'O link de acesso é obrigatório',
+      })
+      .url({
+        message: 'Digite uma URL válida',
+      }),
     linkGoogleScholar: z.string().optional().or(z.literal('')),
     linkSolSbc: z.string().optional().or(z.literal('')),
   })
