@@ -34,9 +34,49 @@ const normalizeToNull = obj => {
   return normalized;
 };
 
+// Helper to validate and convert percentile strings to integers
+const validateAndConvertPercentile = (value, fieldName) => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const stringValue = String(value).trim();
+  if (stringValue === '') {
+    return null;
+  }
+
+  const numericValue = parseInt(stringValue, 10);
+
+  if (isNaN(numericValue)) {
+    throw new Error(`${fieldName} deve ser um número válido`);
+  }
+
+  if (numericValue < 0 || numericValue > 100) {
+    throw new Error(`${fieldName} deve estar entre 0 e 100`);
+  }
+
+  return numericValue;
+};
+
 const postPeriodico = async ({ periodicoData, userId }) => {
   // Normalize all empty/undefined values to null
   const normalizedData = normalizeToNull(periodicoData);
+
+  // Validate and convert percentiles from strings to integers
+  try {
+    normalizedData.percentilJcr = validateAndConvertPercentile(
+      normalizedData.percentilJcr,
+      'Percentil JCR'
+    );
+    normalizedData.percentilScopus = validateAndConvertPercentile(
+      normalizedData.percentilScopus,
+      'Percentil Scopus'
+    );
+  } catch (error) {
+    throw new Error(`Erro de validação: ${error.message}`);
+  }
+
+  // The backend expects vinculoSBC (uppercase), so keep it as is
   console.log('Sending data to API:', normalizedData);
   const response = await fetch(
     'http://localhost:8080/api/periodicos/cadastro',
@@ -101,9 +141,10 @@ function ValidacaoPeriodicoContent() {
 
       if (error.response?.data) {
         try {
-          // Try to parse JSON response and extract the "error" field
+          // Try to parse JSON response and extract the "message" field
           const errorData = JSON.parse(error.response.data);
-          errorMessage = errorData.error || error.response.data;
+          errorMessage =
+            errorData.message || errorData.error || error.response.data;
         } catch {
           // If parsing fails, use the raw response data
           errorMessage = error.response.data;
@@ -275,12 +316,12 @@ function ValidacaoPeriodicoContent() {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">PERCENTIL (JCR):</span>{' '}
-              {periodicoData.percentil_jcr || 'N/A'}
+              {periodicoData.percentilJcr || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
-              {periodicoData.percentil_scopus || 'N/A'}
+              {periodicoData.percentilScopus || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">

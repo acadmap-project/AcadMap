@@ -17,31 +17,24 @@ function FormularioPeriodicoContent() {
   const {
     handleSubmit,
     register,
-    watch,
     setValue,
     control,
     formState: { errors },
   } = methods;
 
-  const vinculoSbcCheckbox = watch('vinculoSbcCheckbox');
-
-  const sbcOptions = [
-    { value: 'vinculo_comum', label: 'Comum' },
-    { value: 'vinculo_top_20', label: 'Top 20' },
-    { value: 'vinculo_top_10', label: 'Top 10' },
-  ];
-
   const onSubmit = data => {
-    // Handle vinculoSBC logic and convert percentil to number
+    // Handle vinculoSBC logic and convert percentil strings to numbers for calculation
     const { vinculoSbcCheckbox: _, ...rest } = data; // Remove vinculoSbcCheckbox
+
+    // Convert percentile strings to numbers for classification calculation
+    const percentilJcrNum = parseInt(data.percentilJcr || '0', 10) || 0;
+    const percentilScopusNum = parseInt(data.percentilScopus || '0', 10) || 0;
+
     const periodicoData = {
       ...rest,
-      vinculoSBC:
-        data.vinculoSbcCheckbox && data.vinculoSBC && data.vinculoSBC !== ''
-          ? data.vinculoSBC
-          : 'sem_vinculo',
+      vinculoSBC: data.vinculoSbcCheckbox ? 'vinculo_comum' : 'sem_vinculo',
       classificacao: calcularClassificacaoPeriodico(
-        Math.max(data.percentil_jcr, data.percentil_scopus)
+        Math.max(percentilJcrNum, percentilScopusNum)
       ),
     };
 
@@ -161,7 +154,9 @@ function FormularioPeriodicoContent() {
                         className="sr-only peer"
                         {...register('vinculoSbcCheckbox', {
                           onChange: e => {
-                            if (!e.target.checked) {
+                            if (e.target.checked) {
+                              setValue('vinculoSBC', 'vinculo_comum');
+                            } else {
                               setValue('vinculoSBC', '');
                             }
                           },
@@ -172,33 +167,7 @@ function FormularioPeriodicoContent() {
                     </div>
                   </label>
                 </div>{' '}
-                <div className="flex-1">
-                  <select
-                    id="vinculoSBC"
-                    className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300 ${
-                      vinculoSbcCheckbox
-                        ? 'opacity-100'
-                        : 'opacity-0 pointer-events-none'
-                    }`}
-                    {...register('vinculoSBC')}
-                    defaultValue=""
-                    disabled={!vinculoSbcCheckbox}
-                  >
-                    <option value="" disabled className="text-gray-500">
-                      Selecione tipo de vínculo
-                    </option>
-                    {sbcOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.vinculoSBC && vinculoSbcCheckbox && (
-                    <p className="text-red-500 text-sm mt-1 text-left">
-                      {errors.vinculoSBC.message}
-                    </p>
-                  )}
-                </div>
+                {/* Dropdown is now completely invisible */}
               </div>
             </div>
           </div>{' '}
@@ -271,7 +240,7 @@ function FormularioPeriodicoContent() {
                 htmlFor="qualisAntigo"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                NOTA NO ANTIGO QUALIS*
+                NOTA NO ANTIGO QUALIS
               </label>
               <select
                 id="qualisAntigo"
@@ -288,49 +257,49 @@ function FormularioPeriodicoContent() {
                   </option>
                 ))}
               </select>
-              {errors.vinculoSBC && vinculoSbcCheckbox && (
+              {errors.qualisAntigo && (
                 <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.vinculoSBC.message}
+                  {errors.qualisAntigo.message}
                 </p>
               )}
             </div>
             <div>
               <label
-                htmlFor="percentil_jcr"
+                htmlFor="percentilJcr"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 PERCENTIL JCR*
               </label>{' '}
               <input
                 type="text"
-                id="percentil_jcr"
+                id="percentilJcr"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite o percentil do periódico (0-100)..."
-                {...register('percentil_jcr')}
+                {...register('percentilJcr')}
               />
-              {errors.percentil_jcr && (
+              {errors.percentilJcr && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.percentil_jcr.message}
+                  {errors.percentilJcr.message}
                 </p>
               )}
             </div>
             <div>
               <label
-                htmlFor="percentil_scopus"
+                htmlFor="percentilScopus"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
                 PERCENTIL SCOPUS*
               </label>{' '}
               <input
                 type="text"
-                id="percentil_scopus"
+                id="percentilScopus"
                 className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
                 placeholder="Digite o percentil do periódico (0-100)..."
-                {...register('percentil_scopus')}
+                {...register('percentilScopus')}
               />
-              {errors.percentil_scopus && (
+              {errors.percentilScopus && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.percentil_scopus.message}
+                  {errors.percentilScopus.message}
                 </p>
               )}
             </div>
