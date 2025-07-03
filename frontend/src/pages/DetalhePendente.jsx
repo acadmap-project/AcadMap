@@ -20,8 +20,11 @@ function DetalhePendenteContent() {
   const { loggedIn } = useLogin();
   const { id } = useParams();
   const location = useLocation();
+  // Get registro data from location state or set default
+  const registro = useMemo(() => location.state || {}, [location.state]);
+
   const navigate = useNavigate();
-  const [isPredatorio, setIsPredatorio] = useState(registro.flagPredatorio || false);
+  const [isPredatorio, setIsPredatorio] = useState(false);
   const { negarPendencias, aprovarPendencias } = usePendencias();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
@@ -34,9 +37,8 @@ function DetalhePendenteContent() {
     title: '',
     message: '',
     type: 'success',
-  }); // Get registro data from location state or set default
-  const registro = useMemo(() => location.state || {}, [location.state]);
-
+  }); 
+  
   // Check if current user is the same as the registro creator
   const isCreatorSameAsCurrentUser =
     registro.usuario?.idUsuario === loggedIn.id;
@@ -62,32 +64,6 @@ function DetalhePendenteContent() {
     }
   }, [registro, navigate]); 
   
-  // Mutation para atualizar flagPredatorio
-  const classificarPeriodicoMutation = useMutation({
-    mutationFn: async ({ id, flagPredatorio, userId }) => {
-      const response = await fetch(
-        `http://localhost:8080/api/preiodicos/cadastro/${id}/classificar`,
-        {
-          method: 'PATCH',
-          headers : {
-            'X-User-Id' : userId,
-            'Content-Type' : 'application/json',
-          },
-          body : JSON.stringify({ flagPredatorio }),
-        }
-      );
-      if (!response.ok){
-        throw new Error('Erro ao atualizar flag predatório');
-      }
-      return response.json();
-    },
-    onSuccess: data => {
-      setIsPredatorio(data.flagPredatorio);
-    },
-    onError: error => {
-      alert('Erro ao atualizar flag predatório: ' + error.message);
-    },
-  });
   // Mutations for approve and reject actions
   const aprovarMutation = useMutation({
     mutationFn: aprovarPendencias,
@@ -190,10 +166,12 @@ function DetalhePendenteContent() {
     console.log('Attempting to approve registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
+    console.log('isPredatorio:', isPredatorio);
 
     aprovarMutation.mutate({
       id: registroId,
       userId: loggedIn.id,
+      flagPredatorio: isPredatorio,
     });
   };
 
@@ -201,10 +179,12 @@ function DetalhePendenteContent() {
     console.log('Attempting to reject registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
+    console.log('isPredatorio:', isPredatorio);
 
     rejeitarMutation.mutate({
       id: registroId,
       userId: loggedIn.id,
+      flagPredatorio: isPredatorio,
     });
   };
   // If no registro data, show error message
@@ -294,29 +274,21 @@ function DetalhePendenteContent() {
                 ' N/A'
               )}
             </div>
+            
             {registro.tipo === 'periodico' && (
-        <div className="text-sm text-gray-900 mt-2">
-          <label>
-            <input
-              type="checkbox"
-              checked={isPredatorio}
-              onChange={e => {
-                classificarPeriodicoMutation.mutate({
-                  id: registro.idVeiculo,
-                  flagPredatorio: e.target.checked,
-                  userId: loggedIn.id,
-                });
-              }}
-              disabled={
-                !['AUDITOR', 'ADMINISTRADOR'].includes(loggedIn.userType) ||
-                aprovarMutation.isPending ||
-                rejeitarMutation.isPending
-              }
-            />{' '}
-            Marcar como periódico predatório
-          </label>
-        </div>
-      )}
+              <div className="text-sm text-gray-900 mt-2">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isPredatorio}
+                    onChange={e => setIsPredatorio(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Marcar como periódico predatório
+                </label>
+              </div>
+            )}
+            
             <div className="text-sm text-gray-900">
               <span className="font-medium">STATUS ATUAL:</span>{' '}
               {registro.status}
