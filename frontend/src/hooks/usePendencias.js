@@ -26,12 +26,14 @@ function usePendencias() {
 
     fetchPendencias();
   }, [loggedIn.id]);
-  const negarPendencias = async ({ id, userId }) => {
+  const negarPendencias = async ({ id, userId, flagPredatorio = false }) => {
     console.log(
       'Attempting to reject pendencia with ID:',
       id,
       'User ID:',
-      userId
+      userId,
+      'flagPredatorio:',
+      flagPredatorio
     );
 
     // Validate required parameters
@@ -45,7 +47,7 @@ function usePendencias() {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/negar-veiculo/${id}`,
-        { flagPredatorio: false }, // Add flagPredatorio attribute
+        { flagPredatorio }, // Send flagPredatorio in the request body
         {
           headers: {
             'X-User-Id': userId,
@@ -84,12 +86,14 @@ function usePendencias() {
     }
   };
 
-  const aprovarPendencias = async ({ id, userId }) => {
+  const aprovarPendencias = async ({ id, userId, flagPredatorio = false }) => {
     console.log(
       'Attempting to approve pendencia with ID:',
       id,
       'User ID:',
-      userId
+      userId,
+      'flagPredatorio:',
+      flagPredatorio
     );
 
     // Validate required parameters
@@ -103,7 +107,7 @@ function usePendencias() {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/aprovar-veiculo/${id}`,
-        { flagPredatorio: false }, // Add flagPredatorio attribute
+        { flagPredatorio }, // Send flagPredatorio in the request body
         {
           headers: {
             'X-User-Id': userId,
