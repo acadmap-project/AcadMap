@@ -45,10 +45,11 @@ function usePendencias() {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/negar-veiculo/${id}`,
-        null, // Explicitly set body to null for PUT requests without body
+        { flagPredatorio: false }, // Add flagPredatorio attribute
         {
           headers: {
             'X-User-Id': userId,
+            'Content-Type': 'application/json',
           },
           timeout: 10000, // 10 second timeout
         }
@@ -102,10 +103,11 @@ function usePendencias() {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/aprovar-veiculo/${id}`,
-        null, // Explicitly set body to null for PUT requests without body
+        { flagPredatorio: false }, // Add flagPredatorio attribute
         {
           headers: {
             'X-User-Id': userId,
+            'Content-Type': 'application/json',
           },
           timeout: 10000, // 10 second timeout
         }
