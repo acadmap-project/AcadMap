@@ -68,7 +68,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
                 >
                   {option ? option.label : opt}
                   <div
-                    className="cursor-pointer hover:text-red-500 ml-1"
+                    className="cursor-pointer hover:text-red-500 ml-1 "
                     onClick={e => {
                       e.stopPropagation();
                       deleteItem(opt);
@@ -96,7 +96,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
             filterOptions.map(option => (
               <div
                 key={option.value}
-                className="flex items-center gap-2 hover:bg-gray-200 cursor-pointer p-2"
+                className="flex items-center gap-2 hover:bg-gray-200 cursor-pointer p-2 text-left"
                 onClick={() => setOption(option.value)}
               >
                 <input
