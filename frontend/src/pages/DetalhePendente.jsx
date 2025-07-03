@@ -21,6 +21,7 @@ function DetalhePendenteContent() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isPredatorio, setIsPredatorio] = useState(registro.flagPredatorio || false);
   const { negarPendencias, aprovarPendencias } = usePendencias();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
@@ -59,7 +60,35 @@ function DetalhePendenteContent() {
         navigate('/registros-pendentes');
       }, 3000);
     }
-  }, [registro, navigate]); // Mutations for approve and reject actions
+  }, [registro, navigate]); 
+  
+  // Mutation para atualizar flagPredatorio
+  const classificarPeriodicoMutation = useMutation({
+    mutationFn: async ({ id, flagPredatorio, userId }) => {
+      const response = await fetch(
+        `http://localhost:8080/api/preiodicos/cadastro/${id}/classificar`,
+        {
+          method: 'PATCH',
+          headers : {
+            'X-User-Id' : userId,
+            'Content-Type' : 'application/json',
+          },
+          body : JSON.stringify({ flagPredatorio }),
+        }
+      );
+      if (!response.ok){
+        throw new Error('Erro ao atualizar flag predatório');
+      }
+      return response.json();
+    },
+    onSuccess: data => {
+      setIsPredatorio(data.flagPredatorio);
+    },
+    onError: error => {
+      alert('Erro ao atualizar flag predatório: ' + error.message);
+    },
+  });
+  // Mutations for approve and reject actions
   const aprovarMutation = useMutation({
     mutationFn: aprovarPendencias,
     onSuccess: () => {
@@ -265,6 +294,29 @@ function DetalhePendenteContent() {
                 ' N/A'
               )}
             </div>
+            {registro.tipo === 'periodico' && (
+        <div className="text-sm text-gray-900 mt-2">
+          <label>
+            <input
+              type="checkbox"
+              checked={isPredatorio}
+              onChange={e => {
+                classificarPeriodicoMutation.mutate({
+                  id: registro.idVeiculo,
+                  flagPredatorio: e.target.checked,
+                  userId: loggedIn.id,
+                });
+              }}
+              disabled={
+                !['AUDITOR', 'ADMINISTRADOR'].includes(loggedIn.userType) ||
+                aprovarMutation.isPending ||
+                rejeitarMutation.isPending
+              }
+            />{' '}
+            Marcar como periódico predatório
+          </label>
+        </div>
+      )}
             <div className="text-sm text-gray-900">
               <span className="font-medium">STATUS ATUAL:</span>{' '}
               {registro.status}
