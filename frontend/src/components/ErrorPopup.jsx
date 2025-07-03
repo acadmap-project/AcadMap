@@ -154,8 +154,13 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
                   if (cancelMap.has(item)) {
                     cancelMap.get(item)();
                   }
+                  // Clear the items state and reset flags
+                  setItems([]);
+                  setHasShownCurrent(false);
+                  onClose(); // Call onClose to update parent state
                 }}
-                className="ml-3 text-red-500 hover:text-red-700 transition-colors flex-shrink-0"
+                className="!px-3 !py-2 !bg-red-500 hover:!bg-red-600 !text-white !border-0 !rounded-none focus:!outline-none focus:!ring-2 focus:!ring-red-500 focus:!ring-opacity-50 transition-colors duration-200 font-medium text-sm flex-shrink-0"
+                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
               >
                 <svg
                   className="w-4 h-4"

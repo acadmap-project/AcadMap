@@ -95,9 +95,26 @@ function ValidacaoPeriodicoContent() {
     },
     onError: error => {
       console.error('Erro ao cadastrar periódico:', error);
+      
+      // Extract error message from backend response
+      let errorMessage = 'Erro desconhecido ao processar o cadastro';
+      
+      if (error.response?.data) {
+        try {
+          // Try to parse JSON response and extract the "error" field
+          const errorData = JSON.parse(error.response.data);
+          errorMessage = errorData.error || error.response.data;
+        } catch (parseError) {
+          // If parsing fails, use the raw response data
+          errorMessage = error.response.data;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setErrorInfo({
         title: 'Erro!',
-        message: 'O cadastro já encontra presente no sistema',
+        message: errorMessage,
         type: 'error',
       });
       setShowErrorPopup(true);
