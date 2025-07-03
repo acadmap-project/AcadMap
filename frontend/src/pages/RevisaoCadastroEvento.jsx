@@ -179,10 +179,10 @@ function RevisaoCadastroEventoContent() {
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
               {eventData.areasPesquisaIds &&
-                eventData.areasPesquisaIds.length > 0
+              eventData.areasPesquisaIds.length > 0
                 ? eventData.areasPesquisaIds
-                  .map(areaId => getAreaName(areaId))
-                  .join(', ')
+                    .map(areaId => getAreaName(areaId))
+                    .join(', ')
                 : 'N/A'}
             </div>
 
