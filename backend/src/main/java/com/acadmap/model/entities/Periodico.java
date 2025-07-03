@@ -25,8 +25,11 @@ public class Periodico extends VeiculoPublicacao {
   @Column(name = "ISSN", nullable = false, length = 8, unique = true)
   private String issn;
 
-  @Column(name = "percentil", nullable = false)
-  private Integer percentil;
+  @Column(name = "percentil_jcr")
+  private Integer percentilJcr;
+
+  @Column(name = "percentil_scopus")
+  private Integer percentilScopus;
 
   @Column(name = "link_jcr", length = 255)
   private String linkJcr;

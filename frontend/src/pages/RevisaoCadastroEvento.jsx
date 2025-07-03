@@ -63,7 +63,7 @@ function RevisaoCadastroEventoContent() {
     onSuccess: data => {
       console.log('Api utilizada com sucesso:', data);
       setSuccessInfo({
-        title: 'Evento Cadastrado com Sucesso!',
+        title: `Evento ${eventData.nome} registrado com sucesso! O cadastro agora aguarda a validação de um auditor.`,
         message: 'O evento foi cadastrado no sistema com sucesso.',
         type: 'success',
       });
@@ -103,6 +103,7 @@ function RevisaoCadastroEventoContent() {
 
   const closeSuccessPopup = () => {
     setShowSuccessPopup(false);
+    navigate('/');
   };
 
   useEffect(() => {

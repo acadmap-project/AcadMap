@@ -49,9 +49,9 @@ INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinc
 VALUES 
 (id_veiculo_periodico_pendente, id_usuario_pesquisador_3, 'Computing Systems Journal', 'a3', 'vinculo_top_20', 'mestrado', 'periodico', 'pendente');
 
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, link_jcr, link_scopus, qualis_antigo, flag_predatorio)
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, percentil_scopus, link_jcr, link_scopus, flag_predatorio)
 VALUES 
-(id_veiculo_periodico_pendente, '87654321', 75, 'http://jcr.com/csj', 'http://scopus.com/csj', 'b1', false);
+(id_veiculo_periodico_pendente, '87654321', 75, 48, 'http://jcr.com/csj', 'http://scopus.com/csj', false);
 
 -- Evento aceito
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)

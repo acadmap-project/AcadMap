@@ -17,13 +17,15 @@ public record PeriodicoResponseDTO(UUID idVeiculo,
                                    TipoVeiculo tipo,
                                    StatusVeiculo status,
                                    String issn,
-                                   Integer percentil,
+                                   Integer percentil_jcr,
+                                   Integer percentil_scopus,
                                    String linkJcr,
                                    String linkScopus,
                                    String linkGoogleScholar,
                                    QualisAntigo qualisAntigo,
                                    Set<UUID> areasPesquisaIds,
-                                   UsuarioResumoDTO usuario) {
+                                   UsuarioResumoDTO usuario,
+                                   Boolean flagPredatorio) {
 
     public PeriodicoResponseDTO(Periodico periodico){
         this(
@@ -35,7 +37,8 @@ public record PeriodicoResponseDTO(UUID idVeiculo,
                 periodico.getTipo(),
                 periodico.getStatus(),
                 periodico.getIssn(),
-                periodico.getPercentil(),
+                periodico.getPercentilJcr(),
+                periodico.getPercentilScopus(),
                 periodico.getLinkJcr(),
                 periodico.getLinkScopus(),
                 periodico.getLinkGoogleScholar(),
@@ -43,7 +46,8 @@ public record PeriodicoResponseDTO(UUID idVeiculo,
                 periodico.getAreasPesquisa().stream()
                         .map(AreaPesquisa::getIdAreaPesquisa)
                         .collect(Collectors.toSet()),
-                new UsuarioResumoDTO(periodico.getUsuario())
+                new UsuarioResumoDTO(periodico.getUsuario()),
+                periodico.getFlagPredatorio()
         );
     }
     public record UsuarioResumoDTO(

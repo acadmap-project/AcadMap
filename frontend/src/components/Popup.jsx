@@ -9,6 +9,8 @@ function Popup({ isOpen, onClose, title, message, type = 'success' }) {
   const [items, setItems] = useState([]);
   const [hasShownCurrent, setHasShownCurrent] = useState(false);
 
+  const POPUP_DURATION = 5000;
+
   const transitions = useTransition(items, {
     from: { opacity: 0, transform: 'translateX(100%)', height: 0 },
     keys: item => item.key,
@@ -19,6 +21,8 @@ function Popup({ isOpen, onClose, title, message, type = 'success' }) {
         transform: 'translateX(0%)',
         height: refMap.get(item)?.offsetHeight || 'auto',
       });
+
+      await new Promise(resolve => setTimeout(resolve, POPUP_DURATION));
     },
     leave: { opacity: 0, transform: 'translateX(100%)', height: 0 },
     onRest: (result, ctrl, item) => {

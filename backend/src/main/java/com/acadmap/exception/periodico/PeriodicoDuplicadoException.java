@@ -1,6 +1,5 @@
 package com.acadmap.exception.periodico;
 
-import com.acadmap.model.dto.periodico.PeriodicoResquestDTO;
 import com.acadmap.model.entities.Periodico;
 import lombok.Getter;
 

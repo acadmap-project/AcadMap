@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import closeIcon from '../assets/close.svg';
 
 export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
   const [searchText, setSearchText] = useState('');
@@ -38,16 +39,33 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
     };
   }, []);
 
+  const deleteItem = optValue => {
+    const newValue = value.filter(item => item !== optValue);
+    onChange(newValue);
+  };
+
   return (
     <div className="relative border border-gray-200 rounded-md" ref={selectref}>
       <div className="px-2">
         {value && value.length > 0 && (
-          <div className="flex gap-2 items-center text-xs">
+          <div className="flex flex-wrap gap-2 items-center text-xs">
             {value.map(opt => {
               const option = options.find(option => option.value === opt);
               return (
-                <span key={opt} className="px-2 rounded-md bg-gray-200">
+                <span
+                  key={opt}
+                  className="flex items-center px-2 my-1.5 rounded-md bg-gray-200"
+                >
                   {option ? option.label : opt}
+                  <div
+                    className="cursor-pointer hover:text-red-500 ml-1"
+                    onClick={e => {
+                      e.stopPropagation();
+                      deleteItem(opt);
+                    }}
+                  >
+                    <img src={closeIcon} alt="close" className="w-3 h-3" />
+                  </div>
                 </span>
               );
             })}
