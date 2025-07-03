@@ -10,13 +10,12 @@ export const CadastrarEventoSchema = z
       .min(1, 'Selecione uma área de conhecimento'),
     h5: z
       .string()
-      .nonempty({
-        message: 'O índice H5 é obrigatório',
-      })
-      .refine(val => !isNaN(Number(val)), {
+      .optional()
+      .or(z.literal(''))
+      .refine(val => !val || val === '' || !isNaN(Number(val)), {
         message: 'O índice deve ser um número',
       })
-      .transform(val => Number(val)),
+      .transform(val => val && val !== '' ? Number(val) : undefined),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
     linkEvento: z
