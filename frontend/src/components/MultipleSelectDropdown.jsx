@@ -68,7 +68,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
                 >
                   {option ? option.label : opt}
                   <div
-                    className="cursor-pointer hover:text-red-500 ml-1 "
+                    className="cursor-pointer hover:text-red-500 ml-1"
                     onClick={e => {
                       e.stopPropagation();
                       deleteItem(opt);
