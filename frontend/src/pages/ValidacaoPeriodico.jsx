@@ -326,56 +326,15 @@ function ValidacaoPeriodicoContent() {
               )}
             </div>
 
-            {(() => {
-              const jcrPercentil = periodicoData.percentilJcr;
-              const scopusPercentil = periodicoData.percentilScopus;
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL (JCR):</span>{' '}
+              {periodicoData.percentilJcr || 'N/A'}
+            </div>
 
-              // If both are null/undefined, show N/A
-              if (!jcrPercentil && !scopusPercentil) {
-                return (
-                  <div className="text-sm text-gray-900">
-                    <span className="font-medium">PERCENTIL:</span> N/A
-                  </div>
-                );
-              }
-
-              // If only one has a value, show that one
-              if (!jcrPercentil && scopusPercentil) {
-                return (
-                  <div className="text-sm text-gray-900">
-                    <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
-                    {scopusPercentil}
-                  </div>
-                );
-              }
-
-              if (jcrPercentil && !scopusPercentil) {
-                return (
-                  <div className="text-sm text-gray-900">
-                    <span className="font-medium">PERCENTIL (JCR):</span>{' '}
-                    {jcrPercentil}
-                  </div>
-                );
-              }
-
-              // If both have values, show the bigger one
-              if (Number(jcrPercentil) >= Number(scopusPercentil)) {
-                return (
-                  <div className="text-sm text-gray-900">
-                    <span className="font-medium">PERCENTIL (JCR):</span>{' '}
-                    {jcrPercentil}
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="text-sm text-gray-900">
-                    <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
-                    {scopusPercentil}
-                  </div>
-                );
-              }
-            })()}
-
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
+              {periodicoData.percentilScopus || 'N/A'}
+            </div>
             <div className="text-sm text-gray-900">
               <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
               {periodicoData.qualisAntigo
