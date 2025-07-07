@@ -1,0 +1,37 @@
+package com.acadmap.model.dto.evento;
+
+import com.acadmap.model.enums.*;
+import lombok.*;
+
+import java.util.Set;
+import java.util.UUID;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class EventoCreateDTO {
+
+  private String nome;
+
+  private ClassificacaoVeiculo classificacao;
+
+  private VinculoSBC vinculoSbc;
+
+  private AdequacaoDefesa adequadoDefesa;
+
+  private TipoVeiculo tipo;
+
+  private StatusVeiculo status;
+
+  private Set<UUID> areasPesquisaIds;
+
+  private Integer h5;
+
+  private String linkEvento;
+
+  private String linkGoogleScholar;
+
+  private String linkSolSbc;
+}
