@@ -263,7 +263,7 @@ function RevisaoCadastroEventoContent() {
               >
                 {createEventMutation.isPending
                   ? 'Salvando...'
-                  : 'Salvar e Continuar'}
+                  : 'Confirmar'}
               </button>
             </div>
           </div>
