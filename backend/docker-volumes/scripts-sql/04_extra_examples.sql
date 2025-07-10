@@ -45,22 +45,22 @@ VALUES
 -- ====================================================================
 
 -- Periódico pendente
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
 VALUES 
-(id_veiculo_periodico_pendente, id_usuario_pesquisador_3, 'Computing Systems Journal', 'a3', 'vinculo_top_20', 'mestrado', 'periodico', 'pendente');
+(id_veiculo_periodico_pendente, id_usuario_pesquisador_3, 'Computing Systems Journal' , null, null, 'a3', 'vinculo_top_20', 'mestrado', 'periodico', 'pendente');
 
 INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, percentil_scopus, link_jcr, link_scopus, flag_predatorio)
 VALUES 
 (id_veiculo_periodico_pendente, '87654321', 75, 48, 'http://jcr.com/csj', 'http://scopus.com/csj', false);
 
 -- Evento aceito
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
 VALUES 
-(id_veiculo_evento_aceito, id_usuario_pesquisador_3, 'Symposium on Distributed Computing', 'a2', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
+(id_veiculo_evento_aceito, id_usuario_pesquisador_3, 'Symposium on Distributed Computing', 50, 'http://scholar.google.com/sdc' , 'a2', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
 
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_google_scholar)
+INSERT INTO Evento (id_veiculo, link_sol_sbc)
 VALUES 
-(id_veiculo_evento_aceito, 50, 'http://sdc.com/2024', 'http://scholar.google.com/sdc');
+(id_veiculo_evento_aceito, 'https://sol-sbc/sdc');
 
 -- Relacionamentos com área de pesquisa
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa)

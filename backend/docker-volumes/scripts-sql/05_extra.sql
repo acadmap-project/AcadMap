@@ -128,8 +128,9 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_usuario
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_knuth_1);
 
 -- Evento PENDENTE
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_knuth_2, id_pesq_knuth, 'Symposium on Literate Programming', 'a3', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'pendente');
-INSERT INTO Evento (id_veiculo, h5, link_evento) VALUES (id_veiculo_knuth_2, 35, 'http://slp.org/2024');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_knuth_2, id_pesq_knuth, 'Symposium on Literate Programming', 35, 'http://scholar.google.com/slp', 'a3', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'pendente');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_knuth_2, 'http://sol-sbc/slp/2024');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_knuth_2, id_area_comp);
 -- Log
 log_id := gen_random_uuid();
@@ -139,8 +140,9 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_knuth_2);
 
 -- --- Cenários para Edsger Dijkstra ---
 -- Evento NEGADO
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_dijkstra_1, id_pesq_dijkstra, 'Workshop on Formal Methods Verification', 'a4', 'sem_vinculo', 'mestrado', 'evento', 'negado');
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_google_scholar) VALUES (id_veiculo_dijkstra_1, 20, 'http://wfmv.conf', 'http://scholar.google.com/wfmv');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES
+(id_veiculo_dijkstra_1, id_pesq_dijkstra, 'Workshop on Formal Methods Verification', 20 , 'http://scholar.google.com/wfmv','a4', 'sem_vinculo', 'mestrado', 'evento', 'negado');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_dijkstra_1,'http://sol-sbc/slp/2024');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_dijkstra_1, id_area_comp);
 -- Logs
 log_id := gen_random_uuid();
@@ -154,7 +156,8 @@ INSERT INTO JustificativaRecusa (id_log, justificativa) VALUES (log_id, 'Evento 
 
 -- --- Cenários para Thomas H. Cormen ---
 -- Periódico PENDENTE
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_cormen_1, id_pesq_cormen, 'Journal of Concrete Mathematics and Algorithms', 'a2', 'vinculo_top_20', 'doutorado', 'periodico', 'pendente');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_cormen_1, id_pesq_cormen, 'Journal of Concrete Mathematics and Algorithms', 'a2', 'vinculo_top_20', 'doutorado', 'periodico', 'pendente');
 INSERT INTO Periodico (id_veiculo, ISSN, percentil_scopus, link_scopus) VALUES (id_veiculo_cormen_1, '55667788', 88, 'http://scopus.com/jcma');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_cormen_1, id_area_comp);
 -- Log
@@ -163,8 +166,9 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_co
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_cormen_1);
 
 -- Evento ACEITO
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_cormen_2, id_pesq_cormen, 'Conference on Introduction to Algorithms (CIA)', 'a1', 'vinculo_top_10', 'mestrado_doutorado', 'evento', 'aceito');
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_sol_sbc) VALUES (id_veiculo_cormen_2, 60, 'http://cia-conf.com', 'http://sol.sbc.org.br/cia');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES
+(id_veiculo_cormen_2, id_pesq_cormen, 'Conference on Introduction to Algorithms (CIA)', 60, 'http://scholar.google.com', 'a1', 'vinculo_top_10', 'mestrado_doutorado', 'evento', 'aceito');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_cormen_2, 'http://sol.sbc.org.br/cia');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_cormen_2, id_area_comp);
 -- Logs
 log_id := gen_random_uuid();
@@ -177,7 +181,8 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_cormen_2)
 
 -- --- Cenários para Ronald Rivest ---
 -- Periódico ACEITO (área dupla)
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_rivest_1, id_pesq_rivest, 'IEEE Transactions on Information Theory', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_rivest_1, id_pesq_rivest, 'IEEE Transactions on Information Theory', 60, 'http://scholar.google.com', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
 INSERT INTO Periodico (id_veiculo, ISSN, qualis_antigo) VALUES (id_veiculo_rivest_1, '99887766', 'a1');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_rivest_1, id_area_comp);
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_rivest_1, id_area_eng_eletrica);
@@ -190,8 +195,9 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_auditor
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_rivest_1);
 
 -- Evento PENDENTE
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_rivest_2, id_pesq_rivest, 'International Cryptology Conference (CRYPTO)', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'pendente');
-INSERT INTO Evento (id_veiculo, h5, link_evento) VALUES (id_veiculo_rivest_2, 70, 'http://iacr.org/crypto');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_rivest_2, id_pesq_rivest, 'International Cryptology Conference (CRYPTO)', 70, 'http://scholar.google.com', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'pendente');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_rivest_2, 'http://sol.sbc.org.br/icc');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_rivest_2, id_area_comp);
 -- Log
 log_id := gen_random_uuid();
@@ -215,8 +221,9 @@ INSERT INTO JustificativaRecusa (id_log, justificativa) VALUES (log_id, 'Veícul
 
 -- --- Cenário para Linus Torvalds ---
 -- Evento ACEITO
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_torvalds_1, id_pesq_torvalds, 'Linux Kernel Summit', 'a2', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'aceito');
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_google_scholar) VALUES (id_veiculo_torvalds_1, 55, 'http://events.linuxfoundation.org/lks', 'http://scholar.google/lks');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_torvalds_1, id_pesq_torvalds, 'Linux Kernel Summit', 55, 'http://scholar.google/lks', 'a2', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'aceito');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_torvalds_1, 'http://sol.sbc.org.br/lks');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_torvalds_1, id_area_comp);
 -- Logs
 log_id := gen_random_uuid();
@@ -238,8 +245,9 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_torvalds_
 
 -- --- Cenários Adicionais (Restantes) ---
 -- Berners-Lee (Web)
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_berners_1, id_pesq_berners_lee, 'The Web Conference', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
-INSERT INTO Evento (id_veiculo, h5, link_evento) VALUES (id_veiculo_berners_1, 80, 'http://thewebconf.org');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_berners_1, id_pesq_berners_lee, 'The Web Conference', 80, 'http://scholar.google/lks','a1', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_berners_1, 'http://sol-thewebconf.org');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_berners_1, id_area_comp);
 log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_berners_lee, NOW() - INTERVAL '50 day', 'adicao_veiculo');
@@ -256,8 +264,9 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_be
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_berners_2);
 
 -- Cerf & Kahn (Redes)
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_cerf_1, id_pesq_cerf, 'ACM SIGCOMM', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_sol_sbc) VALUES (id_veiculo_cerf_1, 90, 'http://sigcomm.org', 'http://sol.sbc.org.br/sigcomm');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+ VALUES (id_veiculo_cerf_1, id_pesq_cerf, 'ACM SIGCOMM', 90, 'http://sigcomm.org', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_cerf_1, 'http://sol.sbc.org.br/sigcomm');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_cerf_1, id_area_comp);
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_cerf_1, id_area_eng_eletrica);
 log_id := gen_random_uuid();
@@ -278,8 +287,9 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_usuario
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_kahn_1);
 
 -- McCarthy (IA)
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_mccarthy_1, id_pesq_mccarthy, 'AAAI Conference on Artificial Intelligence', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
-INSERT INTO Evento (id_veiculo, h5, link_evento) VALUES (id_veiculo_mccarthy_1, 85, 'http://aaai.org');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_mccarthy_1, id_pesq_mccarthy, 'AAAI Conference on Artificial Intelligence', 85, 'http://aaai.org', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'aceito');
+INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_mccarthy_1, 'htps://sol.com/aaai');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_mccarthy_1, id_area_comp);
 log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_mccarthy, NOW() - INTERVAL '22 day', 'adicao_veiculo');
@@ -298,8 +308,9 @@ log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_auditor_4, NOW() - INTERVAL '26 day', 'cadastro_veiculo_aceito');
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_mccarthy_2);
 
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_mccarthy_3, id_pesq_mccarthy, 'LISP and Functional Programming Symposium', 'a5', 'sem_vinculo', 'nenhum', 'evento', 'negado');
-INSERT INTO Evento (id_veiculo, h5, link_evento) VALUES (id_veiculo_mccarthy_3, 10, 'http://lfp-symp.historic');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_mccarthy_3, id_pesq_mccarthy, 'LISP and Functional Programming Symposium', 10, 'http://lfp-symp.historic', 'a5', 'sem_vinculo', 'nenhum', 'evento', 'negado');
+    INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_mccarthy_3, 'htps://sol.com/aaai');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_mccarthy_3, id_area_comp);
 log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_mccarthy, NOW() - INTERVAL '12 day', 'adicao_veiculo');

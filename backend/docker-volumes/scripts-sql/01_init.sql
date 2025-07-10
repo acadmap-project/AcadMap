@@ -27,6 +27,8 @@ CREATE TABLE VeiculoPublicacao (
   id_veiculo uuid,
   id_usuario uuid NOT NULL,
   nome varchar(255) NOT NULL,
+  h5 int NOT NULL,
+  link_google_scholar varchar(255) DEFAULT null,
   classificacao varchar(2) NOT NULL,
   vinculo_sbc varchar(20) NOT NULL,
   adequado_defesa varchar(20) NOT NULL,
@@ -42,9 +44,6 @@ CREATE TABLE VeiculoPublicacao (
 
 CREATE TABLE Evento (
   id_veiculo uuid,
-  h5 int NOT NULL,
-  link_evento varchar(255) NOT NULL,
-  link_google_scholar varchar(255),
   link_sol_sbc varchar(255),
   CONSTRAINT pk_evento PRIMARY KEY (id_veiculo)
 );
@@ -79,12 +78,11 @@ CREATE TABLE Periodico (
   percentil_scopus int DEFAULT null,
   link_jcr varchar(255),
   link_scopus varchar(255),
-  link_google_scholar varchar(255) DEFAULT null,
   qualis_antigo varchar(2) DEFAULT null,
   flag_predatorio boolean DEFAULT false,
   CONSTRAINT pk_periodico PRIMARY KEY (id_veiculo),
   CONSTRAINT uq_periodico_issn UNIQUE (ISSN),
-  CONSTRAINT chk_periodico_qualis_antigo CHECK (qualis_antigo IS NULL OR qualis_antigo IN ('a1', 'a2', 'b1', 'b2', 'b3', 'b4', 'b5', 'c'))
+  CONSTRAINT chk_periodico_qualis_antigo CHECK (qualis_antigo IS NULL OR qualis_antigo IN ('a1', 'a2','a3', 'a4', 'b1', 'b2', 'b3', 'b4'))
 );
 
 CREATE TABLE LogVeiculo (
