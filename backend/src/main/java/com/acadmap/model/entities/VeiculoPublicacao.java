@@ -44,6 +44,9 @@ public abstract class VeiculoPublicacao {
   @Column(name = "nome", nullable = false, length = 255)
   private String nome;
 
+  @Column(name = "h5", nullable = false)
+  private Integer h5;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "classificacao", nullable = false, length = 2)
   private ClassificacaoVeiculo classificacao;

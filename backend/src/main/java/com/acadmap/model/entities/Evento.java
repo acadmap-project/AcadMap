@@ -20,9 +20,6 @@ import java.util.Objects;
 @PrimaryKeyJoinColumn(name = "id_veiculo")
 public class Evento extends VeiculoPublicacao {
 
-  @Column(name = "h5", nullable = false)
-  private Integer h5;
-
   @Column(name = "link_evento", nullable = false, length = 255)
   private String linkEvento;
 
