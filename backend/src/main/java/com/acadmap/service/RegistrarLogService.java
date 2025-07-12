@@ -2,6 +2,7 @@ package com.acadmap.service;
 
 import com.acadmap.model.entities.*;
 import com.acadmap.model.enums.AcaoLog;
+import com.acadmap.repository.JustificativaRecusaRepository;
 import com.acadmap.repository.LogRepository;
 import com.acadmap.repository.LogVeiculoRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class RegistrarLogService {
   private final LogRepository logRepository;
   private final LogVeiculoRepository logVeiculoRepository;
+  private final JustificativaRecusaRepository justificativaRecusaRepository;
 
   @Transactional
   public void registraCadastroUsuario(Usuario usuario) {
@@ -45,6 +47,29 @@ public class RegistrarLogService {
     logVeiculo.setVeiculo(periodico);
 
     this.logVeiculoRepository.save(logVeiculo);
+  }
+
+  @Transactional
+  public void registrarNegarVeiculo(VeiculoPublicacao veiculoPublicacao, Usuario usuario, JustificativaRecusa justificativaRecusa) {
+    LogVeiculo logVeiculo = gerarLogVeiculo(veiculoPublicacao, usuario, AcaoLog.cadastro_veiculo_recusado);
+    System.out.println(justificativaRecusa.getJustificativa());
+    justificativaRecusa.setLogVeiculo(logVeiculo);
+    justificativaRecusaRepository.save(justificativaRecusa);
+  }
+
+  @Transactional
+  public void registrarAprovarVeiculo(VeiculoPublicacao veiculoPublicacao, Usuario usuario) {
+    gerarLogVeiculo(veiculoPublicacao, usuario, AcaoLog.cadastro_veiculo_aceito);
+  }
+
+  private LogVeiculo gerarLogVeiculo(VeiculoPublicacao veiculoPublicacao, Usuario usuario, AcaoLog acaoLog) {
+    LogVeiculo logVeiculo = new LogVeiculo();
+    logVeiculo.setUsuario(usuario);
+    logVeiculo.setDataHora(LocalDateTime.now());
+    logVeiculo.setAcao(acaoLog);
+    logVeiculo.setVeiculo(veiculoPublicacao);
+    this.logVeiculoRepository.save(logVeiculo);
+    return logVeiculo;
   }
 
 
