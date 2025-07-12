@@ -88,7 +88,7 @@ public class CriarPeriodicoService {
 
             Periodico periodicoSavo = this.periodicoRepository.save(periodico);
 
-            this.registrarLogService.registrarCadastroPeriodico(periodicoSavo, usuario);
+            this.registrarLogService.gerarLogVeiculo(periodicoSavo, usuario, AcaoLog.adicao_veiculo);
 
             return new PeriodicoResponseDTO(periodicoSavo);
 

@@ -7,6 +7,7 @@ import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
 import com.acadmap.model.entities.JustificativaRecusa;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.model.entities.VeiculoPublicacao;
+import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.model.enums.TipoVeiculo;
 import com.acadmap.repository.UsuarioRepository;
@@ -73,7 +74,7 @@ public class AvaliarVeiculoService {
             justificativaRecusa.setJustificativa(classificacaoPeriodicoRequestDTO.getJustificativa());
             registrarLogService.registrarNegarVeiculo(veiculoPublicacaoAtual, usuario, justificativaRecusa);
         } else {
-            registrarLogService.registrarAprovarVeiculo(veiculoPublicacaoAtual, usuario);
+            registrarLogService.gerarLogVeiculo(veiculoPublicacaoAtual, usuario, AcaoLog.cadastro_veiculo_aceito);
         }
 
     }

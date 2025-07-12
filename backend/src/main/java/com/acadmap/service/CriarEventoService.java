@@ -60,7 +60,7 @@ public class CriarEventoService {
 
       Evento eventoSalvo =  this.eventoRepository.save(evento);
 
-      this.registrarLogService.registrarCadastroEvento(eventoSalvo, usuario);
+      this.registrarLogService.gerarLogVeiculo(eventoSalvo, usuario, AcaoLog.adicao_veiculo);
 
       return new EventoResponseDTO(eventoSalvo);
 
