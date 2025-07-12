@@ -72,8 +72,18 @@ function RevisaoCadastroEventoContent() {
     onError: error => {
       console.error('Endpoint para cadastrar evento com erro:', error);
 
+      // Handle 500 Internal Server Error
+      if (error.status === 500 || error.message.status === 500) {
+        setErrorInfo({
+          title: 'Erro no Servidor',
+          message:
+            'Ocorreu um erro ao tentar salvar os dados do evento. Por favor, tente novamente mais tarde.',
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+      }
       // Handle 409 Conflict error
-      if (error.status === 409) {
+      else if (error.status === 409) {
         setErrorInfo({
           title: 'Evento Já Existe',
           message:
@@ -179,10 +189,10 @@ function RevisaoCadastroEventoContent() {
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
               {eventData.areasPesquisaIds &&
-                eventData.areasPesquisaIds.length > 0
+              eventData.areasPesquisaIds.length > 0
                 ? eventData.areasPesquisaIds
-                  .map(areaId => getAreaName(areaId))
-                  .join(', ')
+                    .map(areaId => getAreaName(areaId))
+                    .join(', ')
                 : 'N/A'}
             </div>
 

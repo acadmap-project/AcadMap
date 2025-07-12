@@ -9,7 +9,7 @@ function Popup({ isOpen, onClose, title, message, type = 'success' }) {
   const [items, setItems] = useState([]);
   const [hasShownCurrent, setHasShownCurrent] = useState(false);
 
-  const POPUP_DURATION = 5000; 
+  const POPUP_DURATION = 5000;
 
   const transitions = useTransition(items, {
     from: { opacity: 0, transform: 'translateX(100%)', height: 0 },

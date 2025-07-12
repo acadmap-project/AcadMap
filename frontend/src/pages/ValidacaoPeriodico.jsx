@@ -16,8 +16,68 @@ import '../styles/App.css';
 
 const queryClient = new QueryClient();
 
+// Helper to convert empty string/undefined to null for all fields
+const normalizeToNull = obj => {
+  if (!obj || typeof obj !== 'object') return obj;
+  const normalized = {};
+  for (const key in obj) {
+    if (Array.isArray(obj[key])) {
+      normalized[key] = obj[key].length === 0 ? null : obj[key];
+    } else if (obj[key] === '' || obj[key] === undefined) {
+      normalized[key] = null;
+    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+      normalized[key] = normalizeToNull(obj[key]);
+    } else {
+      normalized[key] = obj[key];
+    }
+  }
+  return normalized;
+};
+
+// Helper to validate and convert percentile strings to integers
+const validateAndConvertPercentile = (value, fieldName) => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const stringValue = String(value).trim();
+  if (stringValue === '') {
+    return null;
+  }
+
+  const numericValue = parseInt(stringValue, 10);
+
+  if (isNaN(numericValue)) {
+    throw new Error(`${fieldName} deve ser um número válido`);
+  }
+
+  if (numericValue < 0 || numericValue > 100) {
+    throw new Error(`${fieldName} deve estar entre 0 e 100`);
+  }
+
+  return numericValue;
+};
+
 const postPeriodico = async ({ periodicoData, userId }) => {
-  console.log('Sending data to API:', periodicoData);
+  // Normalize all empty/undefined values to null
+  const normalizedData = normalizeToNull(periodicoData);
+
+  // Validate and convert percentiles from strings to integers
+  try {
+    normalizedData.percentilJcr = validateAndConvertPercentile(
+      normalizedData.percentilJcr,
+      'Percentil JCR'
+    );
+    normalizedData.percentilScopus = validateAndConvertPercentile(
+      normalizedData.percentilScopus,
+      'Percentil Scopus'
+    );
+  } catch (error) {
+    throw new Error(`Erro de validação: ${error.message}`);
+  }
+
+  // The backend expects vinculoSBC (uppercase), so keep it as is
+  console.log('Sending data to API:', normalizedData);
   const response = await fetch(
     'http://localhost:8080/api/periodicos/cadastro',
     {
@@ -26,7 +86,7 @@ const postPeriodico = async ({ periodicoData, userId }) => {
         'X-User-Id': userId,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(periodicoData),
+      body: JSON.stringify(normalizedData),
     }
   );
 
@@ -75,9 +135,39 @@ function ValidacaoPeriodicoContent() {
     },
     onError: error => {
       console.error('Erro ao cadastrar periódico:', error);
+
+      // Handle 500 Internal Server Error
+      if (error.status === 500) {
+        setErrorInfo({
+          title: 'Erro no Servidor',
+          message:
+            'Ocorreu um erro ao tentar salvar os dados do periódico. Por favor, tente novamente mais tarde.',
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+        return;
+      }
+
+      // Extract error message from backend response for other errors
+      let errorMessage = 'Erro desconhecido ao processar o cadastro';
+
+      if (error.response?.data) {
+        try {
+          // Try to parse JSON response and extract the "message" field
+          const errorData = JSON.parse(error.response.data);
+          errorMessage =
+            errorData.message || errorData.error || error.response.data;
+        } catch {
+          // If parsing fails, use the raw response data
+          errorMessage = error.response.data;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       setErrorInfo({
         title: 'Erro!',
-        message: 'O cadastro já encontra presente no sistema',
+        message: errorMessage,
         type: 'error',
       });
       setShowErrorPopup(true);
@@ -237,15 +327,19 @@ function ValidacaoPeriodicoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL (JCR):</span>{' '}
+              {periodicoData.percentilJcr || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
+              {periodicoData.percentilScopus || 'N/A'}
+            </div>
+            <div className="text-sm text-gray-900">
               <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
               {periodicoData.qualisAntigo
                 ? periodicoData.qualisAntigo.toUpperCase()
                 : 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">PERCENTIL:</span>{' '}
-              {periodicoData.percentil || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
