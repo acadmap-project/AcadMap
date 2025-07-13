@@ -9,6 +9,7 @@ import com.acadmap.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -40,26 +41,11 @@ public class CriarEventoService {
 
       Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.getAreasPesquisaIds());
 
-      Evento evento = new Evento();
-      evento.setIdVeiculo(UUID.randomUUID());
-      evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
-      evento.setClassificacao(dto.getClassificacao());
-      evento.setNome(dto.getNome());
-      evento.setH5(dto.getH5());
-      evento.setLinkGoogleScholar(dto.getLinkGoogleScholar());
-      evento.setVinculoSbc(dto.getVinculoSbc());
-      evento.setTipo(TipoVeiculo.evento);
-      evento.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusVeiculo.pendente);
-      evento.setAreasPesquisa(areasPesquisa);
       Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(uuid).orElseThrow(EntityNotFoundException::new);
-      evento.setUsuario(usuario);
 
-      evento.setLinkSolSbc(dto.getLinkSolSbc());
+      Evento eventoSalvo =  salvarEvento(dto, areasPesquisa, usuario);
 
-
-      Evento eventoSalvo =  this.eventoRepository.save(evento);
-
-      this.registrarLogService.registrarCadastroEvento(eventoSalvo, usuario);
+      this.registrarLogService.gerarLogVeiculo(eventoSalvo, usuario, AcaoLog.adicao_veiculo);
 
       return new EventoResponseDTO(eventoSalvo);
 
@@ -88,5 +74,19 @@ public class CriarEventoService {
     }
 
     return new HashSet<>(areas);
+  }
+
+
+  private Evento salvarEvento(EventoCreateDTO dto, Set<AreaPesquisa> areasPesquisa, Usuario usuario){
+
+    Evento evento = new Evento();
+    BeanUtils.copyProperties(dto, evento, "adequadoDefesa", "tipo", "status", "areasPesquisaIds");
+    evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
+    evento.setTipo(TipoVeiculo.evento);
+    evento.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusVeiculo.pendente);
+    evento.setAreasPesquisa(areasPesquisa);
+    evento.setUsuario(usuario);
+    return eventoRepository.save(evento);
+
   }
 }

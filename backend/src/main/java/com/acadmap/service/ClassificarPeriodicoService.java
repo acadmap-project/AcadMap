@@ -25,7 +25,7 @@ public class ClassificarPeriodicoService {
     public Periodico classificarPeriodico(UUID idPeriodico, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser) {
         Usuario usuario = usuarioRepository.findById(idUser).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
 
-        if (verificaTipoUsuario(usuario)) {
+        if (isPesquisador(usuario)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado. Apenas administradores e auditores podem classificar periódicos.");
         }
 
@@ -36,7 +36,7 @@ public class ClassificarPeriodicoService {
         return periodicoRepository.save(periodico);
     }
 
-    private boolean verificaTipoUsuario(Usuario usuario){
+    private boolean isPesquisador(Usuario usuario){
         TipoPerfilUsuario tipoPerfilUsuario = usuario.getTipoPerfil();
         return tipoPerfilUsuario == TipoPerfilUsuario.pesquisador;
     }
