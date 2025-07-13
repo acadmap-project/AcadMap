@@ -144,29 +144,26 @@ function FormularioEventoContent() {
                 </label>
               </div>
               <div className="flex-1">
-                <div
-                  className={`transition-opacity duration-300 ${
+                <select
+                  id="vinculoSbc"
+                  className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300 ${
                     vinculoSbcCheckbox
                       ? 'opacity-100'
                       : 'opacity-0 pointer-events-none'
                   }`}
+                  {...register('vinculoSbc')}
+                  defaultValue=""
+                  disabled={!vinculoSbcCheckbox}
                 >
+                  <option value="" disabled className="text-gray-500">
+                    Selecione tipo de vínculo
+                  </option>
                   {sbcOptions.map(option => (
-                    <label
-                      key={option.value}
-                      className="flex items-center mb-1"
-                    >
-                      <input
-                        type="radio"
-                        value={option.value}
-                        {...register('vinculoSbc')}
-                        disabled={!vinculoSbcCheckbox}
-                        className="mr-2"
-                      />
+                    <option key={option.value} value={option.value}>
                       {option.label}
-                    </label>
+                    </option>
                   ))}
-                </div>
+                </select>
                 {errors.vinculoSbc && vinculoSbcCheckbox && (
                   <p className="text-red-500 text-sm mt-1 text-left">
                     {errors.vinculoSbc.message}
@@ -182,7 +179,7 @@ function FormularioEventoContent() {
               htmlFor="linkEvento"
               className="block mb-2 text-sm text-gray-900 text-start"
             >
-              LINK DE ACESSO*
+              LINK DE ACESSO
             </label>
             <input
               type="text"
