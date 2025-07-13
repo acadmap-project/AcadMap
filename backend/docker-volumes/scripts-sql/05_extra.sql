@@ -117,7 +117,7 @@ RAISE NOTICE 'Inserindo veículos e logs...';
 -- --- Cenários para Donald Knuth ---
 -- Periódico ACEITO
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_knuth_1, id_pesq_knuth, 'The Art of Computer Programming Journal', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, link_jcr, qualis_antigo) VALUES (id_veiculo_knuth_1, '11223344', 99, 'http://jcr.com/taocp', 'a1');
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, link_jcr) VALUES (id_veiculo_knuth_1, '11223344', 89, 'http://jcr.com/taocp');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_knuth_1, id_area_comp);
 -- Logs
 log_id := gen_random_uuid();
@@ -155,7 +155,7 @@ INSERT INTO JustificativaRecusa (id_log, justificativa) VALUES (log_id, 'Evento 
 -- --- Cenários para Thomas H. Cormen ---
 -- Periódico PENDENTE
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_cormen_1, id_pesq_cormen, 'Journal of Concrete Mathematics and Algorithms', 'a2', 'vinculo_top_20', 'doutorado', 'periodico', 'pendente');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, link_scopus, qualis_antigo) VALUES (id_veiculo_cormen_1, '55667788', 88, 'http://scopus.com/jcma', 'a2');
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_scopus, link_scopus) VALUES (id_veiculo_cormen_1, '55667788', 88, 'http://scopus.com/jcma');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_cormen_1, id_area_comp);
 -- Log
 log_id := gen_random_uuid();
@@ -178,7 +178,7 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_cormen_2)
 -- --- Cenários para Ronald Rivest ---
 -- Periódico ACEITO (área dupla)
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_rivest_1, id_pesq_rivest, 'IEEE Transactions on Information Theory', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, link_jcr, link_scopus, qualis_antigo) VALUES (id_veiculo_rivest_1, '99887766', 97, 'http://jcr.com/ieee-it', 'http://scopus.com/ieee-it', 'a1');
+INSERT INTO Periodico (id_veiculo, ISSN, qualis_antigo) VALUES (id_veiculo_rivest_1, '99887766', 'a1');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_rivest_1, id_area_comp);
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_rivest_1, id_area_eng_eletrica);
 -- Logs
@@ -201,7 +201,7 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_rivest_2)
 -- --- Cenário para Adi Shamir ---
 -- Periódico NEGADO (predatório)
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_shamir_1, id_pesq_shamir, 'Global Journal of Computer Science Research', 'a7', 'sem_vinculo', 'nenhum', 'periodico', 'negado');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, flag_predatorio) VALUES (id_veiculo_shamir_1, '12121212', 15, true);
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, link_jcr, flag_predatorio) VALUES (id_veiculo_shamir_1, '12121212', 15, 'http://jcr.com/taocp', true);
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_shamir_1, id_area_comp);
 -- Logs
 log_id := gen_random_uuid();
@@ -228,7 +228,7 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_torvalds_
 
 -- Periódico PENDENTE
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_torvalds_2, id_pesq_torvalds, 'Journal of Open Source Systems', 'a4', 'vinculo_comum', 'mestrado', 'periodico', 'pendente');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil, link_scopus, qualis_antigo) VALUES (id_veiculo_torvalds_2, '23232323', 65, 'http://scopus.com/joss', 'b2');
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_scopus, link_scopus) VALUES (id_veiculo_torvalds_2, '23232323', 65, 'http://scopus.com/joss');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_torvalds_2, id_area_comp);
 -- Log
 log_id := gen_random_uuid();
@@ -249,7 +249,7 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_auditor
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_berners_1);
 
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_berners_2, id_pesq_berners_lee, 'Journal of Web Science', 'a3', 'vinculo_top_20', 'mestrado_doutorado', 'periodico', 'pendente');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil) VALUES (id_veiculo_berners_2, '45454545', 80);
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, link_jcr) VALUES (id_veiculo_berners_2, '45454545', 80, 'http://jcr.com/taocp');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_berners_2, id_area_comp);
 log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_berners_lee, NOW() - INTERVAL '5 day', 'adicao_veiculo');
@@ -268,7 +268,7 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_auditor
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_cerf_1);
 
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_kahn_1, id_pesq_kahn, 'IEEE/ACM Transactions on Networking', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil) VALUES (id_veiculo_kahn_1, '67676767', 98);
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, link_jcr) VALUES (id_veiculo_kahn_1, '67676767', 98, 'http://jcr.com/taocp');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_kahn_1, id_area_eng_eletrica);
 log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_kahn, NOW() - INTERVAL '65 day', 'adicao_veiculo');
@@ -289,7 +289,7 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_auditor
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_mccarthy_1);
 
 INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES (id_veiculo_mccarthy_2, id_pesq_mccarthy, 'Journal of Artificial Intelligence Research (JAIR)', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
-INSERT INTO Periodico (id_veiculo, ISSN, percentil) VALUES (id_veiculo_mccarthy_2, '89898989', 96);
+INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr, link_jcr) VALUES (id_veiculo_mccarthy_2, '89898989', 34, 'http://jcr.com/taocp');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_mccarthy_2, id_area_comp);
 log_id := gen_random_uuid();
 INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_pesq_mccarthy, NOW() - INTERVAL '28 day', 'adicao_veiculo');

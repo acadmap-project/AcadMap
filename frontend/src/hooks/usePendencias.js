@@ -26,12 +26,14 @@ function usePendencias() {
 
     fetchPendencias();
   }, [loggedIn.id]);
-  const negarPendencias = async ({ id, userId, motivo }) => {
+  const negarPendencias = async ({ id, userId, motivo, flagPredatorio = false }) => {
     console.log(
       'Attempting to reject pendencia with ID:',
       id,
       'User ID:',
-      userId
+      userId,
+      'flagPredatorio:',
+      flagPredatorio
     );
 
     // Validate required parameters
@@ -48,11 +50,11 @@ function usePendencias() {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/negar-veiculo/${id}`,
-        { motivo }, // Send motivo in the request body
+        { motivo, flagPredatorio }, // Send flagPredatorio in the request body
         {
           headers: {
             'X-User-Id': userId,
-            'Content-type' : 'application/json',
+            'Content-Type': 'application/json',
           },
           timeout: 10000, // 10 second timeout
         }
@@ -87,12 +89,14 @@ function usePendencias() {
     }
   };
 
-  const aprovarPendencias = async ({ id, userId }) => {
+  const aprovarPendencias = async ({ id, userId, flagPredatorio = false }) => {
     console.log(
       'Attempting to approve pendencia with ID:',
       id,
       'User ID:',
-      userId
+      userId,
+      'flagPredatorio:',
+      flagPredatorio
     );
 
     // Validate required parameters
@@ -106,10 +110,11 @@ function usePendencias() {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/aprovar-veiculo/${id}`,
-        null, // Explicitly set body to null for PUT requests without body
+        { flagPredatorio }, // Send flagPredatorio in the request body
         {
           headers: {
             'X-User-Id': userId,
+            'Content-Type': 'application/json',
           },
           timeout: 10000, // 10 second timeout
         }

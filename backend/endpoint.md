@@ -28,6 +28,13 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 **Path Parameters:**
 - `id` – UUID do veículo a ser aprovado
 
+**Corpo esperado:**
+```json
+{
+  "flagPredatorio": true
+}
+```
+
 **Resposta:**
 - `202 Accepted` – Veículo aprovado com sucesso
 - `405 Method Not Allowed` – Usuário sem permissão para aprovar
@@ -52,6 +59,13 @@ X-User-Id: <UUID do usuário que está tentando negar>
 
 **Path Parameters:**
 - `id` – UUID do veículo a ser negado
+
+**Corpo esperado:**
+```json
+{
+  "flagPredatorio": true
+}
+```
 
 **Resposta:**
 - `202 Accepted` – Veículo negado com sucesso
@@ -115,7 +129,7 @@ X-User-Id: <UUID do usuário solicitante>
 ## ⚙️ Regras internas de negócio
 
 - **Permissões de ação** (aprovar/negar) são negadas se o usuário:
-  - Tem perfil de **pesquisador**; ou
+  - Tem perfil de **pesquisador**
   - Está **vinculado** ao veículo (`id_usuario` do veículo = `X-User-Id`).
 
 
@@ -313,14 +327,14 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
   "nome": "Journal of Academic Studies2",
   "vinculoSBC": "sem_vinculo",
   "issn": "12345698",
-  "percentil": 75,
+  "percentilJcr": 75,
+  "percentilScopus": 80,
   "linkJcr": "https://jcr.example.com/journal123",
   "linkScopus": "https://scopus.example.com/journal123",
-  "linkGoogleScholar": "https://scholar.google.com/journal123",
-  "qualisAntigo": "B1",
+  "classificacao": "A1",
   "areasPesquisaIds": [
-    "c3398a61-b985-42af-9fe5-d6bddd971a87",
-    "a3c5f2a4-081a-4a17-8c8b-9a60c431c931"
+    "a111a111-b222-c333-d444-e555e555e555",
+    "b222b222-c333-d444-e555-f666f666f666"
   ]
 }
 ```
@@ -329,9 +343,11 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
 - `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação. 
-- `percentil` (Integer): Valor numérico.
+- `percentilJcr` (Integer): Valor numérico.
+- `percentilScopus` (Integer): Valor numérico.
 - `linkJrc` (string) : Link do Jrc referente ao periódico o qual está sendo inserido
 - `linkScopus` (string) : Link repositório Scopus referente ao periodico o qual está sendo inserido.
+- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8") 
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao periódico o qual está sendo inserido
 - `qualisAntigo` (string) : Pontuação do Qualis antigo (Enum= "a1", "a2", "b1", "b2", "b3", "b4", "b5', "c").
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
@@ -344,27 +360,27 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 
 ```json
 {
-  "idVeiculo": "ae759c9a-5db1-456b-ae45-22ba5e2568a7",
+  "idVeiculo": "ce700504-ea1c-4653-aeaa-972f9866a34c",
   "nome": "Journal of Academic Studies2",
-  "classificacao": "a8",
+  "classificacao": "a1",
   "vinculoSBC": "sem_vinculo",
   "adequadoDefesa": "nenhum",
   "tipo": "periodico",
   "status": "pendente",
   "issn": "12345698",
-  "percentil": 75,
+  "percentil_jcr": 75,
+  "percentil_scopus": 80,
   "linkJcr": "https://jcr.example.com/journal123",
   "linkScopus": "https://scopus.example.com/journal123",
-  "linkGoogleScholar": "https://scholar.google.com/journal123",
-  "qualisAntigo": "b1",
+  "linkGoogleScholar": null,
+  "qualisAntigo": null,
   "areasPesquisaIds": [
-    "c3398a61-b985-42af-9fe5-d6bddd971a87",
-    "a3c5f2a4-081a-4a17-8c8b-9a60c431c931"
+    "a111a111-b222-c333-d444-e555e555e555",
+    "b222b222-c333-d444-e555-f666f666f666"
   ],
   "usuario": {
-    "idUsuario": "11111111-1111-1111-1111-111111111111",
-    "nome": "Dra. Ada Lovelace"
-  }
+    "idUsuario": "00000000-0000-0000-0000-000000000001",
+    "nome": "Admin Mestre"
   }
 }
 ```
@@ -372,9 +388,9 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Campos:
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
-- `classificacao`, `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
+- `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
 - `tipo`, `status` : Valores padrões na criação de Evento. (Periodico, Pendente)
-- `issn`, `percentil`, `linkJrc`, `linkScopus` , `linkGoogleScholar`, `qualisAntigo`, `areasPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
+- `issn`, `classificacao`, `percentilJcr`, `percentilScopus`, `linkJrc`, `linkScopus` , `linkGoogleScholar`, `qualisAntigo`, `areasPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
 
 ### Forçar inserção mesmo com erro de duplicação :

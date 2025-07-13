@@ -75,7 +75,8 @@ CREATE TABLE LogExclusao (
 CREATE TABLE Periodico (
   id_veiculo uuid,
   ISSN char(8) NOT NULL,
-  percentil int NOT NULL,
+  percentil_jcr int DEFAULT null,
+  percentil_scopus int DEFAULT null,
   link_jcr varchar(255),
   link_scopus varchar(255),
   link_google_scholar varchar(255) DEFAULT null,

@@ -20,9 +20,13 @@ function DetalhePendenteContent() {
   const { loggedIn } = useLogin();
   const { id } = useParams();
   const location = useLocation();
+  // Get registro data from location state or set default
+  const registro = useMemo(() => location.state || {}, [location.state]);
+
   const navigate = useNavigate();
   const [showMotivoPopup, setShowMotivoPopup] = useState(false);
   const [motivoRecusa, setMotivoRecusa] = useState('');
+  const [isPredatorio, setIsPredatorio] = useState(false);
   const { negarPendencias, aprovarPendencias } = usePendencias();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
@@ -35,8 +39,7 @@ function DetalhePendenteContent() {
     title: '',
     message: '',
     type: 'success',
-  }); // Get registro data from location state or set default
-  const registro = useMemo(() => location.state || {}, [location.state]);
+  });
 
   // Check if current user is the same as the registro creator
   const isCreatorSameAsCurrentUser =
@@ -61,7 +64,9 @@ function DetalhePendenteContent() {
         navigate('/registros-pendentes');
       }, 3000);
     }
-  }, [registro, navigate]); // Mutations for approve and reject actions
+  }, [registro, navigate]);
+
+  // Mutations for approve and reject actions
   const aprovarMutation = useMutation({
     mutationFn: aprovarPendencias,
     onSuccess: () => {
@@ -163,10 +168,12 @@ function DetalhePendenteContent() {
     console.log('Attempting to approve registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
+    console.log('isPredatorio:', isPredatorio);
 
     aprovarMutation.mutate({
       id: registroId,
       userId: loggedIn.id,
+      flagPredatorio: isPredatorio,
     });
   };
 
@@ -175,10 +182,12 @@ function DetalhePendenteContent() {
     console.log('Attempting to reject registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
+    console.log('isPredatorio:', isPredatorio);
 
     rejeitarMutation.mutate({
       id: registroId,
       userId: loggedIn.id,
+      flagPredatorio: isPredatorio,
     });
   };
 
@@ -278,6 +287,19 @@ function DetalhePendenteContent() {
                 ' N/A'
               )}
             </div>
+            {registro.tipo === 'periodico' && (
+              <div className="text-sm text-gray-900 mt-2">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isPredatorio}
+                    onChange={e => setIsPredatorio(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Marcar como periódico predatório
+                </label>
+              </div>
+            )}
             <div className="text-sm text-gray-900">
               <span className="font-medium">STATUS ATUAL:</span>{' '}
               {registro.status}

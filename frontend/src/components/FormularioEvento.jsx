@@ -105,7 +105,7 @@ function FormularioEventoContent() {
               htmlFor="h5"
               className="block mb-2 text-sm text-gray-900 text-start"
             >
-              ÍNDICE H5*
+              ÍNDICE H5
             </label>
             <input
               type="text"
