@@ -26,14 +26,21 @@ function usePendencias() {
 
     fetchPendencias();
   }, [loggedIn.id]);
-  const negarPendencias = async ({ id, userId, motivo, flagPredatorio = false }) => {
+  const negarPendencias = async ({
+    id,
+    userId,
+    justificativa,
+    flagPredatorio = false,
+  }) => {
     console.log(
       'Attempting to reject pendencia with ID:',
       id,
       'User ID:',
       userId,
       'flagPredatorio:',
-      flagPredatorio
+      flagPredatorio,
+      'justificativa:',
+      justificativa
     );
 
     // Validate required parameters
@@ -43,14 +50,14 @@ function usePendencias() {
     if (!userId) {
       throw new Error('ID do usuário é obrigatório');
     }
-    if (!motivo) {
-      throw new Error('Motivo para negação é obrigatório');
+    if (!justificativa) {
+      throw new Error('Justificativa para negação é obrigatório');
     }
 
     try {
       const response = await axios.put(
         `http://localhost:8080/api/veiculo/negar-veiculo/${id}`,
-        { motivo, flagPredatorio }, // Send flagPredatorio in the request body
+        { justificativa, flagPredatorio }, // Send flagPredatorio in the request body
         {
           headers: {
             'X-User-Id': userId,

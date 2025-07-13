@@ -271,9 +271,7 @@ function RevisaoCadastroEventoContent() {
                 className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
                 style={{ fontFamily: 'Poppins', fontWeight: '400' }}
               >
-                {createEventMutation.isPending
-                  ? 'Salvando...'
-                  : 'Confirmar'}
+                {createEventMutation.isPending ? 'Salvando...' : 'Confirmar'}
               </button>
             </div>
           </div>
