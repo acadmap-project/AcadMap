@@ -92,7 +92,7 @@ function FormularioPeriodicoContent() {
                 {...register('nome')}
               />
               {errors.nome && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.nome.message}
                 </p>
               )}
@@ -117,7 +117,7 @@ function FormularioPeriodicoContent() {
                 )}
               />
               {errors.areasPesquisaIds && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.areasPesquisaIds.message}
                 </p>
               )}
@@ -139,7 +139,7 @@ function FormularioPeriodicoContent() {
                 {...register('issn')}
               />
               {errors.issn && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.issn.message}
                 </p>
               )}
@@ -195,7 +195,7 @@ function FormularioPeriodicoContent() {
                 {...register('linkScopus')}
               />
               {errors.linkScopus && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.linkScopus.message}
                 </p>
               )}
@@ -220,7 +220,7 @@ function FormularioPeriodicoContent() {
                 {...register('linkGoogleScholar')}
               />
               {errors.linkGoogleScholar && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.linkGoogleScholar.message}
                 </p>
               )}
@@ -240,7 +240,7 @@ function FormularioPeriodicoContent() {
                 {...register('linkJcr')}
               />
               {errors.linkJcr && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.linkJcr.message}
                 </p>
               )}
@@ -296,7 +296,7 @@ function FormularioPeriodicoContent() {
                 {...register('percentilJcr')}
               />
               {errors.percentilJcr && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.percentilJcr.message}
                 </p>
               )}
@@ -316,7 +316,7 @@ function FormularioPeriodicoContent() {
                 {...register('percentilScopus')}
               />
               {errors.percentilScopus && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.percentilScopus.message}
                 </p>
               )}
