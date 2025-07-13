@@ -24,6 +24,8 @@ function DetalhePendenteContent() {
   const registro = useMemo(() => location.state || {}, [location.state]);
 
   const navigate = useNavigate();
+  const [showMotivoPopup, setShowMotivoPopup] = useState(false);
+  const [motivoRecusa, setMotivoRecusa] = useState('');
   const [isPredatorio, setIsPredatorio] = useState(false);
   const { negarPendencias, aprovarPendencias } = usePendencias();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -176,6 +178,7 @@ function DetalhePendenteContent() {
   };
 
   const handleRejeitar = registroId => {
+    setShowMotivoPopup(true)
     console.log('Attempting to reject registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
@@ -186,6 +189,16 @@ function DetalhePendenteContent() {
       userId: loggedIn.id,
       flagPredatorio: isPredatorio,
     });
+  };
+
+  const confirmarRejeicao = () => {
+    setShowMotivoPopup(false);
+    rejeitarMutation.mutate({
+      id: id,
+      userId: loggedIn.id,
+      motivo: motivoRecusa,  // Envia o motivo para a mutação
+    });
+    setMotivoRecusa(''); // Limpa o motivo após rejeitar
   };
   // If no registro data, show error message
   if (!registro || Object.keys(registro).length === 0) {
@@ -327,6 +340,36 @@ function DetalhePendenteContent() {
               >
                 {rejeitarMutation.isPending ? 'Rejeitando...' : 'Rejeitar'}
               </button>
+              {/* Popup para motivo da recusa */}
+              {showMotivoPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                  <div className="bg-white rounded shadow-lg p-6 w-full max-w-md">
+                    <h2 className="text-lg font-bold mb-4">Motivo da recusa</h2>
+                    <textarea
+                      className="w-full border border-gray-300 rounded p-2 mb-4"
+                      rows={4}
+                      placeholder="Descreva o motivo da recusa..."
+                      value={motivoRecusa}
+                      onChange={e => setMotivoRecusa(e.target.value)}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="px-4 py-2 bg-gray-300 rounded"
+                        onClick={() => setShowMotivoPopup(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-red-600 text-white rounded"
+                        onClick={confirmarRejeicao}
+                        disabled={!motivoRecusa.trim()}
+                      >
+                        Confirmar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <ErrorPopup
