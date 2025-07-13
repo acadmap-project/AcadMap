@@ -46,16 +46,22 @@ public class CriarPeriodicoService {
                     HttpStatus.BAD_REQUEST,
                     "Se preencher linkScopus, deve-se preencher percentilScopus e vice‑versa");
         }
+        if ((dto.linkGoogleScholar() != null) ^ (dto.h5() != null)){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Se preencher linkGoogleScholar, deve-se preencher h5 e vice‑versa");
+        }
         boolean hasJcrOrScopus = dto.linkJcr() != null || dto.linkScopus() != null;
         if (hasJcrOrScopus && (dto.qualisAntigo() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não pode cadastrar QualisAntigo quando há JCR ou Scopus");
         }
-        if (dto.linkGoogleScholar() != null ^ dto.vinculoSBC() != VinculoSBC.sem_vinculo) {
+        boolean hasJcrOrScopus2 = dto.linkJcr() == null || dto.linkScopus() == null;
+        if (hasJcrOrScopus2 && (dto.qualisAntigo() == null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se o periódico tiver vínculo com a SBC, deve-se preencher linkGoogleScholar e vice‑versa");
+                    "Na ausência do JCR ou Scopus, deve preencher o qualisAntigo.");
         }
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
@@ -71,6 +77,8 @@ public class CriarPeriodicoService {
             periodico.setAdequadoDefesa(AdequacaoDefesa.nenhum);
             periodico.setClassificacao(dto.classificacao());
             periodico.setNome(dto.nome());
+            periodico.setH5(dto.h5());
+            periodico.setLinkGoogleScholar(dto.linkGoogleScholar());
             periodico.setVinculoSbc(dto.vinculoSBC());
             periodico.setTipo(TipoVeiculo.periodico);
             periodico.setStatus(dto.status() != null ? dto.status() : StatusVeiculo.pendente);
@@ -83,7 +91,6 @@ public class CriarPeriodicoService {
             periodico.setPercentilScopus(dto.percentilScopus());
             periodico.setLinkJcr(dto.linkJcr());
             periodico.setLinkScopus(dto.linkScopus());
-            periodico.setLinkGoogleScholar(dto.linkGoogleScholar());
             periodico.setQualisAntigo(dto.qualisAntigo());
 
             Periodico periodicoSavo = this.periodicoRepository.save(periodico);

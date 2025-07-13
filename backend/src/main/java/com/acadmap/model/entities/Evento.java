@@ -20,17 +20,12 @@ import java.util.Objects;
 @PrimaryKeyJoinColumn(name = "id_veiculo")
 public class Evento extends VeiculoPublicacao {
 
-  @Column(name = "link_evento", nullable = false, length = 255)
-  private String linkEvento;
-
-  @Column(name = "link_google_scholar", length = 255)
-  private String linkGoogleScholar;
   @Column(name = "link_sol_sbc", length = 255)
   private String linkSolSbc;
 
   @Override
   public String getLinkEvento() {
-    return this.linkEvento;
+    return super.getLinkGoogleScholar();
   }
 
 }

@@ -45,6 +45,8 @@ public class CriarEventoService {
       evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
       evento.setClassificacao(dto.getClassificacao());
       evento.setNome(dto.getNome());
+      evento.setH5(dto.getH5());
+      evento.setLinkGoogleScholar(dto.getLinkGoogleScholar());
       evento.setVinculoSbc(dto.getVinculoSbc());
       evento.setTipo(TipoVeiculo.evento);
       evento.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusVeiculo.pendente);
@@ -52,9 +54,6 @@ public class CriarEventoService {
       Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(uuid).orElseThrow(EntityNotFoundException::new);
       evento.setUsuario(usuario);
 
-      evento.setH5(dto.getH5());
-      evento.setLinkEvento(dto.getLinkEvento());
-      evento.setLinkGoogleScholar(dto.getLinkGoogleScholar());
       evento.setLinkSolSbc(dto.getLinkSolSbc());
 
 
@@ -73,7 +72,7 @@ public class CriarEventoService {
     } catch (DataAccessException e) {
       throw new RuntimeException("Erro ao acessar o banco de dados: " + e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Erro inesperado ao criar evento: " + e.getMessage());
+      throw new RuntimeException("Erro inesperado ao criar evento: " + e);
     }
   }
 

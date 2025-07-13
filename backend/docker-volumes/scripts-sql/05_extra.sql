@@ -140,7 +140,7 @@ INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_knuth_2);
 
 -- --- Cenários para Edsger Dijkstra ---
 -- Evento NEGADO
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status) VALUES
 (id_veiculo_dijkstra_1, id_pesq_dijkstra, 'Workshop on Formal Methods Verification', 20 , 'http://scholar.google.com/wfmv','a4', 'sem_vinculo', 'mestrado', 'evento', 'negado');
 INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_dijkstra_1,'http://sol-sbc/slp/2024');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_dijkstra_1, id_area_comp);
@@ -195,7 +195,7 @@ INSERT INTO Log (id_log, id_usuario, data_hora, acao) VALUES (log_id, id_auditor
 INSERT INTO LogVeiculo (id_log, id_veiculo) VALUES (log_id, id_veiculo_rivest_1);
 
 -- Evento PENDENTE
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
 VALUES (id_veiculo_rivest_2, id_pesq_rivest, 'International Cryptology Conference (CRYPTO)', 70, 'http://scholar.google.com', 'a1', 'vinculo_top_10', 'doutorado', 'evento', 'pendente');
 INSERT INTO Evento (id_veiculo, link_sol_sbc) VALUES (id_veiculo_rivest_2, 'http://sol.sbc.org.br/icc');
 INSERT INTO AreaPesquisaVeiculo (id_veiculo, id_area_pesquisa) VALUES (id_veiculo_rivest_2, id_area_comp);
