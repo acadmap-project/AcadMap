@@ -211,8 +211,8 @@ function FormularioPeriodicoContent() {
                 type="text"
                 id="linkGoogleScholar"
                 className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  !isEnableSBC 
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                  !isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-white border-gray-300'
                 }`}
                 placeholder="Digite uma URL válida..."
@@ -258,8 +258,8 @@ function FormularioPeriodicoContent() {
               <select
                 id="qualisAntigo"
                 className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
-                  !isEnableSBC 
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                  !isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-white border-gray-300'
                 } border`}
                 {...register('qualisAntigo')}

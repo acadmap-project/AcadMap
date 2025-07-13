@@ -44,38 +44,109 @@ export const CadastrarPeriodicoSchema = z
     percentilJcr: z.string().optional().or(z.literal('')),
     percentilScopus: z.string().optional().or(z.literal('')),
   })
-  // Validation rule: At least one of the three links must be filled
+  // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(
     data => {
       const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
       const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
       const hasGoogleScholar =
         data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
 
-      return hasJcr || hasScopus || hasGoogleScholar;
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
     },
     {
-      message:
-        'Pelo menos um dos links (JCR, Scopus ou Google Scholar) deve ser preenchido',
-      path: ['linkJcr'], // Show error on the first link field
+      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      path: ['linkJcr'],
     }
   )
-  // Validar se tem Google Scholar e vinculo SBC
+  // Show error on linkScopus as well
+  .refine(
+    data => {
+      const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
+      const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
+      const hasGoogleScholar =
+        data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
+
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
+    },
+    {
+      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      path: ['linkScopus'],
+    }
+  )
+  // Show error on linkGoogleScholar as well
+  .refine(
+    data => {
+      const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
+      const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
+      const hasGoogleScholar =
+        data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
+
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
+    },
+    {
+      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      path: ['linkGoogleScholar'],
+    }
+  )
+  // Show error on qualisAntigo as well
+  .refine(
+    data => {
+      const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
+      const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
+      const hasGoogleScholar =
+        data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
+
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
+    },
+    {
+      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      path: ['qualisAntigo'],
+    }
+  )
+  // Validar: No caso de ter Google Scholar, vinculo SBC deve ser preenchido
   .refine(
     data => {
       const hasGoogleScholar =
         data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
-
-      const hasSbcCheckbox = data.vinculoSbcCheckbox === true;
-
-      return hasGoogleScholar && hasSbcCheckbox;
+      if (hasGoogleScholar && (!data.vinculoSBC || data.vinculoSBC === '')) {
+        return false;
+      }
+      return true;
     },
     {
       message:
-        'Se o link do Google Scholar for preenchido, a nota no antigo Qualis e o vínculo com SBC devem ser informados',
+        'Selecione um tipo de vínculo SBC quando o Google Scholar for preenchido',
       path: ['linkGoogleScholar'],
     }
   )
+  // Validar: No caso de ter qualis antigo, vinculo SBC deve ser preenchido
+  .refine(
+    data => {
+      if (
+        data.qualisAntigo &&
+        data.qualisAntigo.trim() !== '' &&
+        !data.vinculoSBC
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message:
+        'Selecione um tipo de vínculo SBC quando o Qualis Antigo for preenchido',
+      path: ['qualisAntigo'],
+    }
+  )
+  // Validar: Se o link JCR for preenchido, percentil JCR deve ser informado
   .refine(
     data => {
       if (data.linkJcr && data.linkJcr !== '' && !data.percentilJcr) {
@@ -88,6 +159,7 @@ export const CadastrarPeriodicoSchema = z
       path: ['percentilJcr'],
     }
   )
+  // Validar: Se o link Scopus for preenchido, percentil Scopus deve ser informado
   .refine(
     data => {
       if (data.linkScopus && data.linkScopus !== '' && !data.percentilScopus) {
