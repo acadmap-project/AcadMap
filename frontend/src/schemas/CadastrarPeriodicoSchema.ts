@@ -47,6 +47,11 @@ export const CadastrarPeriodicoSchema = z
     qualisAntigo: z.string().optional().or(z.literal('')),
     percentilJcr: z.string().optional().or(z.literal('')),
     percentilScopus: z.string().optional().or(z.literal('')),
+    // *** PLACEHOLDER FIELD - CHANGE THIS LATER ***
+    // This h5 field is temporarily set to 0 as a placeholder
+    // TODO: Replace with actual h5 field implementation
+    h5: z.number().default(0),
+    // *** END PLACEHOLDER - CHANGE THIS LATER ***
   })
   // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(
