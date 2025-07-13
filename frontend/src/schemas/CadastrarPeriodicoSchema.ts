@@ -18,14 +18,23 @@ export const CadastrarPeriodicoSchema = z
           if (!val || val === '' || val === '0') {
             return true;
           }
-          // If value is provided, validate it's a number with 8 digits
-          const numVal = Number(val);
-          return !isNaN(numVal) && val.length === 8;
+          // Remove hyphens and validate
+          const cleanIssn = val.replace(/-/g, '');
+          // Check if it's exactly 8 digits after removing hyphens
+          return /^\d{8}$/.test(cleanIssn);
         },
         {
-          message: 'O ISSN deve ter exatamente 8 dígitos ou ser 0',
+          message:
+            'O ISSN deve ter exatamente 8 dígitos (formato: 12345678 ou 1234-5678) ou ser 0',
         }
-      ),
+      )
+      .transform(val => {
+        // Transform to send only digits to backend (remove hyphens)
+        if (!val || val === '' || val === '0') {
+          return val;
+        }
+        return val.replace(/-/g, '');
+      }),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSBC: z.string().default('sem_vinculo'),
     linkJcr: z.string().optional().or(z.literal('')),
