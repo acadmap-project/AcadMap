@@ -3,7 +3,7 @@ import { useTransition } from '@react-spring/web';
 
 let id = 0;
 
-function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
+function ErrorPopup({ isOpen, onClose, title, message, type = 'error', className = '', hideCloseButton = false, forceChoice = false, onForceYes, onForceNo }) {
   const refMap = useMemo(() => new WeakMap(), []);
   const cancelMap = useMemo(() => new WeakMap(), []);
   const [items, setItems] = useState([]);
@@ -84,7 +84,7 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
 
   return (
     <div
-      className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 space-y-2 w-full max-w-2xl px-4"
+      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 space-y-2 w-full max-w-2xl px-4 ${className}`}
       style={{ pointerEvents: 'none' }}
     >
       {transitions((style, item) => (
@@ -149,28 +149,45 @@ function ErrorPopup({ isOpen, onClose, title, message, type = 'error' }) {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  if (cancelMap.has(item)) {
-                    cancelMap.get(item)();
-                  }
-                }}
-                className="ml-3 text-red-500 hover:text-red-700 transition-colors flex-shrink-0"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              {forceChoice ? (
+                <div className="flex gap-2 ml-3">
+                  <button
+                    onClick={onForceYes}
+                    className="px-3 py-1 text-red-500 rounded hover:text-red-700 transition-colors"
+                  >
+                    Sim
+                  </button>
+                  <button
+                    onClick={onForceNo}
+                    className="px-3 py-1 text-red-500 rounded hover:text-red-700 transition-colors"
+                  >
+                    Não
+                  </button>
+                </div>
+              ) : (!hideCloseButton && (
+                <button
+                  onClick={() => {
+                    if (cancelMap.has(item)) {
+                      cancelMap.get(item)();
+                    }
+                  }}
+                  className="ml-3 text-red-500 hover:text-red-700 transition-colors flex-shrink-0"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              ))}
             </div>
           </div>
         </div>
