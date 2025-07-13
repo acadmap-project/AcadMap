@@ -30,7 +30,11 @@ export const CadastrarPeriodicoSchema = z
       )
       .transform(val => {
         // Transform to send only digits to backend (remove hyphens)
-        if (!val || val === '' || val === '0') {
+        // Convert empty string to null for backend compatibility
+        if (!val || val === '') {
+          return null;
+        }
+        if (val === '0') {
           return val;
         }
         return val.replace(/-/g, '');
