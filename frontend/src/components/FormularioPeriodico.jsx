@@ -182,6 +182,26 @@ function FormularioPeriodicoContent() {
           <div className="w-full grid grid-cols-3 gap-4">
             <div>
               <label
+                htmlFor="linkJcr"
+                className="block mb-2 text-sm text-gray-900 text-start"
+              >
+                LINK DE REPOSITÓRIO (JCR)
+              </label>
+              <input
+                type="text"
+                id="linkJcr"
+                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                placeholder="Digite uma URL válida..."
+                {...register('linkJcr')}
+              />
+              {errors.linkJcr && (
+                <p className="text-red-500 text-sm mt-1 text-left">
+                  {errors.linkJcr.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
                 htmlFor="linkScopus"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
@@ -199,7 +219,7 @@ function FormularioPeriodicoContent() {
                   {errors.linkScopus.message}
                 </p>
               )}
-            </div>{' '}
+            </div>
             <div>
               <label
                 htmlFor="linkGoogleScholar"
@@ -225,62 +245,9 @@ function FormularioPeriodicoContent() {
                 </p>
               )}
             </div>
-            <div>
-              <label
-                htmlFor="linkJcr"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE REPOSITÓRIO (JCR)
-              </label>
-              <input
-                type="text"
-                id="linkJcr"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite uma URL válida..."
-                {...register('linkJcr')}
-              />
-              {errors.linkJcr && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.linkJcr.message}
-                </p>
-              )}
-            </div>
           </div>
           <div className="w-full grid grid-cols-3 gap-4">
             {' '}
-            <div>
-              <label
-                htmlFor="qualisAntigo"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                NOTA NO ANTIGO QUALIS
-              </label>
-              <select
-                id="qualisAntigo"
-                className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
-                  !isEnableSBC
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                } border`}
-                {...register('qualisAntigo')}
-                defaultValue=""
-                disabled={!isEnableSBC}
-              >
-                <option value="" disabled className="text-gray-500">
-                  Selecione a nota do QUALIS
-                </option>
-                {qualisOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {errors.qualisAntigo && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.qualisAntigo.message}
-                </p>
-              )}
-            </div>
             <div>
               <label
                 htmlFor="percentilJcr"
@@ -318,6 +285,39 @@ function FormularioPeriodicoContent() {
               {errors.percentilScopus && (
                 <p className="text-red-500 text-sm mt-1 text-left">
                   {errors.percentilScopus.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="qualisAntigo"
+                className="block mb-2 text-sm text-gray-900 text-start"
+              >
+                NOTA NO ANTIGO QUALIS
+              </label>
+              <select
+                id="qualisAntigo"
+                className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
+                  !isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                } border`}
+                {...register('qualisAntigo')}
+                defaultValue=""
+                disabled={!isEnableSBC}
+              >
+                <option value="" disabled className="text-gray-500">
+                  Selecione a nota do QUALIS
+                </option>
+                {qualisOptions.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {errors.qualisAntigo && (
+                <p className="text-red-500 text-sm mt-1 text-left">
+                  {errors.qualisAntigo.message}
                 </p>
               )}
             </div>
