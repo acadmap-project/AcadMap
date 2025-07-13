@@ -5,10 +5,13 @@ import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import { calcularClassificacaoPeriodico } from '../utils/classificacaoBase';
+import { useState } from 'react';
 
 function FormularioPeriodicoContent() {
   const areas = useAreas();
   const navigate = useNavigate();
+
+  const [isEnableSBC, setIsEnableSBC] = useState(false);
 
   const methods = useForm({
     resolver: zodResolver(CadastrarPeriodicoSchema),
@@ -156,8 +159,13 @@ function FormularioPeriodicoContent() {
                           onChange: e => {
                             if (e.target.checked) {
                               setValue('vinculoSBC', 'vinculo_comum');
+                              setIsEnableSBC(true);
                             } else {
                               setValue('vinculoSBC', '');
+                              setIsEnableSBC(false);
+                              // Clear the fields when SBC is disabled
+                              setValue('linkGoogleScholar', '');
+                              setValue('qualisAntigo', '');
                             }
                           },
                         })}
@@ -202,8 +210,13 @@ function FormularioPeriodicoContent() {
               <input
                 type="text"
                 id="linkGoogleScholar"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  !isEnableSBC 
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite uma URL válida..."
+                disabled={!isEnableSBC}
                 {...register('linkGoogleScholar')}
               />
               {errors.linkGoogleScholar && (
@@ -244,9 +257,14 @@ function FormularioPeriodicoContent() {
               </label>
               <select
                 id="qualisAntigo"
-                className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300`}
+                className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
+                  !isEnableSBC 
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                    : 'bg-white border-gray-300'
+                } border`}
                 {...register('qualisAntigo')}
                 defaultValue=""
+                disabled={!isEnableSBC}
               >
                 <option value="" disabled className="text-gray-500">
                   Selecione a nota do QUALIS
