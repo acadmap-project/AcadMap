@@ -57,7 +57,8 @@ export const CadastrarPeriodicoSchema = z
       return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
     },
     {
-      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
       path: ['linkJcr'],
     }
   )
@@ -74,7 +75,8 @@ export const CadastrarPeriodicoSchema = z
       return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
     },
     {
-      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
       path: ['linkScopus'],
     }
   )
@@ -91,7 +93,8 @@ export const CadastrarPeriodicoSchema = z
       return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
     },
     {
-      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
       path: ['linkGoogleScholar'],
     }
   )
@@ -108,7 +111,8 @@ export const CadastrarPeriodicoSchema = z
       return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
     },
     {
-      message: 'Preenchimento obrigatório de pelo menos um dos campos',
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
       path: ['qualisAntigo'],
     }
   )
