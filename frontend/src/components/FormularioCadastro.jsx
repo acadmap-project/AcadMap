@@ -69,6 +69,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     message: '',
     type: 'success',
   });
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
 
   const methods = useForm({
     resolver: zodResolver(
@@ -132,6 +133,13 @@ function FormularioCadastroContent({ isAdmin = false }) {
             'Já existe um usuário cadastrado com este email. Por favor, use um email diferente.',
           type: 'warning',
         });
+      } else if (errorMessage == 'EMAIL_DUPLICADO') {
+        setErrorInfo({
+          title: 'Erro ao Cadastrar Usuário',
+          message: 'Já existe um cadastro com esse e-mail.',
+          type: 'error',
+        });
+        setEmailErrorMessage('Já existe um cadastro com esse e-mail.');
       } else if (error.status === 400) {
         setErrorInfo({
           title: 'Dados Inválidos',
@@ -143,7 +151,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
       } else {
         setErrorInfo({
           title: 'Erro ao Cadastrar Usuário',
-          message: errorMessage,
+          message: '123',
           type: 'error',
         });
       }
@@ -271,12 +279,19 @@ function FormularioCadastroContent({ isAdmin = false }) {
               type="email"
               className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Digite..."
-              {...register('email')}
+              {...register('email', {
+                onChange: () => setEmailErrorMessage(''), // Clear error when user types
+              })}
             />{' '}
             <div className="h-6">
               {errors.email && (
                 <p className="text-red-600 text-sm text-left">
                   {errors.email.message}
+                </p>
+              )}
+              {emailErrorMessage && !errors.email && (
+                <p className="text-red-600 text-sm text-left">
+                  {emailErrorMessage}
                 </p>
               )}
             </div>
