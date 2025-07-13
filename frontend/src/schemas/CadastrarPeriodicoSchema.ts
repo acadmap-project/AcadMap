@@ -41,21 +41,15 @@ export const CadastrarPeriodicoSchema = z
       path: ['linkJcr'], // Show error on the first link field
     }
   )
-  // Validation rule: If Google Scholar link is filled, both qualisAntigo and vinculoSbcCheckbox are required
+  // Validar se tem Google Scholar e vinculo SBC
   .refine(
     data => {
       const hasGoogleScholar =
         data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
 
-      if (hasGoogleScholar) {
-        const hasQualisAntigo =
-          data.qualisAntigo && data.qualisAntigo.trim() !== '';
-        const hasSbcCheckbox = data.vinculoSbcCheckbox === true;
+      const hasSbcCheckbox = data.vinculoSbcCheckbox === true;
 
-        return hasQualisAntigo && hasSbcCheckbox;
-      }
-
-      return true;
+      return hasGoogleScholar && hasSbcCheckbox;
     },
     {
       message:
