@@ -60,7 +60,7 @@ public class CriarPeriodicoService {
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
             if (!periodicosSimilares.isEmpty() && !forcar) {
-                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
+                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periódico detectado.",
                             periodicosSimilares);
             }
 
