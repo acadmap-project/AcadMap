@@ -27,6 +27,8 @@ CREATE TABLE VeiculoPublicacao (
   id_veiculo uuid,
   id_usuario uuid NOT NULL,
   nome varchar(255) NOT NULL,
+  h5 int DEFAULT null,
+  link_google_scholar varchar(255) DEFAULT null,
   classificacao varchar(2) NOT NULL,
   vinculo_sbc varchar(20) NOT NULL,
   adequado_defesa varchar(20) NOT NULL,
@@ -37,16 +39,27 @@ CREATE TABLE VeiculoPublicacao (
   CONSTRAINT chk_veiculo_vinculo_sbc CHECK (vinculo_sbc IN ('sem_vinculo', 'vinculo_top_10', 'vinculo_top_20', 'vinculo_comum')),
   CONSTRAINT chk_veiculo_adequado_defesa CHECK (adequado_defesa IN ('mestrado', 'doutorado', 'mestrado_doutorado', 'nenhum')),
   CONSTRAINT chk_veiculo_tipo CHECK (tipo IN ('evento', 'periodico')),
-  CONSTRAINT chk_veiculo_status CHECK (status IN ('pendente', 'negado', 'aceito', 'excluido'))
+  CONSTRAINT chk_veiculo_status CHECK (status IN ('pendente', 'negado', 'aceito', 'excluido')),
+  CONSTRAINT chk_h5_evento_not_null CHECK (tipo <> 'evento' OR h5 IS NOT NULL)
 );
 
 CREATE TABLE Evento (
   id_veiculo uuid,
-  h5 int NOT NULL,
-  link_evento varchar(255) NOT NULL,
-  link_google_scholar varchar(255),
-  link_sol_sbc varchar(255),
+  link_sol_sbc varchar(255) DEFAULT null,
   CONSTRAINT pk_evento PRIMARY KEY (id_veiculo)
+);
+
+CREATE TABLE Periodico (
+  id_veiculo uuid,
+  ISSN varchar(255) DEFAULT null,
+  percentil_jcr int DEFAULT null,
+  percentil_scopus int DEFAULT null,
+  link_jcr varchar(255),
+  link_scopus varchar(255),
+  qualis_antigo varchar(2) DEFAULT null,
+  flag_predatorio boolean DEFAULT false,
+  CONSTRAINT pk_periodico PRIMARY KEY (id_veiculo),
+  CONSTRAINT chk_periodico_qualis_antigo CHECK (qualis_antigo IS NULL OR qualis_antigo IN ('a1', 'a2','a3', 'a4', 'b1', 'b2', 'b3', 'b4'))
 );
 
 CREATE TABLE Log (
@@ -70,21 +83,6 @@ CREATE TABLE LogExclusao (
   id_log uuid,
   id_usuario_excluido uuid NOT NULL,
   CONSTRAINT pk_log_exclusao PRIMARY KEY (id_log)
-);
-
-CREATE TABLE Periodico (
-  id_veiculo uuid,
-  ISSN char(8) NOT NULL,
-  percentil_jcr int DEFAULT null,
-  percentil_scopus int DEFAULT null,
-  link_jcr varchar(255),
-  link_scopus varchar(255),
-  link_google_scholar varchar(255) DEFAULT null,
-  qualis_antigo varchar(2) DEFAULT null,
-  flag_predatorio boolean DEFAULT false,
-  CONSTRAINT pk_periodico PRIMARY KEY (id_veiculo),
-  CONSTRAINT uq_periodico_issn UNIQUE (ISSN),
-  CONSTRAINT chk_periodico_qualis_antigo CHECK (qualis_antigo IS NULL OR qualis_antigo IN ('a1', 'a2', 'b1', 'b2', 'b3', 'b4', 'b5', 'c'))
 );
 
 CREATE TABLE LogVeiculo (

@@ -11,14 +11,13 @@ import java.util.stream.Collectors;
 public record EventoResponseDTO(
         UUID idVeiculo,
         String nome,
+        Integer h5,
+        String linkGoogleScholar,
         ClassificacaoVeiculo classificacao,
         VinculoSBC vinculoSbc,
         AdequacaoDefesa adequadoDefesa,
         TipoVeiculo tipo,
         StatusVeiculo status,
-        Integer h5,
-        String linkEvento,
-        String linkGoogleScholar,
         String linkSolSbc,
         Set<UUID> areasPesquisaIds,
         UsuarioResumoDTO usuario
@@ -27,14 +26,13 @@ public record EventoResponseDTO(
         this(
                 evento.getIdVeiculo(),
                 evento.getNome(),
+                evento.getH5(),
+                evento.getLinkGoogleScholar(),
                 evento.getClassificacao(),
                 evento.getVinculoSbc(),
                 evento.getAdequadoDefesa(),
                 evento.getTipo(),
                 evento.getStatus(),
-                evento.getH5(),
-                evento.getLinkEvento(),
-                evento.getLinkGoogleScholar(),
                 evento.getLinkSolSbc(),
                 evento.getAreasPesquisa().stream()
                         .map(AreaPesquisa::getIdAreaPesquisa)
