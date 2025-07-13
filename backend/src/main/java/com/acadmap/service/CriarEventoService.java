@@ -58,7 +58,7 @@ public class CriarEventoService {
     } catch (DataAccessException e) {
       throw new RuntimeException("Erro ao acessar o banco de dados: " + e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Erro inesperado ao criar evento: " + e.getMessage());
+      throw new RuntimeException("Erro inesperado ao criar evento: " + e);
     }
   }
 

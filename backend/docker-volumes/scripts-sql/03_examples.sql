@@ -76,25 +76,25 @@ INSERT INTO AreaPesquisaUsuario (id_usuario, id_area_pesquisa) VALUES (id_usuari
 -- ====================================================================
 
 -- Cenário 1: Periódico submetido pela Dra. Ada e ACEITO pelo admin
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
-VALUES (id_veiculo_periodico_aceito, id_usuario_pesquisador_1, 'Journal of Advanced AI', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_periodico_aceito, id_usuario_pesquisador_1, 'Journal of Advanced AI', 10 , 'http://scholar.google.com/ica' ,  'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
 
 INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr,	percentil_scopus, link_jcr, link_scopus, flag_predatorio)
-VALUES (id_veiculo_periodico_aceito, '12345678', 95, 83, 'http://jcr.com/jai', 'http://scopus.com/jai', false);
+VALUES (id_veiculo_periodico_aceito, '12345678', null, null, null, null, false);
 
 -- Cenário 2: Evento submetido pelo Dr. Alan e ainda PENDENTE
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
-VALUES (id_veiculo_evento_pendente, id_usuario_pesquisador_2, 'International Conference on Algorithms', 'a2', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'pendente');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_evento_pendente, id_usuario_pesquisador_2, 'International Conference on Algorithms', 42, 'http://scholar.google.com/ica', 'a2', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'pendente');
 
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_google_scholar)
-VALUES (id_veiculo_evento_pendente, 42, 'http://ica.com/2024', 'http://scholar.google.com/ica');
+INSERT INTO Evento (id_veiculo)
+VALUES (id_veiculo_evento_pendente);
 
 -- Cenário 3: Evento submetido pela Dra. Ada e NEGADO pelo auditor
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
-VALUES (id_veiculo_evento_negado, id_usuario_pesquisador_1, 'Workshop on Obscure Topics', 'a8', 'sem_vinculo', 'nenhum', 'evento', 'negado');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_evento_negado, id_usuario_pesquisador_1, 'Workshop on Obscure Topics', 5 ,'a8', 'sem_vinculo', 'nenhum', 'evento', 'negado');
 
-INSERT INTO Evento (id_veiculo, h5, link_evento)
-VALUES (id_veiculo_evento_negado, 5, 'http://woto.com/2023');
+INSERT INTO Evento (id_veiculo)
+VALUES (id_veiculo_evento_negado);
 
 
 -- ====================================================================

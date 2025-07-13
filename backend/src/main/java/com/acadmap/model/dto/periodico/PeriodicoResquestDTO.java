@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.UUID;
 
 public record PeriodicoResquestDTO(String nome,
+                                   Integer h5,
+                                   String linkGoogleScholar,
                                    ClassificacaoVeiculo classificacao,
                                    VinculoSBC vinculoSBC,
                                    AdequacaoDefesa adequadoDefesa,
@@ -13,10 +15,10 @@ public record PeriodicoResquestDTO(String nome,
                                    StatusVeiculo status,
                                    Set<UUID> areasPesquisaIds,
                                    String issn,
-                                   Integer percentil,
+                                   Integer percentilJcr,
+                                   Integer percentilJcopus,
                                    String linkJcr,
                                    String linkScopus,
-                                   String linkGoogleScholar,
                                    QualisAntigo qualisAntigo
                                    ) {
 

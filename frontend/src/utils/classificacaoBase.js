@@ -74,6 +74,10 @@ export const calcularClassificacaoEvento = (h5, vinculoSbc) => {
   if (h5Number > 0) {
     const classificacaoBase = calcClassEventoSemSBC(h5Number);
 
+    if (classificacaoBase === 'a2' || classificacaoBase === 'a1') {
+      return classificacaoBase;
+    }
+
     if (vinculoSbc === 'vinculo_top_10') {
       return elevarClassificacao(classificacaoBase, 2);
     }

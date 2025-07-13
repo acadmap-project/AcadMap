@@ -45,6 +45,12 @@ public abstract class VeiculoPublicacao {
   @Column(name = "nome", nullable = false, length = 255)
   private String nome;
 
+  @Column(name = "h5")
+  private Integer h5;
+
+  @Column(name = "link_google_scholar", length = 255)
+  private String linkGoogleScholar;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "classificacao", nullable = false, length = 2)
   private ClassificacaoVeiculo classificacao;
@@ -63,9 +69,8 @@ public abstract class VeiculoPublicacao {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status", length = 10)
-  @ColumnDefault("PENDENTE")
+  @ColumnDefault("pendente")
   private StatusVeiculo status;
-
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "id_usuario", nullable = false)

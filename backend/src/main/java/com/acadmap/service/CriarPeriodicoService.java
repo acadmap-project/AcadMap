@@ -47,21 +47,27 @@ public class CriarPeriodicoService {
                     HttpStatus.BAD_REQUEST,
                     "Se preencher linkScopus, deve-se preencher percentilScopus e vice‑versa");
         }
+        if ((dto.linkGoogleScholar() != null) ^ (dto.h5() != null)){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Se preencher linkGoogleScholar, deve-se preencher h5 e vice‑versa");
+        }
         boolean hasJcrOrScopus = dto.linkJcr() != null || dto.linkScopus() != null;
         if (hasJcrOrScopus && (dto.qualisAntigo() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não pode cadastrar QualisAntigo quando há JCR ou Scopus");
         }
-        if (dto.linkGoogleScholar() != null ^ dto.vinculoSbc() != VinculoSBC.sem_vinculo) {
+        boolean hasJcrOrScopus2 = dto.linkJcr() == null || dto.linkScopus() == null;
+        if (hasJcrOrScopus2 && (dto.qualisAntigo() == null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se o periódico tiver vínculo com a SBC, deve-se preencher linkGoogleScholar e vice‑versa");
+                    "Na ausência do JCR ou Scopus, deve preencher o qualisAntigo.");
         }
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
             if (!periodicosSimilares.isEmpty() && !forcar) {
-                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
+                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periódico detectado.",
                             periodicosSimilares);
             }
 

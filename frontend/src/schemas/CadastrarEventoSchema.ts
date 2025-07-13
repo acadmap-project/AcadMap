@@ -20,14 +20,34 @@ export const CadastrarEventoSchema = z
     vinculoSbc: z.string().optional(),
     linkEvento: z
       .string()
-      .nonempty({
-        message: 'O link de acesso é obrigatório',
-      })
-      .url({
-        message: 'Digite uma URL válida',
-      }),
-    linkGoogleScholar: z.string().optional().or(z.literal('')),
-    linkSolSbc: z.string().optional().or(z.literal('')),
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => !val || val === '' || z.string().url().safeParse(val).success,
+        {
+          message: 'Digite uma URL válida',
+        }
+      ),
+    linkGoogleScholar: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => !val || val === '' || z.string().url().safeParse(val).success,
+        {
+          message: 'Digite uma URL válida',
+        }
+      ),
+    linkSolSbc: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => !val || val === '' || z.string().url().safeParse(val).success,
+        {
+          message: 'Digite uma URL válida',
+        }
+      ),
   })
   .refine(
     data => {
