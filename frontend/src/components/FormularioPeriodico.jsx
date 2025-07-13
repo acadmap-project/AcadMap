@@ -306,8 +306,11 @@ function FormularioPeriodicoContent() {
                 defaultValue=""
                 disabled={!isEnableSBC}
               >
-                <option value="" disabled className="text-gray-500">
+                <option value="" className="text-gray-500">
                   Selecione a nota do QUALIS
+                </option>
+                <option value="" className="text-gray-500">
+                  -- Limpar seleção --
                 </option>
                 {qualisOptions.map(option => (
                   <option key={option.value} value={option.value}>
