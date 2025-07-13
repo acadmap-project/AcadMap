@@ -145,11 +145,17 @@ function FormularioEventoContent() {
               </div>
               <div className="flex-1">
                 <div
-                  className={`transition-opacity duration-300 ${vinculoSbcCheckbox ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                    }`}
+                  className={`transition-opacity duration-300 ${
+                    vinculoSbcCheckbox
+                      ? 'opacity-100'
+                      : 'opacity-0 pointer-events-none'
+                  }`}
                 >
                   {sbcOptions.map(option => (
-                    <label key={option.value} className="flex items-center mb-1">
+                    <label
+                      key={option.value}
+                      className="flex items-center mb-1"
+                    >
                       <input
                         type="radio"
                         value={option.value}
