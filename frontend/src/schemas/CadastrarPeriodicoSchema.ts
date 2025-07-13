@@ -8,14 +8,24 @@ export const CadastrarPeriodicoSchema = z
     areasPesquisaIds: z
       .array(z.string().min(1, 'Selecione pelo menos uma área de conhecimento'))
       .min(1, 'Selecione pelo menos uma área de conhecimento'),
-    issn: z.coerce
-      .number({
-        required_error: 'O ISSN é obrigatório',
-        invalid_type_error: 'O ISSN deve ser um número',
-      })
-      .refine(val => val.toString().length === 8, {
-        message: 'O ISSN deve ter exatamente 8 digítos',
-      }),
+    issn: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => {
+          // Allow empty string, "0", or null/undefined
+          if (!val || val === '' || val === '0') {
+            return true;
+          }
+          // If value is provided, validate it's a number with 8 digits
+          const numVal = Number(val);
+          return !isNaN(numVal) && val.length === 8;
+        },
+        {
+          message: 'O ISSN deve ter exatamente 8 dígitos ou ser 0',
+        }
+      ),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSBC: z.string().default('sem_vinculo'),
     linkJcr: z.string().optional().or(z.literal('')),
