@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record PeriodicoRequestDTO(String nome,
                                   ClassificacaoVeiculo classificacao,
-                                  VinculoSBC vinculoSBC,
+                                  VinculoSBC vinculoSbc,
                                   AdequacaoDefesa adequadoDefesa,
                                   TipoVeiculo tipo,
                                   StatusVeiculo status,

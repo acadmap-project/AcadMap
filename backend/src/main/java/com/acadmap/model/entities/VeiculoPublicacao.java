@@ -38,6 +38,7 @@ import java.util.UUID;
 public abstract class VeiculoPublicacao {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "id_veiculo", columnDefinition = "uuid")
   private UUID idVeiculo;
 

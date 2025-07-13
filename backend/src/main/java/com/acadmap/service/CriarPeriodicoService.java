@@ -13,6 +13,7 @@ import com.acadmap.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class CriarPeriodicoService {
                     HttpStatus.BAD_REQUEST,
                     "Não pode cadastrar QualisAntigo quando há JCR ou Scopus");
         }
-        if (dto.linkGoogleScholar() != null ^ dto.vinculoSBC() != VinculoSBC.sem_vinculo) {
+        if (dto.linkGoogleScholar() != null ^ dto.vinculoSbc() != VinculoSBC.sem_vinculo) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Se o periódico tiver vínculo com a SBC, deve-se preencher linkGoogleScholar e vice‑versa");
@@ -66,27 +67,9 @@ public class CriarPeriodicoService {
 
             Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.areasPesquisaIds());
 
-            Periodico periodico = new Periodico();
-            periodico.setIdVeiculo(UUID.randomUUID());
-            periodico.setAdequadoDefesa(AdequacaoDefesa.nenhum);
-            periodico.setClassificacao(dto.classificacao());
-            periodico.setNome(dto.nome());
-            periodico.setVinculoSbc(dto.vinculoSBC());
-            periodico.setTipo(TipoVeiculo.periodico);
-            periodico.setStatus(dto.status() != null ? dto.status() : StatusVeiculo.pendente);
-            periodico.setAreasPesquisa(areasPesquisa);
             Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(uuid).orElseThrow(EntityNotFoundException::new);
-            periodico.setUsuario(usuario);
 
-            periodico.setIssn(dto.issn());
-            periodico.setPercentilJcr(dto.percentilJcr());
-            periodico.setPercentilScopus(dto.percentilScopus());
-            periodico.setLinkJcr(dto.linkJcr());
-            periodico.setLinkScopus(dto.linkScopus());
-            periodico.setLinkGoogleScholar(dto.linkGoogleScholar());
-            periodico.setQualisAntigo(dto.qualisAntigo());
-
-            Periodico periodicoSavo = this.periodicoRepository.save(periodico);
+            Periodico periodicoSavo = salvarPeriodico(dto, areasPesquisa, usuario);
 
             this.registrarLogService.gerarLogVeiculo(periodicoSavo, usuario, AcaoLog.adicao_veiculo);
 
@@ -120,5 +103,19 @@ public class CriarPeriodicoService {
 
         return new HashSet<>(areas);
         }
+
+    private Periodico salvarPeriodico(PeriodicoRequestDTO dto, Set<AreaPesquisa> areasPesquisa, Usuario usuario){
+
+        Periodico periodico = new Periodico();
+        BeanUtils.copyProperties(dto, periodico, "adequadoDefesa", "tipo", "status", "areasPesquisaIds");
+        periodico.setAdequadoDefesa(AdequacaoDefesa.nenhum);
+        periodico.setTipo(TipoVeiculo.periodico);
+        periodico.setStatus(dto.status() != null ? dto.status() : StatusVeiculo.pendente);
+        periodico.setAreasPesquisa(areasPesquisa);
+        periodico.setUsuario(usuario);
+
+        return periodicoRepository.save(periodico);
+
+    }
 
     }

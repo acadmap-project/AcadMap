@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AvaliarVeiculoService {
 
     private VeiculoPublicacaoRepository veiculoPublicacaoRepository;
@@ -38,22 +39,16 @@ public class AvaliarVeiculoService {
     }
 
 
-    @Transactional
     public VeiculoPublicacaoDTO negar(UUID veiculoUuid, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser){
 
-        if (classificacaoPeriodicoRequestDTO.getJustificativa() == null){
-            throw new VeiculoVinculadoException(
-                    "Não foi apresentada a justificativa de negação do veiculo",
-                    veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow(EntityNotFoundException::new)
-            );
-        }
+        validarJustificativa(veiculoUuid, classificacaoPeriodicoRequestDTO);
         VeiculoPublicacao veiculoPublicacaoAvaliado = avaliarPublicacao(veiculoUuid, StatusVeiculo.negado, classificacaoPeriodicoRequestDTO, idUser);
         registrarLog(veiculoPublicacaoAvaliado.getStatus(), classificacaoPeriodicoRequestDTO, veiculoPublicacaoAvaliado, idUser);
         return VeiculoPublicacaoDTO.buildVeiculoDto(veiculoPublicacaoAvaliado);
 
     }
 
-    @Transactional
+
     public VeiculoPublicacao avaliarPublicacao(UUID veiculoUuid, StatusVeiculo statusVeiculo, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser){
 
         VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow();
@@ -64,6 +59,15 @@ public class AvaliarVeiculoService {
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
         return veiculoPublicacaoAtual;
 
+    }
+
+    private void validarJustificativa(UUID veiculoUuid, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO) {
+        if (classificacaoPeriodicoRequestDTO.getJustificativa() == null){
+            throw new VeiculoVinculadoException(
+                    "Não foi apresentada a justificativa de negação do veiculo",
+                    veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow(EntityNotFoundException::new)
+            );
+        }
     }
 
     private void registrarLog(StatusVeiculo statusVeiculo, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, VeiculoPublicacao veiculoPublicacaoAtual, UUID idUser) {

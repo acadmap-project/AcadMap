@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RegistrarLogService {
   private final LogRepository logRepository;
   private final LogVeiculoRepository logVeiculoRepository;
   private final JustificativaRecusaRepository justificativaRecusaRepository;
 
-  @Transactional
   public void registrarNegarVeiculo(VeiculoPublicacao veiculoPublicacao, Usuario usuario, JustificativaRecusa justificativaRecusa) {
     LogVeiculo logVeiculo = gerarLogVeiculo(veiculoPublicacao, usuario, AcaoLog.cadastro_veiculo_recusado);
     justificativaRecusa.setLogVeiculo(logVeiculo);
