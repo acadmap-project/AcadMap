@@ -93,13 +93,10 @@ function RevisaoCadastroEventoContent() {
         setShowErrorPopup(true);
       } else {
         // Handle other errors
-        const errorMessage =
-          error.response?.data ||
-          error.message ||
-          'Erro desconhecido ao cadastrar evento';
         setErrorInfo({
           title: 'Erro ao Cadastrar Evento',
-          message: `Ocorreu um erro ao tentar cadastrar o evento: ${errorMessage}`,
+          message:
+            'Ocorreu um erro ao finalizar o cadastro, por favor, tente confirmar o registro novamente mais tarde.',
           type: 'error',
         });
         setShowErrorPopup(true);
