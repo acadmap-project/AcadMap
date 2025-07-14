@@ -52,8 +52,8 @@ CREATE TABLE Evento (
 CREATE TABLE Periodico (
   id_veiculo uuid,
   ISSN varchar(255) DEFAULT null,
-  percentil_jcr int DEFAULT null,
-  percentil_scopus int DEFAULT null,
+  percentil_jcr double precision DEFAULT null,
+  percentil_scopus double precision DEFAULT null,
   link_jcr varchar(255),
   link_scopus varchar(255),
   qualis_antigo varchar(2) DEFAULT null,
