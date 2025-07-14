@@ -30,8 +30,10 @@ function FormularioPeriodicoContent() {
     const { vinculoSbcCheckbox: _, ...rest } = data; // Remove vinculoSbcCheckbox
 
     // Convert percentile strings to numbers for classification calculation
-    const percentilJcrNum = parseInt(data.percentilJcr || '0', 10) || 0;
-    const percentilScopusNum = parseInt(data.percentilScopus || '0', 10) || 0;
+    const percentilJcrNum =
+      parseFloat((data.percentilJcr || '0').replace(',', '.')) || 0;
+    const percentilScopusNum =
+      parseFloat((data.percentilScopus || '0').replace(',', '.')) || 0;
 
     const periodicoData = {
       ...rest,
