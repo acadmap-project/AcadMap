@@ -39,29 +39,40 @@ public class CriarPeriodicoService {
         if ((dto.linkJcr() != null) ^ (dto.percentilJcr() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se preencher linkJcr, deve-se preencher percentilJcr e vice‑versa");
+                    "Para JCR, é obrigatório preencher o Link e o Percentil.");
         }
         if ((dto.linkScopus() != null) ^ (dto.percentilScopus() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se preencher linkScopus, deve-se preencher percentilScopus e vice‑versa");
+                    "Para Scopus, é obrigatório preencher o Link e o Percentil.");
         }
-        if ((dto.linkGoogleScholar() != null) ^ (dto.h5() != null)){
+        if ((dto.linkGoogleScholar() != null) ^ (dto.h5() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se preencher linkGoogleScholar, deve-se preencher h5 e vice‑versa");
+                    "Para Google Scholar, é obrigatório preencher o Link e o h5.");
         }
-        boolean hasJcrOrScopus = dto.linkJcr() != null || dto.linkScopus() != null;
-        if (hasJcrOrScopus && (dto.qualisAntigo() != null)) {
+
+        boolean temJcr = dto.linkJcr() != null;
+        boolean temScopus = dto.linkScopus() != null;
+        boolean temGoogleScholar = dto.linkGoogleScholar() != null;
+        boolean temQualisAntigo = dto.qualisAntigo() != null;
+
+        if ((temJcr || temScopus) && temGoogleScholar) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Não pode cadastrar QualisAntigo quando há JCR ou Scopus");
+                    "Não é permitido cadastrar Google Scholar quando JCR e/ou Scopus já foram informados.");
         }
-        boolean hasJcrOrScopus2 = dto.linkJcr() == null || dto.linkScopus() == null;
-        if (hasJcrOrScopus2 && (dto.qualisAntigo() == null)) {
+
+        if ((temJcr || temScopus || temGoogleScholar) && temQualisAntigo) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Na ausência do JCR ou Scopus, deve preencher o qualisAntigo.");
+                    "Não é permitido cadastrar Qualis Antigo quando JCR, Scopus ou Google Scholar já foram informados.");
+        }
+
+        if (!temJcr && !temScopus && !temGoogleScholar && !temQualisAntigo) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "É obrigatório informar um dos seguintes indicadores: JCR, Scopus, Google Scholar ou Qualis Antigo, respeitando a ordem de prioridade.");
         }
         try {
             List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
