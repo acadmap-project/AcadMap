@@ -40,7 +40,7 @@ export const CadastrarPeriodicoSchema = z
         return val.replace(/-/g, '');
       }),
     vinculoSbcCheckbox: z.boolean().optional(),
-    vinculoSBC: z.string().default('sem_vinculo'),
+    vinculoSbc: z.string().default('sem_vinculo'),
     linkJcr: z.string().optional().or(z.literal('')),
     linkScopus: z.string().optional().or(z.literal('')),
     linkGoogleScholar: z.string().optional().or(z.literal('')),
@@ -50,8 +50,18 @@ export const CadastrarPeriodicoSchema = z
     // *** PLACEHOLDER FIELD - CHANGE THIS LATER ***
     // This h5 field is temporarily set to 0 as a placeholder
     // TODO: Replace with actual h5 field implementation
-    h5: z.number().default(0),
+    h5: z.number().nullable().default(0),
     // *** END PLACEHOLDER - CHANGE THIS LATER ***
+  })
+  .transform(data => {
+    // If there's no Google Scholar link, set h5 to null
+    if (!data.linkGoogleScholar || data.linkGoogleScholar.trim() === '') {
+      return {
+        ...data,
+        h5: null,
+      };
+    }
+    return data;
   })
   // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(
@@ -130,7 +140,7 @@ export const CadastrarPeriodicoSchema = z
     data => {
       const hasGoogleScholar =
         data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
-      if (hasGoogleScholar && (!data.vinculoSBC || data.vinculoSBC === '')) {
+      if (hasGoogleScholar && (!data.vinculoSbc || data.vinculoSbc === '')) {
         return false;
       }
       return true;
@@ -147,7 +157,7 @@ export const CadastrarPeriodicoSchema = z
       if (
         data.qualisAntigo &&
         data.qualisAntigo.trim() !== '' &&
-        !data.vinculoSBC
+        !data.vinculoSbc
       ) {
         return false;
       }

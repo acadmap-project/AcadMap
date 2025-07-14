@@ -26,7 +26,7 @@ function FormularioPeriodicoContent() {
   } = methods;
 
   const onSubmit = data => {
-    // Handle vinculoSBC logic and convert percentil strings to numbers for calculation
+    // Handle vinculoSbc logic and convert percentil strings to numbers for calculation
     const { vinculoSbcCheckbox: _, ...rest } = data; // Remove vinculoSbcCheckbox
 
     // Convert percentile strings to numbers for classification calculation
@@ -35,7 +35,7 @@ function FormularioPeriodicoContent() {
 
     const periodicoData = {
       ...rest,
-      vinculoSBC: data.vinculoSbcCheckbox ? 'vinculo_comum' : 'sem_vinculo',
+      vinculoSbc: data.vinculoSbcCheckbox ? 'vinculo_comum' : 'sem_vinculo',
       classificacao: calcularClassificacaoPeriodico(
         Math.max(percentilJcrNum, percentilScopusNum)
       ),
@@ -158,10 +158,10 @@ function FormularioPeriodicoContent() {
                         {...register('vinculoSbcCheckbox', {
                           onChange: e => {
                             if (e.target.checked) {
-                              setValue('vinculoSBC', 'vinculo_comum');
+                              setValue('vinculoSbc', 'vinculo_comum');
                               setIsEnableSBC(true);
                             } else {
-                              setValue('vinculoSBC', '');
+                              setValue('vinculoSbc', '');
                               setIsEnableSBC(false);
                               // Clear the fields when SBC is disabled
                               setValue('linkGoogleScholar', '');

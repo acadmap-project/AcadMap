@@ -76,7 +76,7 @@ const postPeriodico = async ({ periodicoData, userId }) => {
     throw new Error(`Erro de validação: ${error.message}`);
   }
 
-  // The backend expects vinculoSBC (uppercase), so keep it as is
+  // The backend expects vinculoSbc (camelCase), so keep it as is
   console.log('Sending data to API:', normalizedData);
   const response = await fetch(
     'http://localhost:8080/api/periodicos/cadastro',
@@ -257,7 +257,7 @@ function ValidacaoPeriodicoContent() {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">Vínculo com a SBC:</span>{' '}
-              {periodicoData.vinculoSBC || 'N/A'}
+              {periodicoData.vinculoSbc || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
