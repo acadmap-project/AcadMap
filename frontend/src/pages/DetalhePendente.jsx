@@ -24,6 +24,8 @@ function DetalhePendenteContent() {
   const registro = useMemo(() => location.state || {}, [location.state]);
 
   const navigate = useNavigate();
+  const [showJustificacaoPopup, setShowJustificacaoPopup] = useState(false);
+  const [justificacaoRecusa, setJustificacaoRecusa] = useState('');
   const [isPredatorio, setIsPredatorio] = useState(false);
   const { negarPendencias, aprovarPendencias } = usePendencias();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -175,17 +177,23 @@ function DetalhePendenteContent() {
     });
   };
 
-  const handleRejeitar = registroId => {
+  const handleRejeitar = () => {
+    setShowJustificacaoPopup(true);
+  };
+
+  const confirmarRejeicao = registroId => {
+    setShowJustificacaoPopup(false);
     console.log('Attempting to reject registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
     console.log('isPredatorio:', isPredatorio);
 
     rejeitarMutation.mutate({
-      id: registroId,
+      id: id,
       userId: loggedIn.id,
-      flagPredatorio: isPredatorio,
+      justificativa: justificacaoRecusa, // Envia o justificativa para a mutação
     });
+    setJustificacaoRecusa(''); // Limpa o justificativa após rejeitar
   };
   // If no registro data, show error message
   if (!registro || Object.keys(registro).length === 0) {
@@ -311,7 +319,7 @@ function DetalhePendenteContent() {
               </button>
 
               <button
-                onClick={() => handleRejeitar(id)}
+                onClick={handleRejeitar}
                 disabled={
                   aprovarMutation.isPending ||
                   rejeitarMutation.isPending ||
@@ -327,6 +335,38 @@ function DetalhePendenteContent() {
               >
                 {rejeitarMutation.isPending ? 'Rejeitando...' : 'Rejeitar'}
               </button>
+              {/* Popup para justificativa da recusa */}
+              {showJustificacaoPopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                  <div className="bg-white rounded shadow-lg p-6 w-full max-w-md">
+                    <h2 className="text-lg font-bold mb-4">
+                      Justificacao da recusa
+                    </h2>
+                    <textarea
+                      className="w-full border border-gray-300 rounded p-2 mb-4"
+                      rows={4}
+                      placeholder="Descreva a justificacao da recusa..."
+                      value={justificacaoRecusa}
+                      onChange={e => setJustificacaoRecusa(e.target.value)}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
+                        onClick={() => setShowJustificacaoPopup(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
+                        onClick={() => confirmarRejeicao(id)}
+                        disabled={!justificacaoRecusa.trim()}
+                      >
+                        Confirmar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <ErrorPopup

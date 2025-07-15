@@ -63,7 +63,8 @@ X-User-Id: <UUID do usuário que está tentando negar>
 **Corpo esperado:**
 ```json
 {
-  "flagPredatorio": true
+  "flagPredatorio": true,
+  "justificativa": "Texto"
 }
 ```
 

@@ -1,23 +1,25 @@
 package com.acadmap.model.dto.periodico;
 
 import com.acadmap.model.enums.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.Set;
 import java.util.UUID;
 
 public record PeriodicoRequestDTO(String nome,
+                                  Integer h5,
+                                  String linkGoogleScholar,
                                   ClassificacaoVeiculo classificacao,
-                                  VinculoSBC vinculoSBC,
+                                  VinculoSBC vinculoSbc,
                                   AdequacaoDefesa adequadoDefesa,
                                   TipoVeiculo tipo,
                                   StatusVeiculo status,
                                   Set<UUID> areasPesquisaIds,
                                   String issn,
-                                  Integer percentilJcr,
-                                  Integer percentilScopus,
+                                  Double percentilJcr,
+                                  Double percentilScopus,
                                   String linkJcr,
                                   String linkScopus,
-                                  String linkGoogleScholar,
                                   QualisAntigo qualisAntigo
                                    ) {
 

@@ -179,7 +179,7 @@ function FormularioEventoContent() {
               htmlFor="linkEvento"
               className="block mb-2 text-sm text-gray-900 text-start"
             >
-              LINK DE ACESSO*
+              LINK DE ACESSO
             </label>
             <input
               type="text"
