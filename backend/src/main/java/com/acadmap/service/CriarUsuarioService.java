@@ -5,6 +5,7 @@ import com.acadmap.model.dto.usuario.UsuarioResponseDTO;
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Programa;
 import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.repository.AreaPesquisaRepository;
 import com.acadmap.repository.ProgramaRepository;
 import com.acadmap.repository.UsuarioRepository;
@@ -40,7 +41,7 @@ public class CriarUsuarioService {
     usuario.setPrograma(programa);
     usuario.setAreasPesquisa(areas);
     Usuario usuarioPersistido = this.usuarioRepository.save(usuario);
-    this.registrarLogService.registraCadastroUsuario(usuarioPersistido);
+    this.registrarLogService.gerarLogUsuario(usuarioPersistido, AcaoLog.cadastro_usuario);
 
     return new UsuarioResponseDTO(usuarioPersistido);
   }

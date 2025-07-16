@@ -8,61 +8,168 @@ export const CadastrarPeriodicoSchema = z
     areasPesquisaIds: z
       .array(z.string().min(1, 'Selecione pelo menos uma área de conhecimento'))
       .min(1, 'Selecione pelo menos uma área de conhecimento'),
-    issn: z.coerce
-      .number({
-        required_error: 'O ISSN é obrigatório',
-        invalid_type_error: 'O ISSN deve ser um número',
-      })
-      .refine(val => val.toString().length === 8, {
-        message: 'O ISSN deve ter exatamente 8 digítos',
+    issn: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => {
+          // Allow empty string, "0", or null/undefined
+          if (!val || val === '' || val === '0') {
+            return true;
+          }
+          // Remove hyphens and validate
+          const cleanIssn = val.replace(/-/g, '');
+          // Check if it's exactly 8 digits after removing hyphens
+          return /^\d{8}$/.test(cleanIssn);
+        },
+        {
+          message:
+            'O ISSN deve ter exatamente 8 dígitos (formato: 12345678 ou 1234-5678) ou ser 0',
+        }
+      )
+      .transform(val => {
+        // Transform to send only digits to backend (remove hyphens)
+        // Convert empty string to null for backend compatibility
+        if (!val || val === '') {
+          return null;
+        }
+        if (val === '0') {
+          return val;
+        }
+        return val.replace(/-/g, '');
       }),
     vinculoSbcCheckbox: z.boolean().optional(),
-    vinculoSBC: z.string().default('sem_vinculo'),
+    vinculoSbc: z.string().default('sem_vinculo'),
     linkJcr: z.string().optional().or(z.literal('')),
     linkScopus: z.string().optional().or(z.literal('')),
     linkGoogleScholar: z.string().optional().or(z.literal('')),
     qualisAntigo: z.string().optional().or(z.literal('')),
     percentilJcr: z.string().optional().or(z.literal('')),
     percentilScopus: z.string().optional().or(z.literal('')),
+    // *** PLACEHOLDER FIELD - CHANGE THIS LATER ***
+    // This h5 field is temporarily set to 0 as a placeholder
+    // TODO: Replace with actual h5 field implementation
+    h5: z.number().nullable().default(0),
+    // *** END PLACEHOLDER - CHANGE THIS LATER ***
   })
-  // Validation rule: At least one of the three links must be filled
+  .transform(data => {
+    // If there's no Google Scholar link, set h5 to null
+    if (!data.linkGoogleScholar || data.linkGoogleScholar.trim() === '') {
+      return {
+        ...data,
+        h5: null,
+      };
+    }
+    return data;
+  })
+  // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(
     data => {
       const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
       const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
       const hasGoogleScholar =
         data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
 
-      return hasJcr || hasScopus || hasGoogleScholar;
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
     },
     {
       message:
-        'Pelo menos um dos links (JCR, Scopus ou Google Scholar) deve ser preenchido',
-      path: ['linkJcr'], // Show error on the first link field
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
+      path: ['linkJcr'],
     }
   )
-  // Validation rule: If Google Scholar link is filled, both qualisAntigo and vinculoSbcCheckbox are required
+  // Show error on linkScopus as well
+  .refine(
+    data => {
+      const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
+      const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
+      const hasGoogleScholar =
+        data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
+
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
+    },
+    {
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
+      path: ['linkScopus'],
+    }
+  )
+  // Show error on linkGoogleScholar as well
+  .refine(
+    data => {
+      const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
+      const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
+      const hasGoogleScholar =
+        data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
+
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
+    },
+    {
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
+      path: ['linkGoogleScholar'],
+    }
+  )
+  // Show error on qualisAntigo as well
+  .refine(
+    data => {
+      const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
+      const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
+      const hasGoogleScholar =
+        data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
+      const hasOldScholar =
+        data.qualisAntigo && data.qualisAntigo.trim() !== '';
+
+      return hasJcr || hasScopus || hasGoogleScholar || hasOldScholar;
+    },
+    {
+      message:
+        'Não foi possível calcular a classificação. Informe pelo menos uma das seguintes fontes: JCR, Scopus, Link Google Scholar ou nota do Qualis CAPES.',
+      path: ['qualisAntigo'],
+    }
+  )
+  // Validar: No caso de ter Google Scholar, vinculo SBC deve ser preenchido
   .refine(
     data => {
       const hasGoogleScholar =
         data.linkGoogleScholar && data.linkGoogleScholar.trim() !== '';
-
-      if (hasGoogleScholar) {
-        const hasQualisAntigo =
-          data.qualisAntigo && data.qualisAntigo.trim() !== '';
-        const hasSbcCheckbox = data.vinculoSbcCheckbox === true;
-
-        return hasQualisAntigo && hasSbcCheckbox;
+      if (hasGoogleScholar && (!data.vinculoSbc || data.vinculoSbc === '')) {
+        return false;
       }
-
       return true;
     },
     {
       message:
-        'Se o link do Google Scholar for preenchido, a nota no antigo Qualis e o vínculo com SBC devem ser informados',
+        'Selecione um tipo de vínculo SBC quando o Google Scholar for preenchido',
       path: ['linkGoogleScholar'],
     }
   )
+  // Validar: No caso de ter qualis antigo, vinculo SBC deve ser preenchido
+  .refine(
+    data => {
+      if (
+        data.qualisAntigo &&
+        data.qualisAntigo.trim() !== '' &&
+        !data.vinculoSbc
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message:
+        'Selecione um tipo de vínculo SBC quando o Qualis Antigo for preenchido',
+      path: ['qualisAntigo'],
+    }
+  )
+  // Validar: Se o link JCR for preenchido, percentil JCR deve ser informado
   .refine(
     data => {
       if (data.linkJcr && data.linkJcr !== '' && !data.percentilJcr) {
@@ -75,6 +182,7 @@ export const CadastrarPeriodicoSchema = z
       path: ['percentilJcr'],
     }
   )
+  // Validar: Se o link Scopus for preenchido, percentil Scopus deve ser informado
   .refine(
     data => {
       if (data.linkScopus && data.linkScopus !== '' && !data.percentilScopus) {
