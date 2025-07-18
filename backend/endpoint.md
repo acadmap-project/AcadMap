@@ -705,3 +705,58 @@ Status: `400 BAD REQUEST`
 | 400    | Periódico existe, mas não está aceito        |
 | 404    | Periódico não encontrado                     |
 
+---
+ ## 📋 3. **Listar Periódicos Aprovados**
+
+**Endpoint:**
+
+```
+
+GET /api/periodicos/listar
+
+```
+
+**Descrição:** Retorna uma lista resumida de todos os periódicos com status 'aceito', ideal para a visualização pública (RF03). Inclui uma flag para identificar periódicos predatórios.
+
+**Query Parameters:**
+- `nome` (string, opcional) - Filtra a lista para retornar apenas periódicos cujo nome contenha o texto informado (busca parcial e case-insensitive).
+
+### ✅ **Exemplo de uso**
+```
+
+GET /api/periodicos/listar?nome=Journal
+
+````
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retorna todos os periódicos aprovados. Se nenhum periódico for encontrado, retorna uma lista vazia `[]`.
+
+```json
+[
+  {
+    "idVeiculo": "55555555-5555-5555-5555-555555555555",
+    "nome": "Journal of Advanced AI",
+    "tipo": "periodico",
+    "classificacao": "a1",
+    "flagPredatorio": false
+  },
+  {
+    "idVeiculo": "11111111-1111-1111-1111-111111111101",
+    "nome": "The Art of Computer Programming Journal",
+    "tipo": "periodico",
+    "classificacao": "a1",
+    "flagPredatorio": false
+  }
+]
+````
+
+-----
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso.   |
+| 500    | Erro interno no servidor.                    |
