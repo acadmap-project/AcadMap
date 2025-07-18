@@ -78,17 +78,14 @@ const postPeriodico = async ({ periodicoData, userId }) => {
 
   // The backend expects vinculoSbc (camelCase), so keep it as is
   console.log('Sending data to API:', normalizedData);
-  const response = await fetch(
-    'http://localhost:8080/api/periodicos/cadastro',
-    {
-      method: 'POST',
-      headers: {
-        'X-User-Id': userId,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(normalizedData),
-    }
-  );
+  const response = await fetch('http://localhost:8080/api/periodicos/', {
+    method: 'POST',
+    headers: {
+      'X-User-Id': userId,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(normalizedData),
+  });
 
   if (!response.ok) {
     const errorData = await response.text();
