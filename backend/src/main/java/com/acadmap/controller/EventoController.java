@@ -3,8 +3,11 @@ package com.acadmap.controller;
 import com.acadmap.model.dto.evento.EventoCreateDTO;
 import com.acadmap.model.dto.evento.EventoResponseDTO;
 import com.acadmap.model.dto.evento.EventoVisualizacaoDTO;
+import com.acadmap.model.dto.evento.EventoResumoListaDTO;
 import com.acadmap.service.CriarEventoService;
 import com.acadmap.service.EventoConsultaService;
+
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,6 +44,14 @@ public class EventoController {
     EventoVisualizacaoDTO eventoDto = this.eventoConsultaService.consultaPorId(id);
 
     return ResponseEntity.status(HttpStatus.OK).body(eventoDto);
+  }
+
+  @GetMapping("/listar")
+  public ResponseEntity<List<EventoResumoListaDTO>> listarEventosAprovados(
+          @RequestParam(required = false) String nome) {
+
+    List<EventoResumoListaDTO> eventos = eventoConsultaService.listarAprovados(nome);
+    return ResponseEntity.ok(eventos);
   }
 
 }
