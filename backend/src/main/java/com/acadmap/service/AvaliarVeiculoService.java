@@ -37,8 +37,8 @@ public class AvaliarVeiculoService {
     public VeiculoPublicacaoDTO aceito(UUID veiculoUuid, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser){
         VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow();
         classificarAdequacaoDefesa(veiculoPublicacaoAtual);
+        classificarPredatorio(veiculoPublicacaoAtual, classificacaoPeriodicoRequestDTO, idUser);
         avaliarPublicacao(veiculoPublicacaoAtual, StatusVeiculo.aceito, classificacaoPeriodicoRequestDTO, idUser);
-        registrarLog(veiculoPublicacaoAtual.getStatus(), classificacaoPeriodicoRequestDTO, veiculoPublicacaoAtual, idUser);
         return VeiculoPublicacaoDTO.buildVeiculoDto(veiculoPublicacaoAtual);
 
     }
@@ -47,16 +47,15 @@ public class AvaliarVeiculoService {
     public VeiculoPublicacaoDTO negar(UUID veiculoUuid, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser){
         VeiculoPublicacao veiculoPublicacaoAtual = veiculoPublicacaoRepository.findById(veiculoUuid).orElseThrow();
         validarJustificativa(veiculoUuid, classificacaoPeriodicoRequestDTO);
-        registrarLog(veiculoPublicacaoAtual.getStatus(), classificacaoPeriodicoRequestDTO, veiculoPublicacaoAtual, idUser);
+        avaliarPublicacao(veiculoPublicacaoAtual, StatusVeiculo.negado, classificacaoPeriodicoRequestDTO, idUser);
         return VeiculoPublicacaoDTO.buildVeiculoDto(veiculoPublicacaoAtual);
 
     }
 
 
     public void avaliarPublicacao(VeiculoPublicacao veiculoPublicacaoAtual, StatusVeiculo statusVeiculo, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser){
-
-        classificarPredatorio(veiculoPublicacaoAtual, classificacaoPeriodicoRequestDTO, idUser);
         veiculoPublicacaoAtual.setStatus(statusVeiculo);
+        registrarLog(classificacaoPeriodicoRequestDTO, veiculoPublicacaoAtual, idUser);
         veiculoPublicacaoRepository.save(veiculoPublicacaoAtual);
 
     }
@@ -70,10 +69,10 @@ public class AvaliarVeiculoService {
         }
     }
 
-    private void registrarLog(StatusVeiculo statusVeiculo, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, VeiculoPublicacao veiculoPublicacaoAtual, UUID idUser) {
+    private void registrarLog(ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, VeiculoPublicacao veiculoPublicacaoAtual, UUID idUser) {
 
         Usuario usuario = usuarioRepository.findById(idUser).orElseThrow();
-        if (statusVeiculo.getCodigo().contains(StatusVeiculo.negado.getCodigo())){
+        if (veiculoPublicacaoAtual.getStatus().equals(StatusVeiculo.negado)){
             JustificativaRecusa justificativaRecusa = new JustificativaRecusa();
             justificativaRecusa.setJustificativa(classificacaoPeriodicoRequestDTO.getJustificativa());
             registrarLogService.registrarNegarVeiculo(veiculoPublicacaoAtual, usuario, justificativaRecusa);
