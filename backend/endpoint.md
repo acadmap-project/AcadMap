@@ -304,7 +304,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/eventos/cadastro?forcar=true
+POST /api/eventos?forcar=true
 ```
 
 ---
@@ -429,7 +429,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/periodicos/cadastro?forcar=true
+POST /api/periodicos?forcar=true
 ```
 
 ---
