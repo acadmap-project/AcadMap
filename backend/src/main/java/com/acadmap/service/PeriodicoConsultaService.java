@@ -1,10 +1,16 @@
 package com.acadmap.service;
 
+import com.acadmap.model.dto.periodico.PeriodicoResumoListaDTO;
 import com.acadmap.model.dto.periodico.PeriodicoVisualizacaoDTO;
 import com.acadmap.model.entities.Periodico;
+import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.PeriodicoRepository;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,5 +35,20 @@ public class PeriodicoConsultaService {
     }
 
     return new PeriodicoVisualizacaoDTO(periodicoOpt.get());
+  }
+
+  public List<PeriodicoResumoListaDTO> listarAprovados(String nomeFiltro) {
+    List<Periodico> periodicos;
+
+    if (nomeFiltro == null || nomeFiltro.trim().isEmpty()) {
+      periodicos = periodicoRepository.findByStatus(StatusVeiculo.aceito);
+    } else {
+
+      periodicos = periodicoRepository.findByStatusAndNomeContainingIgnoreCase(StatusVeiculo.aceito, nomeFiltro);
+    }
+
+    return periodicos.stream()
+            .map(PeriodicoResumoListaDTO::new)
+            .collect(Collectors.toList());
   }
 }
