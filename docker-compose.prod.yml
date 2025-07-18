@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  backend:
+    image: ghcr.io/${REGISTRY_USER}/backend:${BACKEND_IMAGE_TAG}
+    ports:
+      - "8080:8080"
+    restart: always
+    pull_policy: always
+
+  frontend:
+    image: ghcr.io/${REGISTRY_USER}/frontend:${FRONTEND_IMAGE_TAG}
+    ports:
+      - "80:80"
+    restart: always
+    pull_policy: always

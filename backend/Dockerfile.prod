@@ -1,0 +1,37 @@
+FROM arm64v8/maven:3.9.11-amazoncorretto-17-alpine AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+FROM build AS jlinker
+WORKDIR /app
+RUN apk add --no-cache binutils
+RUN jar xvf target/*.jar
+RUN jdeps \
+    --ignore-missing-deps -q \
+    --recursive \
+    --multi-release 17 \
+    --print-module-deps \
+    --class-path 'BOOT-INF/lib/*' \
+    target/*.jar > jre-deps.txt
+RUN jlink \
+    --add-modules $(cat jre-deps.txt) \
+    --strip-debug \
+    --no-man-pages \
+    --no-header-files \
+    --compress=2 \
+    --output /custom_jre
+
+
+FROM alpine:latest
+WORKDIR /app
+ENV JAVA_HOME=/app/custom_jre
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+COPY --from=jlinker /custom_jre ./custom_jre
+COPY --from=build /app/target/*.jar app.jar
+ARG APPLICATION_USER=appuser
+RUN addgroup -S $APPLICATION_USER && adduser -S $APPLICATION_USER -G $APPLICATION_USER
+USER $APPLICATION_USER
+ENTRYPOINT ["java", "-jar", "app.jar"]
