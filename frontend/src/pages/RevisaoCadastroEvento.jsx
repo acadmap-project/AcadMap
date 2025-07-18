@@ -17,7 +17,7 @@ const queryClient = new QueryClient();
 
 const postEvent = async ({ eventData, userId }) => {
   console.log(eventData);
-  const response = await fetch('http://localhost:8080/api/eventos/cadastro', {
+  const response = await fetch('http://localhost:8080/api/eventos', {
     method: 'POST',
     headers: {
       'X-User-Id': userId,
