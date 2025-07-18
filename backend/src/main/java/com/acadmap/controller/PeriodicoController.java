@@ -31,6 +31,7 @@ public class PeriodicoController {
 
   private final CriarPeriodicoService criarPeriodicoService;
   private final ClassificarPeriodicoService classificarPeriodicoService;
+  private final VeiculoPublicacaoRepository veiculoPublicacaoRepository;
   private final PeriodicoConsultaService periodicoConsultaService;
 
   @PostMapping
@@ -43,21 +44,20 @@ public class PeriodicoController {
     return ResponseEntity.status(HttpStatus.CREATED).body(dtoresponseperiodico);
   }
 
-  @PatchMapping("/{idPeriodico}/classificar")
-  @Deprecated
-  public ResponseEntity<PeriodicoResponseDTO> classificarPeriodico(@PathVariable UUID idPeriodico,
-      @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO,
-      @RequestHeader("X-User-Id") UUID idUser) {
-    System.out.println(idUser);
-    Periodico periodicoAtualizado = this.classificarPeriodicoService
-        .classificarPeriodico(idPeriodico, classificacaoPeriodicoRequestDTO, idUser);
+    @PatchMapping("/{idPeriodico}/classificar")
+    @Deprecated
+    public ResponseEntity<PeriodicoResponseDTO> classificarPeriodico(@PathVariable UUID idPeriodico,
+                                                                     @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO,
+                                                                     @RequestHeader("X-User-Id") UUID idUser) {
 
-    PeriodicoResponseDTO periodicoResponseDTO = new PeriodicoResponseDTO(periodicoAtualizado);
-
-    return ResponseEntity.ok(periodicoResponseDTO);
+        VeiculoPublicacao veiculoPublicacao = veiculoPublicacaoRepository.findById(idPeriodico).orElseThrow();
+        Periodico periodicoAtualizado = classificarPeriodicoPredatorioService.classificarPeriodico(veiculoPublicacao, classificacaoPeriodicoRequestDTO, idUser);
+   
+      PeriodicoResponseDTO periodicoResponseDTO = new PeriodicoResponseDTO(periodicoAtualizado);
+      return ResponseEntity.ok(periodicoResponseDTO);
   }
 
-  @GetMapping("/{id}")
+ @GetMapping("/{id}")
   public ResponseEntity<PeriodicoVisualizacaoDTO> consultaPorId(@PathVariable UUID id) {
     PeriodicoVisualizacaoDTO periodicoDto = this.periodicoConsultaService.consultaPorId(id);
     return ResponseEntity.status(HttpStatus.OK).body(periodicoDto);
