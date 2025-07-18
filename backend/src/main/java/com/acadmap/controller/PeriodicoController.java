@@ -1,14 +1,13 @@
 package com.acadmap.controller;
 
 
-import com.acadmap.model.dto.periodico.ClassificacaoPeriodicoRequestDTO;
-import com.acadmap.model.dto.periodico.PeriodicoRequestDTO;
-import com.acadmap.model.dto.periodico.PeriodicoResponseDTO;
-import com.acadmap.model.dto.periodico.PeriodicoVisualizacaoDTO;
+import com.acadmap.model.dto.periodico.*;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.service.ClassificarPeriodicoService;
 import com.acadmap.service.CriarPeriodicoService;
 import com.acadmap.service.PeriodicoConsultaService;
+
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -62,6 +61,15 @@ public class PeriodicoController {
   public ResponseEntity<PeriodicoVisualizacaoDTO> consultaPorId(@PathVariable UUID id) {
     PeriodicoVisualizacaoDTO periodicoDto = this.periodicoConsultaService.consultaPorId(id);
     return ResponseEntity.status(HttpStatus.OK).body(periodicoDto);
+  }
+
+  @GetMapping("/listar")
+  public ResponseEntity<List<PeriodicoResumoListaDTO>> listarPeriodicosAprovados(
+          @RequestParam(required = false) String nome) {
+
+    List<PeriodicoResumoListaDTO> periodicos = periodicoConsultaService.listarAprovados(nome);
+
+    return ResponseEntity.ok(periodicos);
   }
 
 }
