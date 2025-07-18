@@ -381,7 +381,7 @@ Status: `404 NOT FOUND`
 | 400    | Evento existe, mas não está aceito        |
 | 404    | Evento não encontrado                     |
 
-
+---
 
 # 📘 API - Periodico
 
@@ -507,5 +507,83 @@ POST /api/periodicos?forcar=true
 ```
 
 ---
+ ## 📋 2. **Detalhar periódico por ID**
 
+**Endpoint:**
+
+```
+GET /api/periodicos/{id}
+```
+
+**Descrição:**  
+Retorna os detalhes do periódico solicitado via ID.
+
+---
+
+### ✅ **Exemplo de uso**
+```
+GET /api/periodicos/4e8f5b70-92f3-4c21-b07b-6a5d5c6f901a
+```
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+{
+  "nome": "IEEE Transactions on Information Theory",
+  "issn": "99887766",
+  "percentilJcr": null,
+  "percentilScopus": null,
+  "areasPesquisas": [
+    "Ciência da Computação",
+    "Engenharia Elétrica"
+  ],
+  "vinculoSbc": "vinculo_top_10",
+  "linkJcr": null,
+  "linkScopus": null,
+  "linkGoogleScholar": "http://scholar.google.com",
+  "qualisAntigo": "a1",
+  "classificacao": "a1",
+  "flagPredatorio": false,
+  "adequacaoDefesa": "doutorado"
+}
+```
+
+---
+
+### ❌ **Possíveis Erros**
+
+#### **1. Periódico não encontrado**  
+Status: `404 NOT FOUND`  
+**Resposta:**
+```json
+{
+  "path": "/api/periodicos/11111111-1111-1111-1111-111111111105",
+  "error": "PERIODICO_NAO_ENCONTRADO",
+  "timestamp": "2025-07-17T22:47:49.740520044",
+  "status": 404
+}
+```
+---
+
+#### **2. Periódico não aceito**
+Status: `400 BAD REQUEST`  
+**Resposta:**
+```json
+{
+  "path": "/api/periodicos/88888888-cccc-cccc-cccc-cccccccccccc",
+  "error": "NAO_ACEITO",
+  "timestamp": "2025-07-17T22:48:44.87700495",
+  "status": 400
+}
+```
+
+---
+
+### ✅ **Códigos de resposta**
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Detalhes do periódico retornados com sucesso |
+| 400    | Periódico existe, mas não está aceito        |
+| 404    | Periódico não encontrado                     |
 

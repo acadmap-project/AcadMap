@@ -4,14 +4,17 @@ package com.acadmap.controller;
 import com.acadmap.model.dto.periodico.ClassificacaoPeriodicoRequestDTO;
 import com.acadmap.model.dto.periodico.PeriodicoRequestDTO;
 import com.acadmap.model.dto.periodico.PeriodicoResponseDTO;
+import com.acadmap.model.dto.periodico.PeriodicoVisualizacaoDTO;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.service.ClassificarPeriodicoService;
 import com.acadmap.service.CriarPeriodicoService;
+import com.acadmap.service.PeriodicoConsultaService;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +32,7 @@ public class PeriodicoController {
 
   private final CriarPeriodicoService criarPeriodicoService;
   private final ClassificarPeriodicoService classificarPeriodicoService;
+  private final PeriodicoConsultaService periodicoConsultaService;
 
   @PostMapping
   public ResponseEntity<PeriodicoResponseDTO> criarPeriodico(@RequestBody PeriodicoRequestDTO dto,
@@ -53,5 +57,12 @@ public class PeriodicoController {
 
     return ResponseEntity.ok(periodicoResponseDTO);
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<PeriodicoVisualizacaoDTO> consultaPorId(@PathVariable UUID id) {
+    PeriodicoVisualizacaoDTO periodicoDto = this.periodicoConsultaService.consultaPorId(id);
+    return ResponseEntity.status(HttpStatus.OK).body(periodicoDto);
+  }
+
 }
 
