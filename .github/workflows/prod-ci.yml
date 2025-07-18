@@ -30,6 +30,7 @@ jobs:
       with:
         context: ./backend
         file: ./backend/Dockerfile.prod
+        platforms: linux/amd64,linux/arm64
         push: true
         # Construct the tag dynamically
         tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.BACKEND_IMAGE }}:${{ github.sha }}
@@ -41,6 +42,7 @@ jobs:
       with:
         context: ./frontend
         file: ./frontend/Dockerfile.prod
+        platforms: linux/amd64,linux/arm64
         push: true
         # Construct the tag dynamically
         tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.FRONTEND_IMAGE }}:${{ github.sha }}
@@ -60,5 +62,5 @@ jobs:
           echo "BACKEND_IMAGE_TAG=${{ github.sha }}" > .env
           echo "FRONTEND_IMAGE_TAG=${{ github.sha }}" >> .env
           echo "REGISTRY_USER=${{ github.repository_owner }}" >> .env
-          docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans --build
           docker image prune -af
