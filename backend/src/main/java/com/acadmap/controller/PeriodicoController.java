@@ -2,19 +2,27 @@ package com.acadmap.controller;
 
 
 import com.acadmap.model.dto.periodico.ClassificacaoPeriodicoRequestDTO;
-import com.acadmap.model.dto.periodico.PeriodicoResponseDTO;
 import com.acadmap.model.dto.periodico.PeriodicoRequestDTO;
+import com.acadmap.model.dto.periodico.PeriodicoResponseDTO;
+import com.acadmap.model.dto.periodico.PeriodicoVisualizacaoDTO;
 import com.acadmap.model.entities.Periodico;
-import com.acadmap.model.entities.VeiculoPublicacao;
-import com.acadmap.repository.VeiculoPublicacaoRepository;
-import com.acadmap.service.ClassificarPeriodicoPredatorioService;
+import com.acadmap.service.ClassificarPeriodicoService;
 import com.acadmap.service.CriarPeriodicoService;
+import com.acadmap.service.PeriodicoConsultaService;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/periodicos")
@@ -23,9 +31,9 @@ import java.util.UUID;
 public class PeriodicoController {
 
   private final CriarPeriodicoService criarPeriodicoService;
-  private final ClassificarPeriodicoPredatorioService classificarPeriodicoService;
+  private final ClassificarPeriodicoService classificarPeriodicoService;
   private final VeiculoPublicacaoRepository veiculoPublicacaoRepository;
-  private final ClassificarPeriodicoPredatorioService classificarPeriodicoPredatorioService;
+  private final PeriodicoConsultaService periodicoConsultaService;
 
   @PostMapping
   public ResponseEntity<PeriodicoResponseDTO> criarPeriodico(@RequestBody PeriodicoRequestDTO dto,
@@ -45,10 +53,16 @@ public class PeriodicoController {
 
         VeiculoPublicacao veiculoPublicacao = veiculoPublicacaoRepository.findById(idPeriodico).orElseThrow();
         Periodico periodicoAtualizado = classificarPeriodicoPredatorioService.classificarPeriodico(veiculoPublicacao, classificacaoPeriodicoRequestDTO, idUser);
+   
+      PeriodicoResponseDTO periodicoResponseDTO = new PeriodicoResponseDTO(periodicoAtualizado);
+      return ResponseEntity.ok(periodicoResponseDTO);
+  }
 
-        PeriodicoResponseDTO periodicoResponseDTO = new PeriodicoResponseDTO(periodicoAtualizado);
+ @GetMapping("/{id}")
+  public ResponseEntity<PeriodicoVisualizacaoDTO> consultaPorId(@PathVariable UUID id) {
+    PeriodicoVisualizacaoDTO periodicoDto = this.periodicoConsultaService.consultaPorId(id);
+    return ResponseEntity.status(HttpStatus.OK).body(periodicoDto);
+  }
 
-        return ResponseEntity.ok(periodicoResponseDTO);
-    }
 }
 
