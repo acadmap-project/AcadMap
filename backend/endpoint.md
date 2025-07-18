@@ -195,25 +195,37 @@ X-User-Id: <UUID do usuário solicitante>
 
 ---
 
-# 📘 API - Cadastro de Evento
+# 📘 API - Evento
+
+Base URL:
+
+```
+/api/eventos
+```
+
+## ➕ 1. **Cadastrar Evento**
 
 **Endpoint:**
+
 ```
-POST /api/eventos/cadastro/
+POST /api/eventos
 ```
 
 **Descrição:**  
-Cria um novo evento no sistema, *deve ser um usuario já cadastrado no sistema*.
+Cria um novo evento no sistema, _deve ser um usuario já cadastrado no sistema_.
 
 **Headers obrigatórios:**
+
 ```http
 X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 **Path Parameters:**
+
 - `id` – UUID do usuário que está tentando inserir o evento.
 
 **Resposta:**
+
 - `202 Accepted` – Evento criado com sucesso.
 - `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
 - `400 Bad Request` – Erro na requisição.
@@ -240,6 +252,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
@@ -247,6 +260,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `linkEvento` (string): Link do evento o qual está sendo inserido.
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao evento o qual está sendo inserido
 - `linkSolSbc` (string) : Link repositório SOL-SBC referente ao evento o qual está sendo inserido.
+
 ---
 
 ## ✅ Resposta
@@ -279,6 +293,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `classificacao`, `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
@@ -286,7 +301,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` , `areaPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
 
-### Forçar inserção mesmo com erro de duplicação : 
+### Forçar inserção mesmo com erro de duplicação :
 
 ```
 POST /api/eventos/cadastro?forcar=true
@@ -294,25 +309,39 @@ POST /api/eventos/cadastro?forcar=true
 
 ---
 
-# 📘 API - Cadastro de Periodico
+# 📘 API - Periodico
+
+Base URL:
+
+```
+/api/periodicos
+```
+
+---
+
+## ➕ 1. **Cadastrar Periodico**
 
 **Endpoint:**
+
 ```
-POST /api/periodicos/cadastro
+POST /api/periodicos
 ```
 
 **Descrição:**  
-Cria um novo periódico no sistema, *deve ser um usuario já cadastrado no sistema*.
+Cria um novo periódico no sistema, _deve ser um usuario já cadastrado no sistema_.
 
 **Headers obrigatórios:**
+
 ```http
 X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 **Path Parameters:**
+
 - `id` – UUID do usuário que está tentando inserir o evento.
 
 **Resposta:**
+
 - `202 Accepted` – Evento criado com sucesso.
 - `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
 - `400 Bad Request` – Erro na requisição.
@@ -341,17 +370,19 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
-- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação. 
+- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação.
 - `percentilJcr` (Integer): Valor numérico.
 - `percentilScopus` (Integer): Valor numérico.
 - `linkJrc` (string) : Link do Jrc referente ao periódico o qual está sendo inserido
 - `linkScopus` (string) : Link repositório Scopus referente ao periodico o qual está sendo inserido.
-- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8") 
+- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8")
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao periódico o qual está sendo inserido
 - `qualisAntigo` (string) : Pontuação do Qualis antigo (Enum= "a1", "a2", "b1", "b2", "b3", "b4", "b5', "c").
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
+
 ---
 
 ## ✅ Resposta
@@ -387,6 +418,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
@@ -399,8 +431,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 POST /api/periodicos/cadastro?forcar=true
 ```
+
 ---
-
-
 
 

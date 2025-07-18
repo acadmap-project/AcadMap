@@ -17,23 +17,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/periodicos/cadastro")
+@RequestMapping("/api/periodicos")
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
 public class PeriodicoController {
 
-    private final CriarPeriodicoService criarPeriodicoService;
-    private final ClassificarPeriodicoPredatorioService classificarPeriodicoPredatorioService;
-    private final VeiculoPublicacaoRepository veiculoPublicacaoRepository;
+  private final CriarPeriodicoService criarPeriodicoService;
+  private final ClassificarPeriodicoPredatorioService classificarPeriodicoService;
+  private final VeiculoPublicacaoRepository veiculoPublicacaoRepository;
+  private final ClassificarPeriodicoPredatorioService classificarPeriodicoPredatorioService;
 
-    @PostMapping
-    public ResponseEntity<PeriodicoResponseDTO> criarPeriodico(@RequestBody PeriodicoRequestDTO dto,
-                                                               @RequestHeader("X-User-Id") UUID idUser,
-                                                               @RequestParam(defaultValue = "false") boolean forcar) {
-        System.out.println("FORCAR: " + forcar);
-        PeriodicoResponseDTO dtoresponseperiodico = this.criarPeriodicoService.criarPeriodico(dto, idUser, forcar);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dtoresponseperiodico);
-    }
+  @PostMapping
+  public ResponseEntity<PeriodicoResponseDTO> criarPeriodico(@RequestBody PeriodicoRequestDTO dto,
+      @RequestHeader("X-User-Id") UUID idUser,
+      @RequestParam(defaultValue = "false") boolean forcar) {
+    System.out.println("FORCAR: " + forcar);
+    PeriodicoResponseDTO dtoresponseperiodico =
+        this.criarPeriodicoService.criarPeriodico(dto, idUser, forcar);
+    return ResponseEntity.status(HttpStatus.CREATED).body(dtoresponseperiodico);
+  }
 
     @PatchMapping("/{idPeriodico}/classificar")
     @Deprecated
