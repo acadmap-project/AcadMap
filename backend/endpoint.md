@@ -304,10 +304,84 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/eventos/cadastro?forcar=true
+POST /api/eventos?forcar=true
 ```
 
 ---
+## 📋 2. **Detalhar evento por ID**
+
+**Endpoint:**
+
+```
+GET /api/eventos/{id}
+```
+**Descrição:**  
+Retorna os detalhes do evento solicitado via ID.
+
+---
+
+### ✅ **Exemplo de uso**
+```
+GET /api/eventos/4e8f5b70-92f3-4c21-b07b-6a5d5c6f901a
+```
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+{
+    "nome": "Symposium on Distributed Computing",
+    "h5": 50,
+    "classificacao": "a2",
+    "areasPesquisas": [
+        "Ciência da Computação",
+        "Engenharia Elétrica"
+    ],
+    "vinculoSbc": "vinculo_top_10",
+    "linkGoogleScholar": "http://scholar.google.com/sdc",
+    "linkSolSbc": "https://sol-sbc/sdc",
+    "adequacaoDefesa": "doutorado"
+}
+```
+
+---
+
+### ❌ **Possíveis Erros**
+
+#### **1. Evento não encontrado**  
+Status: `404 NOT FOUND`  
+**Resposta:**
+```json
+{
+    "path": "/api/eventos/66666666-6666-6666-6666-666666666661",
+    "error": "EVENTO_NAO_ENCONTRADO",
+    "timestamp": "2025-07-17T21:30:44.281158971",
+    "status": 404
+}
+```
+---
+
+#### **2. Evento não aceito**
+**Status:** `400 BAD REQUEST`  
+**Resposta:**
+```json
+{
+    "path": "/api/eventos/66666666-6666-6666-6666-666666666666",
+    "error": "NAO_ACEITO",
+    "timestamp": "2025-07-17T21:31:39.378190018",
+    "status": 400
+}
+```
+
+---
+
+### ✅ **Códigos de resposta**
+| Código | Descrição                                 |
+|--------|-------------------------------------------|
+| 200    | Detalhes do evento retornados com sucesso |
+| 400    | Evento existe, mas não está aceito        |
+| 404    | Evento não encontrado                     |
+
+
 
 # 📘 API - Periodico
 
@@ -429,7 +503,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/periodicos/cadastro?forcar=true
+POST /api/periodicos?forcar=true
 ```
 
 ---
