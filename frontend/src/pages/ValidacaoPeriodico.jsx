@@ -107,7 +107,7 @@ function ValidacaoPeriodicoContent() {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
     title: '',
-    message: '',
+    message: 'Parece que esse cadastro já se encontra presente no sistema. Deseja forçar o cadastro?',
     type: 'error',
   });
   const [successInfo, setSuccessInfo] = useState({
@@ -115,6 +115,46 @@ function ValidacaoPeriodicoContent() {
     message: '',
     type: 'success',
   });
+
+  const handleForceYes = () => {
+    setShowErrorPopup(false);
+    // Forçar cadastro de periódico usando o parâmetro ?forcar=true
+    fetch('http://localhost:8080/api/periodicos/cadastro?forcar=true', {
+      method: 'POST',
+      headers: {
+        'X-User-Id': loggedIn.id,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(periodicoData),
+    })
+      .then(async response => {
+        if (!response.ok) {
+          const errorData = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorData}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setSuccessInfo({
+          title: 'Periódico Cadastrado',
+          message: 'O periódico foi cadastrado com sucesso no sistema.',
+          type: 'success',
+        });
+        setShowSuccessPopup(true);
+      })
+      .catch(error => {
+        setErrorInfo({
+          title: 'Erro!',
+          message: 'Erro ao forçar o cadastro do periódico: ' + error.message,
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+      });
+  };
+
+  const handleForceNo = () => {
+    setShowErrorPopup(false);
+  };
 
   // Get periodico data from location state (passed from form)
   const [periodicoData, _] = useState(location.state || null);
@@ -226,7 +266,7 @@ function ValidacaoPeriodicoContent() {
         <SemPermissao />
       ) : (
         <>
-          <h1 className="mt-8 mb-8">Cadastro de Periódicos</h1>
+          <h1 className="mt-20 mb-8">Cadastro de Periódicos</h1>
 
           <div
             className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
@@ -364,6 +404,10 @@ function ValidacaoPeriodicoContent() {
             title={errorInfo.title}
             message={errorInfo.message}
             type={errorInfo.type}
+            className="mt-12"
+            forceChoice={errorInfo.message === 'Parece que esse cadastro já se encontra presente no sistema. Deseja forçar o cadastro?'}
+            onForceYes={handleForceYes}
+            onForceNo={handleForceNo}
           />
 
           <Popup
