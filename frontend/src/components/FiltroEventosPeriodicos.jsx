@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
-import { Controller, set, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 const normalizeToNull = obj => {
   if (!obj || typeof obj !== 'object') return obj;
@@ -85,9 +85,10 @@ function FiltroEventosPeriodicos({ onResultados }) {
 
       setShowErrorPopup(true);
 
-
       eventosData = [];
       periodicosData = [];
+
+      console.error('Erro ao buscar eventos e periódicos:', err);
     }
 
     if (onResultados) {
