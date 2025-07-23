@@ -3,7 +3,9 @@ package com.acadmap.controller;
 
 import com.acadmap.model.dto.periodico.*;
 import com.acadmap.model.entities.Periodico;
-import com.acadmap.service.ClassificarPeriodicoService;
+import com.acadmap.model.entities.VeiculoPublicacao;
+import com.acadmap.repository.VeiculoPublicacaoRepository;
+import com.acadmap.service.ClassificarPeriodicoPredatorioService;
 import com.acadmap.service.CriarPeriodicoService;
 import com.acadmap.service.PeriodicoConsultaService;
 
@@ -30,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PeriodicoController {
 
   private final CriarPeriodicoService criarPeriodicoService;
-  private final ClassificarPeriodicoService classificarPeriodicoService;
+  private final ClassificarPeriodicoPredatorioService classificarPeriodicoPredatorioService;
   private final VeiculoPublicacaoRepository veiculoPublicacaoRepository;
   private final PeriodicoConsultaService periodicoConsultaService;
 
