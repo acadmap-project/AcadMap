@@ -9,6 +9,7 @@ import RegistrosPendentes from './pages/RegistrosPendentes';
 import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
 import CadastroPeriodico from './pages/CadastroPeriodico';
 import DetalhePendente from './pages/DetalhePendente';
+import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 
 const App = () => {
   return (
@@ -16,7 +17,8 @@ const App = () => {
       <div className="App w-screen h-screen">
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<ConsultaEventosPeriodicos />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/cadastro-evento" element={<CadastroEvento />} />
             <Route path="/cadastro-periodico" element={<CadastroPeriodico />} />
             <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
