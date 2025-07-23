@@ -1,68 +1,83 @@
-import FiltroEventosPeriodicos from "../components/FiltroEventosPeriodicos";
-import HeaderSistema from "../components/HeaderSistema";
-import { useState } from "react";
-import useLogin from "../hooks/userAuth";
+import FiltroEventosPeriodicos from '../components/FiltroEventosPeriodicos';
+import HeaderSistema from '../components/HeaderSistema';
+import { useState } from 'react';
+import useLogin from '../hooks/userAuth';
 
 function ConsultaEventosPeriodicos() {
+  const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
+  const onResultados = ({ eventos, periodicos }) => {
+    setResultados({
+      eventos: Array.isArray(eventos) ? eventos : [],
+      periodicos: Array.isArray(periodicos) ? periodicos : [],
+    });
+  };
+  const { loggedIn } = useLogin();
+  const hasResultados =
+    resultados.eventos.length > 0 || resultados.periodicos.length > 0;
 
-    const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
+  return (
+    <>
+      <HeaderSistema
+        userName={loggedIn ? loggedIn.userName : 'Usuário Desconhecido'}
+        userType={loggedIn ? loggedIn.userType : 'NÃO LOGADO'}
+      />
 
-    const onResultados = ({ eventos, periodicos }) => {
-        setResultados({
-            eventos: Array.isArray(eventos) ? eventos : [],
-            periodicos: Array.isArray(periodicos) ? periodicos : []
-        });
-    };
-    const { loggedIn } = useLogin();
+      <h1 className="mt-8 mb-12 text-center text-4xl font-normal">
+        Consulta de Eventos e Periódicos
+      </h1>
 
-    return (
-        <>
-            <HeaderSistema
-                userName={loggedIn ? loggedIn.userName : "Usuário Desconhecido"}
-                userType={loggedIn ? loggedIn.userType : "NÃO LOGADO"}
-            />
-
-            <h1 className="mt-8 mb-12">Consulta de Eventos e Periódicos</h1>
-            <div className="w-full flex justify-center">
-                <FiltroEventosPeriodicos onResultados={onResultados} />
-            </div>
-
-            <div className="w-full max-w-5xl mx-auto mt-8">
-                {resultados !== null && (
-                    <table className="w-full border">
-                        <thead>
-                            <tr>
-                                <th className="border px-2 py-1">Tipo</th>
-                                <th className="border px-2 py-1">Nome</th>
-                                <th className="border px-2 py-1">Área</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {[...resultados.eventos.map(ev => ({
-                                id: ev.id,
-                                tipo: "Evento",
-                                nome: ev.nome,
-                                areaConhecimento: ev.areaConhecimento
-                            })),
-                            ...resultados.periodicos.map(p => ({
-                                id: p.id,
-                                tipo: "Periódico",
-                                nome: p.nome,
-                                areaConhecimento: p.areaConhecimento
-                            }))]
-                                .map(item => (
-                                    <tr key={item.tipo + "-" + item.id}>
-                                        <td className="border px-2 py-1">{item.tipo}</td>
-                                        <td className="border px-2 py-1">{item.nome}</td>
-                                        <td className="border px-2 py-1">{item.areaConhecimento}</td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </table>
-                )}
-            </div>
-        </>
-    );
+      <div
+        className={`w-full flex ${hasResultados ? 'flex-col md:flex-row justify-center items-start gap-8' : 'justify-center'}`}
+      >
+        <div
+          className={
+            hasResultados
+              ? 'md:max-w-xs md:min-w-[20rem] mb-4 md:mb-0'
+              : 'w-full'
+          }
+        >
+          <FiltroEventosPeriodicos onResultados={onResultados} />
+        </div>
+        {hasResultados && (
+          <div className="w-full md:flex-1 md:max-w-5xl">
+            <table className="w-full border">
+              <thead>
+                <tr className="bg-black text-white">
+                  <th className="border px-2 py-1">Tipo</th>
+                  <th className="border px-2 py-1">Nome</th>
+                  <th className="border px-2 py-1">Classificação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ...resultados.eventos.map(ev => ({
+                    id: ev.idVeiculo,
+                    tipo: ev.tipo === 'evento' ? 'Evento' : ev.tipo,
+                    nome: ev.nome,
+                    areaConhecimento: ev.areaConhecimento || '',
+                    classificacao: ev.classificacao || '',
+                  })),
+                  ...resultados.periodicos.map(p => ({
+                    id: p.idVeiculo,
+                    tipo: p.tipo === 'periodico' ? 'Periódico' : p.tipo,
+                    nome: p.nome,
+                    areaConhecimento: p.areaConhecimento || '',
+                    classificacao: p.classificacao || '',
+                  })),
+                ].map(item => (
+                  <tr key={item.tipo + '-' + item.id}>
+                    <td className="border px-2 py-1">{item.tipo}</td>
+                    <td className="border px-2 py-1">{item.nome}</td>
+                    <td className="border px-2 py-1">{item.classificacao}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </>
+  );
 }
 
 export default ConsultaEventosPeriodicos;

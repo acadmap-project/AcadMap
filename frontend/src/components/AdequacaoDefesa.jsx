@@ -2,20 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const AdequacaoDefesa = ({ adequacaoDefesa }) => {
-  const getAdequacaoStyle = (adequacao) => {
+  const getAdequacaoStyle = adequacao => {
     const styles = {
       nenhum: 'text-red-600 font-medium',
       mestrado: 'text-yellow-600 font-medium',
-      mestrado_doutorado: 'text-green-600 font-medium'
+      mestrado_doutorado: 'text-green-600 font-medium',
     };
     return styles[adequacao] || styles.nenhum;
   };
 
-  const formatarAdequacao = (adequacao) => {
+  const formatarAdequacao = adequacao => {
     const formatacao = {
       nenhum: 'Nenhum',
       mestrado: 'Apenas Mestrado',
-      mestrado_doutorado: 'Mestrado e Doutorado'
+      mestrado_doutorado: 'Mestrado e Doutorado',
     };
     return formatacao[adequacao] || 'Nenhum';
   };
@@ -33,7 +33,8 @@ const AdequacaoDefesa = ({ adequacaoDefesa }) => {
 };
 
 AdequacaoDefesa.propTypes = {
-  adequacaoDefesa: PropTypes.oneOf(['nenhum', 'mestrado', 'mestrado_doutorado']).isRequired
+  adequacaoDefesa: PropTypes.oneOf(['nenhum', 'mestrado', 'mestrado_doutorado'])
+    .isRequired,
 };
 
 export default AdequacaoDefesa;

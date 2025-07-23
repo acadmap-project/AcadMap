@@ -1,8 +1,11 @@
 import { Outlet, Link } from 'react-router-dom';
 import pfpImage from '../assets/pfp.svg';
 import EventPeriodDropdown from './EventPeriodDropdown';
+import { useLocation } from 'react-router-dom';
 
 function HeaderSistema({ userType, userName }) {
+  const location = useLocation();
+
   return (
     <>
       <header>
@@ -20,24 +23,25 @@ function HeaderSistema({ userType, userName }) {
               />
               <span
                 className="text-black text-sm"
-                style={{ fontFamily: "Poppins", fontWeight: "300" }}
+                style={{ fontFamily: 'Poppins', fontWeight: '300' }}
               >
-                {userName || "Usuário Desconhecido"} - {userType || "NÃO LOGADO"}
+                {userName || 'Usuário Desconhecido'} -{' '}
+                {userType || 'NÃO LOGADO'}
               </span>
             </Link>
 
             <ul
               className="flex flex-row space-x-4 items-center ml-6"
-              style={{ fontFamily: "Poppins", fontWeight: "300" }}
+              style={{ fontFamily: 'Poppins', fontWeight: '300' }}
             >
-              {(userType === "AUDITOR" ||
-                userType === "PESQUISADOR" ||
-                userType === "ADMINISTRADOR") && (
-                  <li>
-                    <EventPeriodDropdown />
-                  </li>
-                )}
-              {(userType === "AUDITOR" || userType === "ADMINISTRADOR") && (
+              {(userType === 'AUDITOR' ||
+                userType === 'PESQUISADOR' ||
+                userType === 'ADMINISTRADOR') && (
+                <li>
+                  <EventPeriodDropdown />
+                </li>
+              )}
+              {(userType === 'AUDITOR' || userType === 'ADMINISTRADOR') && (
                 <li>
                   <Link
                     to="/registros-pendentes"
@@ -57,15 +61,17 @@ function HeaderSistema({ userType, userName }) {
                   Cadastrar Usuário
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/"
-                  className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                  aria-current="page"
-                >
-                  Consultar Eventos e Periódicos
-                </Link>
-              </li>
+              {location.pathname !== '/' && (
+                <li>
+                  <Link
+                    to="/"
+                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                    aria-current="page"
+                  >
+                    Consultar Eventos e Periódicos
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
           <Link
