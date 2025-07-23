@@ -23,7 +23,6 @@ const normalizeToNull = obj => {
 function FiltroEventosPeriodicos({ onResultados }) {
   const [open, setOpen] = React.useState(false);
   const areas = useAreas();
-  let hasResultados = false;
   const { control, register, handleSubmit } = useForm();
   const minimalClassification = [
     { value: 'A1', label: 'A1' },
@@ -82,7 +81,6 @@ function FiltroEventosPeriodicos({ onResultados }) {
         eventos: eventosData,
         periodicos: periodicosData,
       });
-      hasResultados = true;
     }
   };
 
