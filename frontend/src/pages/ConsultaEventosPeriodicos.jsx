@@ -5,7 +5,6 @@ import useLogin from '../hooks/userAuth';
 import { Link } from 'react-router-dom';
 
 function ConsultaEventosPeriodicos() {
-
   const [busca, setBusca] = useState(false);
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const onResultados = ({ eventos, periodicos }) => {
@@ -16,7 +15,8 @@ function ConsultaEventosPeriodicos() {
     setBusca(true);
   };
   const { loggedIn } = useLogin();
-  const hasResultados = resultados.eventos.length > 0 || resultados.periodicos.length > 0;
+  const hasResultados =
+    resultados.eventos.length > 0 || resultados.periodicos.length > 0;
 
   useEffect(() => {
     console.log('Resultados atualizados:', resultados);
@@ -34,10 +34,11 @@ function ConsultaEventosPeriodicos() {
       </h1>
 
       <div
-        className={`w-full flex ${hasResultados
+        className={`w-full flex ${
+          hasResultados
             ? 'flex-col md:flex-row justify-center items-start gap-8'
             : 'justify-center'
-          }`}
+        }`}
       >
         <div
           className={
@@ -51,37 +52,48 @@ function ConsultaEventosPeriodicos() {
           {!hasResultados && busca && (
             <div className="flex justify-center mt-4">
               <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
-                Nenhum evento ou periódico aprovado foi encontrado com os critérios informados
+                Nenhum evento ou periódico aprovado foi encontrado com os
+                critérios informados
               </p>
             </div>
           )}
         </div>
-        
+
         {hasResultados && (
-          <div className="w-full md:flex-1 md:max-w-5xl">
-            <table className="w-full border">
+          <div className="w-full md:flex-1 overflow-x-auto">
+            <table className="w-full border min-w-max">
               <thead>
                 <tr className="bg-black text-white">
                   <th className="border px-2 py-1">Tipo</th>
                   <th className="border px-2 py-1">Nome</th>
+                  <th className="border px-2 py-1">Área de Conhecimento</th>
                   <th className="border px-2 py-1">Classificação</th>
+                  <th className="border px-2 py-1">Vínculo SBC</th>
+                  <th className="border px-2 py-1">Adequação para Defesas</th>
+                  <th className="border px-2 py-1">H5/Percentil</th>
                 </tr>
               </thead>
               <tbody>
                 {[
                   ...(resultados.eventos || []).map(ev => ({
                     id: ev.idVeiculo,
-                    tipo: ev.tipo === 'evento' ? 'Evento' : ev.tipo,
+                    tipo: 'Evento',
                     nome: ev.nome,
-                    areaConhecimento: ev.areaConhecimento || '',
+                    areaConhecimento: ev.areaPesquisa || '',
                     classificacao: ev.classificacao || '',
+                    vinculoSBC: ev.vinculoSBC || '',
+                    adequacaoDefesa: ev.adequacaoDefesa || '',
+                    h5Percentil: ev.h5 || ev.percentil || '',
                   })),
                   ...(resultados.periodicos || []).map(p => ({
                     id: p.idVeiculo,
-                    tipo: p.tipo === 'periodico' ? 'Periódico' : p.tipo,
+                    tipo: 'Periódico',
                     nome: p.nome,
-                    areaConhecimento: p.areaConhecimento || '',
+                    areaConhecimento: p.areaPesquisa || '',
                     classificacao: p.classificacao || '',
+                    vinculoSBC: p.vinculoSBC || '',
+                    adequacaoDefesa: p.adequacaoDefesa || '',
+                    h5Percentil: p.h5 || p.percentil || '',
                   })),
                 ].map(item => (
                   <tr key={item.tipo + '-' + item.id}>
@@ -98,7 +110,13 @@ function ConsultaEventosPeriodicos() {
                       </Link>
                     </td>
                     <td className="border px-2 py-1">{item.nome}</td>
+                    <td className="border px-2 py-1">
+                      {item.areaConhecimento}
+                    </td>
                     <td className="border px-2 py-1">{item.classificacao}</td>
+                    <td className="border px-2 py-1">{item.vinculoSBC}</td>
+                    <td className="border px-2 py-1">{item.adequacaoDefesa}</td>
+                    <td className="border px-2 py-1">{item.h5Percentil}</td>
                   </tr>
                 ))}
               </tbody>
