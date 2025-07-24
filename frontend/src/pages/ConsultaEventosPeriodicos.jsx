@@ -1,7 +1,8 @@
 import FiltroEventosPeriodicos from '../components/FiltroEventosPeriodicos';
 import HeaderSistema from '../components/HeaderSistema';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useLogin from '../hooks/userAuth';
+import { Link } from 'react-router-dom';
 
 function ConsultaEventosPeriodicos() {
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
@@ -14,6 +15,10 @@ function ConsultaEventosPeriodicos() {
   const { loggedIn } = useLogin();
   const hasResultados =
     resultados.eventos.length > 0 || resultados.periodicos.length > 0;
+
+    useEffect(() => {
+      console.log('Resultados atualizados:', resultados);
+    }, [resultados])
 
   return (
     <>
@@ -66,7 +71,11 @@ function ConsultaEventosPeriodicos() {
                   })),
                 ].map(item => (
                   <tr key={item.tipo + '-' + item.id}>
-                    <td className="border px-2 py-1">{item.tipo}</td>
+                    <td className="border px-2 py-1">
+                      <Link className='underline decoration-solid cursor-pointer' to={item.tipo === 'Evento' ? `/evento/${item.id}` : `/periodico/${item.id}`}>
+                        {item.tipo}
+                      </Link>
+                    </td>
                     <td className="border px-2 py-1">{item.nome}</td>
                     <td className="border px-2 py-1">{item.classificacao}</td>
                   </tr>
