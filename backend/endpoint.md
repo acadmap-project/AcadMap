@@ -415,14 +415,25 @@ Retorna uma lista de eventos resumidos. Se nenhum filtro for aplicado, retorna t
   {
     "idVeiculo": "99999999-dddd-dddd-dddd-dddddddddddd",
     "nome": "Symposium on Distributed Computing",
-    "tipo": "evento",
-    "classificacao": "a2"
+    "classificacao": "a2",
+    "h5": 50,
+    "adequacaoDefesa": "doutorado",
+    "vinculoSBC": "vinculo_top_10",
+    "areaPesquisa": [
+      "Ciência da Computação",
+      "Engenharia Elétrica"
+    ]
   },
   {
-    "idVeiculo": "11111111-1111-1111-1111-11111111110a",
+    "idVeiculo": "11111111-1111-1111-1111-111111111109",
     "nome": "Linux Kernel Summit",
-    "tipo": "evento",
-    "classificacao": "a2"
+    "classificacao": "a2",
+    "h5": 55,
+    "adequacaoDefesa": "mestrado_doutorado",
+    "vinculoSBC": "vinculo_comum",
+    "areaPesquisa": [
+      "Ciência da Computação"
+    ]
   }
 ]
 ````
@@ -738,16 +749,27 @@ Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retor
   {
     "idVeiculo": "55555555-5555-5555-5555-555555555555",
     "nome": "Journal of Advanced AI",
-    "tipo": "periodico",
     "classificacao": "a1",
-    "flagPredatorio": false
+    "flagPredatorio": false,
+    "h5": 10,
+    "adequacaoDefesa": "doutorado",
+    "vinculoSBC": "vinculo_top_10",
+    "areaPesquisa": [
+      "Ciência da Computação",
+      "Engenharia Elétrica"
+    ]
   },
   {
     "idVeiculo": "11111111-1111-1111-1111-111111111101",
     "nome": "The Art of Computer Programming Journal",
-    "tipo": "periodico",
     "classificacao": "a1",
-    "flagPredatorio": false
+    "flagPredatorio": false,
+    "h5": null,
+    "adequacaoDefesa": "doutorado",
+    "vinculoSBC": "vinculo_top_10",
+    "areaPesquisa": [
+      "Ciência da Computação"
+    ]
   }
 ]
 ````

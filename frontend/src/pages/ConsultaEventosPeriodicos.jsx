@@ -5,16 +5,18 @@ import useLogin from '../hooks/userAuth';
 import { Link } from 'react-router-dom';
 
 function ConsultaEventosPeriodicos() {
+
+  const [busca, setBusca] = useState(false);
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const onResultados = ({ eventos, periodicos }) => {
     setResultados({
       eventos: Array.isArray(eventos) ? eventos : [],
       periodicos: Array.isArray(periodicos) ? periodicos : [],
     });
+    setBusca(true);
   };
   const { loggedIn } = useLogin();
-  const hasResultados =
-    resultados.eventos.length > 0 || resultados.periodicos.length > 0;
+  const hasResultados = resultados.eventos.length > 0 || resultados.periodicos.length > 0;
 
   useEffect(() => {
     console.log('Resultados atualizados:', resultados);
@@ -32,7 +34,10 @@ function ConsultaEventosPeriodicos() {
       </h1>
 
       <div
-        className={`w-full flex ${hasResultados ? 'flex-col md:flex-row justify-center items-start gap-8' : 'justify-center'}`}
+        className={`w-full flex ${hasResultados
+            ? 'flex-col md:flex-row justify-center items-start gap-8'
+            : 'justify-center'
+          }`}
       >
         <div
           className={
@@ -42,7 +47,16 @@ function ConsultaEventosPeriodicos() {
           }
         >
           <FiltroEventosPeriodicos onResultados={onResultados} />
+
+          {!hasResultados && busca && (
+            <div className="flex justify-center mt-4">
+              <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
+                Nenhum evento ou periódico aprovado foi encontrado com os critérios informados
+              </p>
+            </div>
+          )}
         </div>
+        
         {hasResultados && (
           <div className="w-full md:flex-1 md:max-w-5xl">
             <table className="w-full border">
@@ -55,14 +69,14 @@ function ConsultaEventosPeriodicos() {
               </thead>
               <tbody>
                 {[
-                  ...resultados.eventos.map(ev => ({
+                  ...(resultados.eventos || []).map(ev => ({
                     id: ev.idVeiculo,
                     tipo: ev.tipo === 'evento' ? 'Evento' : ev.tipo,
                     nome: ev.nome,
                     areaConhecimento: ev.areaConhecimento || '',
                     classificacao: ev.classificacao || '',
                   })),
-                  ...resultados.periodicos.map(p => ({
+                  ...(resultados.periodicos || []).map(p => ({
                     id: p.idVeiculo,
                     tipo: p.tipo === 'periodico' ? 'Periódico' : p.tipo,
                     nome: p.nome,
