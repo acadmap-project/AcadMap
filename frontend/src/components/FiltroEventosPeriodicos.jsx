@@ -173,7 +173,6 @@ function FiltroEventosPeriodicos({ onResultados }) {
                   </div>
                 </label>
               </div>
-
               <div>
                 <label className="block font-semibold uppercase text-xs mb-1">
                   Adequação para Defesas
