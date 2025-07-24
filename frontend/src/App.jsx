@@ -26,7 +26,10 @@ const App = () => {
               <Route path="/" element={<ConsultaEventosPeriodicos />} />
               <Route path="/home" element={<Home />} />
               <Route path="/cadastro-evento" element={<CadastroEvento />} />
-              <Route path="/cadastro-periodico" element={<CadastroPeriodico />} />
+              <Route
+                path="/cadastro-periodico"
+                element={<CadastroPeriodico />}
+              />
               <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
               <Route
                 path="/registros-pendentes"

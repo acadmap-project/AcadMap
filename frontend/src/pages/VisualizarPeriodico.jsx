@@ -2,35 +2,39 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
+import useAreas from '../hooks/useAreas';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
 
-
-const fetchPeriodicoData = async (id) => {
+const fetchPeriodicoData = async id => {
   const response = await fetch(`http://localhost:8080/api/periodicos/${id}`);
   if (!response.ok) {
     throw new Error('Erro ao buscar dados do periódico');
   }
   return await response.json();
-}
+};
 
 const VisualizarPeriodico = () => {
   const { loggedIn } = useLogin();
   const { id } = useParams();
+  const areas = useAreas();
 
   const navigate = useNavigate();
 
-  const { data: periodicoData, isLoading, isError } = useQuery({
+  const { data: periodicoData } = useQuery({
     queryKey: ['periodico', id],
     queryFn: () => fetchPeriodicoData(id),
-  })
+  });
 
   useEffect(() => {
     console.log('Dados do periódico:', periodicoData);
-  }, [periodicoData])
+  }, [periodicoData]);
+
+  const getAreaName = areaId => {
+    const area = areas.find(a => a.value === areaId);
+    return area ? area.label : areaId;
+  };
 
   return (
     <>
@@ -38,11 +42,11 @@ const VisualizarPeriodico = () => {
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      {periodicoData &&
+      {periodicoData && (
         <>
           <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
 
-          <div className='rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12'>
+          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12">
             Dados completos do Periódico {periodicoData.nome}
           </div>
 
@@ -60,29 +64,27 @@ const VisualizarPeriodico = () => {
               {periodicoData.issn || 'N/A'}
             </div>
 
-            {
-              periodicoData.percentilJcr &&
+            {periodicoData.percentilJcr && (
               <div className="text-sm text-gray-900">
                 <span className="font-medium">PERCENTIL JCR:</span>{' '}
                 {periodicoData.percentilJcr}
               </div>
-            }
+            )}
 
-            {
-              periodicoData.percentilScopus &&
+            {periodicoData.percentilScopus && (
               <div className="text-sm text-gray-900">
                 <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
                 {periodicoData.percentilScopus}
               </div>
-            }
+            )}
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
               {periodicoData.areasPesquisaIds &&
-                periodicoData.areasPesquisaIds.length > 0
+              periodicoData.areasPesquisaIds.length > 0
                 ? periodicoData.areasPesquisaIds
-                  .map(areaId => getAreaName(areaId))
-                  .join(', ')
+                    .map(areaId => getAreaName(areaId))
+                    .join(', ')
                 : 'N/A'}
             </div>
 
@@ -125,7 +127,7 @@ const VisualizarPeriodico = () => {
               )}
             </div>
 
-            {periodicoData.linkJcr &&
+            {periodicoData.linkJcr && (
               <div className="text-sm text-gray-900">
                 <span className="font-medium">LINK JCR:</span>{' '}
                 <a
@@ -137,13 +139,13 @@ const VisualizarPeriodico = () => {
                   {periodicoData.linkJcr}
                 </a>
               </div>
-            }
+            )}
 
-
-            {
-              periodicoData.linkScopus &&
+            {periodicoData.linkScopus && (
               <div className="text-sm text-gray-900">
-                <span className="font-medium">LINK DE REPOSITÓRIO (SCOPUS):</span>{' '}
+                <span className="font-medium">
+                  LINK DE REPOSITÓRIO (SCOPUS):
+                </span>{' '}
                 <a
                   href={periodicoData.linkScopus}
                   target="_blank"
@@ -152,17 +154,17 @@ const VisualizarPeriodico = () => {
                 >
                   {periodicoData.linkScopus}
                 </a>
-
               </div>
-            }
+            )}
 
-            {
-              periodicoData.qualisAntigo &&
+            {periodicoData.qualisAntigo && (
               <div className="text-sm text-gray-900">
-                <span className="font-medium">NOTA NO ANTIGO QUALIS CAPES:</span>
+                <span className="font-medium">
+                  NOTA NO ANTIGO QUALIS CAPES:
+                </span>
                 {periodicoData.qualisAntigo.toUpperCase()}
               </div>
-            }
+            )}
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
@@ -170,7 +172,9 @@ const VisualizarPeriodico = () => {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):</span>{' '}
+              <span className="font-medium">
+                ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
+              </span>{' '}
               {periodicoData.adequacaoDefesa.toUpperCase()}
             </div>
 
@@ -190,9 +194,9 @@ const VisualizarPeriodico = () => {
             </button>
           </div>
         </>
-      }
+      )}
     </>
-  )
-}
+  );
+};
 
 export default VisualizarPeriodico;

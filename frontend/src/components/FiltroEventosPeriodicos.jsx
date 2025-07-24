@@ -147,7 +147,7 @@ function FiltroEventosPeriodicos({ onResultados }) {
                     {...register('vinculoSbcCheckbox', {
                       onChange: e => {
                         if (!e.target.checked) {
-                         // setValue('vinculoSbc', '');
+                          // setValue('vinculoSbc', '');
                         }
                       },
                     })}

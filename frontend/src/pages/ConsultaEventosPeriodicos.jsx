@@ -16,9 +16,9 @@ function ConsultaEventosPeriodicos() {
   const hasResultados =
     resultados.eventos.length > 0 || resultados.periodicos.length > 0;
 
-    useEffect(() => {
-      console.log('Resultados atualizados:', resultados);
-    }, [resultados])
+  useEffect(() => {
+    console.log('Resultados atualizados:', resultados);
+  }, [resultados]);
 
   return (
     <>
@@ -72,7 +72,14 @@ function ConsultaEventosPeriodicos() {
                 ].map(item => (
                   <tr key={item.tipo + '-' + item.id}>
                     <td className="border px-2 py-1">
-                      <Link className='underline decoration-solid cursor-pointer' to={item.tipo === 'Evento' ? `/evento/${item.id}` : `/periodico/${item.id}`}>
+                      <Link
+                        className="underline decoration-solid cursor-pointer"
+                        to={
+                          item.tipo === 'Evento'
+                            ? `/evento/${item.id}`
+                            : `/periodico/${item.id}`
+                        }
+                      >
                         {item.tipo}
                       </Link>
                     </td>

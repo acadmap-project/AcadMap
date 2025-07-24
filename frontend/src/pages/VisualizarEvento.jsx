@@ -3,19 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
 
-
-const fetcheventoData = async (id) => {
+const fetcheventoData = async id => {
   const response = await fetch(`http://localhost:8080/api/eventos/${id}`);
   if (!response.ok) {
     throw new Error('Erro ao buscar dados do periódico');
   }
   return await response.json();
-}
+};
 
 const VisualizarPeriodico = () => {
   const { loggedIn } = useLogin();
@@ -23,14 +20,14 @@ const VisualizarPeriodico = () => {
 
   const navigate = useNavigate();
 
-  const { data: eventoData, isLoading, isError } = useQuery({
+  const { data: eventoData } = useQuery({
     queryKey: ['periodico', id],
     queryFn: () => fetcheventoData(id),
-  })
+  });
 
   useEffect(() => {
     console.log('Dados do periódico:', eventoData);
-  }, [eventoData])
+  }, [eventoData]);
 
   return (
     <>
@@ -38,11 +35,11 @@ const VisualizarPeriodico = () => {
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      {eventoData &&
+      {eventoData && (
         <>
           <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
 
-          <div className='rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12'>
+          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12">
             Dados completos do Evento {eventoData.nome}
           </div>
 
@@ -60,12 +57,10 @@ const VisualizarPeriodico = () => {
               {eventoData.h5 || 'N/A'}
             </div>
 
-
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
               {eventoData.areasPesquisas && eventoData.areasPesquisas.length > 0
-                ? eventoData.areasPesquisas
-                  .join(', ')
+                ? eventoData.areasPesquisas.join(', ')
                 : 'N/A'}
             </div>
 
@@ -74,19 +69,16 @@ const VisualizarPeriodico = () => {
               {eventoData.vinculoSbc || 'N/A'}
             </div>
 
-            {
-              eventoData.linkSolSbc &&
+            {eventoData.linkSolSbc && (
               <div className="text-sm text-gray-900">
                 <span className="font-medium">LINK DO SOL-SBC:</span>{' '}
                 {eventoData.linkSolSbc}
               </div>
-            }
+            )}
 
-            {eventoData.linkGoogleScholar &&
+            {eventoData.linkGoogleScholar && (
               <div className="text-sm text-gray-900">
-                <span className="font-medium">
-                  LINK DO GOOGLE SCHOLAR:
-                </span>{' '}
+                <span className="font-medium">LINK DO GOOGLE SCHOLAR:</span>{' '}
                 <a
                   href={eventoData.linkGoogleScholar}
                   target="_blank"
@@ -96,7 +88,7 @@ const VisualizarPeriodico = () => {
                   {eventoData.linkGoogleScholar}
                 </a>
               </div>
-            }
+            )}
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
@@ -104,7 +96,9 @@ const VisualizarPeriodico = () => {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):</span>{' '}
+              <span className="font-medium">
+                ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
+              </span>{' '}
               {eventoData.adequacaoDefesa.toUpperCase()}
             </div>
 
@@ -124,9 +118,9 @@ const VisualizarPeriodico = () => {
             </button>
           </div>
         </>
-      }
+      )}
     </>
-  )
-}
+  );
+};
 
 export default VisualizarPeriodico;
