@@ -109,11 +109,11 @@ function ConsultaEventosPeriodicos() {
         )}
         {!showBusca && hasResultados && (
           <div className="w-full flex flex-col items-center">
-            <div className="w-full md:flex-1 overflow-x-auto mt-8">
-              <table className="w-full border min-w-max">
+            <div className="w-full flex justify-center mt-8">
+              <table className="border min-w-max mx-auto">
                 <thead>
                   <tr className="bg-black text-white">
-                    <th className="border px-2 py-1">Tipo</th>
+                    {/* coluna Tipo removida */}
                     <th className="border px-2 py-1">Nome</th>
                     <th className="border px-2 py-1">
                       <span>
@@ -164,6 +164,7 @@ function ConsultaEventosPeriodicos() {
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
+                      {/* coluna Tipo removida */}
                       <td className="border px-2 py-1">
                         <Link
                           className="underline decoration-solid cursor-pointer"
@@ -173,10 +174,9 @@ function ConsultaEventosPeriodicos() {
                               : `/periodico/${item.id}`
                           }
                         >
-                          {item.tipo}
+                          {item.nome}
                         </Link>
                       </td>
-                      <td className="border px-2 py-1">{item.nome}</td>
                       <td className="border px-2 py-1">
                         {Array.isArray(item.areaConhecimento)
                           ? item.areaConhecimento.map((area, idx) => (
