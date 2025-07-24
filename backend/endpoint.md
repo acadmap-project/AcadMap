@@ -195,25 +195,37 @@ X-User-Id: <UUID do usuário solicitante>
 
 ---
 
-# 📘 API - Cadastro de Evento
+# 📘 API - Evento
+
+Base URL:
+
+```
+/api/eventos
+```
+
+## ➕ 1. **Cadastrar Evento**
 
 **Endpoint:**
+
 ```
-POST /api/eventos/cadastro/
+POST /api/eventos
 ```
 
 **Descrição:**  
-Cria um novo evento no sistema, *deve ser um usuario já cadastrado no sistema*.
+Cria um novo evento no sistema, _deve ser um usuario já cadastrado no sistema_.
 
 **Headers obrigatórios:**
+
 ```http
 X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 **Path Parameters:**
+
 - `id` – UUID do usuário que está tentando inserir o evento.
 
 **Resposta:**
+
 - `202 Accepted` – Evento criado com sucesso.
 - `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
 - `400 Bad Request` – Erro na requisição.
@@ -240,6 +252,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
@@ -247,6 +260,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `linkEvento` (string): Link do evento o qual está sendo inserido.
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao evento o qual está sendo inserido
 - `linkSolSbc` (string) : Link repositório SOL-SBC referente ao evento o qual está sendo inserido.
+
 ---
 
 ## ✅ Resposta
@@ -279,6 +293,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `classificacao`, `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
@@ -286,33 +301,250 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` , `areaPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
 
-### Forçar inserção mesmo com erro de duplicação : 
+### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/eventos/cadastro?forcar=true
+POST /api/eventos?forcar=true
+```
+
+---
+## 📋 2. **Detalhar evento por ID**
+
+**Endpoint:**
+
+```
+GET /api/eventos/{id}
+```
+**Descrição:**  
+Retorna os detalhes do evento solicitado via ID.
+
+---
+
+### ✅ **Exemplo de uso**
+```
+GET /api/eventos/4e8f5b70-92f3-4c21-b07b-6a5d5c6f901a
+```
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+{
+    "nome": "Symposium on Distributed Computing",
+    "h5": 50,
+    "classificacao": "a2",
+    "areasPesquisas": [
+        "Ciência da Computação",
+        "Engenharia Elétrica"
+    ],
+    "vinculoSbc": "vinculo_top_10",
+    "linkGoogleScholar": "http://scholar.google.com/sdc",
+    "linkSolSbc": "https://sol-sbc/sdc",
+    "adequacaoDefesa": "doutorado"
+}
 ```
 
 ---
 
-# 📘 API - Cadastro de Periodico
+### ❌ **Possíveis Erros**
+
+#### **1. Evento não encontrado**  
+Status: `404 NOT FOUND`  
+**Resposta:**
+```json
+{
+    "path": "/api/eventos/66666666-6666-6666-6666-666666666661",
+    "error": "EVENTO_NAO_ENCONTRADO",
+    "timestamp": "2025-07-17T21:30:44.281158971",
+    "status": 404
+}
+```
+---
+
+#### **2. Evento não aceito**
+**Status:** `400 BAD REQUEST`  
+**Resposta:**
+```json
+{
+    "path": "/api/eventos/66666666-6666-6666-6666-666666666666",
+    "error": "NAO_ACEITO",
+    "timestamp": "2025-07-17T21:31:39.378190018",
+    "status": 400
+}
+```
+
+---
+
+### ✅ **Códigos de resposta**
+| Código | Descrição                                 |
+|--------|-------------------------------------------|
+| 200    | Detalhes do evento retornados com sucesso |
+| 400    | Evento existe, mas não está aceito        |
+| 404    | Evento não encontrado                     |
+
+---
+
+
+## 📋 3. **Listar Eventos Aprovados**
 
 **Endpoint:**
 ```
-POST /api/periodicos/cadastro
+
+GET /api/eventos/listar
+
+```
+
+**Descrição:** Retorna uma lista resumida de todos os eventos com status 'aceito', ideal para a visualização pública (RF03).
+
+**Query Parameters:**
+- `nome` (string, opcional) - Filtra a lista para retornar apenas eventos cujo nome contenha o texto informado (busca parcial e case-insensitive).
+
+### ✅ **Exemplo de uso**
+```
+
+GET /api/eventos/listar?nome=Symposium
+
+````
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+Retorna uma lista de eventos resumidos. Se nenhum filtro for aplicado, retorna todos os eventos aprovados. Se nenhum evento for encontrado, retorna uma lista vazia `[]`.
+
+```json
+[
+  {
+    "idVeiculo": "99999999-dddd-dddd-dddd-dddddddddddd",
+    "nome": "Symposium on Distributed Computing",
+    "classificacao": "a2",
+    "h5": 50,
+    "adequacaoDefesa": "doutorado",
+    "vinculoSBC": "vinculo_top_10",
+    "areaPesquisa": [
+      "Ciência da Computação",
+      "Engenharia Elétrica"
+    ]
+  },
+  {
+    "idVeiculo": "11111111-1111-1111-1111-111111111109",
+    "nome": "Linux Kernel Summit",
+    "classificacao": "a2",
+    "h5": 55,
+    "adequacaoDefesa": "mestrado_doutorado",
+    "vinculoSBC": "vinculo_comum",
+    "areaPesquisa": [
+      "Ciência da Computação"
+    ]
+  }
+]
+````
+
+-----
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                 |
+|--------|-------------------------------------------|
+| 200    | Lista de eventos retornada com sucesso.   |
+| 500    | Erro interno no servidor.                 |
+
+````
+
+---
+
+### 2. Documentação para Listar Periódicos
+
+**Instrução:** Adicione o seguinte texto ao final da seção **`# 📘 API - Periodico`** no seu arquivo `endpoint.md`.
+
+```markdown
+---
+ ## 📋 3. **Listar Periódicos Aprovados**
+
+**Endpoint:**
+
+````
+
+GET /api/periodicos/listar
+
+```
+
+**Descrição:** Retorna uma lista resumida de todos os periódicos com status 'aceito', ideal para a visualização pública (RF03). Inclui uma flag para identificar periódicos predatórios.
+
+**Query Parameters:**
+- `nome` (string, opcional) - Filtra a lista para retornar apenas periódicos cujo nome contenha o texto informado (busca parcial e case-insensitive).
+
+### ✅ **Exemplo de uso**
+```
+
+GET /api/periodicos/listar?nome=Journal
+
+````
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retorna todos os periódicos aprovados. Se nenhum periódico for encontrado, retorna uma lista vazia `[]`.
+
+```json
+[
+  {
+    "idVeiculo": "55555555-5555-5555-5555-555555555555",
+    "nome": "Journal of Advanced AI",
+    "tipo": "periodico",
+    "classificacao": "a1",
+    "flagPredatorio": false
+  },
+  {
+    "idVeiculo": "11111111-1111-1111-1111-111111111101",
+    "nome": "The Art of Computer Programming Journal",
+    "tipo": "periodico",
+    "classificacao": "a1",
+    "flagPredatorio": false
+  }
+]
+````
+
+-----
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso.   |
+| 500    | Erro interno no servidor.                    |
+
+# 📘 API - Periodico
+
+Base URL:
+
+```
+/api/periodicos
+```
+
+---
+
+## ➕ 1. **Cadastrar Periodico**
+
+**Endpoint:**
+
+```
+POST /api/periodicos
 ```
 
 **Descrição:**  
-Cria um novo periódico no sistema, *deve ser um usuario já cadastrado no sistema*.
+Cria um novo periódico no sistema, _deve ser um usuario já cadastrado no sistema_.
 
 **Headers obrigatórios:**
+
 ```http
 X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 **Path Parameters:**
+
 - `id` – UUID do usuário que está tentando inserir o evento.
 
 **Resposta:**
+
 - `202 Accepted` – Evento criado com sucesso.
 - `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
 - `400 Bad Request` – Erro na requisição.
@@ -341,17 +573,19 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
-- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação. 
+- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação.
 - `percentilJcr` (Integer): Valor numérico.
 - `percentilScopus` (Integer): Valor numérico.
 - `linkJrc` (string) : Link do Jrc referente ao periódico o qual está sendo inserido
 - `linkScopus` (string) : Link repositório Scopus referente ao periodico o qual está sendo inserido.
-- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8") 
+- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8")
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao periódico o qual está sendo inserido
 - `qualisAntigo` (string) : Pontuação do Qualis antigo (Enum= "a1", "a2", "b1", "b2", "b3", "b4", "b5', "c").
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
+
 ---
 
 ## ✅ Resposta
@@ -387,6 +621,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
@@ -397,10 +632,153 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/periodicos/cadastro?forcar=true
+POST /api/periodicos?forcar=true
+```
+
+---
+ ## 📋 2. **Detalhar periódico por ID**
+
+**Endpoint:**
+
+```
+GET /api/periodicos/{id}
+```
+
+**Descrição:**  
+Retorna os detalhes do periódico solicitado via ID.
+
+---
+
+### ✅ **Exemplo de uso**
+```
+GET /api/periodicos/4e8f5b70-92f3-4c21-b07b-6a5d5c6f901a
+```
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+{
+  "nome": "IEEE Transactions on Information Theory",
+  "issn": "99887766",
+  "percentilJcr": null,
+  "percentilScopus": null,
+  "areasPesquisas": [
+    "Ciência da Computação",
+    "Engenharia Elétrica"
+  ],
+  "vinculoSbc": "vinculo_top_10",
+  "linkJcr": null,
+  "linkScopus": null,
+  "linkGoogleScholar": "http://scholar.google.com",
+  "qualisAntigo": "a1",
+  "classificacao": "a1",
+  "flagPredatorio": false,
+  "adequacaoDefesa": "doutorado"
+}
+```
+
+---
+
+### ❌ **Possíveis Erros**
+
+#### **1. Periódico não encontrado**  
+Status: `404 NOT FOUND`  
+**Resposta:**
+```json
+{
+  "path": "/api/periodicos/11111111-1111-1111-1111-111111111105",
+  "error": "PERIODICO_NAO_ENCONTRADO",
+  "timestamp": "2025-07-17T22:47:49.740520044",
+  "status": 404
+}
 ```
 ---
 
+#### **2. Periódico não aceito**
+Status: `400 BAD REQUEST`  
+**Resposta:**
+```json
+{
+  "path": "/api/periodicos/88888888-cccc-cccc-cccc-cccccccccccc",
+  "error": "NAO_ACEITO",
+  "timestamp": "2025-07-17T22:48:44.87700495",
+  "status": 400
+}
+```
 
+---
 
+### ✅ **Códigos de resposta**
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Detalhes do periódico retornados com sucesso |
+| 400    | Periódico existe, mas não está aceito        |
+| 404    | Periódico não encontrado                     |
 
+---
+ ## 📋 3. **Listar Periódicos Aprovados**
+
+**Endpoint:**
+
+```
+
+GET /api/periodicos/listar
+
+```
+
+**Descrição:** Retorna uma lista resumida de todos os periódicos com status 'aceito', ideal para a visualização pública (RF03). Inclui uma flag para identificar periódicos predatórios.
+
+**Query Parameters:**
+- `nome` (string, opcional) - Filtra a lista para retornar apenas periódicos cujo nome contenha o texto informado (busca parcial e case-insensitive).
+
+### ✅ **Exemplo de uso**
+```
+
+GET /api/periodicos/listar?nome=Journal
+
+````
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retorna todos os periódicos aprovados. Se nenhum periódico for encontrado, retorna uma lista vazia `[]`.
+
+```json
+[
+  {
+    "idVeiculo": "55555555-5555-5555-5555-555555555555",
+    "nome": "Journal of Advanced AI",
+    "classificacao": "a1",
+    "flagPredatorio": false,
+    "h5": 10,
+    "adequacaoDefesa": "doutorado",
+    "vinculoSBC": "vinculo_top_10",
+    "areaPesquisa": [
+      "Ciência da Computação",
+      "Engenharia Elétrica"
+    ]
+  },
+  {
+    "idVeiculo": "11111111-1111-1111-1111-111111111101",
+    "nome": "The Art of Computer Programming Journal",
+    "classificacao": "a1",
+    "flagPredatorio": false,
+    "h5": null,
+    "adequacaoDefesa": "doutorado",
+    "vinculoSBC": "vinculo_top_10",
+    "areaPesquisa": [
+      "Ciência da Computação"
+    ]
+  }
+]
+````
+
+-----
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso.   |
+| 500    | Erro interno no servidor.                    |

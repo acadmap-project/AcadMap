@@ -12,5 +12,7 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
 
     List<Evento> findByStatus(StatusVeiculo statusVeiculo);
 
-  List<Evento> findByNomeContainingIgnoreCase(String nome);
+    List<Evento> findByNomeContainingIgnoreCase(String nome);
+
+    List<Evento> findByStatusAndNomeContainingIgnoreCase(StatusVeiculo statusVeiculo, String nome);
 }
