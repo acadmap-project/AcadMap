@@ -79,7 +79,7 @@ function FiltroEventosPeriodicos({ onResultados }) {
       setErrorInfo({
         title: 'Erro no Servidor',
         message:
-          'Ocorreu um erro ao tentar salvar os dados do periódico. Por favor, tente novamente mais tarde.',
+          'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
         type: 'error',
       });
 
