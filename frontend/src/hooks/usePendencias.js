@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import useLogin from './userAuth';
+import { API_URL } from '../utils/apiUrl';
 
 function usePendencias() {
   const [pendencias, setPendencias] = useState([]);
@@ -9,15 +9,13 @@ function usePendencias() {
   useEffect(() => {
     const fetchPendencias = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/veiculo/periodico-pendente`,
-          {
-            headers: {
-              'X-User-Id': loggedIn.id,
-            },
-          }
-        );
-        let dados = response.data;
+        const response = await fetch(`${API_URL}/api/veiculo/periodico-pendente`, {
+          headers: {
+            'X-User-Id': loggedIn.id,
+          },
+        });
+        if (!response.ok) throw new Error('Erro ao carregar pendencias');
+        let dados = await response.json();
         setPendencias(dados);
       } catch (error) {
         console.error('Erro ao carregar pendencias:', error);
@@ -55,19 +53,18 @@ function usePendencias() {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/veiculo/negar-veiculo/${id}`,
-        { justificativa, flagPredatorio }, // Send flagPredatorio in the request body
-        {
-          headers: {
-            'X-User-Id': userId,
-            'Content-Type': 'application/json',
-          },
-          timeout: 10000, // 10 second timeout
-        }
-      );
-      console.log('Reject pendencia response:', response);
-      return response.data;
+      const response = await fetch(`${API_URL}/api/veiculo/negar-veiculo/${id}`, {
+        method: 'PUT',
+        headers: {
+          'X-User-Id': userId,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ justificativa, flagPredatorio }),
+      });
+      if (!response.ok) throw new Error('Erro ao negar pendencia');
+      const data = await response.json();
+      console.log('Reject pendencia response:', data);
+      return data;
     } catch (error) {
       console.error('Error in negarPendencias:', error);
 
@@ -115,19 +112,18 @@ function usePendencias() {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/veiculo/aprovar-veiculo/${id}`,
-        { flagPredatorio }, // Send flagPredatorio in the request body
-        {
-          headers: {
-            'X-User-Id': userId,
-            'Content-Type': 'application/json',
-          },
-          timeout: 10000, // 10 second timeout
-        }
-      );
-      console.log('Approve pendencia response:', response);
-      return response.data;
+      const response = await fetch(`${API_URL}/api/veiculo/aprovar-veiculo/${id}`, {
+        method: 'PUT',
+        headers: {
+          'X-User-Id': userId,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ flagPredatorio }),
+      });
+      if (!response.ok) throw new Error('Erro ao aprovar pendencia');
+      const data = await response.json();
+      console.log('Approve pendencia response:', data);
+      return data;
     } catch (error) {
       console.error('Error in aprovarPendencias:', error);
 

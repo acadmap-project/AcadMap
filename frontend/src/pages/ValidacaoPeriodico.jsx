@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiUrl';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -78,7 +79,7 @@ const postPeriodico = async ({ periodicoData, userId }) => {
 
   // The backend expects vinculoSbc (camelCase), so keep it as is
   console.log('Sending data to API:', normalizedData);
-  const response = await fetch('http://localhost:8080/api/periodicos/', {
+  const response = await fetch(`${API_URL}/api/periodicos/`, {
     method: 'POST',
     headers: {
       'X-User-Id': userId,

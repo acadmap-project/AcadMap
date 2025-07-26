@@ -28,6 +28,9 @@ services:
     restart: always
     networks:
       - acadmap-net
+    depends_on:
+      backend:
+        condition: service_healthy
 
   postgres:
     image: postgres:15

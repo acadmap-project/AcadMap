@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiUrl';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -17,7 +18,7 @@ const queryClient = new QueryClient();
 
 const postEvent = async ({ eventData, userId, forcar }) => {
   console.log(eventData);
-  let url = 'http://localhost:8080/api/eventos';
+  let url = `${API_URL}/api/eventos`;
   if (forcar) {
     url += '?forcar=true';
   }
