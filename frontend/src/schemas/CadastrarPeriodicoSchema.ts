@@ -66,6 +66,10 @@ export const CadastrarPeriodicoSchema = z
   // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(
     data => {
+      if (data.vinculoSbcCheckbox) {
+        return true; // If vinculoSbcCheckbox is checked, skip this validation
+      }
+
       const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
       const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
       const hasGoogleScholar =
@@ -84,6 +88,10 @@ export const CadastrarPeriodicoSchema = z
   // Show error on linkScopus as well
   .refine(
     data => {
+      if (data.vinculoSbcCheckbox) {
+        return true; // If vinculoSbcCheckbox is checked, skip this validation
+      }
+
       const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
       const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
       const hasGoogleScholar =
@@ -102,6 +110,10 @@ export const CadastrarPeriodicoSchema = z
   // Show error on linkGoogleScholar as well
   .refine(
     data => {
+      if (!data.vinculoSbcCheckbox) {
+        return true; // If vinculoSbcCheckbox isn't checked, skip this validation
+      }
+
       const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
       const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
       const hasGoogleScholar =
@@ -120,6 +132,10 @@ export const CadastrarPeriodicoSchema = z
   // Show error on qualisAntigo as well
   .refine(
     data => {
+      if (!data.vinculoSbcCheckbox) {
+        return true; // If vinculoSbcCheckbox isn't checked, skip this validation
+      }
+
       const hasJcr = data.linkJcr && data.linkJcr.trim() !== '';
       const hasScopus = data.linkScopus && data.linkScopus.trim() !== '';
       const hasGoogleScholar =
@@ -182,6 +198,19 @@ export const CadastrarPeriodicoSchema = z
       path: ['percentilJcr'],
     }
   )
+  // Validar: Se o percentil JCR for preenchido, link JCR deve ser informado
+  .refine(
+    data => {
+      if (data.percentilJcr && data.percentilJcr !== '' && !data.linkJcr) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'O link JCR é obrigatório se o percentil JCR for preenchido',
+      path: ['linkJcr'],
+    }
+  )
   // Validar: Se o link Scopus for preenchido, percentil Scopus deve ser informado
   .refine(
     data => {
@@ -194,5 +223,23 @@ export const CadastrarPeriodicoSchema = z
       message:
         'O percentil Scopus é obrigatório se o link Scopus for preenchido',
       path: ['percentilScopus'],
+    }
+  )
+  // Validar: Se o percentil Scopus for preenchido, link Scopus deve ser informado
+  .refine(
+    data => {
+      if (
+        data.percentilScopus &&
+        data.percentilScopus !== '' &&
+        !data.linkScopus
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message:
+        'O link Scopus é obrigatório se o percentil Scopus for preenchido',
+      path: ['linkScopus'],
     }
   );

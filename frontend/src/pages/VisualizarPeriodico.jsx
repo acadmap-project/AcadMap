@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiUrl';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -8,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
 
 const fetchPeriodicoData = async id => {
-  const response = await fetch(`http://localhost:8080/api/periodicos/${id}`);
+  const response = await fetch(`${API_URL}/api/periodicos/${id}`);
   if (!response.ok) {
     throw new Error('Erro ao buscar dados do periódico');
   }

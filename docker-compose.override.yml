@@ -9,9 +9,10 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev 
     ports:
-      - "80:5173" 
+      - "80:80"
+    depends_on:
+      - backend
 
   postgres:
     ports:

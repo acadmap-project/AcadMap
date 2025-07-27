@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiUrl';
 import { useState } from 'react';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
@@ -56,8 +57,8 @@ function FiltroEventosPeriodicos({ onResultados }) {
       }
     });
 
-    const eventosUrl = `http://localhost:8080/api/eventos/listar?${params.toString()}`;
-    const periodicosUrl = `http://localhost:8080/api/periodicos/listar?${params.toString()}`;
+    const eventosUrl = `${API_URL}/api/eventos/listar?${params.toString()}`;
+    const periodicosUrl = `${API_URL}/api/periodicos/listar?${params.toString()}`;
 
     let eventosData = [];
     let periodicosData = [];
