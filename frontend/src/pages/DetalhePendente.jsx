@@ -22,6 +22,7 @@ function DetalhePendenteContent() {
   const location = useLocation();
   // Get registro data from location state or set default
   const registro = useMemo(() => location.state || {}, [location.state]);
+  console.log('registro:', registro);
 
   const navigate = useNavigate();
   const [showJustificacaoPopup, setShowJustificacaoPopup] = useState(false);
@@ -269,7 +270,7 @@ function DetalhePendenteContent() {
             </div>
             <div className="text-sm text-gray-900">
               <span className="font-medium">LINK DE ACESSO:</span>{' '}
-              {registro.linkEvento ? (
+              {registro.linkEvento && registro.linkEvento !== 'N/A' ? (
                 <a
                   href={registro.linkEvento}
                   target="_blank"
@@ -279,7 +280,7 @@ function DetalhePendenteContent() {
                   {registro.linkEvento}
                 </a>
               ) : (
-                ' N/A'
+                'N/A'
               )}
             </div>
             {registro.tipo === 'periodico' && (

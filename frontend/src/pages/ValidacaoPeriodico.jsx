@@ -110,6 +110,7 @@ function ValidacaoPeriodicoContent() {
   const areas = useAreas();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(null);
   const [errorInfo, setErrorInfo] = useState({
     title: '',
     message: '',
@@ -127,6 +128,7 @@ function ValidacaoPeriodicoContent() {
   const createPeriodicoMutation = useMutation({
     mutationFn: postPeriodico,
     onSuccess: data => {
+      setErrorStatus(null);
       console.log('[BACKEND SUCCESS]', data);
       setSuccessInfo({
         title: 'Periódico Cadastrado',
@@ -137,14 +139,28 @@ function ValidacaoPeriodicoContent() {
     },
     onError: error => {
       console.log('[BACKEND ERROR]', error);
+      setErrorStatus(error.status || 500);
       // Garante que apenas um popup de erro seja exibido por vez
       if (showErrorPopup) return;
+
+      // Se for erro de rede (failed to fetch), só mostra o popup de erro
+      if (error.message && error.message.includes('failed to fetch')) {
+        setErrorInfo({
+          title: 'Erro',
+          message:
+            'Erro de conexão com o servidor. Tente novamente mais tarde.',
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+        return;
+      }
+
       if (error.status === 409) {
         let similares = [];
         try {
           const json = JSON.parse(error.response.data);
           console.log('[BACKEND 409 BODY]', json);
-          similares = json.eventosSimilares || [];
+          similares = json.periodicosSimilares || [];
         } catch {
           console.log('[BACKEND 409 BODY PARSE ERROR]', error.response.data);
           similares = [];
@@ -174,10 +190,14 @@ function ValidacaoPeriodicoContent() {
 
         if (error.response?.data) {
           try {
-            // Try to parse JSON response and extract the "message" field
+            // Try to parse JSON response and extract the "message" or "error" field
             const errorData = JSON.parse(error.response.data);
-            errorMessage =
-              errorData.message || errorData.error || error.response.data;
+            if (error.status === 400 && errorData.error) {
+              errorMessage = errorData.error;
+            } else {
+              errorMessage =
+                errorData.message || errorData.error || error.response.data;
+            }
           } catch {
             // If parsing fails, use the raw response data
             errorMessage = error.response.data;
@@ -198,6 +218,7 @@ function ValidacaoPeriodicoContent() {
 
   const closeErrorPopup = () => {
     setShowErrorPopup(false);
+    setErrorStatus(null);
   };
 
   const closeSuccessPopup = () => {
@@ -390,86 +411,168 @@ function ValidacaoPeriodicoContent() {
             </div>
           </div>
 
-          {showErrorPopup && (
-            <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
-              <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
-                <div className="flex-shrink-0 mr-4">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
-                    <svg
-                      className="w-5 h-5 text-yellow-100"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+          {showErrorPopup &&
+            (errorStatus === 409 ? (
+              <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+                <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                  <div className="flex-shrink-0 mr-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                      <svg
+                        className="w-5 h-5 text-yellow-100"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-red-700 font-semibold text-lg">
+                      "Cadastro potencialmente duplicado. Continuar mesmo
+                      assim?"
+                    </span>
+                  </div>
+                  <div className="flex ml-4 gap-2">
+                    <button
+                      onClick={closeErrorPopup}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
+                      Não
+                    </button>
+                    <button
+                      onClick={handleForceConfirm}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Sim
+                    </button>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <span className="text-red-700 font-semibold text-lg">
-                    "Cadastro potencialmente duplicado. Continuar mesmo assim?"
-                  </span>
-                  {errorInfo.similares && errorInfo.similares.length > 0 && (
-                    <div className="mt-2">
-                      <span className="block text-red-700 font-bold">
-                        Eventos similares:
-                      </span>
-                      <ul className="list-disc ml-6 mt-1">
-                        {errorInfo.similares.map(ev => (
-                          <li key={ev.idVeiculo} className="text-red-700">
-                            <span className="font-semibold">{ev.nome}</span>
-                            {ev.linkGoogleScholar && (
-                              <span className="ml-2 text-xs">
-                                Google Scholar: {ev.linkGoogleScholar}
-                              </span>
-                            )}
-                            {ev.linkSolSbc && (
-                              <span className="ml-2 text-xs">
-                                SolSBC: {ev.linkSolSbc}
-                              </span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+              </div>
+            ) : (
+              <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+                <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                  <div className="flex-shrink-0 mr-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                      <svg
+                        className="w-5 h-5 text-yellow-100"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-red-700 font-semibold text-lg">
+                      {errorInfo.message}
+                    </span>
+                  </div>
+                  <div className="flex ml-4 gap-2">
+                    <button
+                      onClick={closeErrorPopup}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Fechar
+                    </button>
+                  </div>
                 </div>
-                <div className="flex ml-4 gap-2">
-                  <button
-                    onClick={closeErrorPopup}
-                    style={{
-                      fontFamily: 'Poppins',
-                      fontWeight: '400',
-                      background: '#FFD580',
-                      color: '#A30000',
-                      border: 'none',
-                      borderRadius: '2px',
-                      padding: '12px 32px',
-                      fontSize: '18px',
-                      minWidth: '100px',
-                    }}
-                  >
-                    Não
-                  </button>
-                  <button
-                    onClick={handleForceConfirm}
-                    style={{
-                      fontFamily: 'Poppins',
-                      fontWeight: '400',
-                      background: '#FFD580',
-                      color: '#A30000',
-                      border: 'none',
-                      borderRadius: '2px',
-                      padding: '12px 32px',
-                      fontSize: '18px',
-                      minWidth: '100px',
-                    }}
-                  >
-                    Sim
-                  </button>
+              </div>
+            ))}
+
+          {/* Eventos similares desconectados, abaixo do popup, apenas se erro 409 e houver similares */}
+          {errorStatus === 409 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '30%',
+                left: '50%',
+                transform: 'translate(-50%, 0)',
+                zIndex: 40,
+                fontFamily: 'Poppins',
+                fontWeight: '400',
+                width: '80vw',
+                minWidth: '500px',
+                maxWidth: '900px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <div className="bg-white border border-red-300 rounded shadow-md p-4 w-full">
+                <span className="block text-red-700 font-bold mb-2">
+                  Eventos similares detectados:
+                </span>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border border-gray-200">
+                    <thead>
+                      <tr className="bg-red-100">
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Nome
+                        </th>
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Classificação
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {errorInfo.similares.map(ev => (
+                        <tr
+                          key={ev.idVeiculo}
+                          className="border-b border-gray-100"
+                        >
+                          <td className="px-3 py-2 font-semibold text-red-700">
+                            {ev.nome}
+                          </td>
+                          <td className="px-3 py-2">
+                            {ev.classificacao ? (
+                              <span className="text-gray-800">
+                                {ev.classificacao.toUpperCase()}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
