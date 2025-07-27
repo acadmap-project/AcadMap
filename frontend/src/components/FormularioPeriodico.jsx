@@ -131,7 +131,7 @@ function FormularioPeriodicoContent() {
                 htmlFor="issn"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                ÍSSN*
+                ISSN
               </label>
               <input
                 type="text"

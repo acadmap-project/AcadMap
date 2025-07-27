@@ -301,7 +301,7 @@ function ValidacaoPeriodicoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ISSN*:</span>{' '}
+              <span className="font-medium">ISSN:</span>{' '}
               {periodicoData.issn || 'N/A'}
             </div>
 
