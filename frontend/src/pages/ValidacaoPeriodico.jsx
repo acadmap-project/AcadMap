@@ -59,7 +59,7 @@ const validateAndConvertPercentile = (value, fieldName) => {
   return numericValue;
 };
 
-const postPeriodico = async ({ periodicoData, userId }) => {
+const postPeriodico = async ({ periodicoData, userId, forcar }) => {
   // Normalize all empty/undefined values to null
   const normalizedData = normalizeToNull(periodicoData);
 
@@ -78,8 +78,12 @@ const postPeriodico = async ({ periodicoData, userId }) => {
   }
 
   // The backend expects vinculoSbc (camelCase), so keep it as is
-  console.log('Sending data to API:', normalizedData);
-  const response = await fetch(`${API_URL}/api/periodicos/`, {
+  let url = `${API_URL}/api/periodicos`;
+  if (forcar) {
+    url += `?forcar=${forcar}`;
+  }
+  console.log('Sending data to API:', normalizedData, ' URL:', url);
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'X-User-Id': userId,
@@ -123,7 +127,7 @@ function ValidacaoPeriodicoContent() {
   const createPeriodicoMutation = useMutation({
     mutationFn: postPeriodico,
     onSuccess: data => {
-      console.log('Periódico cadastrado com sucesso:', data);
+      console.log('[BACKEND SUCCESS]', data);
       setSuccessInfo({
         title: 'Periódico Cadastrado',
         message: 'O periódico foi cadastrado com sucesso no sistema.',
@@ -132,43 +136,63 @@ function ValidacaoPeriodicoContent() {
       setShowSuccessPopup(true);
     },
     onError: error => {
-      console.error('Erro ao cadastrar periódico:', error);
-
-      // Handle 500 Internal Server Error
-      if (error.status === 500) {
-        setErrorInfo({
+      console.log('[BACKEND ERROR]', error);
+      // Garante que apenas um popup de erro seja exibido por vez
+      if (showErrorPopup) return;
+      if (error.status === 409) {
+        let similares = [];
+        try {
+          const json = JSON.parse(error.response.data);
+          console.log('[BACKEND 409 BODY]', json);
+          similares = json.eventosSimilares || [];
+        } catch {
+          console.log('[BACKEND 409 BODY PARSE ERROR]', error.response.data);
+          similares = [];
+        }
+        setErrorInfo(prev => ({
+          ...prev,
+          title: 'Possível Duplicidade Detectada',
+          message:
+            'Foram encontrados eventos similares pelo nome. Confira abaixo e escolha se deseja prosseguir ou cancelar.',
+          type: 'warning',
+          similares,
+        }));
+        setShowErrorPopup(true);
+      } else if (error.status === 500 || error.message.status === 500) {
+        setErrorInfo(prev => ({
+          ...prev,
           title: 'Erro no Servidor',
           message:
             'Ocorreu um erro ao tentar salvar os dados do periódico. Por favor, tente novamente mais tarde.',
           type: 'error',
-        });
+        }));
         setShowErrorPopup(true);
         return;
-      }
+      } else {
+        // Extract error message from backend response for other errors
+        let errorMessage = 'Erro desconhecido ao processar o cadastro';
 
-      // Extract error message from backend response for other errors
-      let errorMessage = 'Erro desconhecido ao processar o cadastro';
-
-      if (error.response?.data) {
-        try {
-          // Try to parse JSON response and extract the "message" field
-          const errorData = JSON.parse(error.response.data);
-          errorMessage =
-            errorData.message || errorData.error || error.response.data;
-        } catch {
-          // If parsing fails, use the raw response data
-          errorMessage = error.response.data;
+        if (error.response?.data) {
+          try {
+            // Try to parse JSON response and extract the "message" field
+            const errorData = JSON.parse(error.response.data);
+            errorMessage =
+              errorData.message || errorData.error || error.response.data;
+          } catch {
+            // If parsing fails, use the raw response data
+            errorMessage = error.response.data;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
         }
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
 
-      setErrorInfo({
-        title: 'Erro!',
-        message: errorMessage,
-        type: 'error',
-      });
-      setShowErrorPopup(true);
+        setErrorInfo({
+          title: 'Erro!',
+          message: errorMessage,
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+      }
     },
   });
 
@@ -193,12 +217,19 @@ function ValidacaoPeriodicoContent() {
   };
 
   const handleConfirm = () => {
-    // Handle confirmation logic here
-    console.log('Periodico confirmed:', periodicoData);
     createPeriodicoMutation.mutate({
       periodicoData: periodicoData,
       userId: loggedIn.id,
     });
+  };
+
+  const handleForceConfirm = () => {
+    createPeriodicoMutation.mutate({
+      periodicoData: periodicoData,
+      userId: loggedIn.id,
+      forcar: true,
+    });
+    setShowErrorPopup(false);
   };
 
   if (!periodicoData) {
@@ -359,13 +390,90 @@ function ValidacaoPeriodicoContent() {
             </div>
           </div>
 
-          <ErrorPopup
-            isOpen={showErrorPopup}
-            onClose={closeErrorPopup}
-            title={errorInfo.title}
-            message={errorInfo.message}
-            type={errorInfo.type}
-          />
+          {showErrorPopup && (
+            <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+              <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                <div className="flex-shrink-0 mr-4">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                    <svg
+                      className="w-5 h-5 text-yellow-100"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <span className="text-red-700 font-semibold text-lg">
+                    "Cadastro potencialmente duplicado. Continuar mesmo assim?"
+                  </span>
+                  {errorInfo.similares && errorInfo.similares.length > 0 && (
+                    <div className="mt-2">
+                      <span className="block text-red-700 font-bold">
+                        Eventos similares:
+                      </span>
+                      <ul className="list-disc ml-6 mt-1">
+                        {errorInfo.similares.map(ev => (
+                          <li key={ev.idVeiculo} className="text-red-700">
+                            <span className="font-semibold">{ev.nome}</span>
+                            {ev.linkGoogleScholar && (
+                              <span className="ml-2 text-xs">
+                                Google Scholar: {ev.linkGoogleScholar}
+                              </span>
+                            )}
+                            {ev.linkSolSbc && (
+                              <span className="ml-2 text-xs">
+                                SolSBC: {ev.linkSolSbc}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+                <div className="flex ml-4 gap-2">
+                  <button
+                    onClick={closeErrorPopup}
+                    style={{
+                      fontFamily: 'Poppins',
+                      fontWeight: '400',
+                      background: '#FFD580',
+                      color: '#A30000',
+                      border: 'none',
+                      borderRadius: '2px',
+                      padding: '12px 32px',
+                      fontSize: '18px',
+                      minWidth: '100px',
+                    }}
+                  >
+                    Não
+                  </button>
+                  <button
+                    onClick={handleForceConfirm}
+                    style={{
+                      fontFamily: 'Poppins',
+                      fontWeight: '400',
+                      background: '#FFD580',
+                      color: '#A30000',
+                      border: 'none',
+                      borderRadius: '2px',
+                      padding: '12px 32px',
+                      fontSize: '18px',
+                      minWidth: '100px',
+                    }}
+                  >
+                    Sim
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <Popup
             isOpen={showSuccessPopup}
