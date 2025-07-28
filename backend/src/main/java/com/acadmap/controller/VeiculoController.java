@@ -79,7 +79,6 @@ public class VeiculoController {
     @GetMapping("/periodico-pendente")
     @PreAuthorize("hasAuthority('administrador')")
     public ResponseEntity<?> veiculosPendentes(
-            @RequestHeader("X-User-Id") UUID idUser
     ){
         usuarioRepository.findByAllAndFetchProgramaEagerly();
         if (veiculoPublicacaoRepository.findAll().isEmpty()){
