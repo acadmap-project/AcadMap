@@ -21,18 +21,19 @@ public class JwtService {
     public String generateToken(Authentication authentication){
         Instant now = Instant.now();
 
-        long expiry = 3600L;
+        long expiry = 360000L;
 
-        List<String> scopes = authentication.getAuthorities().stream()
+        String scopes = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .toList();
+                .collect(Collectors.joining(" "));
+
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("acad-map")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
-                .claim("authorities", scopes)
+                .claim("scope", scopes)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

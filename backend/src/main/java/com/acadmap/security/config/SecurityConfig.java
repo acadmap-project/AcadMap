@@ -45,9 +45,6 @@ public class SecurityConfig {
     @Autowired
     private JwtAutenticacaoEntryPoint jwtAutenticacaoEntryPoint;
 
-//    @Autowired
-//    private AutenticacaoJwtFilter autenticacaoJwtFilter;
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -59,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    authorize.anyRequest().hasAnyAuthority("administrador", "pesquisador", "auditor");
+                    authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(conf ->
                         conf.jwt(Customizer.withDefaults()));
@@ -68,15 +65,9 @@ public class SecurityConfig {
                 exception.authenticationEntryPoint(jwtAutenticacaoEntryPoint)
                 );
 
-//        httpSecurity.addFilterBefore(autenticacaoJwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
 
     @Bean
     public JwtDecoder jwtDecoder(){
