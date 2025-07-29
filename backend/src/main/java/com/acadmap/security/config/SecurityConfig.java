@@ -2,9 +2,13 @@ package com.acadmap.security.config;
 
 
 import com.acadmap.security.error.JwtAutenticacaoEntryPoint;
-import com.acadmap.security.filter.AutenticacaoJwtFilter;
-import io.jsonwebtoken.security.Keys;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.proc.SecurityContext;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,19 +27,26 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 
 @Component
 @EnableWebSecurity
 @EnableMethodSecurity
-@AllArgsConstructor
 public class SecurityConfig {
 
+    @Value("${jwt.public.key}")
+    private RSAPublicKey pubKey;
 
+
+    @Value("${jwt.private.key}")
+    private RSAPrivateKey privKey;
+
+    @Autowired
     private JwtAutenticacaoEntryPoint jwtAutenticacaoEntryPoint;
 
-    private AutenticacaoJwtFilter autenticacaoJwtFilter;
+//    @Autowired
+//    private AutenticacaoJwtFilter autenticacaoJwtFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -48,21 +59,35 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    authorize.anyRequest().authenticated();
-                }).httpBasic(Customizer.withDefaults());
+                    authorize.anyRequest().hasAnyAuthority("administrador", "pesquisador", "auditor");
+                }).httpBasic(Customizer.withDefaults())
+                .oauth2ResourceServer(conf ->
+                        conf.jwt(Customizer.withDefaults()));
 
         httpSecurity.exceptionHandling(exception ->
                 exception.authenticationEntryPoint(jwtAutenticacaoEntryPoint)
                 );
 
-        httpSecurity.addFilterBefore(autenticacaoJwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.addFilterBefore(autenticacaoJwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
 
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public JwtDecoder jwtDecoder(){
+        return NimbusJwtDecoder.withPublicKey(pubKey).build();
+    }
+
+    @Bean
+    public JwtEncoder jwtEncoder(){
+        RSAKey jwk = new RSAKey.Builder(pubKey).privateKey(privKey).build();
+        var immutableJWKSet = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(immutableJWKSet);
     }
 
 
