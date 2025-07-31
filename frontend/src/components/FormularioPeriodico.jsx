@@ -131,7 +131,7 @@ function FormularioPeriodicoContent() {
                 htmlFor="issn"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                ÍSSN*
+                ISSN
               </label>
               <input
                 type="text"
@@ -165,10 +165,13 @@ function FormularioPeriodicoContent() {
                             } else {
                               setValue('vinculoSbc', '');
                               setIsEnableSBC(false);
-                              // Clear the fields when SBC is disabled
-                              setValue('linkGoogleScholar', '');
-                              setValue('qualisAntigo', '');
                             }
+                            setValue('linkJcr', '');
+                            setValue('linkScopus', '');
+                            setValue('percentilJcr', '');
+                            setValue('percentilScopus', '');
+                            setValue('qualisAntigo', '');
+                            setValue('linkGoogleScholar', '');
                           },
                         })}
                       />
@@ -192,8 +195,13 @@ function FormularioPeriodicoContent() {
               <input
                 type="text"
                 id="linkJcr"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite uma URL válida..."
+                disabled={isEnableSBC}
                 {...register('linkJcr')}
               />
               {errors.linkJcr && (
@@ -212,8 +220,13 @@ function FormularioPeriodicoContent() {
               <input
                 type="text"
                 id="linkScopus"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite uma URL válida..."
+                disabled={isEnableSBC}
                 {...register('linkScopus')}
               />
               {errors.linkScopus && (
@@ -255,13 +268,18 @@ function FormularioPeriodicoContent() {
                 htmlFor="percentilJcr"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                PERCENTIL JCR*
+                PERCENTIL JCR
               </label>{' '}
               <input
                 type="text"
                 id="percentilJcr"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite o percentil do periódico (0-100)..."
+                disabled={isEnableSBC}
                 {...register('percentilJcr')}
               />
               {errors.percentilJcr && (
@@ -275,13 +293,18 @@ function FormularioPeriodicoContent() {
                 htmlFor="percentilScopus"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                PERCENTIL SCOPUS*
+                PERCENTIL SCOPUS
               </label>{' '}
               <input
                 type="text"
                 id="percentilScopus"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite o percentil do periódico (0-100)..."
+                disabled={isEnableSBC}
                 {...register('percentilScopus')}
               />
               {errors.percentilScopus && (

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { API_URL } from '../utils/apiUrl';
 import renomearKey from '../utils/renomearKey';
 
 function useAreas() {
@@ -8,10 +8,9 @@ function useAreas() {
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:8080/api/areas/listar'
-        );
-        let dados = response.data;
+        const response = await fetch(`${API_URL}/api/areas/listar`);
+        if (!response.ok) throw new Error('Erro ao carregar áreas');
+        let dados = await response.json();
         for (let i = 0; i < dados.length; i++) {
           dados[i] = renomearKey(dados[i], 'nome', 'label');
           dados[i] = renomearKey(dados[i], 'id', 'value');

@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiUrl';
 import { zodResolver } from '@hookform/resolvers/zod';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
@@ -22,7 +23,7 @@ const queryClient = new QueryClient();
 
 const postUser = async userData => {
   console.log('Sending user data:', userData);
-  const response = await fetch('http://localhost:8080/api/usuario/cadastro', {
+  const response = await fetch(`${API_URL}/api/usuario/cadastro`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
