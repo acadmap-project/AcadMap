@@ -1,6 +1,7 @@
 package com.acadmap.security.controller;
 
 
+import com.acadmap.security.dto.TokenDTO;
 import com.acadmap.security.service.AutorizacaoServiceRsa;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,9 @@ public class AutorizacaoController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(Authentication authentication){
-        return new ResponseEntity<>(autorizacaoServiceRsa.autenticacao(authentication), HttpStatus.ACCEPTED);
+    public ResponseEntity<TokenDTO> login(Authentication authentication){
+        TokenDTO tokenDTO = new TokenDTO(autorizacaoServiceRsa.autenticacao(authentication));
+        return new ResponseEntity<>(tokenDTO, HttpStatus.ACCEPTED);
     }
 
 
