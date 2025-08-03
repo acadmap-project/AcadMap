@@ -1,4 +1,6 @@
 package com.acadmap.security.dto;
 
-public record TokenDTO(String accessToken) {
+import java.util.UUID;
+
+public record TokenDTO(String accessToken, UUID refreshTokenUUID) {
 }

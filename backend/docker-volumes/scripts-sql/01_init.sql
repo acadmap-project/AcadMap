@@ -109,8 +109,17 @@ CREATE TABLE JustificativaRecusa (
   CONSTRAINT pk_justificativa_recusa PRIMARY KEY (id_log)
 );
 
+CREATE TABLE RefreshToken (
+    id_refresh_token uuid,
+    expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    id_usuario uuid NOT NULL,
+    CONSTRAINT pk_refresh_token PRIMARY KEY (id_refresh_token)
+);
+
 -- Foreign Keys
 ALTER TABLE Usuario ADD CONSTRAINT fk_usuario_programa FOREIGN KEY (id_programa) REFERENCES Programa (id_programa);
+
+ALTER TABLE RefreshToken ADD CONSTRAINT fk_refresh_token_usuario FOREIGN KEY (id_usuario) REFERENCES Usuario (id_usuario);
 
 ALTER TABLE Evento ADD CONSTRAINT fk_evento_veiculopublicacao FOREIGN KEY (id_veiculo) REFERENCES VeiculoPublicacao (id_veiculo);
 
@@ -132,3 +141,5 @@ ALTER TABLE AreaPesquisaUsuario ADD CONSTRAINT fk_areapesquisusuario_areapesquis
 ALTER TABLE AreaPesquisaVeiculo ADD CONSTRAINT fk_areapesquisaveiculo_areapesquisa FOREIGN KEY (id_area_pesquisa) REFERENCES AreaPesquisa (id_area_pesquisa);
 ALTER TABLE AreaPesquisaVeiculo ADD CONSTRAINT fk_areapesquisaveiculo_veiculopublicacao FOREIGN KEY (id_veiculo) REFERENCES VeiculoPublicacao (id_veiculo);
 ALTER TABLE VeiculoPublicacao ADD CONSTRAINT fk_veiculopublicacao_usuario FOREIGN KEY (id_usuario) REFERENCES Usuario (id_usuario);
+
+
