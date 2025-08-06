@@ -4,7 +4,6 @@ import com.acadmap.model.entities.RefreshToken;
 import com.acadmap.model.entities.Usuario;
 import com.acadmap.repository.RefreshTokenRepository;
 import com.acadmap.repository.UsuarioRepository;
-import com.acadmap.security.dto.RefreshTokenDTO;
 import com.acadmap.security.dto.TokenDTO;
 import com.acadmap.security.provider.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
@@ -20,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AutorizacaoServiceRsa {
 
     private final JwtService jwtService;
@@ -31,6 +32,7 @@ public class AutorizacaoServiceRsa {
     public TokenDTO autenticacao(Authentication authentication){
 
         Usuario usuario = usuarioRepository.findByNome(authentication.getName()).orElseThrow();
+        refreshTokenRepository.deleteAllByUsuario(usuario);
 
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUsuario(usuario);
@@ -40,7 +42,7 @@ public class AutorizacaoServiceRsa {
         return new TokenDTO(jwtService.generateToken(authentication), refreshToken.getIdRefreshToken());
     }
 
-    public RefreshTokenDTO refreshToken(UUID refreshTokenUUID, String bearerToken){
+    public TokenDTO refreshToken(UUID refreshTokenUUID, String bearerToken){
         final RefreshToken refreshTokenEntity = refreshTokenRepository
                 .findByIdRefreshToken(refreshTokenUUID)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -48,17 +50,22 @@ public class AutorizacaoServiceRsa {
                         )
                 );
 
-        if(refreshTokenRepository.existsByIdRefreshTokenAndExpiresAtAfter(refreshTokenUUID, LocalDateTime.now())){
-            refreshTokenRepository.deleteAllByUsuario(refreshTokenEntity.getUsuario());
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "O token expirou, faça o login novamente");
-        }
+//        if(refreshTokenRepository.existsByIdRefreshTokenAndExpiresAtAfter(refreshTokenUUID, LocalDateTime.now())){
+//            refreshTokenRepository.deleteAllByUsuario(refreshTokenEntity.getUsuario());
+//            throw new ResponseStatusException(
+//                    HttpStatus.FORBIDDEN, "O token expirou, faça o login novamente");
+//        }
 
         refreshTokenEntity.setExpiresAt(LocalDateTime.now().plus(ttl));
 
         final String newAccessToken = jwtService.generateRefreshToken(bearerToken.substring(7));
 
-        return new RefreshTokenDTO(newAccessToken, refreshTokenUUID);
+        return new TokenDTO(newAccessToken, refreshTokenUUID);
+    }
+
+    public void revokeRefreshToken(UUID refreshTokenUUID) {
+        RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenUUID).orElseThrow();
+        refreshTokenRepository.deleteAllByUsuario(refreshToken.getUsuario());
     }
 
 }

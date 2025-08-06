@@ -1,7 +1,6 @@
 package com.acadmap.security.controller;
 
 
-import com.acadmap.security.dto.RefreshTokenDTO;
 import com.acadmap.security.dto.TokenDTO;
 import com.acadmap.security.service.AutorizacaoServiceRsa;
 import lombok.AllArgsConstructor;
@@ -27,12 +26,18 @@ public class AutorizacaoController {
         return new ResponseEntity<>(autorizacaoServiceRsa.autenticacao(authentication), HttpStatus.ACCEPTED);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> revokeToken(@RequestParam UUID refreshToken) {
+        autorizacaoServiceRsa.revokeRefreshToken(refreshToken);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/refresh-token")
-    public ResponseEntity<RefreshTokenDTO> refreshToken(
+    public ResponseEntity<TokenDTO> refreshToken(
             @RequestParam UUID refreshTokenUUID,
             @RequestHeader("Authorization") String bearerToken
     ) {
-        RefreshTokenDTO response =
+        TokenDTO response =
                 autorizacaoServiceRsa.refreshToken(refreshTokenUUID, bearerToken);
         return ResponseEntity.ok(response);
     }
