@@ -52,6 +52,16 @@ function HeaderSistema({ userType, userName }) {
                   </Link>
                 </li>
               )}
+              {(userType ==='ADMINISTRADOR') && (
+                <li>
+                  <Link
+                    to="/historico-auditoria"
+                  className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                    aria-current="page"
+                  >Histórico
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   to="/cadastro-usuario"

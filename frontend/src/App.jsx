@@ -12,6 +12,7 @@ import DetalhePendente from './pages/DetalhePendente';
 import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
+import VisualizarHistorico from './pages/VisualizarHistorico';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -51,6 +52,10 @@ const App = () => {
               <Route path="/pendente/:id" element={<DetalhePendente />} />
               <Route path="/periodico/:id" element={<VisualizarPeriodico />} />
               <Route path="/evento/:id" element={<VisualizarEvento />} />
+              <Route
+                path="/historico-auditoria"
+                element={<VisualizarHistorico />}
+              />
             </Routes>
           </main>
         </div>
