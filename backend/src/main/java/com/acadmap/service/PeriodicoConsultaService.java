@@ -2,9 +2,11 @@ package com.acadmap.service;
 
 import com.acadmap.model.dto.periodico.PeriodicoResumoListaDTO;
 import com.acadmap.model.dto.periodico.PeriodicoVisualizacaoDTO;
+import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.PeriodicoRepository;
+import com.acadmap.service.specification.VeiculoSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class PeriodicoConsultaService {
 
   private final PeriodicoRepository periodicoRepository;
+  private final VeiculoSpecification veiculoSpecification;
 
   public PeriodicoVisualizacaoDTO consultaPorId(UUID id) {
     Optional<Periodico> periodicoOpt = this.periodicoRepository.findById(id);
@@ -51,4 +55,15 @@ public class PeriodicoConsultaService {
             .map(PeriodicoResumoListaDTO::new)
             .collect(Collectors.toList());
   }
+
+  public List<PeriodicoResumoListaDTO> listarComFiltros(FiltroVeiculoRequestDTO filtro) {
+    Specification<Periodico> periodicoSpec = veiculoSpecification.getSpecification(filtro);
+
+    List<Periodico> periodicos = periodicoRepository.findAll(periodicoSpec);
+
+    return periodicos.stream()
+            .map(PeriodicoResumoListaDTO::new)
+            .collect(Collectors.toList());
+  }
+
 }
