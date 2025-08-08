@@ -65,19 +65,20 @@ const VisualizarPeriodico = () => {
               {periodicoData.issn || 'N/A'}
             </div>
 
-            {periodicoData.percentilJcr && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">PERCENTIL JCR:</span>{' '}
-                {periodicoData.percentilJcr}
-              </div>
-            )}
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL JCR:</span>{' '}
+              {periodicoData.percentilJcr || 'N/A'}
+            </div>
 
-            {periodicoData.percentilScopus && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
-                {periodicoData.percentilScopus}
-              </div>
-            )}
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
+              {periodicoData.percentilScopus || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">H5:</span>{' '}
+              {periodicoData.h5 || 'N/A'}
+            </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
