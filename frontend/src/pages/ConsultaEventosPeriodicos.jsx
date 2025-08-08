@@ -1,37 +1,9 @@
-// Funções utilitárias para apresentação de valores
-function formatVinculoSBC(valor) {
-  switch (valor) {
-    case 'vinculo_top_10':
-      return 'Vinculo Top 10';
-    case 'vinculo_top_20':
-      return 'Vinculo Top 20';
-    case 'vinculo_comum':
-      return 'Vinculo Comum';
-    case 'nenhum':
-      return 'Não';
-    default:
-      return valor || '';
-  }
-}
-
-function formatAdequacaoDefesa(valor) {
-  switch (valor) {
-    case 'mestrado':
-      return 'Apenas Mestrado';
-    case 'mestrado_doutorado':
-      return 'Mestrado e Doutorado';
-    case 'doutorado':
-      return 'Mestrado e Doutorado';
-    default:
-      return 'Nenhum';
-  }
-}
-
 import FiltroEventosPeriodicos from '../components/FiltroEventosPeriodicos';
 import HeaderSistema from '../components/HeaderSistema';
 import { useEffect, useState } from 'react';
 import useLogin from '../hooks/userAuth';
 import { Link } from 'react-router-dom';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);

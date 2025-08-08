@@ -7,6 +7,7 @@ import useAreas from '../hooks/useAreas';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 
 const fetchPeriodicoData = async id => {
   const response = await fetch(`${API_URL}/api/periodicos/${id}`);
@@ -92,7 +93,7 @@ const VisualizarPeriodico = () => {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {periodicoData.vinculoSbc || 'N/A'}
+              {formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
@@ -177,7 +178,7 @@ const VisualizarPeriodico = () => {
               <span className="font-medium">
                 ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
               </span>{' '}
-              {periodicoData.adequacaoDefesa.toUpperCase()}
+              {formatAdequacaoDefesa(periodicoData.adequacaoDefesa)}
             </div>
 
             <div className="text-sm text-gray-900">

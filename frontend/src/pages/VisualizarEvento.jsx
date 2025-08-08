@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
 
@@ -38,7 +39,7 @@ const VisualizarPeriodico = () => {
       />
       {eventoData && (
         <>
-          <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
+          <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
 
           <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
             Dados completos do Evento {eventoData.nome}
@@ -49,7 +50,7 @@ const VisualizarPeriodico = () => {
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
             <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO PERIÓDICO:</span>{' '}
+              <span className="font-medium">NOME DO EVENTO:</span>{' '}
               {eventoData.nome || 'N/A'}
             </div>
 
@@ -67,7 +68,7 @@ const VisualizarPeriodico = () => {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {eventoData.vinculoSbc || 'N/A'}
+              {formatVinculoSBC(eventoData.vinculoSbc) || 'N/A'}
             </div>
 
             {eventoData.linkSolSbc && (
@@ -98,9 +99,9 @@ const VisualizarPeriodico = () => {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">
-                ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
+                ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO):
               </span>{' '}
-              {eventoData.adequacaoDefesa.toUpperCase()}
+              {formatAdequacaoDefesa(eventoData.adequacaoDefesa)}
             </div>
 
             <div className="text-sm text-gray-900">
