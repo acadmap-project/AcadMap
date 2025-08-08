@@ -48,7 +48,8 @@ function HeaderSistema({ userType, userName }) {
                   <EventPeriodDropdown />
                 </li>
               )}
-              {(effectiveUserType === 'AUDITOR' || effectiveUserType === 'ADMINISTRADOR') && (
+              {(effectiveUserType === 'AUDITOR' ||
+                effectiveUserType === 'ADMINISTRADOR') && (
                 <li>
                   <Link
                     to="/registros-pendentes"

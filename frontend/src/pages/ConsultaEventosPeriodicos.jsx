@@ -41,14 +41,12 @@ function ConsultaEventosPeriodicos() {
         ) {
           setResultados({
             eventos: Array.isArray(saved.eventos) ? saved.eventos : [],
-            periodicos: Array.isArray(saved.periodicos)
-              ? saved.periodicos
-              : [],
+            periodicos: Array.isArray(saved.periodicos) ? saved.periodicos : [],
           });
           setShowBusca(false);
           setBusca(true);
         }
-      } catch (e) {
+      } catch {
         // ignora erros de parse
       } finally {
         sessionStorage.removeItem('consultaRestore');
@@ -164,7 +162,9 @@ function ConsultaEventosPeriodicos() {
                       vinculoSBC: p.vinculoSBC || '',
                       adequacaoDefesa: p.adequacaoDefesa || '',
                       h5Percentil:
-                        p.h5 || Math.max(p.percentilJcr, p.percentilScopus) || '',
+                        p.h5 ||
+                        Math.max(p.percentilJcr, p.percentilScopus) ||
+                        '',
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
@@ -184,8 +184,8 @@ function ConsultaEventosPeriodicos() {
                                 JSON.stringify(resultados)
                               );
                               sessionStorage.setItem('consultaRestore', '1');
-                            } catch (e) {
-                              // armazenamento pode falhar
+                            } catch {
+                              // ignora errors de armazenamento
                             }
                           }}
                         >

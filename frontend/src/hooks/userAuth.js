@@ -70,8 +70,19 @@ function useLogin() {
           });
         } else {
           setLoggedState(prev => {
-            if (prev.isLoggedIn === false && !prev.userType && !prev.userName && !prev.id) return prev;
-            return { isLoggedIn: false, userType: null, userName: null, id: null };
+            if (
+              prev.isLoggedIn === false &&
+              !prev.userType &&
+              !prev.userName &&
+              !prev.id
+            )
+              return prev;
+            return {
+              isLoggedIn: false,
+              userType: null,
+              userName: null,
+              id: null,
+            };
           });
         }
       } catch (e) {
@@ -94,7 +105,7 @@ function useLogin() {
   const broadcastChange = () => {
     try {
       window.dispatchEvent(new Event('loginStateChange'));
-    } catch (_) {
+    } catch {
       // no-op
     }
   };
@@ -132,7 +143,9 @@ function useLogin() {
     setLoggedState(nextState);
     try {
       localStorage.setItem('login', JSON.stringify(nextState));
-    } catch {}
+    } catch {
+      // no-op
+    }
     broadcastChange();
   };
 
@@ -146,7 +159,9 @@ function useLogin() {
     setLoggedState(nextState);
     try {
       localStorage.removeItem('login');
-    } catch {}
+    } catch {
+      // no-op
+    }
     broadcastChange();
   };
 
