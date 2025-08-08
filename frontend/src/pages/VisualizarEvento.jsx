@@ -31,6 +31,12 @@ const VisualizarPeriodico = () => {
     console.log('Dados do periódico:', eventoData);
   }, [eventoData]);
 
+  const voltarParaConsultas = () => {
+    // sinaliza para restaurar a tabela na tela de consultas
+    sessionStorage.setItem('consultaRestore', '1');
+    navigate('/');
+  };
+
   return (
     <>
       <HeaderSistema
@@ -110,10 +116,21 @@ const VisualizarPeriodico = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center mt-6">
+          <div className="w-full flex justify-center mt-6 gap-3">
             <button
-              onClick={() => navigate('/')}
+              onClick={voltarParaConsultas}
               className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+            >
+              Voltar para consultas
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem('consultaResultados');
+                sessionStorage.removeItem('consultaRestore');
+                navigate('/');
+              }}
+              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar ao início

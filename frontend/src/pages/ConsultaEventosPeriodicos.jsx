@@ -28,6 +28,34 @@ function ConsultaEventosPeriodicos() {
   const hasResultados =
     resultados.eventos.length > 0 || resultados.periodicos.length > 0;
 
+  // Restaura a última tabela de resultados quando vier da tela de detalhes
+  useEffect(() => {
+    const restore = sessionStorage.getItem('consultaRestore');
+    if (restore) {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem('consultaResultados'));
+        if (
+          saved &&
+          typeof saved === 'object' &&
+          (Array.isArray(saved.eventos) || Array.isArray(saved.periodicos))
+        ) {
+          setResultados({
+            eventos: Array.isArray(saved.eventos) ? saved.eventos : [],
+            periodicos: Array.isArray(saved.periodicos)
+              ? saved.periodicos
+              : [],
+          });
+          setShowBusca(false);
+          setBusca(true);
+        }
+      } catch (e) {
+        // ignora erros de parse
+      } finally {
+        sessionStorage.removeItem('consultaRestore');
+      }
+    }
+  }, []);
+
   useEffect(() => {
     console.log('Resultados atualizados:', resultados);
   }, [resultados]);
@@ -53,6 +81,9 @@ function ConsultaEventosPeriodicos() {
                 setShowBusca(true);
                 setResultados({ eventos: [], periodicos: [] });
                 setBusca(false);
+                // limpa qualquer restauração salva
+                sessionStorage.removeItem('consultaResultados');
+                sessionStorage.removeItem('consultaRestore');
               }}
             >
               ← Voltar
@@ -132,7 +163,8 @@ function ConsultaEventosPeriodicos() {
                       classificacao: p.classificacao || '',
                       vinculoSBC: p.vinculoSBC || '',
                       adequacaoDefesa: p.adequacaoDefesa || '',
-                      h5Percentil: p.h5 || Math.max(p.percentilJcr, p.percentilScopus) || '',
+                      h5Percentil:
+                        p.h5 || Math.max(p.percentilJcr, p.percentilScopus) || '',
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
@@ -145,6 +177,17 @@ function ConsultaEventosPeriodicos() {
                               ? `/evento/${item.id}`
                               : `/periodico/${item.id}`
                           }
+                          onClick={() => {
+                            try {
+                              sessionStorage.setItem(
+                                'consultaResultados',
+                                JSON.stringify(resultados)
+                              );
+                              sessionStorage.setItem('consultaRestore', '1');
+                            } catch (e) {
+                              // armazenamento pode falhar
+                            }
+                          }}
                         >
                           {item.nome}
                         </Link>
