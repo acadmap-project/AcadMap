@@ -7,6 +7,7 @@ import useAreas from '../hooks/useAreas';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 
 const fetchPeriodicoData = async id => {
   const response = await fetch(`${API_URL}/api/periodicos/${id}`);
@@ -37,6 +38,11 @@ const VisualizarPeriodico = () => {
     return area ? area.label : areaId;
   };
 
+  const voltarParaConsultas = () => {
+    sessionStorage.setItem('consultaRestore', '1');
+    navigate('/');
+  };
+
   return (
     <>
       <HeaderSistema
@@ -47,12 +53,12 @@ const VisualizarPeriodico = () => {
         <>
           <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
 
-          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12">
+          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
             Dados completos do Periódico {periodicoData.nome}
           </div>
 
           <div
-            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
+            className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
             <div className="text-sm text-gray-900">
@@ -65,19 +71,20 @@ const VisualizarPeriodico = () => {
               {periodicoData.issn || 'N/A'}
             </div>
 
-            {periodicoData.percentilJcr && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">PERCENTIL JCR:</span>{' '}
-                {periodicoData.percentilJcr}
-              </div>
-            )}
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL JCR:</span>{' '}
+              {periodicoData.percentilJcr || 'N/A'}
+            </div>
 
-            {periodicoData.percentilScopus && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
-                {periodicoData.percentilScopus}
-              </div>
-            )}
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
+              {periodicoData.percentilScopus || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">H5:</span>{' '}
+              {periodicoData.h5 || 'N/A'}
+            </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
@@ -91,7 +98,7 @@ const VisualizarPeriodico = () => {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {periodicoData.vinculoSbc || 'N/A'}
+              {formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
@@ -176,7 +183,7 @@ const VisualizarPeriodico = () => {
               <span className="font-medium">
                 ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
               </span>{' '}
-              {periodicoData.adequacaoDefesa.toUpperCase()}
+              {formatAdequacaoDefesa(periodicoData.adequacaoDefesa)}
             </div>
 
             <div className="text-sm text-gray-900">
@@ -185,10 +192,21 @@ const VisualizarPeriodico = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center mt-6">
+          <div className="w-full flex justify-center mt-6 gap-3">
             <button
-              onClick={() => navigate('/')}
+              onClick={voltarParaConsultas}
               className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+            >
+              Voltar para consultas
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem('consultaResultados');
+                sessionStorage.removeItem('consultaRestore');
+                navigate('/');
+              }}
+              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar ao início
