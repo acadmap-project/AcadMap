@@ -47,12 +47,12 @@ const VisualizarPeriodico = () => {
         <>
           <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
 
-          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12">
+          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
             Dados completos do Periódico {periodicoData.nome}
           </div>
 
           <div
-            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
+            className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
             <div className="text-sm text-gray-900">
