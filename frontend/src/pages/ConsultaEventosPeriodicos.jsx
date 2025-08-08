@@ -17,13 +17,13 @@ function formatVinculoSBC(valor) {
 function formatAdequacaoDefesa(valor) {
   switch (valor) {
     case 'mestrado':
-      return 'Mestrado';
+      return 'Apenas Mestrado';
     case 'mestrado_doutorado':
       return 'Mestrado e Doutorado';
     case 'doutorado':
-      return 'Doutorado';
+      return 'Mestrado e Doutorado';
     default:
-      return valor || '';
+      return 'Nenhum';
   }
 }
 
