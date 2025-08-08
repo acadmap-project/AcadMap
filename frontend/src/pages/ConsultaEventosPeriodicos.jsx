@@ -85,7 +85,7 @@ function ConsultaEventosPeriodicos() {
               <table className="border min-w-max mx-auto">
                 <thead>
                   <tr className="bg-black text-white">
-                    {/* coluna Tipo removida */}
+                    <th className="border px-2 py-1">Tipo</th>
                     <th className="border px-2 py-1">Nome</th>
                     <th className="border px-2 py-1">
                       <span>
@@ -136,7 +136,7 @@ function ConsultaEventosPeriodicos() {
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
-                      {/* coluna Tipo removida */}
+                      <td className="border px-2 py-1">{item.tipo}</td>
                       <td className="border px-2 py-1">
                         <Link
                           className="underline decoration-solid cursor-pointer"
