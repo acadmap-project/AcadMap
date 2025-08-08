@@ -1,4 +1,4 @@
-package com.acadmap.specification;
+package com.acadmap.service.specification;
 
 import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.entities.VeiculoPublicacao;
@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class VeiculoSpecification {
@@ -43,13 +42,10 @@ public class VeiculoSpecification {
             }
 
             if (filtro.getAreasPesquisaIds() != null && !filtro.getAreasPesquisaIds().isEmpty()) {
-                // O 'join' é usado para fazer a ligação com a tabela de relacionamento
                 filtroPredicates.add(root.join("areasPesquisa").get("idAreaPesquisa").in(filtro.getAreasPesquisaIds()));
             }
 
             if (filtro.getAreasPesquisaNomes() != null && !filtro.getAreasPesquisaNomes().isEmpty()) {
-                // O 'join' cria a ligação com a tabela de AreaPesquisa
-                // A cláusula 'in' verifica se o nome da área está na lista fornecida
                 filtroPredicates.add(root.join("areasPesquisa").get("nome").in(filtro.getAreasPesquisaNomes()));
             } else if (filtro.getAreasPesquisaIds() != null && !filtro.getAreasPesquisaIds().isEmpty()) {
                 filtroPredicates.add(root.join("areasPesquisa").get("idAreaPesquisa").in(filtro.getAreasPesquisaIds()));

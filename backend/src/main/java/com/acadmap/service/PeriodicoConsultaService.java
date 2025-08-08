@@ -6,7 +6,7 @@ import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.PeriodicoRepository;
-import com.acadmap.specification.VeiculoSpecification;
+import com.acadmap.service.specification.VeiculoSpecification;
 
 import java.util.List;
 import java.util.Optional;

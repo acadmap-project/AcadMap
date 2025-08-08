@@ -3,7 +3,6 @@ package com.acadmap.service;
 import com.acadmap.model.dto.evento.EventoVisualizacaoDTO;
 import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.entities.Evento;
-import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.EventoRepository;
 import com.acadmap.model.dto.evento.EventoResumoListaDTO;
@@ -13,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.acadmap.specification.VeiculoSpecification;
+import com.acadmap.service.specification.VeiculoSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
