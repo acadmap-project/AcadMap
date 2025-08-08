@@ -2,6 +2,7 @@ package com.acadmap.controller;
 
 
 import com.acadmap.model.dto.periodico.*;
+import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.repository.VeiculoPublicacaoRepository;
@@ -65,6 +66,14 @@ public class PeriodicoController {
     return ResponseEntity.status(HttpStatus.OK).body(periodicoDto);
   }
 
+  @PostMapping("/listar")
+    public ResponseEntity<List<PeriodicoResumoListaDTO>> listarComFiltros(@RequestBody(required = false) FiltroVeiculoRequestDTO filtro) {
+        FiltroVeiculoRequestDTO filtroTratado = (filtro == null) ? new FiltroVeiculoRequestDTO() : filtro;
+        List<PeriodicoResumoListaDTO> periodicos = periodicoConsultaService.listarComFiltros(filtroTratado);
+        return ResponseEntity.ok(periodicos);
+    }
+
+  @Deprecated
   @GetMapping("/listar")
   public ResponseEntity<List<PeriodicoResumoListaDTO>> listarPeriodicosAprovados(
           @RequestParam(required = false) String nome) {

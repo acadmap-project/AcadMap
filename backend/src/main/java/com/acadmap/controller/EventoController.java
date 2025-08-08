@@ -3,6 +3,7 @@ package com.acadmap.controller;
 import com.acadmap.model.dto.evento.EventoCreateDTO;
 import com.acadmap.model.dto.evento.EventoResponseDTO;
 import com.acadmap.model.dto.evento.EventoVisualizacaoDTO;
+import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.dto.evento.EventoResumoListaDTO;
 import com.acadmap.service.CriarEventoService;
 import com.acadmap.service.EventoConsultaService;
@@ -46,6 +47,14 @@ public class EventoController {
     return ResponseEntity.status(HttpStatus.OK).body(eventoDto);
   }
 
+  @PostMapping("/listar")
+  public ResponseEntity<List<EventoResumoListaDTO>> listarComFiltros(@RequestBody(required = false) FiltroVeiculoRequestDTO filtro) {
+    FiltroVeiculoRequestDTO filtroTratado = (filtro == null) ? new FiltroVeiculoRequestDTO() : filtro;
+    List<EventoResumoListaDTO> eventos = eventoConsultaService.listarComFiltros(filtroTratado);
+    return ResponseEntity.ok(eventos);
+  }
+
+  @Deprecated
   @GetMapping("/listar")
   public ResponseEntity<List<EventoResumoListaDTO>> listarEventosAprovados(
           @RequestParam(required = false) String nome) {

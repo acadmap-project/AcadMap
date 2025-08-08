@@ -1,7 +1,9 @@
 package com.acadmap.service;
 
 import com.acadmap.model.dto.evento.EventoVisualizacaoDTO;
+import com.acadmap.model.dto.veiculo.FiltroVeiculoRequestDTO;
 import com.acadmap.model.entities.Evento;
+import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.StatusVeiculo;
 import com.acadmap.repository.EventoRepository;
 import com.acadmap.model.dto.evento.EventoResumoListaDTO;
@@ -11,7 +13,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.acadmap.specification.VeiculoSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class EventoConsultaService {
   private final EventoRepository eventoRepository;
+  private final VeiculoSpecification veiculoSpecification;
 
   public EventoVisualizacaoDTO consultaPorId(UUID id) {
     Optional<Evento> eventoOpt = this.eventoRepository.findById(id);
@@ -49,4 +54,14 @@ public class EventoConsultaService {
             .collect(Collectors.toList());
   }
 
+  public List<EventoResumoListaDTO> listarComFiltros(FiltroVeiculoRequestDTO filtro) {
+
+    Specification<Evento> eventoSpec = veiculoSpecification.getSpecification(filtro);
+
+    List<Evento> eventos = eventoRepository.findAll(eventoSpec);
+
+    return eventos.stream()
+            .map(EventoResumoListaDTO::new)
+            .collect(Collectors.toList());
+  }
 }
