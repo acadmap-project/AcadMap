@@ -150,7 +150,7 @@ function ConsultaEventosPeriodicos() {
                       classificacao: ev.classificacao || '',
                       vinculoSBC: ev.vinculoSBC || '',
                       adequacaoDefesa: ev.adequacaoDefesa || '',
-                      h5Percentil: ev.h5 || ev.percentil || '',
+                      h5Percentil: ev.h5 || '',
                     })),
                     ...(resultados.periodicos || []).map(p => ({
                       id: p.idVeiculo,
@@ -160,7 +160,7 @@ function ConsultaEventosPeriodicos() {
                       classificacao: p.classificacao || '',
                       vinculoSBC: p.vinculoSBC || '',
                       adequacaoDefesa: p.adequacaoDefesa || '',
-                      h5Percentil: p.h5 || p.percentil || '',
+                      h5Percentil: p.h5 || Math.max(p.percentilJcr, p.percentilScopus) || '',
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
