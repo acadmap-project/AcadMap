@@ -4,11 +4,16 @@ import { useEffect, useState } from 'react';
 import useLogin from '../hooks/userAuth';
 import { Link } from 'react-router-dom';
 import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
+import ListaFiltrosEventosPeriodicos from '../components/ListaFiltrosEventosPeriodicos';
+import useAreas from '../hooks/useAreas';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const [showBusca, setShowBusca] = useState(true);
+  const [filtrosAtivos, setFiltrosAtivos] = useState({}); 
+  const areas = useAreas();
+
   const onResultados = ({ eventos, periodicos }) => {
     setResultados({
       eventos: Array.isArray(eventos) ? eventos : [],
@@ -97,7 +102,11 @@ function ConsultaEventosPeriodicos() {
       <div className="w-full flex flex-col items-center">
         {showBusca && (
           <div className="w-full md:max-w-xs md:min-w-[20rem] mb-4 md:mb-0">
-            <FiltroEventosPeriodicos onResultados={onResultados} />
+            <FiltroEventosPeriodicos
+              onResultados={onResultados}
+              filtrosAtivos={filtrosAtivos}
+              onFiltrosChange={setFiltrosAtivos}
+            />
             {!hasResultados && busca && (
               <div className="flex justify-center mt-4">
                 <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
@@ -109,7 +118,8 @@ function ConsultaEventosPeriodicos() {
           </div>
         )}
         {!showBusca && hasResultados && (
-          <div className="w-full flex flex-col items-center">
+          <div className="w-full flex flex-col items-center mt-8">
+            <ListaFiltrosEventosPeriodicos filtros={filtrosAtivos} areas={areas} />
             <div className="w-full flex justify-center mt-8">
               <table className="border min-w-max mx-auto">
                 <thead>
@@ -195,13 +205,13 @@ function ConsultaEventosPeriodicos() {
                       <td className="border px-2 py-1">
                         {Array.isArray(item.areaConhecimento)
                           ? item.areaConhecimento.map((area, idx) => (
-                              <span key={idx}>
-                                {area}
-                                {idx < item.areaConhecimento.length - 1 && (
-                                  <br />
-                                )}
-                              </span>
-                            ))
+                            <span key={idx}>
+                              {area}
+                              {idx < item.areaConhecimento.length - 1 && (
+                                <br />
+                              )}
+                            </span>
+                          ))
                           : item.areaConhecimento}
                       </td>
                       <td className="border px-2 py-1">
