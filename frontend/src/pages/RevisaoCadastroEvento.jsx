@@ -224,7 +224,7 @@ function RevisaoCadastroEventoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ÍNDICE H5*:</span>{' '}
+              <span className="font-medium">ÍNDICE H5:</span>{' '}
               {eventData.h5 || 'N/A'}
             </div>
 

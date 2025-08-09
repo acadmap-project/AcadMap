@@ -26,6 +26,8 @@ public class PeriodicoResumoListaDTO {
     private ClassificacaoVeiculo classificacao;
     private Boolean flagPredatorio;
     private Integer h5;
+    private Double percentilJcr;
+    private Double percentilScopus;
     private AdequacaoDefesa adequacaoDefesa;
     private VinculoSBC vinculoSBC;
     private Set<String> areaPesquisa;
@@ -37,6 +39,8 @@ public class PeriodicoResumoListaDTO {
         this.classificacao = periodico.getClassificacao();
         this.flagPredatorio = periodico.getFlagPredatorio();
         this.h5 = periodico.getH5();
+        this.percentilJcr = periodico.getPercentilJcr();
+        this.percentilScopus = periodico.getPercentilScopus();
         this.adequacaoDefesa = periodico.getAdequadoDefesa();
         this.classificacao = periodico.getClassificacao();
         this.vinculoSBC = periodico.getVinculoSbc();
