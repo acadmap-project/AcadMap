@@ -53,27 +53,59 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
 
   const onSubmit = async data => {
     const normalizedData = normalizeToNull(data);
-    const params = new URLSearchParams();
 
-    Object.entries(normalizedData).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== '') {
-        if (Array.isArray(value)) {
-          value.forEach(v => params.append(key, v));
-        } else {
-          params.append(key, value);
-        }
-      }
-    });
+    const body = {};
 
-    const eventosUrl = `${API_URL}/api/eventos/listar?${params.toString()}`;
-    const periodicosUrl = `${API_URL}/api/periodicos/listar?${params.toString()}`;
+    if (normalizedData.nome) body.nome = normalizedData.nome;
+
+    if (normalizedData.areasPesquisaIds && normalizedData.areasPesquisaIds.length > 0 && Array.isArray(areas)) {
+      body.areasPesquisaNomes = normalizedData.areasPesquisaIds
+        .map(id => {
+          const area = areas.find(a => a.value === id);
+          return area ? area.label : null;
+        })
+        .filter(Boolean);
+    }
+
+    if (typeof normalizedData.vinculoSbcCheckbox === 'boolean') {
+      body.vinculoSbc = normalizedData.vinculoSbcCheckbox;
+    }
+
+    if (Array.isArray(normalizedData.adequacaoDefesas) && normalizedData.adequacaoDefesas.length > 0) {
+      body.adequacaoDefesa = normalizedData.adequacaoDefesas.map(str => str.toUpperCase());
+    }
+
+    if (normalizedData.h5Minimo !== undefined && normalizedData.h5Minimo !== null && normalizedData.h5Minimo !== '') {
+      body.h5Minimo = normalizedData.h5Minimo;
+    }
+
+    if (normalizedData.classificacaoMinima) {
+      body.classificacaoMinima = normalizedData.classificacaoMinima.toLowerCase();
+    }
+
+    if (Array.isArray(normalizedData.modoCombinacao) && normalizedData.modoCombinacao.includes('correspondenciaExata')) {
+      body.correspondenciaExata = true;
+    } else {
+      body.correspondenciaExata = false;
+    }
+
+    const eventosUrl = `${API_URL}/api/eventos/listar`;
+    const periodicosUrl = `${API_URL}/api/periodicos/listar`;
 
     let eventosData = [];
     let periodicosData = [];
     try {
       const [eventosRes, periodicosRes] = await Promise.all([
-        fetch(eventosUrl),
-        fetch(periodicosUrl),
+        fetch(eventosUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }),
+        fetch(periodicosUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }),
       ]);
 
       if (eventosRes.ok) {
@@ -87,16 +119,12 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     } catch (err) {
       setErrorInfo({
         title: 'Erro no Servidor',
-        message:
-          'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
+        message: 'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
         type: 'error',
       });
-
       setShowErrorPopup(true);
-
       eventosData = [];
       periodicosData = [];
-
       console.error('Erro ao buscar eventos e periódicos:', err);
     }
 

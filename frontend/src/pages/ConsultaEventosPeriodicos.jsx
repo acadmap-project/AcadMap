@@ -11,7 +11,7 @@ function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const [showBusca, setShowBusca] = useState(true);
-  const [filtrosAtivos, setFiltrosAtivos] = useState({}); 
+  const [filtrosAtivos, setFiltrosAtivos] = useState({});
   const areas = useAreas();
 
   const onResultados = ({ eventos, periodicos }) => {
@@ -59,9 +59,9 @@ function ConsultaEventosPeriodicos() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('Resultados atualizados:', resultados);
-  }, [resultados]);
+  // useEffect(() => {
+  //   console.log('Resultados atualizados:', resultados);
+  // }, [resultados]);
 
   return (
     <>
@@ -99,26 +99,34 @@ function ConsultaEventosPeriodicos() {
         <div style={{ width: '140px' }} className="flex-shrink-0" />
       </div>
 
-      <div className="w-full flex flex-col items-center">
-        {showBusca && (
-          <div className="w-full md:max-w-xs md:min-w-[20rem] mb-4 md:mb-0">
-            <FiltroEventosPeriodicos
-              onResultados={onResultados}
-              filtrosAtivos={filtrosAtivos}
-              onFiltrosChange={setFiltrosAtivos}
-            />
-            {!hasResultados && busca && (
-              <div className="flex justify-center mt-4">
-                <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
-                  Nenhum evento ou periódico aprovado foi encontrado com os
-                  critérios informados
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+      <div
+        className={`w-full flex ${hasResultados
+          ? 'flex-col md:flex-row justify-center items-start gap-20 mt-2'
+          : 'justify-center'
+          }`}
+      >
+        <div
+          className={
+            hasResultados
+              ? 'md:max-w-xs md:min-w-[12rem] mb-4 md:mb-0'
+              : 'w-full'
+          }
+        >
+          <FiltroEventosPeriodicos onResultados={onResultados}
+            filtrosAtivos={filtrosAtivos}
+            onFiltrosChange={setFiltrosAtivos}
+          />
+
+          {!hasResultados && busca && (
+            <div className="flex justify-center mt-4">
+              <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
+                Nenhum evento ou periódico aprovado foi encontrado com os critérios informados
+              </p>
+            </div>
+          )}
+        </div>
         {!showBusca && hasResultados && (
-          <div className="w-full flex flex-col items-center mt-8">
+          <div className="w-full md:flex-1 md:max-w-5xl">
             <ListaFiltrosEventosPeriodicos filtros={filtrosAtivos} areas={areas} />
             <div className="w-full flex justify-center mt-8">
               <table className="border min-w-max mx-auto">
