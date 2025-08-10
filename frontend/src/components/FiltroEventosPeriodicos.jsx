@@ -1,5 +1,5 @@
 import { API_URL } from '../utils/apiUrl';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
@@ -22,7 +22,7 @@ const normalizeToNull = obj => {
   return normalized;
 };
 
-function FiltroEventosPeriodicos({ onResultados }) {
+function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
   const [open, setOpen] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
@@ -31,7 +31,7 @@ function FiltroEventosPeriodicos({ onResultados }) {
     type: 'error',
   });
   const areas = useAreas();
-  const { control, register, handleSubmit } = useForm();
+  const { control, register, handleSubmit, watch, setValue } = useForm();
   const minimalClassification = [
     { value: 'A1', label: 'A1' },
     { value: 'A2', label: 'A2' },
@@ -43,29 +43,69 @@ function FiltroEventosPeriodicos({ onResultados }) {
     { value: 'A8', label: 'A8' },
   ];
 
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (onFiltrosChange) {
+      onFiltrosChange(watchedValues);
+    }
+  }, [JSON.stringify(watchedValues), onFiltrosChange]);
+
   const onSubmit = async data => {
     const normalizedData = normalizeToNull(data);
-    const params = new URLSearchParams();
 
-    Object.entries(normalizedData).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== '') {
-        if (Array.isArray(value)) {
-          value.forEach(v => params.append(key, v));
-        } else {
-          params.append(key, value);
-        }
-      }
-    });
+    const body = {};
 
-    const eventosUrl = `${API_URL}/api/eventos/listar?${params.toString()}`;
-    const periodicosUrl = `${API_URL}/api/periodicos/listar?${params.toString()}`;
+    if (normalizedData.nome) body.nome = normalizedData.nome;
+
+    if (normalizedData.areasPesquisaIds && normalizedData.areasPesquisaIds.length > 0 && Array.isArray(areas)) {
+      body.areasPesquisaNomes = normalizedData.areasPesquisaIds
+        .map(id => {
+          const area = areas.find(a => a.value === id);
+          return area ? area.label : null;
+        })
+        .filter(Boolean);
+    }
+
+    if (typeof normalizedData.vinculoSbcCheckbox === 'boolean') {
+      body.vinculoSbc = normalizedData.vinculoSbcCheckbox;
+    }
+
+    if (Array.isArray(normalizedData.adequacaoDefesas) && normalizedData.adequacaoDefesas.length > 0) {
+      body.adequacaoDefesa = normalizedData.adequacaoDefesas.map(str => str.toUpperCase());
+    }
+
+    if (normalizedData.h5Minimo !== undefined && normalizedData.h5Minimo !== null && normalizedData.h5Minimo !== '') {
+      body.h5Minimo = normalizedData.h5Minimo;
+    }
+
+    if (normalizedData.classificacaoMinima) {
+      body.classificacaoMinima = normalizedData.classificacaoMinima.toLowerCase();
+    }
+
+    if (Array.isArray(normalizedData.modoCombinacao) && normalizedData.modoCombinacao.includes('correspondenciaExata')) {
+      body.correspondenciaExata = true;
+    } else {
+      body.correspondenciaExata = false;
+    }
+
+    const eventosUrl = `${API_URL}/api/eventos/listar`;
+    const periodicosUrl = `${API_URL}/api/periodicos/listar`;
 
     let eventosData = [];
     let periodicosData = [];
     try {
       const [eventosRes, periodicosRes] = await Promise.all([
-        fetch(eventosUrl),
-        fetch(periodicosUrl),
+        fetch(eventosUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }),
+        fetch(periodicosUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }),
       ]);
 
       if (eventosRes.ok) {
@@ -79,16 +119,12 @@ function FiltroEventosPeriodicos({ onResultados }) {
     } catch (err) {
       setErrorInfo({
         title: 'Erro no Servidor',
-        message:
-          'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
+        message: 'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
         type: 'error',
       });
-
       setShowErrorPopup(true);
-
       eventosData = [];
       periodicosData = [];
-
       console.error('Erro ao buscar eventos e periódicos:', err);
     }
 
@@ -164,7 +200,7 @@ function FiltroEventosPeriodicos({ onResultados }) {
                       {...register('vinculoSbcCheckbox', {
                         onChange: e => {
                           if (!e.target.checked) {
-                            // setValue('vinculoSbc', '');
+                            setValue('vinculoSbc', '');
                           }
                         },
                       })}
@@ -175,16 +211,35 @@ function FiltroEventosPeriodicos({ onResultados }) {
                 </label>
               </div>
               <div>
-                <label className="block font-semibold uppercase text-xs mb-1">
+                <label
+                  className="block font-semibold uppercase text-xs mb-1">
                   Adequação para Defesas
                 </label>
                 <div>
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                    <input type="checkbox"
+                      checked={(watch('adequacaoDefesas') || []).includes('mestrado')}
+                      onChange={e => {
+                        const current = watch('adequacaoDefesas') || [];
+                        if (e.target.checked) {
+                          setValue('adequacaoDefesas', [...current, 'mestrado']);
+                        } else {
+                          setValue('adequacaoDefesas', current.filter(item => item !== 'mestrado'));
+                        }
+                      }} />
                     Mestrado
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                    <input type="checkbox"
+                      checked={(watch('adequacaoDefesas') || []).includes('doutorado')}
+                      onChange={e => {
+                        const current = watch('adequacaoDefesas') || [];
+                        if (e.target.checked) {
+                          setValue('adequacaoDefesas', [...current, 'doutorado']);
+                        } else {
+                          setValue('adequacaoDefesas', current.filter(item => item !== 'doutorado'));
+                        }
+                      }} />
                     Doutorado
                   </label>
                 </div>
@@ -199,6 +254,13 @@ function FiltroEventosPeriodicos({ onResultados }) {
                   min={0}
                   className="w-full border border-gray-400 rounded px-2 py-2"
                   defaultValue={0}
+                  {...register('h5Minimo', { valueAsNumber: true })}
+                  onChange={e => {
+                    const value = e.target.value;
+                    if (value) {
+                      setValue('h5Minimo', parseFloat(value));
+                    }
+                  }}
                 />
               </div>
 
@@ -206,7 +268,9 @@ function FiltroEventosPeriodicos({ onResultados }) {
                 <label className="block font-semibold uppercase text-xs mb-1">
                   Classificação Mínima
                 </label>
-                <select className="w-full border border-gray-400 rounded px-2 py-2">
+                <select
+                  className="w-full border border-gray-400 rounded px-2 py-2"
+                  onChange={e => setValue('classificacaoMinima', e.target.value)}>
                   <option>Selecione</option>
                   {minimalClassification.map(opt => (
                     <option key={opt.value} value={opt.value}>
@@ -221,7 +285,18 @@ function FiltroEventosPeriodicos({ onResultados }) {
                   Modo de Combinação
                 </label>
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    checked={(watch('modoCombinacao') || []).includes('correspondenciaExata')}
+                    onChange={e => {
+                      const current = watch('modoCombinacao') || [];
+                      if (e.target.checked) {
+                        setValue('modoCombinacao', [...current, 'correspondenciaExata']);
+                      } else {
+                        setValue('modoCombinacao', current.filter(item => item !== 'correspondenciaExata'));
+                      }
+                    }}
+                  />
                   Correspondência Exata
                 </label>
               </div>
