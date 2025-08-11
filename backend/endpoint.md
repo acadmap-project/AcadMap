@@ -703,6 +703,7 @@ Campos do Filtro:
 |--------|----------------------------------------------|
 | 200    | Lista de periódicos retornada com sucesso.   |
 | 500    | Erro interno no servidor.                    |
+
 Nota para Desenvolvedores: O antigo endpoint GET /listar?nome=... foi marcado como obsoleto (@Deprecated) no backend. Ele continua a funcionar por retrocompatibilidade, mas todo o novo desenvolvimento deve usar o endpoint POST /listar com o corpo JSON.
 
 # 📘 API - Histórico de Auditoria
