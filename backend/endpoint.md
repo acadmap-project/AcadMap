@@ -714,12 +714,24 @@ Base URL:
 /api/log-veiculo/historico
 ```
 **Descrição:**  
-Retorna uma lista com informações sobre os logs da auditoria de veículos
+Retorna uma lista com informações sobre os logs da auditoria de veículos. Somente para usuários com acesso de administrador. 
+
+**Headers obrigatórios:**
+```http
+X-User-Id: <UUID do usuário solicitante>
+```
 
 ### ✅ **Exemplo de uso**
 ```
 GET /api/log-veiculo/historico
 ```
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                  |
+|--------|--------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso. |
+| 405    | Usuário não possui acesso.                 |
+
 
 ### ✅ **Resposta de Sucesso (200 OK)**
 ```json
