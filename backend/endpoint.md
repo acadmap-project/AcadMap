@@ -704,3 +704,48 @@ Campos do Filtro:
 | 200    | Lista de periódicos retornada com sucesso.   |
 | 500    | Erro interno no servidor.                    |
 Nota para Desenvolvedores: O antigo endpoint GET /listar?nome=... foi marcado como obsoleto (@Deprecated) no backend. Ele continua a funcionar por retrocompatibilidade, mas todo o novo desenvolvimento deve usar o endpoint POST /listar com o corpo JSON.
+
+# 📘 API - Histórico de Auditoria
+
+Base URL:
+
+```
+/api/log-veiculo/historico
+```
+**Descrição:**  
+Retorna uma lista com informações sobre os logs da auditoria de veículos
+
+### ✅ **Exemplo de uso**
+```
+GET /api/log-veiculo/historico
+```
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+[
+    {
+        "idUsuario": "11111111-1111-1111-1111-111111111111",
+        "idVeiculo": "55555555-5555-5555-5555-555555555555",
+        "acao": "Submissão",
+        "statusVeiculo": "Pendente",
+        "timestamp": "2025-08-07T13:22:47.080348",
+        "justificativaNegacao": null
+    },
+    {
+        "idUsuario": "00000000-0000-0000-0000-000000000001",
+        "idVeiculo": "55555555-5555-5555-5555-555555555555",
+        "acao": "Aprovação",
+        "statusVeiculo": "Aprovado",
+        "timestamp": "2025-08-08T13:22:47.080348",
+        "justificativaNegacao": null
+    },
+    {
+        "idUsuario": "33333333-3333-3333-3333-333333333333",
+        "idVeiculo": "77777777-7777-7777-7777-777777777777",
+        "acao": "Negação",
+        "statusVeiculo": "Negado",
+        "timestamp": "2025-08-09T13:22:47.080348",
+        "justificativaNegacao": "O veículo não possui relevância acadêmica comprovada para o programa. O índice h5 é muito baixo e não possui vínculo com a SBC."
+    }
+]
+```
