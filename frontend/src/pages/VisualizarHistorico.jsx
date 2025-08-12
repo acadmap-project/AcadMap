@@ -1,59 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
-
-// dados mock para exemplo
-const mockLogs = [
-  {
-    id: '1',
-    dataHora: '2025-08-06T14:30:00Z',
-    usuario: {
-      id: 'usr-123',
-      nome: 'Usuário 1',
-      tipo: 'pesquisador'
-    },
-    veiculo: {
-      id: 'vec-456',
-      nome: 'Evento 1'
-    },
-    acao: 'adicao_veiculo', 
-    status: 'pendente',
-    justificativa: null,
-  },
-  {
-    id: '2', 
-    dataHora: '2025-08-05T10:20:00Z',
-    usuario: {
-      id: 'usr-124',
-      nome: 'Usuário 2',
-      tipo: 'auditor'
-    },
-    veiculo: {
-      id: 'vec-457', 
-      nome: 'Periódico 1'
-    },
-    acao: 'cadastro_veiculo_aceito',
-    status: 'aceito',
-    justificativa: null,
-  },
-  {
-    id: '3',
-    dataHora: '2025-08-04T09:15:00Z', 
-    usuario: {
-      id: 'usr-125',
-      nome: 'Usuário 3',
-      tipo: 'auditor'  
-    },
-    veiculo: {
-      id: 'vec-458',
-      nome: 'Evento 2'
-    },
-    acao: 'cadastro_veiculo_recusado',
-    status: 'negado',
-    justificativa: 'Motivo da negação'
-  }
-];
+import { API_URL } from '../utils/apiUrl';
 
 const formatarAcao = (acao) => {
   const mapeamento = {
@@ -65,20 +13,42 @@ const formatarAcao = (acao) => {
   return mapeamento[acao] || acao;
 };
 
+const formatarStatus = (status) => {
+  const mapeamento = {
+    'pendente': 'Pendente',
+    'aceito': 'Aprovado',
+    'negado': 'Negado'
+  };
+  return mapeamento[status] || status;
+};
+
 function VisualizarHistorico() {
   const { loggedIn } = useLogin();
-  const [idBusca, setIdBusca] = useState('');
-  const [tipoBusca, setTipoBusca] = useState('veiculo');
 
-  const { data: logs, isLoading } = useQuery({
-    queryKey: ['logs', tipoBusca, idBusca],
+  const { data: logs, isLoading, error } = useQuery({
+    queryKey: ['logs'],
     queryFn: async () => {
-      // During development, return mock data
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(mockLogs), 500);
-      });
+      try {
+        const response = await fetch(`${API_URL}/api/log-veiculo/historico`, {
+          headers: {
+            'X-User-Id': loggedIn.userId,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 405) {
+            throw new Error('Usuário não possui acesso ao histórico');
+          }
+          throw new Error('Erro ao carregar histórico');
+        }
+
+        return response.json();
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+        throw error;
+      }
     },
-    enabled: idBusca.length > 0
   });
 
   return (
@@ -90,25 +60,6 @@ function VisualizarHistorico() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Histórico de Auditoria
           </h1>
-
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <select 
-              value={tipoBusca}
-              onChange={e => setTipoBusca(e.target.value)}
-              className="form-select block w-full sm:w-48 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="veiculo">Veículo</option>
-              <option value="usuario">Usuário</option>
-            </select>
-
-            <input
-              type="text"
-              value={idBusca}
-              onChange={e => setIdBusca(e.target.value)}
-              placeholder={`Digite o ID do ${tipoBusca}`}
-              className="form-input block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            />
-          </div>
 
           {isLoading ? (
             <div className="text-center py-8">
@@ -143,22 +94,22 @@ function VisualizarHistorico() {
                   {logs.map(log => (
                     <tr key={log.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {log.usuario.id}
+                        {log.idUsuario}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {log.veiculo.id}
+                        {log.idVeiculo}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {formatarAcao(log.acao)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {log.status}
+                        {formatarStatus(log.statusVeiculo)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {new Date(log.dataHora).toLocaleString()}
+                        {new Date(log.timestamp).toLocaleString()}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900">
-                        {log.justificativa || 'N/A'}
+                        {log.justificativaNegacao || 'N/A'}
                       </td>
                     </tr>
                   ))}
@@ -167,7 +118,7 @@ function VisualizarHistorico() {
             </div>
           ) : (
             <div className="text-center py-8 text-gray-500">
-              {idBusca ? 'Nenhum registro encontrado' : 'Digite um ID para buscar'}
+              Nenhum registro encontrado
             </div>
           )}
         </div>
