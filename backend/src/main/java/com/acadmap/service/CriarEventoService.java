@@ -33,7 +33,9 @@ public class CriarEventoService {
   public EventoResponseDTO criarEvento(EventoCreateDTO dto, UUID uuid, boolean forcar) {
     try {
 
-      List<Evento> eventosSimilares = this.eventoRepository.findByNomeContainingIgnoreCase(dto.getNome());
+      // Consider duplicates only among active/pending events, ignore rejected/excluded
+      List<StatusVeiculo> statusesParaChecar = List.of(StatusVeiculo.pendente, StatusVeiculo.aceito);
+      List<Evento> eventosSimilares = this.eventoRepository.findByNomeIgnoreCaseAndStatusIn(dto.getNome(), statusesParaChecar);
       if (!eventosSimilares.isEmpty() && !forcar) {
         throw new EventoDuplicadoException("Erro de duplicidade de evento detectado.",
             eventosSimilares);

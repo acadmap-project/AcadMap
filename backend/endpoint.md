@@ -382,128 +382,55 @@ Status: `404 NOT FOUND`
 | 404    | Evento não encontrado                     |
 
 ---
-
-
-## 📋 3. **Listar Eventos Aprovados**
-
-**Endpoint:**
-```
-
-GET /api/eventos/listar
-
-```
-
-**Descrição:** Retorna uma lista resumida de todos os eventos com status 'aceito', ideal para a visualização pública (RF03).
-
-**Query Parameters:**
-- `nome` (string, opcional) - Filtra a lista para retornar apenas eventos cujo nome contenha o texto informado (busca parcial e case-insensitive).
-
-### ✅ **Exemplo de uso**
-```
-
-GET /api/eventos/listar?nome=Symposium
-
-````
-
----
-
-### ✅ **Resposta de Sucesso (200 OK)**
-Retorna uma lista de eventos resumidos. Se nenhum filtro for aplicado, retorna todos os eventos aprovados. Se nenhum evento for encontrado, retorna uma lista vazia `[]`.
-
-```json
-[
-  {
-    "idVeiculo": "99999999-dddd-dddd-dddd-dddddddddddd",
-    "nome": "Symposium on Distributed Computing",
-    "classificacao": "a2",
-    "h5": 50,
-    "adequacaoDefesa": "doutorado",
-    "vinculoSBC": "vinculo_top_10",
-    "areaPesquisa": [
-      "Ciência da Computação",
-      "Engenharia Elétrica"
-    ]
-  },
-  {
-    "idVeiculo": "11111111-1111-1111-1111-111111111109",
-    "nome": "Linux Kernel Summit",
-    "classificacao": "a2",
-    "h5": 55,
-    "adequacaoDefesa": "mestrado_doutorado",
-    "vinculoSBC": "vinculo_comum",
-    "areaPesquisa": [
-      "Ciência da Computação"
-    ]
-  }
-]
-````
-
------
-
-### ✅ **Códigos de resposta**
-
-| Código | Descrição                                 |
-|--------|-------------------------------------------|
-| 200    | Lista de eventos retornada com sucesso.   |
-| 500    | Erro interno no servidor.                 |
-
-````
-
----
-
-### 2. Documentação para Listar Periódicos
-
-**Instrução:** Adicione o seguinte texto ao final da seção **`# 📘 API - Periodico`** no seu arquivo `endpoint.md`.
-
-```markdown
----
- ## 📋 3. **Listar Periódicos Aprovados**
-
+# 📋 3. Listar e Filtrar Eventos Aprovados
 **Endpoint:**
 
-````
-
-GET /api/periodicos/listar
-
+```
+POST /api/eventos/listar
 ```
 
-**Descrição:** Retorna uma lista resumida de todos os periódicos com status 'aceito', ideal para a visualização pública (RF03). Inclui uma flag para identificar periódicos predatórios.
+**Descrição:**
 
-**Query Parameters:**
-- `nome` (string, opcional) - Filtra a lista para retornar apenas periódicos cujo nome contenha o texto informado (busca parcial e case-insensitive).
-
-### ✅ **Exemplo de uso**
-```
-
-GET /api/periodicos/listar?nome=Journal
-
-````
+Retorna uma lista resumida de todos os eventos com status 'aceito', com base num conjunto complexo de filtros enviados no corpo da requisição. Se um corpo vazio ou nulo for enviado, retorna todos os veículos aprovados. Este endpoint substitui o antigo GET /listar.
 
 ---
+### 🔸 Requisição
 
-### ✅ **Resposta de Sucesso (200 OK)**
-Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retorna todos os periódicos aprovados. Se nenhum periódico for encontrado, retorna uma lista vazia `[]`.
+**Content-Type:** application/json
 
-```json
-[
-  {
-    "idVeiculo": "55555555-5555-5555-5555-555555555555",
-    "nome": "Journal of Advanced AI",
-    "tipo": "periodico",
-    "classificacao": "a1",
-    "flagPredatorio": false
-  },
-  {
-    "idVeiculo": "11111111-1111-1111-1111-111111111101",
-    "nome": "The Art of Computer Programming Journal",
-    "tipo": "periodico",
-    "classificacao": "a1",
-    "flagPredatorio": false
-  }
-]
-````
+Corpo (Body) esperado:
+```
+O corpo da requisição é um objeto JSON onde todos os campos são opcionais.
+```
+Exemplo de Corpo (Body):
 
------
+```
+JSON
+
+{
+"nome": "Conference",
+"areasPesquisaNomes": ["Ciência da Computação", "Engenharia Elétrica"],
+"vinculoSbc": true,
+"adequacaoDefesa": ["MESTRADO", "DOUTORADO"],
+"h5Minimo": 50,
+"classificacaoMinima": "a2",
+"correspondenciaExata": false
+}
+
+```
+Campos do Filtro:
+
+- ``nome (string)``: Filtra veículos cujo nome contenha o texto informado.
+- ``areasPesquisaNomes (array de strings)``: Retorna veículos que pertençam a pelo menos uma das áreas de pesquisa listadas.
+- ``vinculoSbc (boolean)``:
+  - ``true``: Retorna apenas veículos que possuem algum vínculo com a SBC.
+  - ``false``: Retorna apenas veículos sem vínculo com a SBC.
+- ``adequacaoDefesa (array de strings)``: Retorna veículos adequados para as defesas listadas. Valores possíveis no Enum: "MESTRADO", "DOUTORADO", "MESTRADO_DOUTORADO", "NENHUM".
+- ``h5Minimo (integer)``: Retorna veículos com índice H5 igual ou superior ao valor especificado.
+- ``classificacaoMinima (string)``: Retorna veículos com classificação igual ou superior à especificada. A ordem é: a8 (mais baixa) até a1 (mais alta). Valores possíveis: "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8".
+- ``correspondenciaExata (boolean)``: Define como os filtros são combinados.
+  - ``false (padrão)``: Lógica OR (inclusiva). Retorna veículos que correspondam a qualquer um dos filtros preenchidos.
+  - ``true``: Lógica AND (excludente). Retorna veículos que correspondam a todos os filtros preenchidos.
 
 ### ✅ **Códigos de resposta**
 
@@ -511,6 +438,9 @@ Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retor
 |--------|----------------------------------------------|
 | 200    | Lista de periódicos retornada com sucesso.   |
 | 500    | Erro interno no servidor.                    |
+Nota para Desenvolvedores: O antigo endpoint GET /listar?nome=... foi marcado como obsoleto (@Deprecated) no backend. Ele continua a funcionar por retrocompatibilidade, mas todo o novo desenvolvimento deve usar o endpoint POST /listar com o corpo JSON.
+
+---
 
 # 📘 API - Periodico
 
@@ -717,64 +647,55 @@ Status: `400 BAD REQUEST`
 | 404    | Periódico não encontrado                     |
 
 ---
- ## 📋 3. **Listar Periódicos Aprovados**
-
+# 📋 3. Listar e Filtrar Periódicos Aprovados
 **Endpoint:**
 
 ```
-
-GET /api/periodicos/listar
-
+POST /api/periodicos/listar
 ```
 
-**Descrição:** Retorna uma lista resumida de todos os periódicos com status 'aceito', ideal para a visualização pública (RF03). Inclui uma flag para identificar periódicos predatórios.
+**Descrição:** 
 
-**Query Parameters:**
-- `nome` (string, opcional) - Filtra a lista para retornar apenas periódicos cujo nome contenha o texto informado (busca parcial e case-insensitive).
-
-### ✅ **Exemplo de uso**
-```
-
-GET /api/periodicos/listar?nome=Journal
-
-````
+Retorna uma lista resumida de todos os periódicos com status 'aceito', com base num conjunto complexo de filtros enviados no corpo da requisição. Se um corpo vazio ou nulo for enviado, retorna todos os veículos aprovados. Este endpoint substitui o antigo GET /listar.
 
 ---
+## 🔸 Requisição
 
-### ✅ **Resposta de Sucesso (200 OK)**
-Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retorna todos os periódicos aprovados. Se nenhum periódico for encontrado, retorna uma lista vazia `[]`.
+**Content-Type:** application/json
 
-```json
-[
-  {
-    "idVeiculo": "55555555-5555-5555-5555-555555555555",
-    "nome": "Journal of Advanced AI",
-    "classificacao": "a1",
-    "flagPredatorio": false,
-    "h5": 10,
-    "adequacaoDefesa": "doutorado",
-    "vinculoSBC": "vinculo_top_10",
-    "areaPesquisa": [
-      "Ciência da Computação",
-      "Engenharia Elétrica"
-    ]
-  },
-  {
-    "idVeiculo": "11111111-1111-1111-1111-111111111101",
-    "nome": "The Art of Computer Programming Journal",
-    "classificacao": "a1",
-    "flagPredatorio": false,
-    "h5": null,
-    "adequacaoDefesa": "doutorado",
-    "vinculoSBC": "vinculo_top_10",
-    "areaPesquisa": [
-      "Ciência da Computação"
-    ]
-  }
-]
-````
+Corpo (Body) esperado:
+```
+O corpo da requisição é um objeto JSON onde todos os campos são opcionais.
+```
+Exemplo de Corpo (Body):
 
------
+```
+JSON
+
+{
+"nome": "Conference",
+"areasPesquisaNomes": ["Ciência da Computação", "Engenharia Elétrica"],
+"vinculoSbc": true,
+"adequacaoDefesa": ["MESTRADO", "DOUTORADO"],
+"h5Minimo": 50,
+"classificacaoMinima": "a2",
+"correspondenciaExata": false
+}
+
+```
+Campos do Filtro:
+
+- ``nome (string)``: Filtra veículos cujo nome contenha o texto informado.
+- ``areasPesquisaNomes (array de strings)``: Retorna veículos que pertençam a pelo menos uma das áreas de pesquisa listadas.
+- ``vinculoSbc (boolean)``:
+  - ``true``: Retorna apenas veículos que possuem algum vínculo com a SBC.
+  - ``false``: Retorna apenas veículos sem vínculo com a SBC.
+- ``adequacaoDefesa (array de strings)``: Retorna veículos adequados para as defesas listadas. Valores possíveis no Enum: "MESTRADO", "DOUTORADO", "MESTRADO_DOUTORADO", "NENHUM".
+- ``h5Minimo (integer)``: Retorna veículos com índice H5 igual ou superior ao valor especificado.
+- ``classificacaoMinima (string)``: Retorna veículos com classificação igual ou superior à especificada. A ordem é: a8 (mais baixa) até a1 (mais alta). Valores possíveis: "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8".
+- ``correspondenciaExata (boolean)``: Define como os filtros são combinados.
+  - ``false (padrão)``: Lógica OR (inclusiva). Retorna veículos que correspondam a qualquer um dos filtros preenchidos.
+  - ``true``: Lógica AND (excludente). Retorna veículos que correspondam a todos os filtros preenchidos.
 
 ### ✅ **Códigos de resposta**
 
@@ -782,3 +703,62 @@ Retorna uma lista de periódicos resumidos. Se nenhum filtro for aplicado, retor
 |--------|----------------------------------------------|
 | 200    | Lista de periódicos retornada com sucesso.   |
 | 500    | Erro interno no servidor.                    |
+
+Nota para Desenvolvedores: O antigo endpoint GET /listar?nome=... foi marcado como obsoleto (@Deprecated) no backend. Ele continua a funcionar por retrocompatibilidade, mas todo o novo desenvolvimento deve usar o endpoint POST /listar com o corpo JSON.
+
+# 📘 API - Histórico de Auditoria
+
+Base URL:
+
+```
+/api/log-veiculo/historico
+```
+**Descrição:**  
+Retorna uma lista com informações sobre os logs da auditoria de veículos. Somente para usuários com acesso de administrador. 
+
+**Headers obrigatórios:**
+```http
+X-User-Id: <UUID do usuário solicitante>
+```
+
+### ✅ **Exemplo de uso**
+```
+GET /api/log-veiculo/historico
+```
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                  |
+|--------|--------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso. |
+| 405    | Usuário não possui acesso.                 |
+
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+[
+    {
+        "idUsuario": "11111111-1111-1111-1111-111111111111",
+        "idVeiculo": "55555555-5555-5555-5555-555555555555",
+        "acao": "Submissão",
+        "statusVeiculo": "Pendente",
+        "timestamp": "2025-08-07T13:22:47.080348",
+        "justificativaNegacao": null
+    },
+    {
+        "idUsuario": "00000000-0000-0000-0000-000000000001",
+        "idVeiculo": "55555555-5555-5555-5555-555555555555",
+        "acao": "Aprovação",
+        "statusVeiculo": "Aprovado",
+        "timestamp": "2025-08-08T13:22:47.080348",
+        "justificativaNegacao": null
+    },
+    {
+        "idUsuario": "33333333-3333-3333-3333-333333333333",
+        "idVeiculo": "77777777-7777-7777-7777-777777777777",
+        "acao": "Negação",
+        "statusVeiculo": "Negado",
+        "timestamp": "2025-08-09T13:22:47.080348",
+        "justificativaNegacao": "O veículo não possui relevância acadêmica comprovada para o programa. O índice h5 é muito baixo e não possui vínculo com a SBC."
+    }
+]
+```

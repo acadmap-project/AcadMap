@@ -6,52 +6,136 @@ A aplicação está sendo desenvolvida sob o padrão de desenvolvimento de softw
 
 ```
 .
-├── backend
-│   ├── Dockerfile
-│   ├── src
-│   │   └── main
-│   │       ├── java
-│   │       │   └── com
-│   │       │       └── acadmap
-│   │       │           ├── controller
-│   │       │           ├── model
-│   │       │           ├── repository
-│   │       │           └── service
-│   │       └── resources
-│   └── tomcat
-├── db
-├── docker-compose.yml
-├── .env
-├── frontend
-│   ├── Dockerfile
-│   ├── public
-│   └── .husky
-│       └── pre-commit
-│   └── src
-│       ├── assets
-│       ├── components 
-│       ├── pages 
-│       ├── hooks 
-│       ├── utils 
-│       ├── styles 
-│       │   ├── App.css
-│       │   └── index.css
-│       ├── App.jsx
-│       └── main.jsx
-│   ├── eslint.config.js
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── .eslintrc.json
-│   ├── .prettierrc
-│   ├── .eslintignore
-│   ├── .prettierignore
-│   └── README.md
 ├── .github
 │   └── workflows
-│       └── ci.yml
-└── README.md
+│       ├── CODEOWNERS
+│       ├── ci.yml
+│       └── prod-ci.yml
+├── .gitignore
+├── .idea/
+├── CONTRIBUTING.md
+├── README.md
+├── backend
+│   ├── .gitattributes
+│   ├── .gitignore
+│   ├── .mvn/
+│   ├── Dockerfile.dev
+│   ├── Dockerfile.prod
+│   ├── ambiente_dev.sh
+│   ├── build_backend_docker.md
+│   ├── desinstala_amb.sh
+│   ├── docker-volumes
+│   │   └── scripts-sql
+│   │       ├── 01_init.sql
+│   │       ├── 02_insert.sql
+│   │       ├── 03_examples.sql
+│   │       ├── 04_extra_examples.sql
+│   │       └── 05_extra.sql
+│   ├── documentacao_ambiente.md
+│   ├── endpoint.md
+│   ├── mvnw
+│   ├── mvnw.cmd
+│   ├── pom.xml
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── com
+│       │   │       └── acadmap
+│       │   │           ├── AcadmapApplication.java
+│       │   │           ├── controller
+│       │   │           │   ├── AreaPesquisaController.java
+│       │   │           │   ├── EventoController.java
+│       │   │           │   ├── PeriodicoController.java
+│       │   │           │   ├── ProgramaController.java
+│       │   │           │   ├── UsuarioController.java
+│       │   │           │   └── VeiculoController.java
+│       │   │           ├── exception/
+│       │   │           ├── model/
+│       │   │           ├── repository/
+│       │   │           └── service/
+│       │   └── resources
+│       │       └── application.properties
+│       └── test
+│           └── java
+│               └── com
+│                   └── acadmap
+│                       └── AcadmapApplicationTests.java
+├── db
+│   └── .gitkeep
+├── docker-compose.override.yml
+├── docker-compose.prod.yml
+├── docker-compose.yml
+├── frontend
+│   ├── .eslintrc.json
+│   ├── .husky
+│   │   └── pre-commit
+│   ├── .prettierignore
+│   ├── .prettierrc
+│   ├── .tool-versions
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── dist/
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── nginx.conf
+│   ├── node_modules/
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── App.jsx
+│   │   ├── assets
+│   │   │   ├── close.svg
+│   │   │   ├── drop.svg
+│   │   │   └── pfp.svg
+│   │   ├── components
+│   │   │   ├── AdequacaoDefesa.jsx
+│   │   │   ├── CampoEntrada.jsx
+│   │   │   ├── CriptografiaSenha.jsx
+│   │   │   ├── ErrorPopup.jsx
+│   │   │   ├── EventPeriodDropdown.jsx
+│   │   │   ├── FiltroEventosPeriodicos.jsx
+│   │   │   ├── FormularioCadastro.jsx
+│   │   │   ├── FormularioEvento.jsx
+│   │   │   ├── FormularioPeriodico.jsx
+│   │   │   ├── GerarSenha.jsx
+│   │   │   ├── HeaderSistema.jsx
+│   │   │   ├── ListaPendentes.jsx
+│   │   │   ├── MultipleSelectDropdown.jsx
+│   │   │   ├── Popup.jsx
+│   │   │   └── SemPermissao.jsx
+│   │   ├── hooks
+│   │   │   ├── useAreas.js
+│   │   │   ├── usePendencias.js
+│   │   │   ├── useProgramas.js
+│   │   │   └── userAuth.js
+│   │   ├── main.jsx
+│   │   ├── pages
+│   │   │   ├── CadastroEvento.jsx
+│   │   │   ├── CadastroPeriodico.jsx
+│   │   │   ├── CadastroUsuario.jsx
+│   │   │   ├── ConsultaEventosPeriodicos.jsx
+│   │   │   ├── DetalhePendente.jsx
+│   │   │   ├── GerenciadorCadastros.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── NotFound.jsx
+│   │   │   ├── RegistrosPendentes.jsx
+│   │   │   ├── RevisaoCadastroEvento.jsx
+│   │   │   ├── ValidacaoPeriodico.jsx
+│   │   │   ├── VisualizarEvento.jsx
+│   │   │   └── VisualizarPeriodico.jsx
+│   │   ├── schemas
+│   │   │   ├── CadastrarEventoSchema.ts
+│   │   │   ├── CadastrarPeriodicoSchema.ts
+│   │   │   └── CadastrarUsuarioSchema.ts
+│   │   ├── styles
+│   │   │   ├── App.css
+│   │   │   └── index.css
+│   │   └── utils
+│   │       ├── apiUrl.js
+│   │       ├── classificacaoBase.js
+│   │       ├── format.js
+│   │       └── renomearKey.js
+│   └── vite.config.js
 
 ```
 

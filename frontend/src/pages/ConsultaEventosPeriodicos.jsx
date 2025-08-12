@@ -1,42 +1,19 @@
-// Funções utilitárias para apresentação de valores
-function formatVinculoSBC(valor) {
-  switch (valor) {
-    case 'vinculo_top_10':
-      return 'Vinculo Top 10';
-    case 'vinculo_top_20':
-      return 'Vinculo Top 20';
-    case 'vinculo_comum':
-      return 'Vinculo Comum';
-    case 'nenhum':
-      return 'Não';
-    default:
-      return valor || '';
-  }
-}
-
-function formatAdequacaoDefesa(valor) {
-  switch (valor) {
-    case 'mestrado':
-      return 'Mestrado';
-    case 'mestrado_doutorado':
-      return 'Mestrado e Doutorado';
-    case 'doutorado':
-      return 'Doutorado';
-    default:
-      return valor || '';
-  }
-}
-
 import FiltroEventosPeriodicos from '../components/FiltroEventosPeriodicos';
 import HeaderSistema from '../components/HeaderSistema';
 import { useEffect, useState } from 'react';
 import useLogin from '../hooks/userAuth';
 import { Link } from 'react-router-dom';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
+import ListaFiltrosEventosPeriodicos from '../components/ListaFiltrosEventosPeriodicos';
+import useAreas from '../hooks/useAreas';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const [showBusca, setShowBusca] = useState(true);
+  const [filtrosAtivos, setFiltrosAtivos] = useState({});
+  const areas = useAreas();
+
   const onResultados = ({ eventos, periodicos }) => {
     setResultados({
       eventos: Array.isArray(eventos) ? eventos : [],
@@ -56,9 +33,35 @@ function ConsultaEventosPeriodicos() {
   const hasResultados =
     resultados.eventos.length > 0 || resultados.periodicos.length > 0;
 
+  // Restaura a última tabela de resultados quando vier da tela de detalhes
   useEffect(() => {
-    console.log('Resultados atualizados:', resultados);
-  }, [resultados]);
+    const restore = sessionStorage.getItem('consultaRestore');
+    if (restore) {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem('consultaResultados'));
+        if (
+          saved &&
+          typeof saved === 'object' &&
+          (Array.isArray(saved.eventos) || Array.isArray(saved.periodicos))
+        ) {
+          setResultados({
+            eventos: Array.isArray(saved.eventos) ? saved.eventos : [],
+            periodicos: Array.isArray(saved.periodicos) ? saved.periodicos : [],
+          });
+          setShowBusca(false);
+          setBusca(true);
+        }
+      } catch {
+        // ignora erros de parse
+      } finally {
+        sessionStorage.removeItem('consultaRestore');
+      }
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('Resultados atualizados:', resultados);
+  // }, [resultados]);
 
   return (
     <>
@@ -81,6 +84,9 @@ function ConsultaEventosPeriodicos() {
                 setShowBusca(true);
                 setResultados({ eventos: [], periodicos: [] });
                 setBusca(false);
+                // limpa qualquer restauração salva
+                sessionStorage.removeItem('consultaResultados');
+                sessionStorage.removeItem('consultaRestore');
               }}
             >
               ← Voltar
@@ -93,27 +99,40 @@ function ConsultaEventosPeriodicos() {
         <div style={{ width: '140px' }} className="flex-shrink-0" />
       </div>
 
-      <div className="w-full flex flex-col items-center">
-        {showBusca && (
-          <div className="w-full md:max-w-xs md:min-w-[20rem] mb-4 md:mb-0">
-            <FiltroEventosPeriodicos onResultados={onResultados} />
-            {!hasResultados && busca && (
-              <div className="flex justify-center mt-4">
-                <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
-                  Nenhum evento ou periódico aprovado foi encontrado com os
-                  critérios informados
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+      <div
+        className={`w-full flex ${hasResultados
+          ? 'flex-col md:flex-row justify-center items-start gap-20 mt-2'
+          : 'justify-center'
+          }`}
+      >
+        <div
+          className={
+            hasResultados
+              ? 'md:max-w-xs md:min-w-[12rem] mb-4 md:mb-0'
+              : 'w-full'
+          }
+        >
+          <FiltroEventosPeriodicos onResultados={onResultados}
+            filtrosAtivos={filtrosAtivos}
+            onFiltrosChange={setFiltrosAtivos}
+          />
+
+          {!hasResultados && busca && (
+            <div className="flex justify-center mt-4">
+              <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
+                Nenhum evento ou periódico aprovado foi encontrado com os critérios informados
+              </p>
+            </div>
+          )}
+        </div>
         {!showBusca && hasResultados && (
-          <div className="w-full flex flex-col items-center">
+          <div className="w-full md:flex-1 md:max-w-5xl">
+            <ListaFiltrosEventosPeriodicos filtros={filtrosAtivos} areas={areas} />
             <div className="w-full flex justify-center mt-8">
               <table className="border min-w-max mx-auto">
                 <thead>
                   <tr className="bg-black text-white">
-                    {/* coluna Tipo removida */}
+                    <th className="border px-2 py-1">Tipo</th>
                     <th className="border px-2 py-1">Nome</th>
                     <th className="border px-2 py-1">
                       <span>
@@ -150,7 +169,7 @@ function ConsultaEventosPeriodicos() {
                       classificacao: ev.classificacao || '',
                       vinculoSBC: ev.vinculoSBC || '',
                       adequacaoDefesa: ev.adequacaoDefesa || '',
-                      h5Percentil: ev.h5 || ev.percentil || '',
+                      h5Percentil: ev.h5 || '',
                     })),
                     ...(resultados.periodicos || []).map(p => ({
                       id: p.idVeiculo,
@@ -160,11 +179,14 @@ function ConsultaEventosPeriodicos() {
                       classificacao: p.classificacao || '',
                       vinculoSBC: p.vinculoSBC || '',
                       adequacaoDefesa: p.adequacaoDefesa || '',
-                      h5Percentil: p.h5 || p.percentil || '',
+                      h5Percentil:
+                        p.h5 ||
+                        Math.max(p.percentilJcr, p.percentilScopus) ||
+                        '',
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
-                      {/* coluna Tipo removida */}
+                      <td className="border px-2 py-1">{item.tipo}</td>
                       <td className="border px-2 py-1">
                         <Link
                           className="underline decoration-solid cursor-pointer"
@@ -173,6 +195,17 @@ function ConsultaEventosPeriodicos() {
                               ? `/evento/${item.id}`
                               : `/periodico/${item.id}`
                           }
+                          onClick={() => {
+                            try {
+                              sessionStorage.setItem(
+                                'consultaResultados',
+                                JSON.stringify(resultados)
+                              );
+                              sessionStorage.setItem('consultaRestore', '1');
+                            } catch {
+                              // ignora errors de armazenamento
+                            }
+                          }}
                         >
                           {item.nome}
                         </Link>
@@ -180,13 +213,13 @@ function ConsultaEventosPeriodicos() {
                       <td className="border px-2 py-1">
                         {Array.isArray(item.areaConhecimento)
                           ? item.areaConhecimento.map((area, idx) => (
-                              <span key={idx}>
-                                {area}
-                                {idx < item.areaConhecimento.length - 1 && (
-                                  <br />
-                                )}
-                              </span>
-                            ))
+                            <span key={idx}>
+                              {area}
+                              {idx < item.areaConhecimento.length - 1 && (
+                                <br />
+                              )}
+                            </span>
+                          ))
                           : item.areaConhecimento}
                       </td>
                       <td className="border px-2 py-1">
