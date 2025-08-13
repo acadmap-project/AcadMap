@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import GraficoClassificacao from "../charts/GraficoClassificacao";
+import GraficoAreaConhecimento from "../charts/GraficoAreaConhecimento";
 
 const VisualizarGraficos = () => {
   const { state } = useLocation();
@@ -23,6 +24,7 @@ const VisualizarGraficos = () => {
         </div>
         <div className="grow grid grid-cols-2 grid-rows-2">
           <div><GraficoClassificacao data={resultados} /></div>
+          <div><GraficoAreaConhecimento data={resultados} /></div>
         </div>
       </div>
     </>
