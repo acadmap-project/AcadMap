@@ -14,6 +14,8 @@ import DetalhePendente from './pages/DetalhePendente';
 import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
+import Login from './pages/Login';
+import HeaderSistema from './components/HeaderSistema';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,49 +34,50 @@ const LoadingComponent = () => (
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <div className="App w-screen h-screen">
-          <main>
-            <Suspense fallback={<LoadingComponent />}>
-              <Routes>
-                <Route path="/" element={<ConsultaEventosPeriodicos />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/cadastro-evento" element={<CadastroEvento />} />
-                <Route
-                  path="/cadastro-periodico"
-                  element={<CadastroPeriodico />}
-                />
-                <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
-                <Route
-                  path="/registros-pendentes"
-                  element={<RegistrosPendentes />}
-                />
-                <Route
-                  path="/revisao-cadastro-evento"
-                  element={<RevisaoCadastroEvento />}
-                />
-                <Route
-                  path="/validacao-cadastro"
-                  element={<ValidacaoPeriodico />}
-                />
-                <Route
-                  path="/cadastro-pendente"
-                  element={<GerenciadorCadastros />}
-                />
-                <Route path="/pendente/:id" element={<DetalhePendente />} />
-                <Route
-                  path="/periodico/:id"
-                  element={<VisualizarPeriodico />}
-                />
-                <Route path="/evento/:id" element={<VisualizarEvento />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </main>
-        </div>
-      </Router>
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <div className="App w-screen h-screen">
+            <main>
+              <Suspense fallback={<LoadingComponent />}>
+                <Routes>
+                  <Route path="/" element={<ConsultaEventosPeriodicos />} />
+                  <Route path="/home" element={<Home />} />
+                  <Route path="/cadastro-evento" element={<CadastroEvento />} />
+                  <Route
+                    path="/cadastro-periodico"
+                    element={<CadastroPeriodico />}
+                  />
+                  <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
+                  <Route
+                    path="/registros-pendentes"
+                    element={<RegistrosPendentes />}
+                  />
+                  <Route
+                    path="/revisao-cadastro-evento"
+                    element={<RevisaoCadastroEvento />}
+                  />
+                  <Route
+                    path="/validacao-cadastro"
+                    element={<ValidacaoPeriodico />}
+                  />
+                  <Route
+                    path="/cadastro-pendente"
+                    element={<GerenciadorCadastros />}
+                  />
+                  <Route path="/pendente/:id" element={<DetalhePendente />} />
+                  <Route
+                    path="/periodico/:id"
+                    element={<VisualizarPeriodico />}
+                  />
+                  <Route path="/evento/:id" element={<VisualizarEvento />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </main>
+          </div>
+        </Router>
+      </QueryClientProvider>
   );
 };
 
