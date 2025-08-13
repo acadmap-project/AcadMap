@@ -15,11 +15,13 @@ function ConsultaEventosPeriodicos() {
   const areas = useAreas();
 
   const onResultados = ({ eventos, periodicos }) => {
+    // Limpa resultados antigos antes de adicionar os novos
     setResultados({
       eventos: Array.isArray(eventos) ? eventos : [],
       periodicos: Array.isArray(periodicos) ? periodicos : [],
     });
     setBusca(true);
+    // Garante que showBusca reflete corretamente o estado da busca
     if (
       (Array.isArray(eventos) && eventos.length > 0) ||
       (Array.isArray(periodicos) && periodicos.length > 0)
@@ -75,22 +77,85 @@ function ConsultaEventosPeriodicos() {
       >
         <div
           style={{ width: '180px' /* largura do botão */ }}
-          className="flex-shrink-0 flex justify-start"
+          className="flex-shrink-0 flex flex-col justify-start"
         >
           {!showBusca && hasResultados && (
-            <button
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 ml-8"
-              onClick={() => {
-                setShowBusca(true);
-                setResultados({ eventos: [], periodicos: [] });
-                setBusca(false);
-                // limpa qualquer restauração salva
-                sessionStorage.removeItem('consultaResultados');
-                sessionStorage.removeItem('consultaRestore');
-              }}
-            >
-              ← Voltar
-            </button>
+            <>
+              <button
+                className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 ml-8"
+                onClick={() => {
+                  setShowBusca(true);
+                  setResultados({ eventos: [], periodicos: [] });
+                  setBusca(false);
+                  // limpa qualquer restauração salva
+                  sessionStorage.removeItem('consultaResultados');
+                  sessionStorage.removeItem('consultaRestore');
+                }}
+              >
+                ← Voltar
+              </button>
+              <button
+                className="!px-8 !py-3 !bg-green-600 !text-white !border-0 !rounded-none hover:!bg-green-700 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 ml-8 mt-2"
+                onClick={() => {
+                  // Função para exportar resultados em CSV
+                  const csvRows = [];
+                  const header = [
+                    'Tipo',
+                    'Nome',
+                    'Área de Conhecimento',
+                    'Classificação',
+                    'Vínculo SBC',
+                    'Adequação para Defesas',
+                    'H5 ou Percentil',
+                  ];
+                  csvRows.push(header.join(','));
+                  const allItems = [
+                    ...(resultados.eventos || []).map(ev => ({
+                      tipo: 'Evento',
+                      nome: ev.nome,
+                      areaConhecimento: Array.isArray(ev.areaPesquisa) ? ev.areaPesquisa.join('; ') : (ev.areaPesquisa || ''),
+                      classificacao: ev.classificacao || '',
+                      vinculoSBC: ev.vinculoSBC || '',
+                      adequacaoDefesa: ev.adequacaoDefesa || '',
+                      h5Percentil: ev.h5 || '',
+                    })),
+                    ...(resultados.periodicos || []).map(p => ({
+                      tipo: 'Periódico',
+                      nome: p.nome,
+                      areaConhecimento: Array.isArray(p.areaPesquisa) ? p.areaPesquisa.join('; ') : (p.areaPesquisa || ''),
+                      classificacao: p.classificacao || '',
+                      vinculoSBC: p.vinculoSBC || '',
+                      adequacaoDefesa: p.adequacaoDefesa || '',
+                      h5Percentil: p.h5 || Math.max(p.percentilJcr, p.percentilScopus) || '',
+                    })),
+                  ];
+                  allItems.forEach(item => {
+                    const row = [
+                      item.tipo,
+                      item.nome,
+                      item.areaConhecimento,
+                      String(item.classificacao).toUpperCase(),
+                      item.vinculoSBC,
+                      item.adequacaoDefesa,
+                      item.h5Percentil,
+                    ].map(field => `"${String(field).replace(/"/g, '""')}`);
+                    csvRows.push(row.join(','));
+                  });
+                  const csvContent = csvRows.join('\n');
+                  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', 'resultados_consulta.csv');
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                Exportar
+              </button>
+            </>
           )}
         </div>
         <h1 className="text-4xl font-normal text-center flex-1">
