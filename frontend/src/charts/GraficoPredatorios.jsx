@@ -26,8 +26,11 @@ const GraficoPredatorios = ({ data }) => {
   ];
 
   return (
-    <div>
-      <h3 className="font-bold text-2xl mb-4">Distribuição de Veículos Predatórios</h3>
+    <div className='max-w-lg'>
+      <div className='flex justify-between items-center'>
+        <h3 className="font-bold text-2xl">Panorama de Periódicos</h3>
+        <p className='p-2 rounded-xl bg-red-100 text-red-800 font-bold'>Predatórios: {predatorio}</p>
+      </div>
       <PieChart width={600} height={400}>
         <Pie
           data={chartData}

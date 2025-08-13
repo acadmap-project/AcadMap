@@ -1,5 +1,22 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
+const CustomTooltip = ({ active, payload, total }) => {
+  console.log(payload, active, total)
+  if (active && payload && payload.length) {
+    const { name, value } = payload[0].payload;
+    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+    return (
+      <div className="bg-gray-300 p-2 rounded">
+        <p>{name}</p>
+        <p>
+          Veículos: {value} ({percent}%)
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const GraficoAreaConhecimento = ({ data }) => {
   const todos = [...data.eventos, ...data.periodicos];
 
@@ -11,11 +28,14 @@ const GraficoAreaConhecimento = ({ data }) => {
     });
   });
 
+  
   // Formato para Recharts
   const chartData = Object.entries(contagem).map(([area, valor]) => ({
     name: area,
     value: valor
   }));
+  
+  const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
   const COLORS = [
     '#FF6384', // vermelho claro
@@ -43,7 +63,7 @@ const GraficoAreaConhecimento = ({ data }) => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} position={{ x: 400, y: 20 }} animationDuration={0} total={total} />
         <Legend
           layout="vertical"
           align="right"
