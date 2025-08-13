@@ -31,7 +31,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     type: 'error',
   });
   const areas = useAreas();
-  const { control, register, handleSubmit, watch, setValue } = useForm();
+  const { control, register, handleSubmit, watch, setValue, reset } = useForm();
   const minimalClassification = [
     { value: 'A1', label: 'A1' },
     { value: 'A2', label: 'A2' },
@@ -354,12 +354,72 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
             </div>
           )}
         </div>
-        <div className="flex justify-center items-center md:col-span-2">
+        <div className="flex justify-center items-center gap-4 md:col-span-2">
           <button
             type="submit"
             className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
           >
             Buscar
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              reset();
+              if (onFiltrosChange) {
+                onFiltrosChange({});
+              }
+
+              // Faz busca imediatamente após limpar filtros
+              const eventosUrl = `${API_URL}/api/eventos/listar`;
+              const periodicosUrl = `${API_URL}/api/periodicos/listar`;
+
+              let eventosData = [];
+              let periodicosData = [];
+              try {
+                const [eventosRes, periodicosRes] = await Promise.all([
+                  fetch(eventosUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({}),
+                  }),
+                  fetch(periodicosUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({}),
+                  }),
+                ]);
+
+                if (eventosRes.ok) {
+                  const json = await eventosRes.json();
+                  eventosData = Array.isArray(json) ? json : [];
+                }
+                if (periodicosRes.ok) {
+                  const json = await periodicosRes.json();
+                  periodicosData = Array.isArray(json) ? json : [];
+                }
+              } catch (err) {
+                setErrorInfo({
+                  title: 'Erro no Servidor',
+                  message:
+                    'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
+                  type: 'error',
+                });
+                setShowErrorPopup(true);
+                eventosData = [];
+                periodicosData = [];
+                console.error('Erro ao buscar eventos e periódicos:', err);
+              }
+
+              if (onResultados) {
+                onResultados({
+                  eventos: eventosData,
+                  periodicos: periodicosData,
+                });
+              }
+            }}
+            className="!px-8 !py-3 !bg-gray-500 !text-white !border-0 !rounded-none hover:!bg-gray-600 focus:!outline-none focus:!ring-2 focus:!ring-gray-400 focus:!ring-opacity-50"
+          >
+            Limpar Filtros
           </button>
         </div>
       </form>
