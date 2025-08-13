@@ -27,7 +27,7 @@ const GraficoAreaConhecimento = ({ data }) => {
 
   return (
     <div>
-      <h3>Distribuição por Área de Conhecimento</h3>
+      <h3 className="font-bold text-2xl mb-4">Distribuição por Área de Conhecimento</h3>
       <PieChart width={600} height={400}>
         <Pie
           data={chartData}
@@ -48,7 +48,6 @@ const GraficoAreaConhecimento = ({ data }) => {
           layout="vertical"
           align="right"
           verticalAlign="middle"
-          wrapperStyle={{ right: 15 }}
         />
       </PieChart>
     </div>
