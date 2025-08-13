@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import GraficoClassificacao from "../charts/GraficoClassificacao";
 import GraficoAreaConhecimento from "../charts/GraficoAreaConhecimento";
 import GraficoAdequacaoDefesa from "../charts/GraficoAdequacaoDefesa";
+import GraficoPredatorios from "../charts/GraficoPredatorios";
 
 
 const VisualizarGraficos = () => {
@@ -28,6 +29,7 @@ const VisualizarGraficos = () => {
           <GraficoClassificacao data={resultados} />
           <GraficoAreaConhecimento data={resultados} />
           <GraficoAdequacaoDefesa data={resultados} />
+          <GraficoPredatorios data={resultados} />
         </div>
       </div>
     </>
