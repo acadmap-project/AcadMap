@@ -100,10 +100,11 @@ function ConsultaEventosPeriodicos() {
       </div>
 
       <div
-        className={`w-full flex ${hasResultados
-          ? 'flex-col md:flex-row justify-center items-start gap-20 mt-2'
-          : 'justify-center'
-          }`}
+        className={`w-full flex ${
+          hasResultados
+            ? 'flex-col md:flex-row justify-center items-start gap-20 mt-2'
+            : 'justify-center'
+        }`}
       >
         <div
           className={
@@ -112,7 +113,8 @@ function ConsultaEventosPeriodicos() {
               : 'w-full'
           }
         >
-          <FiltroEventosPeriodicos onResultados={onResultados}
+          <FiltroEventosPeriodicos
+            onResultados={onResultados}
             filtrosAtivos={filtrosAtivos}
             onFiltrosChange={setFiltrosAtivos}
           />
@@ -120,14 +122,18 @@ function ConsultaEventosPeriodicos() {
           {!hasResultados && busca && (
             <div className="flex justify-center mt-4">
               <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
-                Nenhum evento ou periódico aprovado foi encontrado com os critérios informados
+                Nenhum evento ou periódico aprovado foi encontrado com os
+                critérios informados
               </p>
             </div>
           )}
         </div>
         {!showBusca && hasResultados && (
           <div className="w-full md:flex-1 md:max-w-5xl">
-            <ListaFiltrosEventosPeriodicos filtros={filtrosAtivos} areas={areas} />
+            <ListaFiltrosEventosPeriodicos
+              filtros={filtrosAtivos}
+              areas={areas}
+            />
             <div className="w-full flex justify-center mt-8">
               <table className="border min-w-max mx-auto">
                 <thead>
@@ -213,13 +219,13 @@ function ConsultaEventosPeriodicos() {
                       <td className="border px-2 py-1">
                         {Array.isArray(item.areaConhecimento)
                           ? item.areaConhecimento.map((area, idx) => (
-                            <span key={idx}>
-                              {area}
-                              {idx < item.areaConhecimento.length - 1 && (
-                                <br />
-                              )}
-                            </span>
-                          ))
+                              <span key={idx}>
+                                {area}
+                                {idx < item.areaConhecimento.length - 1 && (
+                                  <br />
+                                )}
+                              </span>
+                            ))
                           : item.areaConhecimento}
                       </td>
                       <td className="border px-2 py-1">
