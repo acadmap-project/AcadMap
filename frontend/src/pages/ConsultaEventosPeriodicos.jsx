@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import ListaFiltrosEventosPeriodicos from '../components/ListaFiltrosEventosPeriodicos';
 import useAreas from '../hooks/useAreas';
+import { useNavigate } from 'react-router-dom';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
@@ -13,6 +14,8 @@ function ConsultaEventosPeriodicos() {
   const [showBusca, setShowBusca] = useState(true);
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
   const areas = useAreas();
+
+  const navigate = useNavigate();
 
   const onResultados = ({ eventos, periodicos }) => {
     setResultados({
@@ -237,6 +240,12 @@ function ConsultaEventosPeriodicos() {
                 </tbody>
               </table>
             </div>
+            <button
+              onClick={() => navigate('/visualizar-graficos', { state: { resultados, filtros: filtrosAtivos } })}
+              className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8"
+            >
+              Visualizar Gráficos
+            </button>
           </div>
         )}
       </div>

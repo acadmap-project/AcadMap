@@ -13,6 +13,7 @@ import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import VisualizarGraficos from './pages/VisualizarGraficos';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,10 @@ const App = () => {
               <Route
                 path="/cadastro-pendente"
                 element={<GerenciadorCadastros />}
+              />
+              <Route
+                path="/visualizar-graficos"
+                element={<VisualizarGraficos />}
               />
               <Route path="/pendente/:id" element={<DetalhePendente />} />
               <Route path="/periodico/:id" element={<VisualizarPeriodico />} />
