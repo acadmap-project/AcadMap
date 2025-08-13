@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 function useLogin() {
   const [loggedIn, setLoggedState] = useState(() => {
@@ -102,54 +102,57 @@ function useLogin() {
     };
   }, []);
 
-  const broadcastChange = () => {
+  const broadcastChange = useCallback(() => {
     try {
       window.dispatchEvent(new Event('loginStateChange'));
     } catch {
       // no-op
     }
-  };
+  }, []);
 
-  const login = (userData = {}) => {
-    const userType = userData.userType || 'PESQUISADOR';
+  const login = useCallback(
+    (userData = {}) => {
+      const userType = userData.userType || 'PESQUISADOR';
 
-    // Set user ID and name based on user type
-    let userId, userName;
-    switch (userType) {
-      case 'PESQUISADOR':
-        userId = '11111111-1111-1111-1111-111111111111';
-        userName = 'Dra. Ada Lovelace';
-        break;
-      case 'ADMINISTRADOR':
-        userId = '00000000-0000-0000-0000-000000000001';
-        userName = 'Admin Mestre';
-        break;
-      case 'AUDITOR':
-        userId = '33333333-3333-3333-3333-333333333333';
-        userName = 'Grace Hopper';
-        break;
-      default:
-        userId = '000';
-        userName = 'Usuário Desconhecido';
-    }
+      // Set user ID and name based on user type
+      let userId, userName;
+      switch (userType) {
+        case 'PESQUISADOR':
+          userId = '11111111-1111-1111-1111-111111111111';
+          userName = 'Dra. Ada Lovelace';
+          break;
+        case 'ADMINISTRADOR':
+          userId = '00000000-0000-0000-0000-000000000001';
+          userName = 'Admin Mestre';
+          break;
+        case 'AUDITOR':
+          userId = '33333333-3333-3333-3333-333333333333';
+          userName = 'Grace Hopper';
+          break;
+        default:
+          userId = '000';
+          userName = 'Usuário Desconhecido';
+      }
 
-    const nextState = {
-      isLoggedIn: true,
-      userType: userType,
-      userName: userData.userName || userName,
-      id: userId,
-      ...userData,
-    };
-    setLoggedState(nextState);
-    try {
-      localStorage.setItem('login', JSON.stringify(nextState));
-    } catch {
-      // no-op
-    }
-    broadcastChange();
-  };
+      const nextState = {
+        isLoggedIn: true,
+        userType: userType,
+        userName: userData.userName || userName,
+        id: userId,
+        ...userData,
+      };
+      setLoggedState(nextState);
+      try {
+        localStorage.setItem('login', JSON.stringify(nextState));
+      } catch {
+        // no-op
+      }
+      broadcastChange();
+    },
+    [broadcastChange]
+  );
 
-  const logout = () => {
+  const logout = useCallback(() => {
     const nextState = {
       isLoggedIn: false,
       userType: null,
@@ -163,7 +166,7 @@ function useLogin() {
       // no-op
     }
     broadcastChange();
-  };
+  }, [broadcastChange]);
 
   return { loggedIn, login, logout };
 }

@@ -1,4 +1,4 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import pfpImage from '../assets/pfp.svg';
 import EventPeriodDropdown from './EventPeriodDropdown';
 import { useLocation } from 'react-router-dom';
@@ -102,7 +102,6 @@ function HeaderSistema({ userType, userName }) {
           )}
         </nav>
       </header>
-      <Outlet />
     </>
   );
 }
