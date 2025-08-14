@@ -41,27 +41,73 @@ export const CadastrarPeriodicoSchema = z
       }),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().default('sem_vinculo'),
-    linkJcr: z.string().optional().or(z.literal('')),
-    linkScopus: z.string().optional().or(z.literal('')),
-    linkGoogleScholar: z.string().optional().or(z.literal('')),
+    linkJcr: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => !val || val === '' || z.string().url().safeParse(val).success,
+        {
+          message: 'Digite uma URL válida',
+        }
+      ),
+    linkScopus: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => !val || val === '' || z.string().url().safeParse(val).success,
+        {
+          message: 'Digite uma URL válida',
+        }
+      ),
+    linkGoogleScholar: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => !val || val === '' || z.string().url().safeParse(val).success,
+        {
+          message: 'Digite uma URL válida',
+        }
+      ),
     qualisAntigo: z.string().optional().or(z.literal('')),
-    percentilJcr: z.string().optional().or(z.literal('')),
-    percentilScopus: z.string().optional().or(z.literal('')),
-    // *** PLACEHOLDER FIELD - CHANGE THIS LATER ***
-    // This h5 field is temporarily set to 0 as a placeholder
-    // TODO: Replace with actual h5 field implementation
-    h5: z.number().nullable().default(0),
-    // *** END PLACEHOLDER - CHANGE THIS LATER ***
-  })
-  .transform(data => {
-    // If there's no Google Scholar link, set h5 to null
-    if (!data.linkGoogleScholar || data.linkGoogleScholar.trim() === '') {
-      return {
-        ...data,
-        h5: null,
-      };
-    }
-    return data;
+    percentilJcr: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => {
+          if (!val || val === '') return true;
+          const num = parseFloat(val.replace(',', '.'));
+          return !isNaN(num) && num >= 0 && num <= 100;
+        },
+        {
+          message: 'O percentil deve ser um número entre 0 e 100',
+        }
+      ),
+    percentilScopus: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(
+        val => {
+          if (!val || val === '') return true;
+          const num = parseFloat(val.replace(',', '.'));
+          return !isNaN(num) && num >= 0 && num <= 100;
+        },
+        {
+          message: 'O percentil deve ser um número entre 0 e 100',
+        }
+      ),
+    h5: z
+      .string()
+      .optional()
+      .or(z.literal(''))
+      .refine(val => !val || val === '' || !isNaN(Number(val)), {
+        message: 'O índice deve ser um número',
+      })
+      .transform(val => (val && val !== '' ? Number(val) : undefined)),
   })
   // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(
