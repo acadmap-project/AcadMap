@@ -5,6 +5,10 @@ const COLORS = {
   periodicos: '#36A2EB',  // azul
 };
 
+const classificacaoOrder = [
+  'A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C', 'NC', 'OUTROS', ''
+];
+
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const bar = payload[0];
@@ -29,18 +33,28 @@ const GraficoClassificacao = ({ data }) => {
   const classificacoes = {};
 
   data.eventos.forEach(ev => {
-    const key = ev.classificacao;
+    const key = (ev.classificacao || '').toUpperCase();
     if (!classificacoes[key]) classificacoes[key] = { classificacao: key, eventos: 0, periodicos: 0 };
     classificacoes[key].eventos += 1;
   });
 
   data.periodicos.forEach(pe => {
-    const key = pe.classificacao;
+    const key = (pe.classificacao || '').toUpperCase();
     if (!classificacoes[key]) classificacoes[key] = { classificacao: key, eventos: 0, periodicos: 0 };
     classificacoes[key].periodicos += 1;
   });
 
-  const chartData = Object.values(classificacoes);
+  // Ordena conforme a ordem definida, e depois por ordem alfabética para os não previstos
+  const chartData = Object.values(classificacoes).sort((a, b) => {
+    const idxA = classificacaoOrder.indexOf(a.classificacao);
+    const idxB = classificacaoOrder.indexOf(b.classificacao);
+    if (idxA === -1 && idxB === -1) {
+      return a.classificacao.localeCompare(b.classificacao);
+    }
+    if (idxA === -1) return 1;
+    if (idxB === -1) return -1;
+    return idxA - idxB;
+  });
 
   return (
     <div className='flex flex-col gap-4'>
@@ -66,6 +80,5 @@ const GraficoClassificacao = ({ data }) => {
     </div>
   );
 };
-
 
 export default GraficoClassificacao;

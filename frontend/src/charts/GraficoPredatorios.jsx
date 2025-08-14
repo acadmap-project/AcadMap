@@ -1,21 +1,22 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
-const COLORS = [
-  '#FF6384', // vermelho claro
-  '#36A2EB', // azul
-];
+const COLOR_MAP = {
+  'Predatório': '#FF6384',      // vermelho claro
+  'Não Predatório': '#36A2EB',  // azul
+};
 
 const CustomTooltip = ({ active, payload, total }) => {
   if (active && payload && payload.length) {
     const { name, value } = payload[0].payload;
     const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-    const color = COLORS[payload[0].payload.name === 'Predatório' ? 0 : 1];
+    const color = COLOR_MAP[name];
 
     return (
       <div className="bg-cyan-100 p-2 rounded">
         <p className='flex items-center gap-2'>
           <span className='inline-block w-2 h-2' style={{ backgroundColor: color }}></span>
-          "{name}": {value} ({percent}%)</p>
+          "{name}": {value} ({percent}%)
+        </p>
       </div>
     );
   }
@@ -36,10 +37,11 @@ const GraficoPredatorios = ({ data }) => {
     }
   });
 
+  // Só inclui fatias com valor > 0
   const chartData = [
     { name: 'Predatório', value: predatorio },
     { name: 'Não Predatório', value: naoPredatorio }
-  ];
+  ].filter(item => item.value > 0);
 
   return (
     <div className='max-w-lg'>
@@ -56,10 +58,9 @@ const GraficoPredatorios = ({ data }) => {
           fill="#8884d8"
           paddingAngle={3}
           dataKey="value"
-        // Removido o prop label para não mostrar porcentagem
         >
-          {chartData.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          {chartData.map((entry) => (
+            <Cell key={entry.name} fill={COLOR_MAP[entry.name]} />
           ))}
         </Pie>
         <Tooltip content={<CustomTooltip total={todos.length} />} />

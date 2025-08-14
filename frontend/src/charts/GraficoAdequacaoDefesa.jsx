@@ -68,7 +68,7 @@ const GraficoAdequacaoDefesa = ({ data }) => {
   return (
     <div>
       <h3 className="font-bold text-2xl mb-4">Veículos por Adequação para Defesa</h3>
-      <BarChart
+            <BarChart
         layout="vertical"
         width={600}
         height={400}
@@ -88,10 +88,10 @@ const GraficoAdequacaoDefesa = ({ data }) => {
             offset={-30}
           />
         </YAxis>
-        <Tooltip content={<CustomTooltip />} position={{ x: 50, y: 400 }} animationDuration={0} />
+        <Tooltip content={<CustomTooltip />} animationDuration={0} />
         <Legend verticalAlign="top" />
-        <Bar dataKey="Com Vínculo SBC" fill={COLORS[0]} name="Com Vínculo SBC" />
-        <Bar dataKey="Sem Vínculo SBC" fill={COLORS[1]} name="Sem Vínculo SBC" />
+        <Bar dataKey="Com Vínculo SBC" fill={COLORS[0]} name="Com Vínculo SBC" stackId="a" />
+        <Bar dataKey="Sem Vínculo SBC" fill={COLORS[1]} name="Sem Vínculo SBC" stackId="a" />
       </BarChart>
     </div>
   );
