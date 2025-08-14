@@ -189,7 +189,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                   htmlFor="areasPesquisaIds"
                   className="block mb-2 text-sm text-gray-900 text-start"
                 >
-                  ÁREA DE CONHECIMENTO (CNPQ)*
+                  ÁREA DE CONHECIMENTO (CNPQ)
                 </label>
                 <Controller
                   control={control}
