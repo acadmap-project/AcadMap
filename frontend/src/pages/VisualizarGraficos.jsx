@@ -20,6 +20,13 @@ const VisualizarGraficos = () => {
 
   const navigate = useNavigate();
 
+  const voltarParaConsultas = () => {
+    // Salva os resultados atuais no sessionStorage para restaurar na página de consultas
+    sessionStorage.setItem('consultaResultados', JSON.stringify(resultados));
+    sessionStorage.setItem('consultaRestore', '1');
+    navigate('/');
+  };
+
   return (
     <>
       <h1 className="py-4 mb-8">DashBoard de Veículos Acadêmicos</h1>
@@ -50,7 +57,7 @@ const VisualizarGraficos = () => {
         </div>
       </div>
       <button
-        onClick={() => navigate(-1)}
+        onClick={voltarParaConsultas}
         className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8 !px-16 !py-6"
       >
         Voltar

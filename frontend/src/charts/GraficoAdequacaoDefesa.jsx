@@ -88,7 +88,7 @@ const GraficoAdequacaoDefesa = ({ data }) => {
             offset={-30}
           />
         </YAxis>
-        <Tooltip content={<CustomTooltip />} animationDuration={0} />
+        <Tooltip content={<CustomTooltip />} animationDuration={0} position={{ x: 20, y: 380 }}/>
         <Legend verticalAlign="top" />
         <Bar dataKey="Com Vínculo SBC" fill={COLORS[0]} name="Com Vínculo SBC" stackId="a" />
         <Bar dataKey="Sem Vínculo SBC" fill={COLORS[1]} name="Sem Vínculo SBC" stackId="a" />
