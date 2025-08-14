@@ -357,7 +357,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
             </div>
           )}
         </div>
-        <div className="flex justify-center items-center gap-4 gap-4">
+        <div className="flex justify-center items-center gap-4 md:col-span-2">
           <button
             type="submit"
             className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
