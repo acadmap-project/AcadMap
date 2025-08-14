@@ -1,5 +1,30 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label } from 'recharts';
 
+const COLORS = {
+  eventos: '#FF6384',     // vermelho
+  periodicos: '#36A2EB',  // azul
+};
+
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const bar = payload[0];
+    const { name, value, dataKey } = bar;
+    const color = COLORS[dataKey];
+    return (
+      <div className="bg-cyan-100 p-2 rounded flex items-center gap-2">
+        <span
+          className='inline-block w-2 h-2'
+          style={{ backgroundColor: color }}
+        ></span>
+        <div>
+          <p className="m-0">{name}: {value}</p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 const GraficoClassificacao = ({ data }) => {
   const classificacoes = {};
 
@@ -33,13 +58,14 @@ const GraficoClassificacao = ({ data }) => {
         <YAxis allowDecimals={false}>
           <Label value="Número de veículos" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} />
         </YAxis>
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} shared={false} />
         <Legend verticalAlign="top" wrapperStyle={{ top: 0 }} />
-        <Bar dataKey="eventos" fill="#8884d8" name="Eventos" />
-        <Bar dataKey="periodicos" fill="#82ca9d" name="Periódicos" />
+        <Bar dataKey="eventos" fill={COLORS.eventos} name="Eventos" />
+        <Bar dataKey="periodicos" fill={COLORS.periodicos} name="Periódicos" />
       </BarChart>
     </div>
   );
 };
+
 
 export default GraficoClassificacao;
