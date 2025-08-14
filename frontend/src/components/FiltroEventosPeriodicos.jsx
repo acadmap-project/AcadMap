@@ -4,6 +4,7 @@ import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 const normalizeToNull = obj => {
   if (!obj || typeof obj !== 'object') return obj;
@@ -43,6 +44,8 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     { value: 'A8', label: 'A8' },
   ];
 
+  const navigate = useNavigate();
+
   const watchedValues = watch();
   const serializedWatchedValues = JSON.stringify(watchedValues);
 
@@ -50,7 +53,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     if (onFiltrosChange) {
       onFiltrosChange(watchedValues);
     }
-  }, [watchedValues, serializedWatchedValues, onFiltrosChange]);
+  }, [serializedWatchedValues, onFiltrosChange]);
 
   const onSubmit = async data => {
     const normalizedData = normalizeToNull(data);
@@ -357,7 +360,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
         <div className="flex justify-center items-center gap-4 md:col-span-2">
           <button
             type="submit"
-            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
+            className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
           >
             Buscar
           </button>
