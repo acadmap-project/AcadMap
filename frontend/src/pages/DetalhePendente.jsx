@@ -268,21 +268,6 @@ function DetalhePendenteContent() {
                 )}
               </div>
             </div>
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO:</span>{' '}
-              {registro.linkEvento && registro.linkEvento !== 'N/A' ? (
-                <a
-                  href={registro.linkEvento}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {registro.linkEvento}
-                </a>
-              ) : (
-                'N/A'
-              )}
-            </div>
             {registro.tipo === 'periodico' && (
               <div className="text-sm text-gray-900 mt-2">
                 <label className="flex items-center cursor-pointer">
