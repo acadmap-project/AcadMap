@@ -1,22 +1,21 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import GraficoClassificacao from "../charts/GraficoClassificacao";
-import GraficoAreaConhecimento from "../charts/GraficoAreaConhecimento";
-import GraficoAdequacaoDefesa from "../charts/GraficoAdequacaoDefesa";
-import GraficoPredatorios from "../charts/GraficoPredatorios";
-import { useNavigate } from "react-router-dom";
-
+import { useLocation } from 'react-router-dom';
+import GraficoClassificacao from '../charts/GraficoClassificacao';
+import GraficoAreaConhecimento from '../charts/GraficoAreaConhecimento';
+import GraficoAdequacaoDefesa from '../charts/GraficoAdequacaoDefesa';
+import GraficoPredatorios from '../charts/GraficoPredatorios';
+import { useNavigate } from 'react-router-dom';
 
 const VisualizarGraficos = () => {
   const { state } = useLocation();
   const resultados = state?.resultados;
-  const filtros = state?.filtros;
 
   const totalEventos = resultados.eventos.length;
   const totalPeriodicos = resultados.periodicos.length;
   const totalVeiculos = totalEventos + totalPeriodicos;
-  const totalPredatorios =
-    [...resultados.eventos, ...resultados.periodicos].filter(item => item.predatorio).length;
+  const totalPredatorios = [
+    ...resultados.eventos,
+    ...resultados.periodicos,
+  ].filter(item => item.predatorio).length;
 
   const navigate = useNavigate();
 
@@ -63,7 +62,7 @@ const VisualizarGraficos = () => {
         Voltar
       </button>
     </>
-  )
-}
+  );
+};
 
 export default VisualizarGraficos;

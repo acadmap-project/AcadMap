@@ -4,7 +4,6 @@ import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 const normalizeToNull = obj => {
   if (!obj || typeof obj !== 'object') return obj;
@@ -44,16 +43,13 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     { value: 'A8', label: 'A8' },
   ];
 
-  const navigate = useNavigate();
-
   const watchedValues = watch();
-  const serializedWatchedValues = JSON.stringify(watchedValues);
 
   useEffect(() => {
     if (onFiltrosChange) {
       onFiltrosChange(watchedValues);
     }
-  }, [serializedWatchedValues, onFiltrosChange]);
+  }, [watchedValues, onFiltrosChange]);
 
   const onSubmit = async data => {
     const normalizedData = normalizeToNull(data);

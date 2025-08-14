@@ -1,8 +1,8 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 const COLOR_MAP = {
-  'Predatório': '#FF6384',      // vermelho claro
-  'Não Predatório': '#36A2EB',  // azul
+  Predatório: '#FF6384', // vermelho claro
+  'Não Predatório': '#36A2EB', // azul
 };
 
 const CustomTooltip = ({ active, payload, total }) => {
@@ -13,8 +13,11 @@ const CustomTooltip = ({ active, payload, total }) => {
 
     return (
       <div className="bg-cyan-100 p-2 rounded">
-        <p className='flex items-center gap-2'>
-          <span className='inline-block w-2 h-2' style={{ backgroundColor: color }}></span>
+        <p className="flex items-center gap-2">
+          <span
+            className="inline-block w-2 h-2"
+            style={{ backgroundColor: color }}
+          ></span>
           "{name}": {value} ({percent}%)
         </p>
       </div>
@@ -40,14 +43,16 @@ const GraficoPredatorios = ({ data }) => {
   // Só inclui fatias com valor > 0
   const chartData = [
     { name: 'Predatório', value: predatorio },
-    { name: 'Não Predatório', value: naoPredatorio }
+    { name: 'Não Predatório', value: naoPredatorio },
   ].filter(item => item.value > 0);
 
   return (
-    <div className='max-w-lg'>
-      <div className='flex justify-between items-center'>
+    <div className="max-w-lg">
+      <div className="flex justify-between items-center">
         <h3 className="font-bold text-2xl">Panorama de Periódicos</h3>
-        <p className='p-2 rounded-xl bg-red-100 text-red-800 font-bold'>Predatórios: {predatorio}</p>
+        <p className="p-2 rounded-xl bg-red-100 text-red-800 font-bold">
+          Predatórios: {predatorio}
+        </p>
       </div>
       <PieChart width={600} height={400}>
         <Pie
@@ -59,16 +64,12 @@ const GraficoPredatorios = ({ data }) => {
           paddingAngle={3}
           dataKey="value"
         >
-          {chartData.map((entry) => (
+          {chartData.map(entry => (
             <Cell key={entry.name} fill={COLOR_MAP[entry.name]} />
           ))}
         </Pie>
         <Tooltip content={<CustomTooltip total={todos.length} />} />
-        <Legend
-          layout="vertical"
-          align="right"
-          verticalAlign="middle"
-        />
+        <Legend layout="vertical" align="right" verticalAlign="middle" />
       </PieChart>
     </div>
   );

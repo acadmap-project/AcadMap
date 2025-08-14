@@ -1,4 +1,13 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Label } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+  Label,
+} from 'recharts';
 
 const COLORS = [
   '#F9B673', // laranja
@@ -6,10 +15,10 @@ const COLORS = [
 ];
 
 const ADEQUACAO_LABELS = {
-  'mestrado': 'Apenas Mestrado',
-  'doutorado': 'Apenas Doutorado',
-  'mestrado_doutorado': 'Mestrado e Doutorado',
-  'nenhuma': 'Nenhuma'
+  mestrado: 'Apenas Mestrado',
+  doutorado: 'Apenas Doutorado',
+  mestrado_doutorado: 'Mestrado e Doutorado',
+  nenhuma: 'Nenhuma',
 };
 
 const CustomTooltip = ({ active, payload }) => {
@@ -17,12 +26,18 @@ const CustomTooltip = ({ active, payload }) => {
     return (
       <div className="bg-blue-100 p-2 rounded">
         <p>Categoria: {payload[0].payload.adequacao}</p>
-        <div className='flex items-center gap-2'>
-          <span className='inline-block w-3 h-3 rounded' style={{ backgroundColor: COLORS[0] }}></span>
+        <div className="flex items-center gap-2">
+          <span
+            className="inline-block w-3 h-3 rounded"
+            style={{ backgroundColor: COLORS[0] }}
+          ></span>
           Sim: {payload[0].payload['Com Vínculo SBC']}
         </div>
-        <div className='flex items-center gap-2'>
-          <span className='inline-block w-3 h-3 rounded' style={{ backgroundColor: COLORS[1] }}></span>
+        <div className="flex items-center gap-2">
+          <span
+            className="inline-block w-3 h-3 rounded"
+            style={{ backgroundColor: COLORS[1] }}
+          ></span>
           Não: {payload[0].payload['Sem Vínculo SBC']}
         </div>
       </div>
@@ -31,11 +46,14 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-const getAdequacaoLabel = (adequacao) => {
+const getAdequacaoLabel = adequacao => {
   if (!adequacao || adequacao.length === 0) return ADEQUACAO_LABELS['nenhuma'];
-  if (adequacao.includes('mestrado_doutorado')) return ADEQUACAO_LABELS['mestrado_doutorado'];
-  if (adequacao.includes('mestrado') && adequacao.length === 1) return ADEQUACAO_LABELS['mestrado'];
-  if (adequacao.includes('doutorado') && adequacao.length === 1) return ADEQUACAO_LABELS['doutorado'];
+  if (adequacao.includes('mestrado_doutorado'))
+    return ADEQUACAO_LABELS['mestrado_doutorado'];
+  if (adequacao.includes('mestrado') && adequacao.length === 1)
+    return ADEQUACAO_LABELS['mestrado'];
+  if (adequacao.includes('doutorado') && adequacao.length === 1)
+    return ADEQUACAO_LABELS['doutorado'];
   return adequacao.join(', ');
 };
 
@@ -57,7 +75,7 @@ const GraficoAdequacaoDefesa = ({ data }) => {
       contagem[label] = {
         adequacao: label,
         'Com Vínculo SBC': 0,
-        'Sem Vínculo SBC': 0
+        'Sem Vínculo SBC': 0,
       };
     }
     contagem[label][vinculo]++;
@@ -67,8 +85,10 @@ const GraficoAdequacaoDefesa = ({ data }) => {
 
   return (
     <div>
-      <h3 className="font-bold text-2xl mb-4">Veículos por Adequação para Defesa</h3>
-            <BarChart
+      <h3 className="font-bold text-2xl mb-4">
+        Veículos por Adequação para Defesa
+      </h3>
+      <BarChart
         layout="vertical"
         width={600}
         height={400}
@@ -77,7 +97,11 @@ const GraficoAdequacaoDefesa = ({ data }) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis type="number" allowDecimals={false}>
-          <Label value="Número de veículos" position="insideBottom" offset={-10} />
+          <Label
+            value="Número de veículos"
+            position="insideBottom"
+            offset={-10}
+          />
         </XAxis>
         <YAxis type="category" dataKey="adequacao" width={180}>
           <Label
@@ -88,10 +112,24 @@ const GraficoAdequacaoDefesa = ({ data }) => {
             offset={-30}
           />
         </YAxis>
-        <Tooltip content={<CustomTooltip />} animationDuration={0} position={{ x: 20, y: 380 }}/>
+        <Tooltip
+          content={<CustomTooltip />}
+          animationDuration={0}
+          position={{ x: 20, y: 380 }}
+        />
         <Legend verticalAlign="top" />
-        <Bar dataKey="Com Vínculo SBC" fill={COLORS[0]} name="Com Vínculo SBC" stackId="a" />
-        <Bar dataKey="Sem Vínculo SBC" fill={COLORS[1]} name="Sem Vínculo SBC" stackId="a" />
+        <Bar
+          dataKey="Com Vínculo SBC"
+          fill={COLORS[0]}
+          name="Com Vínculo SBC"
+          stackId="a"
+        />
+        <Bar
+          dataKey="Sem Vínculo SBC"
+          fill={COLORS[1]}
+          name="Sem Vínculo SBC"
+          stackId="a"
+        />
       </BarChart>
     </div>
   );
