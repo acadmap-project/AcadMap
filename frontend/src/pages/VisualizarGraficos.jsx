@@ -4,6 +4,7 @@ import GraficoClassificacao from "../charts/GraficoClassificacao";
 import GraficoAreaConhecimento from "../charts/GraficoAreaConhecimento";
 import GraficoAdequacaoDefesa from "../charts/GraficoAdequacaoDefesa";
 import GraficoPredatorios from "../charts/GraficoPredatorios";
+import { useNavigate } from "react-router-dom";
 
 
 const VisualizarGraficos = () => {
@@ -17,9 +18,7 @@ const VisualizarGraficos = () => {
   const totalPredatorios =
     [...resultados.eventos, ...resultados.periodicos].filter(item => item.predatorio).length;
 
-  useEffect(() => {
-    console.log('Resultados para gráficos:', resultados);
-  }, [resultados]);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -50,6 +49,12 @@ const VisualizarGraficos = () => {
           <GraficoPredatorios data={resultados} />
         </div>
       </div>
+      <button
+        onClick={() => navigate(-1)}
+        className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8 !px-16 !py-6"
+      >
+        Voltar
+      </button>
     </>
   )
 }
