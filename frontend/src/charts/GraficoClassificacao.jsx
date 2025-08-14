@@ -1,12 +1,32 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Label,
+} from 'recharts';
 
 const COLORS = {
-  eventos: '#FF6384',     // vermelho
-  periodicos: '#36A2EB',  // azul
+  eventos: '#FF6384', // vermelho
+  periodicos: '#36A2EB', // azul
 };
 
 const classificacaoOrder = [
-  'A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C', 'NC', 'OUTROS', ''
+  'A1',
+  'A2',
+  'A3',
+  'A4',
+  'B1',
+  'B2',
+  'B3',
+  'B4',
+  'C',
+  'NC',
+  'OUTROS',
+  '',
 ];
 
 const CustomTooltip = ({ active, payload }) => {
@@ -17,11 +37,13 @@ const CustomTooltip = ({ active, payload }) => {
     return (
       <div className="bg-cyan-100 p-2 rounded flex items-center gap-2">
         <span
-          className='inline-block w-2 h-2'
+          className="inline-block w-2 h-2"
           style={{ backgroundColor: color }}
         ></span>
         <div>
-          <p className="m-0">{name}: {value}</p>
+          <p className="m-0">
+            {name}: {value}
+          </p>
         </div>
       </div>
     );
@@ -34,13 +56,15 @@ const GraficoClassificacao = ({ data }) => {
 
   data.eventos.forEach(ev => {
     const key = (ev.classificacao || '').toUpperCase();
-    if (!classificacoes[key]) classificacoes[key] = { classificacao: key, eventos: 0, periodicos: 0 };
+    if (!classificacoes[key])
+      classificacoes[key] = { classificacao: key, eventos: 0, periodicos: 0 };
     classificacoes[key].eventos += 1;
   });
 
   data.periodicos.forEach(pe => {
     const key = (pe.classificacao || '').toUpperCase();
-    if (!classificacoes[key]) classificacoes[key] = { classificacao: key, eventos: 0, periodicos: 0 };
+    if (!classificacoes[key])
+      classificacoes[key] = { classificacao: key, eventos: 0, periodicos: 0 };
     classificacoes[key].periodicos += 1;
   });
 
@@ -57,8 +81,8 @@ const GraficoClassificacao = ({ data }) => {
   });
 
   return (
-    <div className='flex flex-col gap-4'>
-      <h3 className='font-bold text-2xl'>Distribuição por Classificação</h3>
+    <div className="flex flex-col gap-4">
+      <h3 className="font-bold text-2xl">Distribuição por Classificação</h3>
       <BarChart
         width={600}
         height={400}
@@ -70,7 +94,12 @@ const GraficoClassificacao = ({ data }) => {
           <Label value="Classificação" offset={-5} position="insideBottom" />
         </XAxis>
         <YAxis allowDecimals={false}>
-          <Label value="Número de veículos" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} />
+          <Label
+            value="Número de veículos"
+            angle={-90}
+            position="insideLeft"
+            style={{ textAnchor: 'middle' }}
+          />
         </YAxis>
         <Tooltip content={<CustomTooltip />} shared={false} />
         <Legend verticalAlign="top" wrapperStyle={{ top: 0 }} />

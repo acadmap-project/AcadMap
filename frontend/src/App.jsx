@@ -69,7 +69,10 @@ const App = () => {
                   element={<VisualizarGraficos />}
                 />
                 <Route path="/pendente/:id" element={<DetalhePendente />} />
-                <Route path="/periodico/:id" element={<VisualizarPeriodico />} />
+                <Route
+                  path="/periodico/:id"
+                  element={<VisualizarPeriodico />}
+                />
                 <Route path="/evento/:id" element={<VisualizarEvento />} />
                 <Route
                   path="/historico-auditoria"

@@ -27,13 +27,12 @@ const GraficoAreaConhecimento = ({ data }) => {
     });
   });
 
-  
   // Formato para Recharts
   const chartData = Object.entries(contagem).map(([area, valor]) => ({
     name: area,
-    value: valor
+    value: valor,
   }));
-  
+
   const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
   const COLORS = [
@@ -41,12 +40,14 @@ const GraficoAreaConhecimento = ({ data }) => {
     '#36A2EB', // azul
     '#FFCE56', // amarelo
     '#4BC0C0', // verde água
-    '#9966FF'  // roxo
+    '#9966FF', // roxo
   ];
 
   return (
     <div>
-      <h3 className="font-bold text-2xl mb-4">Distribuição por Área de Conhecimento</h3>
+      <h3 className="font-bold text-2xl mb-4">
+        Distribuição por Área de Conhecimento
+      </h3>
       <PieChart width={600} height={400}>
         <Pie
           data={chartData}
@@ -62,12 +63,13 @@ const GraficoAreaConhecimento = ({ data }) => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip content={<CustomTooltip />} position={{ x: 400, y: 20 }} animationDuration={0} total={total} />
-        <Legend
-          layout="vertical"
-          align="right"
-          verticalAlign="middle"
+        <Tooltip
+          content={<CustomTooltip />}
+          position={{ x: 400, y: 20 }}
+          animationDuration={0}
+          total={total}
         />
+        <Legend layout="vertical" align="right" verticalAlign="middle" />
       </PieChart>
     </div>
   );
