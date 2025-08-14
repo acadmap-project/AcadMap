@@ -15,6 +15,7 @@ import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
 import VisualizarGraficos from './pages/VisualizarGraficos';
+import VisualizarHistorico from './pages/VisualizarHistorico';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,6 +71,10 @@ const App = () => {
                 <Route path="/pendente/:id" element={<DetalhePendente />} />
                 <Route path="/periodico/:id" element={<VisualizarPeriodico />} />
                 <Route path="/evento/:id" element={<VisualizarEvento />} />
+                <Route
+                  path="/historico-auditoria"
+                  element={<VisualizarHistorico />}
+                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
