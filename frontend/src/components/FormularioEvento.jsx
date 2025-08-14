@@ -173,26 +173,7 @@ function FormularioEventoContent() {
             </div>
           </div>
         </div>
-        <div className="w-full mx-auto flex gap-5">
-          <div className="flex-1 flex flex-col items-start">
-            <label
-              htmlFor="linkEvento"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              LINK DE ACESSO
-            </label>
-            <input
-              type="text"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="URL válida"
-              {...register('linkEvento')}
-            />
-            {errors.linkEvento && (
-              <p className="text-red-500 text-sm mt-1 text-left">
-                {errors.linkEvento.message}
-              </p>
-            )}
-          </div>
+        <div className="w-3/4 mx-auto flex gap-5">
           <div className="flex-1 flex flex-col items-start">
             <label
               htmlFor="linkGoogleScholar"

@@ -234,22 +234,6 @@ function RevisaoCadastroEventoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO*:</span>{' '}
-              {eventData.linkEvento ? (
-                <a
-                  href={eventData.linkEvento}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {eventData.linkEvento}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
               <span className="font-medium">
                 LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
               </span>{' '}
