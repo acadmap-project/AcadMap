@@ -3,21 +3,21 @@ import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
 import { API_URL } from '../utils/apiUrl';
 
-const formatarAcao = (acao) => {
+const formatarAcao = acao => {
   const mapeamento = {
-    'adicao_veiculo': 'Cadastro',
-    'atualizacao_veiculo': 'Atualização',
-    'cadastro_veiculo_aceito': 'Aprovação',
-    'cadastro_veiculo_recusado': 'Rejeição'
+    adicao_veiculo: 'Cadastro',
+    atualizacao_veiculo: 'Atualização',
+    cadastro_veiculo_aceito: 'Aprovação',
+    cadastro_veiculo_recusado: 'Rejeição',
   };
   return mapeamento[acao] || acao;
 };
 
-const formatarStatus = (status) => {
+const formatarStatus = status => {
   const mapeamento = {
-    'pendente': 'Pendente',
-    'aceito': 'Aprovado',
-    'negado': 'Negado'
+    pendente: 'Pendente',
+    aceito: 'Aprovado',
+    negado: 'Negado',
   };
   return mapeamento[status] || status;
 };
@@ -25,15 +25,15 @@ const formatarStatus = (status) => {
 function VisualizarHistorico() {
   const { loggedIn } = useLogin();
 
-  const { data: logs, isLoading, error } = useQuery({
+  const { data: logs, isLoading } = useQuery({
     queryKey: ['logs'],
     queryFn: async () => {
       try {
         const response = await fetch(`${API_URL}/api/log-veiculo/historico`, {
           headers: {
-            'X-User-Id': loggedIn.userId,
-            'Content-Type': 'application/json'
-          }
+            'X-User-Id': loggedIn.id,
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!response.ok) {
@@ -53,8 +53,11 @@ function VisualizarHistorico() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <HeaderSistema userType={loggedIn.userType} userName={loggedIn.userName} />
-      
+      <HeaderSistema
+        userType={loggedIn.userType}
+        userName={loggedIn.userName}
+      />
+
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
