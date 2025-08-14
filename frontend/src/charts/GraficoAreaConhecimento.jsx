@@ -1,7 +1,6 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 const CustomTooltip = ({ active, payload, total }) => {
-  console.log(payload, active, total)
   if (active && payload && payload.length) {
     const { name, value } = payload[0].payload;
     const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
