@@ -4,14 +4,20 @@ import { CadastrarPeriodicoSchema } from '../schemas/CadastrarPeriodicoSchema';
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
-import { calcularClassificacaoPeriodico } from '../utils/classificacaoBase';
+import {
+  calcularClassificacaoPeriodico,
+  calcularClassificacaoPorQualis,
+} from '../utils/classificacaoBase';
 import { useState } from 'react';
+import React from 'react';
 
 function FormularioPeriodicoContent() {
   const areas = useAreas();
   const navigate = useNavigate();
 
   const [isEnableSBC, setIsEnableSBC] = useState(false);
+  const [hasQualisSelected, setHasQualisSelected] = useState(false);
+  const [hasH5OrGoogleScholar, setHasH5OrGoogleScholar] = useState(false);
 
   const methods = useForm({
     resolver: zodResolver(CadastrarPeriodicoSchema),
@@ -22,8 +28,62 @@ function FormularioPeriodicoContent() {
     register,
     setValue,
     control,
+    watch,
     formState: { errors },
   } = methods;
+
+  const qualisValue = watch('qualisAntigo');
+  const h5Value = watch('h5');
+  const googleScholarValue = watch('linkGoogleScholar');
+  const linkJcrValue = watch('linkJcr');
+  const linkScopusValue = watch('linkScopus');
+
+  // Update hasQualisSelected state when qualisValue changes
+  React.useEffect(() => {
+    const hasQualis = qualisValue && qualisValue !== '';
+    setHasQualisSelected(hasQualis);
+
+    // Clear H5 and Google Scholar when Qualis is selected
+    if (hasQualis) {
+      setValue('h5', '');
+      setValue('linkGoogleScholar', '');
+    }
+  }, [qualisValue, setValue]);
+
+  // Update hasH5OrGoogleScholar state when h5 or googleScholar changes
+  React.useEffect(() => {
+    const hasH5 = h5Value && h5Value !== '';
+    const hasGoogleScholar = googleScholarValue && googleScholarValue !== '';
+    const hasEither = hasH5 || hasGoogleScholar;
+    setHasH5OrGoogleScholar(hasEither);
+
+    // Clear Qualis when H5 or Google Scholar is filled
+    // But only if H5 is filled (since Google Scholar now depends on having a value)
+    if (hasH5) {
+      setValue('qualisAntigo', '');
+    }
+  }, [h5Value, googleScholarValue, setValue]);
+
+  // Clear percentil JCR when linkJcr is empty
+  React.useEffect(() => {
+    if (!linkJcrValue || linkJcrValue === '') {
+      setValue('percentilJcr', '');
+    }
+  }, [linkJcrValue, setValue]);
+
+  // Clear percentil Scopus when linkScopus is empty
+  React.useEffect(() => {
+    if (!linkScopusValue || linkScopusValue === '') {
+      setValue('percentilScopus', '');
+    }
+  }, [linkScopusValue, setValue]);
+
+  // Clear H5 when Google Scholar is empty
+  React.useEffect(() => {
+    if (!googleScholarValue || googleScholarValue === '') {
+      setValue('h5', '');
+    }
+  }, [googleScholarValue, setValue]);
 
   const onSubmit = data => {
     // Handle vinculoSbc logic and convert percentil strings to numbers for calculation
@@ -34,13 +94,31 @@ function FormularioPeriodicoContent() {
       parseFloat((data.percentilJcr || '0').replace(',', '.')) || 0;
     const percentilScopusNum =
       parseFloat((data.percentilScopus || '0').replace(',', '.')) || 0;
+    const h5Value = data.h5 ? Number(data.h5) : 0;
+
+    let classificacao;
+
+    // Priority order: H5 > Percentil > Qualis Antigo
+    if (h5Value && h5Value > 0) {
+      // Use H5 for classification (same as periodico percentil logic)
+      classificacao = calcularClassificacaoPeriodico(h5Value);
+    } else if (percentilJcrNum > 0 || percentilScopusNum > 0) {
+      // Use percentil for classification
+      classificacao = calcularClassificacaoPeriodico(
+        Math.max(percentilJcrNum, percentilScopusNum)
+      );
+    } else if (data.qualisAntigo && data.qualisAntigo !== '') {
+      // Use antigo qualis for classification
+      classificacao = calcularClassificacaoPorQualis(data.qualisAntigo);
+    } else {
+      // Default classification
+      classificacao = 'a8';
+    }
 
     const periodicoData = {
       ...rest,
       vinculoSbc: data.vinculoSbcCheckbox ? 'vinculo_comum' : 'sem_vinculo',
-      classificacao: calcularClassificacaoPeriodico(
-        Math.max(percentilJcrNum, percentilScopusNum)
-      ),
+      classificacao: classificacao,
     };
 
     console.log('Submitting periodico data:', periodicoData);
@@ -52,12 +130,12 @@ function FormularioPeriodicoContent() {
   const qualisOptions = [
     { value: 'a1', label: 'A1' },
     { value: 'a2', label: 'A2' },
+    { value: 'a3', label: 'A3' },
+    { value: 'a4', label: 'A4' },
     { value: 'b1', label: 'B1' },
     { value: 'b2', label: 'B2' },
     { value: 'b3', label: 'B3' },
     { value: 'b4', label: 'B4' },
-    { value: 'b5', label: 'B5' },
-    { value: 'c', label: 'C' },
   ];
 
   return (
@@ -131,7 +209,7 @@ function FormularioPeriodicoContent() {
                 htmlFor="issn"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                ÍSSN*
+                ISSN
               </label>
               <input
                 type="text"
@@ -146,38 +224,81 @@ function FormularioPeriodicoContent() {
                 </p>
               )}
             </div>
-            <div className="flex flex-col justify-end">
-              <span className="mb-2 text-sm text-gray-900 text-start">
-                VÍNCULO COM A SBC
-              </span>
-              <div className="flex items-center gap-4 w-full">
-                <div className="flex justify-center w-16 flex-shrink-0">
-                  <label className="cursor-pointer">
-                    <div className="relative">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        {...register('vinculoSbcCheckbox', {
-                          onChange: e => {
-                            if (e.target.checked) {
-                              setValue('vinculoSbc', 'vinculo_comum');
-                              setIsEnableSBC(true);
-                            } else {
-                              setValue('vinculoSbc', '');
-                              setIsEnableSBC(false);
-                              // Clear the fields when SBC is disabled
-                              setValue('linkGoogleScholar', '');
+            <div>
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <span className="block mb-2 text-sm text-gray-900 text-start">
+                    VÍNCULO COM A SBC
+                  </span>
+                  <div className="flex justify-center w-16">
+                    <label className="cursor-pointer">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          {...register('vinculoSbcCheckbox', {
+                            onChange: e => {
+                              if (e.target.checked) {
+                                setValue('vinculoSbc', 'vinculo_comum');
+                                setIsEnableSBC(true);
+                              } else {
+                                setValue('vinculoSbc', '');
+                                setIsEnableSBC(false);
+                              }
+                              setValue('linkJcr', '');
+                              setValue('linkScopus', '');
+                              setValue('percentilJcr', '');
+                              setValue('percentilScopus', '');
                               setValue('qualisAntigo', '');
-                            }
-                          },
-                        })}
-                      />
-                      <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:bg-white transition-all duration-300 ease-in-out" />
-                      <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
-                    </div>
+                              setValue('linkGoogleScholar', '');
+                              setValue('h5', '');
+                              setHasQualisSelected(false);
+                              setHasH5OrGoogleScholar(false);
+                            },
+                          })}
+                        />
+                        <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:bg-white transition-all duration-300 ease-in-out" />
+                        <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <label
+                    htmlFor="qualisAntigo"
+                    className="block mb-2 text-sm text-gray-900 text-start"
+                  >
+                    NOTA NO ANTIGO QUALIS
                   </label>
-                </div>{' '}
-                {/* Dropdown is now completely invisible */}
+                  <select
+                    id="qualisAntigo"
+                    className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
+                      !isEnableSBC || hasH5OrGoogleScholar
+                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                        : 'bg-white border-gray-300'
+                    } border`}
+                    {...register('qualisAntigo')}
+                    defaultValue=""
+                    disabled={!isEnableSBC || hasH5OrGoogleScholar}
+                  >
+                    <option value="" className="text-gray-500">
+                      Selecione a nota do QUALIS
+                    </option>
+                    <option value="" className="text-gray-500">
+                      -- Limpar seleção --
+                    </option>
+                    {qualisOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.qualisAntigo && (
+                    <p className="text-red-500 text-sm mt-1 text-left">
+                      {errors.qualisAntigo.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>{' '}
@@ -192,8 +313,13 @@ function FormularioPeriodicoContent() {
               <input
                 type="text"
                 id="linkJcr"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite uma URL válida..."
+                disabled={isEnableSBC}
                 {...register('linkJcr')}
               />
               {errors.linkJcr && (
@@ -212,8 +338,13 @@ function FormularioPeriodicoContent() {
               <input
                 type="text"
                 id="linkScopus"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite uma URL válida..."
+                disabled={isEnableSBC}
                 {...register('linkScopus')}
               />
               {errors.linkScopus && (
@@ -233,12 +364,12 @@ function FormularioPeriodicoContent() {
                 type="text"
                 id="linkGoogleScholar"
                 className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  !isEnableSBC
+                  !isEnableSBC || hasQualisSelected
                     ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-white border-gray-300'
                 }`}
                 placeholder="Digite uma URL válida..."
-                disabled={!isEnableSBC}
+                disabled={!isEnableSBC || hasQualisSelected}
                 {...register('linkGoogleScholar')}
               />
               {errors.linkGoogleScholar && (
@@ -255,13 +386,18 @@ function FormularioPeriodicoContent() {
                 htmlFor="percentilJcr"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                PERCENTIL JCR*
+                PERCENTIL JCR
               </label>{' '}
               <input
                 type="text"
                 id="percentilJcr"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC || !linkJcrValue || linkJcrValue === ''
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite o percentil do periódico (0-100)..."
+                disabled={isEnableSBC || !linkJcrValue || linkJcrValue === ''}
                 {...register('percentilJcr')}
               />
               {errors.percentilJcr && (
@@ -275,13 +411,20 @@ function FormularioPeriodicoContent() {
                 htmlFor="percentilScopus"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                PERCENTIL SCOPUS*
+                PERCENTIL SCOPUS
               </label>{' '}
               <input
                 type="text"
                 id="percentilScopus"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  isEnableSBC || !linkScopusValue || linkScopusValue === ''
+                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border-gray-300'
+                }`}
                 placeholder="Digite o percentil do periódico (0-100)..."
+                disabled={
+                  isEnableSBC || !linkScopusValue || linkScopusValue === ''
+                }
                 {...register('percentilScopus')}
               />
               {errors.percentilScopus && (
@@ -292,37 +435,34 @@ function FormularioPeriodicoContent() {
             </div>
             <div>
               <label
-                htmlFor="qualisAntigo"
+                htmlFor="h5"
                 className="block mb-2 text-sm text-gray-900 text-start"
               >
-                NOTA NO ANTIGO QUALIS
+                ÍNDICE H5
               </label>
-              <select
-                id="qualisAntigo"
-                className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
-                  !isEnableSBC
+              <input
+                type="text"
+                id="h5"
+                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
+                  !isEnableSBC ||
+                  hasQualisSelected ||
+                  !googleScholarValue ||
+                  googleScholarValue === ''
                     ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-white border-gray-300'
-                } border`}
-                {...register('qualisAntigo')}
-                defaultValue=""
-                disabled={!isEnableSBC}
-              >
-                <option value="" className="text-gray-500">
-                  Selecione a nota do QUALIS
-                </option>
-                <option value="" className="text-gray-500">
-                  -- Limpar seleção --
-                </option>
-                {qualisOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {errors.qualisAntigo && (
+                }`}
+                placeholder="númerico (campo)"
+                disabled={
+                  !isEnableSBC ||
+                  hasQualisSelected ||
+                  !googleScholarValue ||
+                  googleScholarValue === ''
+                }
+                {...register('h5')}
+              />
+              {errors.h5 && (
                 <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.qualisAntigo.message}
+                  {errors.h5.message}
                 </p>
               )}
             </div>

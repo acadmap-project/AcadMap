@@ -9,12 +9,12 @@ import com.acadmap.model.enums.VinculoSBC;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record PeriodicoVisualizacaoDTO(String nome, String issn, Double percentilJcr,
+public record PeriodicoVisualizacaoDTO(String nome, String issn, Integer h5, Double percentilJcr,
     Double percentilScopus, Set<String> areasPesquisas, VinculoSBC vinculoSbc, String linkJcr,
     String linkScopus, String linkGoogleScholar, QualisAntigo qualisAntigo,
     ClassificacaoVeiculo classificacao, Boolean flagPredatorio, AdequacaoDefesa adequacaoDefesa) {
   public PeriodicoVisualizacaoDTO(Periodico periodico) {
-    this(periodico.getNome(), periodico.getIssn(), periodico.getPercentilJcr(),
+    this(periodico.getNome(), periodico.getIssn(), periodico.getH5(), periodico.getPercentilJcr(),
         periodico.getPercentilScopus(),
         periodico.getAreasPesquisa().stream().map(AreaPesquisa::getNome)
             .collect(Collectors.toSet()),

@@ -22,6 +22,7 @@ function DetalhePendenteContent() {
   const location = useLocation();
   // Get registro data from location state or set default
   const registro = useMemo(() => location.state || {}, [location.state]);
+  console.log('registro:', registro);
 
   const navigate = useNavigate();
   const [showJustificacaoPopup, setShowJustificacaoPopup] = useState(false);
@@ -267,21 +268,6 @@ function DetalhePendenteContent() {
                 )}
               </div>
             </div>
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO:</span>{' '}
-              {registro.linkEvento ? (
-                <a
-                  href={registro.linkEvento}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {registro.linkEvento}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
             {registro.tipo === 'periodico' && (
               <div className="text-sm text-gray-900 mt-2">
                 <label className="flex items-center cursor-pointer">
@@ -337,7 +323,7 @@ function DetalhePendenteContent() {
               </button>
               {/* Popup para justificativa da recusa */}
               {showJustificacaoPopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div className="fixed inset-0 flex items-center justify-center z-50">
                   <div className="bg-white rounded shadow-lg p-6 w-full max-w-md">
                     <h2 className="text-lg font-bold mb-4">
                       Justificacao da recusa

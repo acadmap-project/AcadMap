@@ -18,16 +18,6 @@ export const CadastrarEventoSchema = z
       .transform(val => (val && val !== '' ? Number(val) : undefined)),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
-    linkEvento: z
-      .string()
-      .optional()
-      .or(z.literal(''))
-      .refine(
-        val => !val || val === '' || z.string().url().safeParse(val).success,
-        {
-          message: 'Digite uma URL válida',
-        }
-      ),
     linkGoogleScholar: z
       .string()
       .optional()

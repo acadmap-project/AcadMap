@@ -1,13 +1,15 @@
+import { API_URL } from '../utils/apiUrl';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
 
 const fetcheventoData = async id => {
-  const response = await fetch(`http://localhost:8080/api/eventos/${id}`);
+  const response = await fetch(`${API_URL}/api/eventos/${id}`);
   if (!response.ok) {
     throw new Error('Erro ao buscar dados do periódico');
   }
@@ -29,6 +31,12 @@ const VisualizarPeriodico = () => {
     console.log('Dados do periódico:', eventoData);
   }, [eventoData]);
 
+  const voltarParaConsultas = () => {
+    // sinaliza para restaurar a tabela na tela de consultas
+    sessionStorage.setItem('consultaRestore', '1');
+    navigate('/');
+  };
+
   return (
     <>
       <HeaderSistema
@@ -37,18 +45,18 @@ const VisualizarPeriodico = () => {
       />
       {eventoData && (
         <>
-          <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
+          <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
 
-          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-12">
+          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
             Dados completos do Evento {eventoData.nome}
           </div>
 
           <div
-            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
+            className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
             <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO PERIÓDICO:</span>{' '}
+              <span className="font-medium">NOME DO EVENTO:</span>{' '}
               {eventoData.nome || 'N/A'}
             </div>
 
@@ -66,7 +74,7 @@ const VisualizarPeriodico = () => {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {eventoData.vinculoSbc || 'N/A'}
+              {formatVinculoSBC(eventoData.vinculoSbc) || 'N/A'}
             </div>
 
             {eventoData.linkSolSbc && (
@@ -97,9 +105,9 @@ const VisualizarPeriodico = () => {
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">
-                ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
+                ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO):
               </span>{' '}
-              {eventoData.adequacaoDefesa.toUpperCase()}
+              {formatAdequacaoDefesa(eventoData.adequacaoDefesa)}
             </div>
 
             <div className="text-sm text-gray-900">
@@ -108,10 +116,21 @@ const VisualizarPeriodico = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center mt-6">
+          <div className="w-full flex justify-center mt-6 gap-3">
             <button
-              onClick={() => navigate('/')}
+              onClick={voltarParaConsultas}
               className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+            >
+              Voltar para consultas
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem('consultaResultados');
+                sessionStorage.removeItem('consultaRestore');
+                navigate('/');
+              }}
+              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar ao início

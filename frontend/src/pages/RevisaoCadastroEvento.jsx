@@ -1,3 +1,4 @@
+import { API_URL } from '../utils/apiUrl';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -15,9 +16,13 @@ import '../styles/App.css';
 
 const queryClient = new QueryClient();
 
-const postEvent = async ({ eventData, userId }) => {
+const postEvent = async ({ eventData, userId, forcar }) => {
   console.log(eventData);
-  const response = await fetch('http://localhost:8080/api/eventos', {
+  let url = `${API_URL}/api/eventos`;
+  if (forcar) {
+    url += '?forcar=true';
+  }
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'X-User-Id': userId,
@@ -44,6 +49,7 @@ function RevisaoCadastroEventoContent() {
   const areas = useAreas();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(null);
   const [errorInfo, setErrorInfo] = useState({
     title: '',
     message: '',
@@ -61,7 +67,8 @@ function RevisaoCadastroEventoContent() {
   const createEventMutation = useMutation({
     mutationFn: postEvent,
     onSuccess: data => {
-      console.log('Api utilizada com sucesso:', data);
+      console.log('[BACKEND SUCCESS]', data);
+      setErrorStatus(null);
       setSuccessInfo({
         title: `Evento ${eventData.nome} registrado com sucesso! O cadastro agora aguarda a validação de um auditor.`,
         message: 'O evento foi cadastrado no sistema com sucesso.',
@@ -70,35 +77,48 @@ function RevisaoCadastroEventoContent() {
       setShowSuccessPopup(true);
     },
     onError: error => {
-      console.error('Endpoint para cadastrar evento com erro:', error);
+      console.log('[BACKEND ERROR]', error);
+      setErrorStatus(error.status || 500);
+      // Garante que apenas um popup de erro seja exibido por vez
+      if (showErrorPopup) return;
 
-      // Handle 500 Internal Server Error
-      if (error.status === 500 || error.message.status === 500) {
-        setErrorInfo({
+      if (error.status === 409) {
+        let similares = [];
+        try {
+          const json = JSON.parse(error.response.data);
+          console.log('[BACKEND 409 BODY]', json);
+          similares = json.periodicosSimilares || [];
+        } catch {
+          console.log('[BACKEND 409 BODY PARSE ERROR]', error.response.data);
+          similares = [];
+        }
+        setErrorInfo(prev => ({
+          ...prev,
+          title: 'Possível Duplicidade Detectada',
+          message:
+            'Foram encontrados eventos similares pelo nome. Confira abaixo e escolha se deseja prosseguir ou cancelar.',
+          type: 'warning',
+          similares,
+        }));
+        setShowErrorPopup(true);
+      } else if (error.status === 500 || error.message.status === 500) {
+        setErrorInfo(prev => ({
+          ...prev,
           title: 'Erro no Servidor',
           message:
             'Ocorreu um erro ao tentar salvar os dados do evento. Por favor, tente novamente mais tarde.',
           type: 'error',
-        });
+        }));
         setShowErrorPopup(true);
-      }
-      // Handle 409 Conflict error
-      else if (error.status === 409) {
-        setErrorInfo({
-          title: 'Evento Já Existe',
-          message:
-            'Um evento com este nome já foi cadastrado no sistema. Por favor, verifique se não é um evento duplicado ou altere o nome do evento.',
-          type: 'warning',
-        });
-        setShowErrorPopup(true);
+        return;
       } else {
-        // Handle other errors
-        setErrorInfo({
+        setErrorInfo(prev => ({
+          ...prev,
           title: 'Erro ao Cadastrar Evento',
           message:
             'Ocorreu um erro ao finalizar o cadastro, por favor, tente confirmar o registro novamente mais tarde.',
           type: 'error',
-        });
+        }));
         setShowErrorPopup(true);
       }
     },
@@ -106,6 +126,8 @@ function RevisaoCadastroEventoContent() {
 
   const closeErrorPopup = () => {
     setShowErrorPopup(false);
+    setErrorStatus(null);
+    setErrorInfo({ title: '', message: '', type: 'error', similares: [] });
   };
 
   const closeSuccessPopup = () => {
@@ -138,12 +160,20 @@ function RevisaoCadastroEventoContent() {
     return area ? area.label : areaId;
   };
   const handleConfirm = () => {
-    // Handle confirmation logic here
-    console.log('Event confirmed:', eventData);
     createEventMutation.mutate({
       eventData: eventData,
       userId: loggedIn.id,
     });
+  };
+
+  const handleForceConfirm = () => {
+    // Tenta cadastro forçado
+    createEventMutation.mutate({
+      eventData: eventData,
+      userId: loggedIn.id,
+      forcar: true,
+    });
+    closeErrorPopup();
   };
 
   if (!eventData) {
@@ -194,29 +224,13 @@ function RevisaoCadastroEventoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ÍNDICE H5*:</span>{' '}
+              <span className="font-medium">ÍNDICE H5:</span>{' '}
               {eventData.h5 || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
               {formatVinculoSbc(eventData.vinculoSbc)}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO*:</span>{' '}
-              {eventData.linkEvento ? (
-                <a
-                  href={eventData.linkEvento}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {eventData.linkEvento}
-                </a>
-              ) : (
-                ' N/A'
-              )}
             </div>
 
             <div className="text-sm text-gray-900">
@@ -273,13 +287,172 @@ function RevisaoCadastroEventoContent() {
             </div>
           </div>
 
-          <ErrorPopup
-            isOpen={showErrorPopup}
-            onClose={closeErrorPopup}
-            title={errorInfo.title}
-            message={errorInfo.message}
-            type={errorInfo.type}
-          />
+          {showErrorPopup &&
+            (errorStatus === 409 ? (
+              <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+                <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                  <div className="flex-shrink-0 mr-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                      <svg
+                        className="w-5 h-5 text-yellow-100"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-red-700 font-semibold text-lg">
+                      "Cadastro potencialmente duplicado. Continuar mesmo
+                      assim?"
+                    </span>
+                  </div>
+                  <div className="flex ml-4 gap-2">
+                    <button
+                      onClick={closeErrorPopup}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Não
+                    </button>
+                    <button
+                      onClick={handleForceConfirm}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Sim
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+                <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                  <div className="flex-shrink-0 mr-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                      <svg
+                        className="w-5 h-5 text-yellow-100"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-red-700 font-semibold text-lg">
+                      {errorInfo.message}
+                    </span>
+                  </div>
+                  <div className="flex ml-4 gap-2">
+                    <button
+                      onClick={closeErrorPopup}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+          {/* Eventos similares desconectados, abaixo do popup, apenas se erro 409 e houver similares */}
+          {errorStatus == 409 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, 0)',
+                zIndex: 40,
+                fontFamily: 'Poppins',
+                fontWeight: '400',
+                width: '80vw',
+                minWidth: '500px',
+                maxWidth: '900px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <div className="bg-white border border-red-300 rounded shadow-md p-4 w-full">
+                <span className="block text-red-700 font-bold mb-2">
+                  Eventos similares detectados:
+                </span>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border border-gray-200">
+                    <thead>
+                      <tr className="bg-red-100">
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Nome
+                        </th>
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Classificação
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {errorInfo.similares.map(ev => (
+                        <tr
+                          key={ev.idVeiculo}
+                          className="border-b border-gray-100"
+                        >
+                          <td className="px-3 py-2 font-semibold text-red-700 text-center">
+                            {ev.nome}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {ev.classificacao ? (
+                              <span className="text-gray-800">
+                                {ev.classificacao}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
 
           <Popup
             isOpen={showSuccessPopup}
