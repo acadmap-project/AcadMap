@@ -6,6 +6,7 @@ import com.acadmap.repository.RefreshTokenRepository;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.security.dto.TokenDTO;
 import com.acadmap.security.provider.JwtService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,9 @@ public class AutorizacaoServiceRsa {
     }
 
     public void revokeRefreshToken(UUID refreshTokenUUID) {
-        RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenUUID).orElseThrow();
+        RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenUUID).orElseThrow(
+                EntityNotFoundException::new
+        );
         refreshTokenRepository.deleteAllByUsuario(refreshToken.getUsuario());
     }
 

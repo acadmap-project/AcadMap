@@ -79,16 +79,8 @@ public class VeiculoController {
 
 
     @GetMapping("/periodico-pendente")
-    @PreAuthorize("hasAuthority('SCOPE_auditor') or hasAuthority('SCOPE_administrador')")
     public ResponseEntity<?> veiculosPendentes(
     ){
-
-        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authenticationToken);
-
-        System.out.println(authenticationToken.getName());
-
-
         usuarioRepository.findByAllAndFetchProgramaEagerly();
         if (veiculoPublicacaoRepository.findAll().isEmpty()){
             return new ResponseEntity<>(ResponseEntity.notFound().build(), HttpStatus.NOT_FOUND);
