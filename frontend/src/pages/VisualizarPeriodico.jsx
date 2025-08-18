@@ -51,7 +51,7 @@ const VisualizarPeriodico = () => {
       />
       {periodicoData && (
         <>
-          <h1 className="mt-8 mb-8">Cadastro de Eventos e Periódicos</h1>
+          <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
 
           <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
             Dados completos do Periódico {periodicoData.nome}

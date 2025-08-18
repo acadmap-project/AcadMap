@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import ListaFiltrosEventosPeriodicos from '../components/ListaFiltrosEventosPeriodicos';
 import useAreas from '../hooks/useAreas';
+import { useNavigate } from 'react-router-dom';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
@@ -14,6 +15,8 @@ function ConsultaEventosPeriodicos() {
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
   const areas = useAreas();
 
+  const navigate = useNavigate();
+  
   const onResultados = ({ eventos, periodicos }) => {
     // Limpa resultados antigos antes de adicionar os novos
     setResultados({
@@ -113,7 +116,9 @@ function ConsultaEventosPeriodicos() {
                     ...(resultados.eventos || []).map(ev => ({
                       tipo: 'Evento',
                       nome: ev.nome,
-                      areaConhecimento: Array.isArray(ev.areaPesquisa) ? ev.areaPesquisa.join('; ') : (ev.areaPesquisa || ''),
+                      areaConhecimento: Array.isArray(ev.areaPesquisa)
+                        ? ev.areaPesquisa.join('; ')
+                        : ev.areaPesquisa || '',
                       classificacao: ev.classificacao || '',
                       vinculoSBC: ev.vinculoSBC || '',
                       adequacaoDefesa: ev.adequacaoDefesa || '',
@@ -122,11 +127,16 @@ function ConsultaEventosPeriodicos() {
                     ...(resultados.periodicos || []).map(p => ({
                       tipo: 'Periódico',
                       nome: p.nome,
-                      areaConhecimento: Array.isArray(p.areaPesquisa) ? p.areaPesquisa.join('; ') : (p.areaPesquisa || ''),
+                      areaConhecimento: Array.isArray(p.areaPesquisa)
+                        ? p.areaPesquisa.join('; ')
+                        : p.areaPesquisa || '',
                       classificacao: p.classificacao || '',
                       vinculoSBC: p.vinculoSBC || '',
                       adequacaoDefesa: p.adequacaoDefesa || '',
-                      h5Percentil: p.h5 || Math.max(p.percentilJcr, p.percentilScopus) || '',
+                      h5Percentil:
+                        p.h5 ||
+                        Math.max(p.percentilJcr, p.percentilScopus) ||
+                        '',
                     })),
                   ];
                   allItems.forEach(item => {
@@ -142,7 +152,9 @@ function ConsultaEventosPeriodicos() {
                     csvRows.push(row.join(','));
                   });
                   const csvContent = csvRows.join('\n');
-                  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                  const blob = new Blob([csvContent], {
+                    type: 'text/csv;charset=utf-8;',
+                  });
                   const url = URL.createObjectURL(blob);
                   const link = document.createElement('a');
                   link.href = url;
@@ -284,13 +296,13 @@ function ConsultaEventosPeriodicos() {
                       <td className="border px-2 py-1">
                         {Array.isArray(item.areaConhecimento)
                           ? item.areaConhecimento.map((area, idx) => (
-                              <span key={idx}>
-                                {area}
-                                {idx < item.areaConhecimento.length - 1 && (
-                                  <br />
-                                )}
-                              </span>
-                            ))
+                            <span key={idx}>
+                              {area}
+                              {idx < item.areaConhecimento.length - 1 && (
+                                <br />
+                              )}
+                            </span>
+                          ))
                           : item.areaConhecimento}
                       </td>
                       <td className="border px-2 py-1">
@@ -308,6 +320,16 @@ function ConsultaEventosPeriodicos() {
                 </tbody>
               </table>
             </div>
+            <button
+              onClick={() =>
+                navigate('/visualizar-graficos', {
+                  state: { resultados, filtros: filtrosAtivos },
+                })
+              }
+              className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8"
+            >
+              Visualizar Gráficos
+            </button>
           </div>
         )}
       </div>

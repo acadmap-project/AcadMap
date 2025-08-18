@@ -44,13 +44,12 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
   ];
 
   const watchedValues = watch();
-  const serializedWatchedValues = JSON.stringify(watchedValues);
 
   useEffect(() => {
     if (onFiltrosChange) {
       onFiltrosChange(watchedValues);
     }
-  }, [watchedValues, serializedWatchedValues, onFiltrosChange]);
+  }, [watchedValues, onFiltrosChange]);
 
   const onSubmit = async data => {
     const normalizedData = normalizeToNull(data);
@@ -137,8 +136,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     } catch (err) {
       setErrorInfo({
         title: 'Erro no Servidor',
-        message:
-          'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
+        message: 'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
         type: 'error',
       });
       setShowErrorPopup(true);
@@ -191,7 +189,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                   htmlFor="areasPesquisaIds"
                   className="block mb-2 text-sm text-gray-900 text-start"
                 >
-                  ÁREA DE CONHECIMENTO (CNPQ)*
+                  ÁREA DE CONHECIMENTO (CNPQ)
                 </label>
                 <Controller
                   control={control}
@@ -230,7 +228,8 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                 </label>
               </div>
               <div>
-                <label className="block font-semibold uppercase text-xs mb-1">
+                <label
+                  className="block font-semibold uppercase text-xs mb-1">
                   Adequação para Defesas
                 </label>
                 <div>
@@ -357,7 +356,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
         <div className="flex justify-center items-center gap-4 md:col-span-2">
           <button
             type="submit"
-            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
+            className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
           >
             Buscar
           </button>
