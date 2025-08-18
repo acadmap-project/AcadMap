@@ -14,6 +14,8 @@ import DetalhePendente from './pages/DetalhePendente';
 import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
+import Login from './pages/Login';
+import HeaderSistema from './components/HeaderSistema';
 import VisualizarGraficos from './pages/VisualizarGraficos';
 import VisualizarHistorico from './pages/VisualizarHistorico';
 
@@ -78,6 +80,7 @@ const App = () => {
                   path="/historico-auditoria"
                   element={<VisualizarHistorico />}
                 />
+                <Route path="/login" element={<Login />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

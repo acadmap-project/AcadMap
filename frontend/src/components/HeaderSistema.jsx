@@ -104,7 +104,7 @@ function HeaderSistema({ userType, userName }) {
             </button>
           ) : (
             <Link
-              to="/home"
+              to="/login"
               aria-current="page"
               className="!px-4 !py-2 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
             >
