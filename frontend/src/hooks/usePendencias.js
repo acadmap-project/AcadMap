@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import useLogin from './userAuth';
-import { API_URL } from '../utils/apiUrl';
+import { get, put } from '../utils/authFetch';
 
 function usePendencias() {
   const [pendencias, setPendencias] = useState([]);
@@ -9,14 +9,7 @@ function usePendencias() {
   useEffect(() => {
     const fetchPendencias = async () => {
       try {
-        const response = await fetch(
-          `${API_URL}/api/veiculo/periodico-pendente`,
-          {
-            headers: {
-              'X-User-Id': loggedIn.id,
-            },
-          }
-        );
+        const response = await get('/api/veiculo/periodico-pendente');
         if (!response.ok) throw new Error('Erro ao carregar pendencias');
         let dados = await response.json();
         setPendencias(dados);
@@ -56,17 +49,10 @@ function usePendencias() {
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/veiculo/negar-veiculo/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'X-User-Id': userId,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ justificativa, flagPredatorio }),
-        }
-      );
+      const response = await put(`/api/veiculo/negar-veiculo/${id}`, {
+        justificativa,
+        flagPredatorio,
+      });
       if (!response.ok) throw new Error('Erro ao negar pendencia');
       const data = await response.json();
       console.log('Reject pendencia response:', data);
@@ -118,17 +104,9 @@ function usePendencias() {
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/veiculo/aprovar-veiculo/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'X-User-Id': userId,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ flagPredatorio }),
-        }
-      );
+      const response = await put(`/api/veiculo/aprovar-veiculo/${id}`, {
+        flagPredatorio,
+      });
       if (!response.ok) throw new Error('Erro ao aprovar pendencia');
       const data = await response.json();
       console.log('Approve pendencia response:', data);

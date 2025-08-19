@@ -80,18 +80,18 @@ BEGIN
 RAISE NOTICE 'Inserindo novos usuários...';
 
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil) VALUES
-(id_pesq_knuth,       id_programa_computacao, 'Donald Knuth',       'donald.knuth@email.com',       'senha_hash', 'pesquisador'),
-(id_pesq_dijkstra,    id_programa_computacao, 'Edsger Dijkstra',    'edsger.dijkstra@email.com',    'senha_hash', 'pesquisador'),
-(id_pesq_cormen,      id_programa_computacao, 'Thomas H. Cormen',   'thomas.cormen@email.com',      'senha_hash', 'pesquisador'),
-(id_pesq_rivest,      id_programa_computacao, 'Ronald Rivest',      'ronald.rivest@email.com',      'senha_hash', 'pesquisador'),
-(id_pesq_shamir,      id_programa_computacao, 'Adi Shamir',         'adi.shamir@email.com',         'senha_hash', 'pesquisador'),
-(id_pesq_torvalds,    id_programa_computacao, 'Linus Torvalds',     'linus.torvalds@email.com',     'senha_hash', 'pesquisador'),
-(id_pesq_berners_lee, id_programa_computacao, 'Tim Berners-Lee',    'tim.berners.lee@email.com',    'senha_hash', 'pesquisador'),
-(id_pesq_cerf,        id_programa_computacao, 'Vint Cerf',          'vint.cerf@email.com',          'senha_hash', 'pesquisador'),
-(id_pesq_kahn,        id_programa_computacao, 'Robert E. Kahn',     'robert.kahn@email.com',        'senha_hash', 'pesquisador'),
-(id_pesq_mccarthy,    id_programa_computacao, 'John McCarthy',      'john.mccarthy@email.com',      'senha_hash', 'pesquisador'),
-(id_auditor_3,        id_programa_computacao, 'Margaret Hamilton',  'margaret.hamilton@email.com',  'senha_hash', 'auditor'),
-(id_auditor_4,        id_programa_computacao, 'Radia Perlman',      'radia.perlman@email.com',      'senha_hash', 'auditor');
+(id_pesq_knuth,       id_programa_computacao, 'Donald Knuth',       'donald.knuth@email.com',       '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_dijkstra,    id_programa_computacao, 'Edsger Dijkstra',    'edsger.dijkstra@email.com',    '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_cormen,      id_programa_computacao, 'Thomas H. Cormen',   'thomas.cormen@email.com',      '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_rivest,      id_programa_computacao, 'Ronald Rivest',      'ronald.rivest@email.com',      '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_shamir,      id_programa_computacao, 'Adi Shamir',         'adi.shamir@email.com',         '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_torvalds,    id_programa_computacao, 'Linus Torvalds',     'linus.torvalds@email.com',     '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_berners_lee, id_programa_computacao, 'Tim Berners-Lee',    'tim.berners.lee@email.com',    '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_cerf,        id_programa_computacao, 'Vint Cerf',          'vint.cerf@email.com',          '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_kahn,        id_programa_computacao, 'Robert E. Kahn',     'robert.kahn@email.com',        '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_pesq_mccarthy,    id_programa_computacao, 'John McCarthy',      'john.mccarthy@email.com',      '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_auditor_3,        id_programa_computacao, 'Margaret Hamilton',  'margaret.hamilton@email.com',  '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'auditor'),
+(id_auditor_4,        id_programa_computacao, 'Radia Perlman',      'radia.perlman@email.com',      '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'auditor');
 
 -- Relacionando novos usuários com áreas de pesquisa
 INSERT INTO AreaPesquisaUsuario (id_usuario, id_area_pesquisa) VALUES

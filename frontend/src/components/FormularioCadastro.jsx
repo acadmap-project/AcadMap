@@ -1,4 +1,4 @@
-import { API_URL } from '../utils/apiUrl';
+import { post } from '../utils/authFetch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
@@ -17,19 +17,12 @@ import {
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 import Popup from './Popup';
-import { criptografarSenha } from './CriptografiaSenha';
 
 const queryClient = new QueryClient();
 
 const postUser = async userData => {
   console.log('Sending user data:', userData);
-  const response = await fetch(`${API_URL}/api/usuario/cadastro`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  });
+  const response = await post('/api/usuario/cadastro', userData);
 
   if (!response.ok) {
     let errorData;
@@ -149,10 +142,20 @@ function FormularioCadastroContent({ isAdmin = false }) {
             'Verifique se todos os campos foram preenchidos corretamente.',
           type: 'error',
         });
+      } else if (error.status === 404) {
+        setErrorInfo({
+          title: 'Erro ao Cadastrar Usuário',
+          message:
+            errorMessage ||
+            'Programa ou área de pesquisa não encontrados. Verifique os dados selecionados.',
+          type: 'error',
+        });
       } else {
         setErrorInfo({
           title: 'Erro ao Cadastrar Usuário',
-          message: '123',
+          message:
+            errorMessage ||
+            'Ocorreu um erro inesperado ao cadastrar o usuário. Tente novamente mais tarde.',
           type: 'error',
         });
       }
@@ -172,7 +175,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     const userData = {
       nome: data.fullName,
       email: data.email,
-      senha: criptografarSenha(data.password), // Criptografia de senha antes de enviar ao backend
+      senha: data.password, // Senha enviada sem criptografia
       tipoPerfil: isAdmin ? data.tipoPerfil : 'PESQUISADOR', // Use selected type if admin, default to PESQUISADOR
       idPrograma: data.program,
       idsAreasPesquisa: data.searchArea || [],
