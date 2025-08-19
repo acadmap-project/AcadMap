@@ -16,7 +16,7 @@ function ConsultaEventosPeriodicos() {
   const areas = useAreas();
 
   const navigate = useNavigate();
-
+  
   const onResultados = ({ eventos, periodicos }) => {
     // Limpa resultados antigos antes de adicionar os novos
     setResultados({

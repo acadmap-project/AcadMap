@@ -151,7 +151,7 @@ function useLogin() {
           userId = '000';
           userName = 'Usuário Desconhecido';
       }
-
+      
       const nextState = {
         isLoggedIn: true,
         userType: userType,
@@ -191,7 +191,7 @@ function useLogin() {
     }
     broadcastChange();
   }, [broadcastChange]);
-
+  
   // Listen for authentication errors and handle logout
   useEffect(() => {
     const handleAuthError = event => {
