@@ -51,11 +51,6 @@ public class AutorizacaoServiceRsa {
                         )
                 );
 
-//        if(refreshTokenRepository.existsByIdRefreshTokenAndExpiresAtAfter(refreshTokenUUID, LocalDateTime.now())){
-//            refreshTokenRepository.deleteAllByUsuario(refreshTokenEntity.getUsuario());
-//            throw new ResponseStatusException(
-//                    HttpStatus.FORBIDDEN, "O token expirou, faça o login novamente");
-//        }
 
         refreshTokenEntity.setExpiresAt(LocalDateTime.now().plus(ttl));
 
