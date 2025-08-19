@@ -24,7 +24,7 @@ public class UsuarioDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByNome(nome).orElseThrow();
+        Usuario usuario = usuarioRepository.findByEmail(nome).orElseThrow();
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(usuario.getTipoPerfil().getCodigo()));
 

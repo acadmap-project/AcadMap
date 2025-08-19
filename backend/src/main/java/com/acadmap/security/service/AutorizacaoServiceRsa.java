@@ -32,7 +32,7 @@ public class AutorizacaoServiceRsa {
 
     public TokenDTO autenticacao(Authentication authentication){
 
-        Usuario usuario = usuarioRepository.findByNome(authentication.getName()).orElseThrow();
+        Usuario usuario = usuarioRepository.findByEmail(authentication.getName()).orElseThrow();
         refreshTokenRepository.deleteAllByUsuario(usuario);
 
         RefreshToken refreshToken = new RefreshToken();
