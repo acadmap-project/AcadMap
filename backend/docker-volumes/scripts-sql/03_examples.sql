@@ -40,23 +40,23 @@ BEGIN
 
 -- Usuário Administrador
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_admin, id_programa_computacao, 'Admin Mestre', 'admin@email.com', 'hash_senha_admin', 'administrador');
+VALUES (id_usuario_admin, id_programa_computacao, 'Admin Mestre', 'admin@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'administrador');
 
 -- Pesquisador 1 (Ativo)
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_pesquisador_1, id_programa_computacao, 'Dra. Ada Lovelace', 'ada.lovelace@email.com', 'hash_senha_ada', 'pesquisador');
+VALUES (id_usuario_pesquisador_1, id_programa_computacao, 'Dra. Ada Lovelace', 'ada.lovelace@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador');
 
 -- Pesquisador 2 (Ativo)
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_pesquisador_2, id_programa_computacao, 'Dr. Alan Turing', 'alan.turing@email.com', 'hash_senha_turing', 'pesquisador');
+VALUES (id_usuario_pesquisador_2, id_programa_computacao, 'Dr. Alan Turing', 'alan.turing@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador');
 
 -- Usuário Auditor
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_auditor, id_programa_computacao, 'Grace Hopper', 'grace.hopper@email.com', 'hash_senha_grace', 'auditor');
+VALUES (id_usuario_auditor, id_programa_computacao, 'Grace Hopper', 'grace.hopper@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'auditor');
 
 -- Usuário que será "excluído" (será marcado como inativo e terá um log de exclusão)
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil, flag_ativo)
-VALUES (id_usuario_a_ser_excluido, id_programa_computacao, 'Usuário Antigo', 'antigo@email.com', 'hash_senha_antiga', 'pesquisador', false);
+VALUES (id_usuario_a_ser_excluido, id_programa_computacao, 'Usuário Antigo', 'antigo@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador', false);
 
 
 -- ====================================================================

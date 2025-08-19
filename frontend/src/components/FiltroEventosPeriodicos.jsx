@@ -136,7 +136,8 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     } catch (err) {
       setErrorInfo({
         title: 'Erro no Servidor',
-        message: 'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
+        message:
+          'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
         type: 'error',
       });
       setShowErrorPopup(true);
@@ -228,8 +229,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                 </label>
               </div>
               <div>
-                <label
-                  className="block font-semibold uppercase text-xs mb-1">
+                <label className="block font-semibold uppercase text-xs mb-1">
                   Adequação para Defesas
                 </label>
                 <div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import renomearKey from '../utils/renomearKey';
-import { API_URL } from '../utils/apiUrl';
+import { get } from '../utils/authFetch';
 
 function toTitleCase(str) {
   return str.replace(
@@ -15,7 +15,7 @@ function useProgramas() {
   useEffect(() => {
     const fetchProgramas = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/programa/listar`);
+        const response = await get('/api/programa/listar', {}, false); // This endpoint might not require auth
         if (!response.ok) throw new Error('Erro ao carregar programas');
         let dados = await response.json();
         for (let i = 0; i < dados.length; i++) {

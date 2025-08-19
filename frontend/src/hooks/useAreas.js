@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { API_URL } from '../utils/apiUrl';
+import { get } from '../utils/authFetch';
 import renomearKey from '../utils/renomearKey';
 
 function useAreas() {
@@ -8,7 +8,7 @@ function useAreas() {
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/areas/listar`);
+        const response = await get('/api/areas/listar', {}, false); // This endpoint might not require auth
         if (!response.ok) throw new Error('Erro ao carregar áreas');
         let dados = await response.json();
         for (let i = 0; i < dados.length; i++) {

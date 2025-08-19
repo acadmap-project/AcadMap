@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import pfpImage from '../assets/pfp.svg';
 import EventPeriodDropdown from './EventPeriodDropdown';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useLogin from '../hooks/userAuth.js';
 
 function HeaderSistema({ userType, userName }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { loggedIn, logout } = useLogin();
 
   // Determine effective user info, prioritizing current auth state
@@ -13,6 +14,12 @@ function HeaderSistema({ userType, userName }) {
     loggedIn?.userName ?? userName ?? 'Usuário Desconhecido';
   const effectiveUserType = loggedIn?.userType ?? userType ?? 'NÃO LOGADO';
   const isLoggedIn = !!loggedIn?.isLoggedIn;
+
+  // Handle logout with redirect to home
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <>
@@ -71,15 +78,17 @@ function HeaderSistema({ userType, userName }) {
                   </Link>
                 </li>
               )}
-              <li>
-                <Link
-                  to="/cadastro-usuario"
-                  className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                  aria-current="page"
-                >
-                  Cadastrar Usuário
-                </Link>
-              </li>
+              {isLoggedIn && (
+                <li>
+                  <Link
+                    to="/cadastro-usuario"
+                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                    aria-current="page"
+                  >
+                    Cadastrar Usuário
+                  </Link>
+                </li>
+              )}
               {location.pathname !== '/' && (
                 <li>
                   <Link
@@ -96,7 +105,7 @@ function HeaderSistema({ userType, userName }) {
           {isLoggedIn ? (
             <button
               type="button"
-              onClick={logout}
+              onClick={handleLogout}
               aria-current="page"
               className="!px-4 !py-2 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
             >

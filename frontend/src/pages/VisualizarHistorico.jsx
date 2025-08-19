@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import HeaderSistema from '../components/HeaderSistema';
 import useLogin from '../hooks/userAuth';
-import { API_URL } from '../utils/apiUrl';
+import { get } from '../utils/authFetch';
 
 const formatarAcao = acao => {
   const mapeamento = {
@@ -29,12 +29,7 @@ function VisualizarHistorico() {
     queryKey: ['logs'],
     queryFn: async () => {
       try {
-        const response = await fetch(`${API_URL}/api/log-veiculo/historico`, {
-          headers: {
-            'X-User-Id': loggedIn.id,
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await get('/api/log-veiculo/historico');
 
         if (!response.ok) {
           if (response.status === 405) {
