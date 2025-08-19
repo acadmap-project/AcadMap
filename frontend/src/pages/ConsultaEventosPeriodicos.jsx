@@ -296,13 +296,13 @@ function ConsultaEventosPeriodicos() {
                       <td className="border px-2 py-1">
                         {Array.isArray(item.areaConhecimento)
                           ? item.areaConhecimento.map((area, idx) => (
-                            <span key={idx}>
-                              {area}
-                              {idx < item.areaConhecimento.length - 1 && (
-                                <br />
-                              )}
-                            </span>
-                          ))
+                              <span key={idx}>
+                                {area}
+                                {idx < item.areaConhecimento.length - 1 && (
+                                  <br />
+                                )}
+                              </span>
+                            ))
                           : item.areaConhecimento}
                       </td>
                       <td className="border px-2 py-1">

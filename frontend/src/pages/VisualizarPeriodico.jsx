@@ -1,4 +1,4 @@
-import { API_URL } from '../utils/apiUrl';
+import { get } from '../utils/authFetch';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -10,7 +10,7 @@ import '../styles/App.css';
 import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 
 const fetchPeriodicoData = async id => {
-  const response = await fetch(`${API_URL}/api/periodicos/${id}`);
+  const response = await get(`/api/periodicos/${id}`, {}, false); // requireAuth = false
   if (!response.ok) {
     throw new Error('Erro ao buscar dados do periódico');
   }
@@ -46,8 +46,8 @@ const VisualizarPeriodico = () => {
   return (
     <>
       <HeaderSistema
-        userType={loggedIn.userType}
-        userName={loggedIn.userName}
+        userType={loggedIn?.userType}
+        userName={loggedIn?.userName}
       />
       {periodicoData && (
         <>

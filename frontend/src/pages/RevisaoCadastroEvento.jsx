@@ -1,4 +1,4 @@
-import { API_URL } from '../utils/apiUrl';
+import { post } from '../utils/authFetch';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -18,18 +18,12 @@ const queryClient = new QueryClient();
 
 const postEvent = async ({ eventData, userId, forcar }) => {
   console.log(eventData);
-  let url = `${API_URL}/api/eventos`;
+  let endpoint = '/api/eventos';
   if (forcar) {
-    url += '?forcar=true';
+    endpoint += '?forcar=true';
   }
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'X-User-Id': userId,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(eventData),
-  });
+
+  const response = await post(endpoint, eventData);
 
   if (!response.ok) {
     const errorData = await response.text();

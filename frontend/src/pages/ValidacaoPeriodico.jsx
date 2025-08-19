@@ -1,4 +1,4 @@
-import { API_URL } from '../utils/apiUrl';
+import { post } from '../utils/authFetch';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -78,19 +78,13 @@ const postPeriodico = async ({ periodicoData, userId, forcar }) => {
   }
 
   // The backend expects vinculoSbc (camelCase), so keep it as is
-  let url = `${API_URL}/api/periodicos`;
+  let endpoint = '/api/periodicos';
   if (forcar) {
-    url += `?forcar=${forcar}`;
+    endpoint += `?forcar=${forcar}`;
   }
-  console.log('Sending data to API:', normalizedData, ' URL:', url);
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'X-User-Id': userId,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(normalizedData),
-  });
+  console.log('Sending data to API:', normalizedData, ' Endpoint:', endpoint);
+
+  const response = await post(endpoint, normalizedData);
 
   if (!response.ok) {
     const errorData = await response.text();

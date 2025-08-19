@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import tokenManager from '../utils/tokenManager';
 
 function useLogin() {
   const [loggedIn, setLoggedState] = useState(() => {
@@ -35,11 +37,25 @@ function useLogin() {
 
         return parsedData;
       }
-      return { isLoggedIn: false, userType: null, userName: null, id: null };
+      return {
+        isLoggedIn: false,
+        userType: null,
+        userName: null,
+        id: null,
+        accessToken: null,
+        refreshTokenUUID: null,
+      };
     } catch (error) {
       console.error('Error parsing login data from localStorage:', error);
       localStorage.removeItem('login');
-      return { isLoggedIn: false, userType: null, userName: null, id: null };
+      return {
+        isLoggedIn: false,
+        userType: null,
+        userName: null,
+        id: null,
+        accessToken: null,
+        refreshTokenUUID: null,
+      };
     }
   });
 
@@ -82,6 +98,8 @@ function useLogin() {
               userType: null,
               userName: null,
               id: null,
+              accessToken: null,
+              refreshTokenUUID: null,
             };
           });
         }
@@ -133,12 +151,14 @@ function useLogin() {
           userId = '000';
           userName = 'Usuário Desconhecido';
       }
-
+      
       const nextState = {
         isLoggedIn: true,
         userType: userType,
         userName: userData.userName || userName,
         id: userId,
+        accessToken: userData.accessToken || null,
+        refreshTokenUUID: userData.refreshTokenUUID || null,
         ...userData,
       };
       setLoggedState(nextState);
@@ -158,17 +178,49 @@ function useLogin() {
       userType: null,
       userName: null,
       id: null,
+      accessToken: null,
+      refreshTokenUUID: null,
     };
     setLoggedState(nextState);
     try {
       localStorage.removeItem('login');
+      // Clear tokens using token manager
+      tokenManager.clearTokens();
     } catch {
       // no-op
     }
     broadcastChange();
   }, [broadcastChange]);
+  
+  // Listen for authentication errors and handle logout
+  useEffect(() => {
+    const handleAuthError = event => {
+      console.log('Authentication error detected, logging out user');
+      logout();
+    };
 
-  return { loggedIn, login, logout };
+    window.addEventListener('authError', handleAuthError);
+
+    return () => {
+      window.removeEventListener('authError', handleAuthError);
+    };
+  }, [logout]);
+
+  // Utility function to check if user is authenticated with valid token
+  const isAuthenticated = useCallback(() => {
+    if (!loggedIn?.isLoggedIn || !loggedIn?.accessToken) {
+      return false;
+    }
+
+    try {
+      return !tokenManager.isTokenExpired(loggedIn.accessToken);
+    } catch (error) {
+      console.error('Error checking token validity:', error);
+      return false;
+    }
+  }, [loggedIn]);
+
+  return { loggedIn, login, logout, isAuthenticated };
 }
 
 export default useLogin;

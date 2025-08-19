@@ -61,4 +61,7 @@ public class Usuario {
   @JoinColumn(name = "id_programa", nullable = false)
   private Programa programa;
 
+  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<RefreshToken> refreshTokens = new HashSet<>();
+
 }

@@ -31,8 +31,8 @@ BEGIN
 -- ====================================================================
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
 VALUES 
-(id_usuario_pesquisador_3, id_programa_computacao, 'Prof. Barbara Liskov', 'barbara.liskov@email.com', 'hash_senha_barbara', 'pesquisador'),
-(id_usuario_auditor_2, id_programa_computacao, 'John von Neumann', 'john.neumann@email.com', 'hash_senha_neumann', 'auditor');
+(id_usuario_pesquisador_3, id_programa_computacao, 'Prof. Barbara Liskov', 'barbara.liskov@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador'),
+(id_usuario_auditor_2, id_programa_computacao, 'John von Neumann', 'john.neumann@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'auditor');
 
 -- Relacionamentos com área de pesquisa
 INSERT INTO AreaPesquisaUsuario (id_usuario, id_area_pesquisa)

@@ -22,6 +22,45 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/dev"
       SPRING_DATASOURCE_USERNAME: "usuario"
       SPRING_DATASOURCE_PASSWORD: "87654321"
+      APP_PRIVATE_KEY: |
+        -----BEGIN PRIVATE KEY-----
+        MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDJ+OWD52x1TRfT
+        oLNjH/r1dQ0QhS1V1Qn7oNBLu2QofS6YLcDZx51nPQMGIgv4t1y9xJMOBXcHxfWm
+        b3lfdcaIHVFGKNgHQ6hRdvDysekrXA5qfUlF1MS3HCfnXymQTd0Y6cdcZJ8NqyeX
+        9c1lHYR3IPQj+vIejSg+8qEMQ/POagS3VgGoU149YPMNCinp+j8gnbxCZKhDHpGr
+        GGb0MC14arwRtzyUT/xiZevqRbKkz/8uMuUznOOf3Y1bbSFmJoH6L8Jmr2zSH/Ez
+        2fHyzWuEPiQfxixfZtukJBhJeEFwjnGcnvNHfgLJEZWK6Ulw0wfa4lJhpBndlRqR
+        quHC3WW5AgMBAAECggEABM+J3/duLOkWLTNBspW7a4dLNV6GsumtIDI3Y+Zlv1Uj
+        +/nzAvzvMdtRLB85e8YaTmbVPdtBd4zuifVTxcNPZESWf/5PDvU8mBwmJxG3xRGf
+        QkgTq7cirF3eUXOB0O8Z2hMPbZLz+uZdvg/bwZHPaur9BbJfe/zOvZkX3uvrbbor
+        5IlV1PSI3rLccdBFfq9K8I8iV8YuveP2LIdUms38zIL2s/OmYzWiCuPmxXR/dvck
+        ahyvkbKKdkx84wFW9SQ8p0Vo5T2bB9e0eid0Kgy24Mx+oMln7+x+b5jl9jK9QMCL
+        DDpTuaNMYJ7u0LOQbofx3i4IU8NxA+ZLnHh2yEVXEQKBgQDZEMJVudShKgsoEDvg
+        Oqzu9mmpEyGcYAiAvzj2+Hdau0U1Zr3kryNS+4e3Fr3ZFkZiz5XMT/8ICG4Zf+Ty
+        ybceMmZpzT2AjlNFk4F58qQ2A75BJpEZDmTzJ+XwgvMNzu25/Tn6aruZ80jgevYU
+        Tv/wXDmZ7dkSznEAHLqK3YrClQKBgQDuMxXTPk09cn9svgqWm1RDO70xYAwFzqKZ
+        8V2xj2L0HMvIxc/L3UyZkoAgmJyG03sd4sd1+hD1M5GylnOwQQ6AO47viMyRqi1g
+        X+fqD27BeLsFCe3yIoaF6G0hhxozjP9gad6qejFu6o+QjQSRxmqPW0B/vh8xznmg
+        USzQIiVRlQKBgQCnPqltIaw5rMpByRhJMQxTZhqNAceQ09FZWXyLlW9owgeWGJ5R
+        F7ww0MqFgAkwvV/n/Cdf73cBenVSQl9lzZPAuXZ9KHytk3uHjRpimlh5obKyQgPj
+        +VpAm0ooYMzio8A44GoOjrQS7wcEptj5VtEOIhDjkAYD3nnkaz4zhnTGbQKBgQCa
+        CJb4f7VbIwubulkGg3O99oelwkKEDte/TQIVrG+FBIoTTzfM0VKTjNUmPwoZdfCL
+        pvbtJ8SHi82P+xLcy3UhH2KTK5d+KtolFF/YUBqDKhtmasFgb0smlOLdZ4xeAbOz
+        GUNQYqxM2Yn1I/vseK63/X58HOn3P1oPfe7IuQwA8QKBgQCP9bD7Dc/48i0/N3Hv
+        bR3MS7Heq/r7px0kZutjWBwB5u1xxsX0e1rZvN+P+CEvwEr+7fLvJDRVyKgxV5tm
+        uxUSvYCsDJmJ0wUwDgXb9vFcpfoNj+QM4oqR2IgxU5kxoyHhVFuO+G6ZeuElky2c
+        S4A2zxig1NWFapX1gAwv5ixl7w==
+        -----END PRIVATE KEY-----
+      APP_PUBLIC_KEY: |
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyfjlg+dsdU0X06CzYx/6
+        9XUNEIUtVdUJ+6DQS7tkKH0umC3A2cedZz0DBiIL+LdcvcSTDgV3B8X1pm95X3XG
+        iB1RRijYB0OoUXbw8rHpK1wOan1JRdTEtxwn518pkE3dGOnHXGSfDasnl/XNZR2E
+        dyD0I/ryHo0oPvKhDEPzzmoEt1YBqFNePWDzDQop6fo/IJ28QmSoQx6Rqxhm9DAt
+        eGq8Ebc8lE/8YmXr6kWypM//LjLlM5zjn92NW20hZiaB+i/CZq9s0h/xM9nx8s1r
+        hD4kH8YsX2bbpCQYSXhBcI5xnJ7zR34CyRGViulJcNMH2uJSYaQZ3ZUakarhwt1l
+        uQIDAQAB
+        -----END PUBLIC KEY-----
 
   frontend:
     container_name: acadmap-frontend
