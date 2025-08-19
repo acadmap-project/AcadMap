@@ -1,3 +1,113 @@
+# Autenticação via JWT
+
+Para acessar os **endpoints da API**, é necessário utilizar um **token JWT** válido em todas as requisições.  
+O token deve ser enviado no cabeçalho HTTP da seguinte forma:
+```http
+Authorization: Bearer <token_jwt>
+```
+
+
+## Endpoints públicos (não exigem autenticação)
+
+Os seguintes endpoints estão liberados e **não precisam e nem devem ter token JWT**:
+
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/periodicos/listar`
+- `GET /api/eventos/listar`
+
+## Endpoints protegidos
+
+Qualquer outro endpoint **exige autenticação**. Caso o token não seja enviado ou seja inválido/expirado, a requisição será rejeitada com código **401 Unauthorized**.
+
+
+## Login
+
+### Endpoint
+`POST /api/auth/login`
+
+### Descrição
+Realiza a autenticação do usuário e retorna um **token JWT** junto com o id do **refresh token**.  
+Este é o primeiro passo para acessar os endpoints protegidos da API.
+
+### Requisição
+- **Header**
+```http
+Authorization: Basic <usuario:senha>
+```
+
+> **Atenção:** <usuario:senha> deve estar codificado em Base64
+
+### Exemplo de Requisição
+
+```shell
+curl --location --request POST 'http://localhost:8080/api/auth/login' --header 'Authorization: Basic <usuario:senha>'
+````
+
+> Para testes acesse a tabela usuários no banco de dados
+
+## Refresh Token
+
+### Endpoint
+`POST /api/auth/refresh-token`
+
+### Descrição
+Este endpoint é utilizado para **gerar um novo token JWT** com o **tempo de expiração estendido**.  
+Ele deve ser usado quando o token atual estiver próximo de expirar, evitando a necessidade de realizar um novo login.
+
+### Requisição
+
+**Parâmetros**
+>`refreshTokenUUID` (UUID) → Identificador único do *refresh token* associado ao usuário.
+
+**Header**
+```http
+Authorization: Bearer <token_jwt>
+```
+
+### Exemplo de Requisição
+```shell
+curl --location --request POST 'http://localhost:8080/api/auth/refresh-token?refreshTokenUUID=<id_token>' \
+--header 'Authorization: Bearer <token_jwt>'
+```
+
+
+### Resposta
+
+**200 OK**
+
+Retorna um objeto `TokenDTO` contendo o novo JWT e informações relacionadas.
+
+```json
+{
+  "accessToken": "<token_kwt>",
+  "refreshTokenUUID": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+## Erros
+> Caso o token esteja expirado ou o ID refreshTokenUUID será retornado uma exceção
+
+## Logout
+
+### Endpoint
+`POST /api/auth/logout`
+
+### Descrição
+Revoga o **refresh token** do usuário, invalidando sua utilização futura para renovação de JWT.  
+Após o logout, o usuário precisará realizar um novo login para obter um novo token.
+
+### Requisição
+
+**Parâmetros**
+- `refreshToken` (UUID) → Identificador do *refresh token* que será revogado.
+
+### Exemplo de Requisição
+```shell
+curl --location --request POST 'http://localhost:8080/api/auth/logout?refreshToken=<token_id>'
+```
+**Resposta:**
+`200 Ok`
 
 # 📘 API - Veículo de Publicação
 

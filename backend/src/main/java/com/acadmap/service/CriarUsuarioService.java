@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +28,7 @@ public class CriarUsuarioService {
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final ProgramaRepository programaRepository;
   private final RegistrarLogService registrarLogService;
+  private final PasswordEncoder passwordEncoder;
 
   public UsuarioResponseDTO criarUsuario(UsuarioRequestDTO usuarioRequestDTO) {
     Programa programa = this.buscaPrograma(usuarioRequestDTO.idPrograma());
@@ -37,7 +40,8 @@ public class CriarUsuarioService {
     }
 
     Usuario usuario = new Usuario();
-    BeanUtils.copyProperties(usuarioRequestDTO, usuario, "idPrograma", "idsAreasPesquisa");
+    BeanUtils.copyProperties(usuarioRequestDTO, usuario, "idPrograma", "idsAreasPesquisa", "senha");
+    usuario.setSenha(passwordEncoder.encode(usuarioRequestDTO.senha()));
     usuario.setPrograma(programa);
     usuario.setAreasPesquisa(areas);
     Usuario usuarioPersistido = this.usuarioRepository.save(usuario);
