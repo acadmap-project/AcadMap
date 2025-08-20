@@ -39,11 +39,6 @@ export class AuthenticatedFetch {
       }
     }
 
-    // Add user ID header if available (for compatibility with existing backend)
-    const loginData = this._getLoginData();
-    if (loginData && loginData.id) {
-      headers['X-User-Id'] = loginData.id;
-    }
 
     const requestOptions = {
       ...options,

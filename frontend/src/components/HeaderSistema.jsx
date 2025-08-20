@@ -78,17 +78,15 @@ function HeaderSistema({ userType, userName }) {
                   </Link>
                 </li>
               )}
-              {isLoggedIn && (
-                <li>
-                  <Link
-                    to="/cadastro-usuario"
-                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                    aria-current="page"
-                  >
-                    Cadastrar Usuário
-                  </Link>
-                </li>
-              )}
+              <li>
+                <Link
+                  to="/cadastro-usuario"
+                  className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                  aria-current="page"
+                >
+                  Cadastrar Usuário
+                </Link>
+              </li>
               {location.pathname !== '/' && (
                 <li>
                   <Link

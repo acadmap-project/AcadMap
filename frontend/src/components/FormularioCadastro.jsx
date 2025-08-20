@@ -22,7 +22,7 @@ const queryClient = new QueryClient();
 
 const postUser = async userData => {
   console.log('Sending user data:', userData);
-  const response = await post('/api/usuario/cadastro', userData);
+  const response = await post('/api/usuario/cadastro', userData, {}, false);
 
   if (!response.ok) {
     let errorData;
