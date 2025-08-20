@@ -17,9 +17,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,10 +41,11 @@ public class VeiculoController {
 
     @PutMapping("/aprovar-veiculo/{id}")
     public ResponseEntity<?> aprovaPublicacao(
-            @RequestHeader("X-User-Id") UUID idUser,
+            Authentication authentication,
             @PathVariable("id") UUID idVeiculo,
             @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO
     ){
+        UUID idUser = getUserIdFromAuthentication(authentication);
         if (this.isPesquisador(idUser)){
             throw new PesquisadorUnauthorizedException(
                     "Pesquisador não possui permissão para aprovar um veiculo",
@@ -58,11 +62,12 @@ public class VeiculoController {
 
     @PutMapping("/negar-veiculo/{id}")
     public ResponseEntity<?> negarPublicacao(
-            @RequestHeader("X-User-Id") UUID idUser,
+            Authentication authentication,
             @PathVariable("id") UUID idVeiculo,
             @RequestBody ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO
 
     ){
+        UUID idUser = getUserIdFromAuthentication(authentication);
         if (this.isPesquisador(idUser)){
             throw new PesquisadorUnauthorizedException(
                     "Pesquisador não possui permissão para negar um veiculo",
@@ -104,5 +109,18 @@ public class VeiculoController {
                 .stream().map(VeiculoPublicacaoDTO::new).toList();
     }
 
+    private UUID getUserIdFromAuthentication(Authentication authentication) {
+        if (authentication instanceof JwtAuthenticationToken jwtToken) {
+            Jwt jwt = jwtToken.getToken();
+            String email = jwt.getSubject();
+            
+            Usuario usuario = usuarioRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário não encontrado"));
+            
+            return usuario.getIdUsuario();
+        }
+        
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Tipo de autenticação não suportado");
+    }
 
 }
