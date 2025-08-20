@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/api/auth/login").permitAll();
                     authorize.requestMatchers("/api/auth/logout").permitAll();
+                    authorize.requestMatchers("/api/usuario/cadastro").permitAll();
                     authorize.requestMatchers("/api/periodicos/listar").permitAll();
                     authorize.requestMatchers("/api/periodicos/*").permitAll();
                     authorize.requestMatchers("/api/eventos/listar").permitAll();
