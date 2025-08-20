@@ -104,10 +104,23 @@ export const CadastrarPeriodicoSchema = z
       .string()
       .optional()
       .or(z.literal(''))
-      .refine(val => !val || val === '' || !isNaN(Number(val)), {
-        message: 'O índice deve ser um número',
-      })
-      .transform(val => (val && val !== '' ? Number(val) : undefined)),
+      .refine(
+        val => {
+          if (!val || val === '') return true;
+          const cleanVal = val.replace(',', '.');
+          return !isNaN(Number(cleanVal));
+        },
+        {
+          message: 'O índice deve ser um número',
+        }
+      )
+      .transform(val => {
+        if (val && val !== '') {
+          const cleanVal = val.replace(',', '.');
+          return Number(cleanVal);
+        }
+        return undefined;
+      }),
   })
   // Validar: Pelo menos um dos links (JCR, Scopus, Google Scholar) deve ser preenchido ou o Qualis Antigo deve ser informado
   .refine(

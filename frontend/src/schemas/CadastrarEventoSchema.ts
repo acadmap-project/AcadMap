@@ -12,10 +12,20 @@ export const CadastrarEventoSchema = z
       .string()
       .optional()
       .or(z.literal(''))
-      .refine(val => !val || val === '' || !isNaN(Number(val)), {
+      .refine(val => {
+        if (!val || val === '') return true;
+        const cleanVal = val.replace(',', '.');
+        return !isNaN(Number(cleanVal));
+      }, {
         message: 'O índice deve ser um número',
       })
-      .transform(val => (val && val !== '' ? Number(val) : undefined)),
+      .transform(val => {
+        if (val && val !== '') {
+          const cleanVal = val.replace(',', '.');
+          return Number(cleanVal);
+        }
+        return undefined;
+      }),
     vinculoSbcCheckbox: z.boolean().optional(),
     vinculoSbc: z.string().optional(),
     linkGoogleScholar: z
