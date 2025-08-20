@@ -75,7 +75,10 @@ CREATE TABLE Log (
     'cadastro_veiculo_recusado',
     'cadastro_veiculo_aceito',
     'cadastro_usuario',
-    'exclusao_usuario'
+    'exclusao_usuario',
+    'geracao_csv',
+    'geracao_grafico',
+    'erro_grafico'
   ))
 );
 
