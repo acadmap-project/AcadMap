@@ -94,7 +94,7 @@ function FormularioPeriodicoContent() {
       parseFloat((data.percentilJcr || '0').replace(',', '.')) || 0;
     const percentilScopusNum =
       parseFloat((data.percentilScopus || '0').replace(',', '.')) || 0;
-    const h5Value = data.h5 ? Number(data.h5) : 0;
+    const h5Value = data.h5 ? Number(data.h5.toString().replace(',', '.')) : 0;
 
     let classificacao;
 
