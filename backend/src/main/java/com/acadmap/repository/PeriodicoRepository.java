@@ -15,5 +15,10 @@ public interface PeriodicoRepository extends JpaRepository<Periodico, UUID>, Jpa
     List<Periodico> findByNomeContainingIgnoreCase(String nome);
 
     List<Periodico> findByStatusAndNomeContainingIgnoreCase(StatusVeiculo statusVeiculo, String nome);
+    
+    // Methods to find by links for duplicate validation
+    List<Periodico> findByLinkGoogleScholarAndStatusIn(String linkGoogleScholar, List<StatusVeiculo> statuses);
+    List<Periodico> findByLinkJcrAndStatusIn(String linkJcr, List<StatusVeiculo> statuses);
+    List<Periodico> findByLinkScopusAndStatusIn(String linkScopus, List<StatusVeiculo> statuses);
 
 }
