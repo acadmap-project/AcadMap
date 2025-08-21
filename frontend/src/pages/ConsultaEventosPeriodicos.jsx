@@ -110,6 +110,7 @@ function ConsultaEventosPeriodicos() {
                     'Vínculo SBC',
                     'Adequação para Defesas',
                     'H5 ou Percentil',
+                    'Predatório',
                   ];
                   csvRows.push(header.join(','));
                   const allItems = [
@@ -123,6 +124,7 @@ function ConsultaEventosPeriodicos() {
                       vinculoSBC: ev.vinculoSBC || '',
                       adequacaoDefesa: ev.adequacaoDefesa || '',
                       h5Percentil: ev.h5 || '',
+                      predatorio: ev.predatorio ? 'Sim' : 'Não',
                     })),
                     ...(resultados.periodicos || []).map(p => ({
                       tipo: 'Periódico',
@@ -137,6 +139,7 @@ function ConsultaEventosPeriodicos() {
                         p.h5 ||
                         Math.max(p.percentilJcr, p.percentilScopus) ||
                         '',
+                      predatorio: p.predatorio ? 'Sim' : 'Não',
                     })),
                   ];
                   allItems.forEach(item => {
@@ -145,9 +148,10 @@ function ConsultaEventosPeriodicos() {
                       item.nome,
                       item.areaConhecimento,
                       String(item.classificacao).toUpperCase(),
-                      item.vinculoSBC,
-                      item.adequacaoDefesa,
+                      formatVinculoSBC(item.vinculoSBC),
+                      formatAdequacaoDefesa(item.adequacaoDefesa),
                       item.h5Percentil,
+                      item.predatorio,
                     ].map(field => `${String(field).replace(/"/g, '""')}`);
                     csvRows.push(row.join(','));
                   });
@@ -157,8 +161,12 @@ function ConsultaEventosPeriodicos() {
                   });
                   const url = URL.createObjectURL(blob);
                   const link = document.createElement('a');
+                  const date = new Date().toLocaleString('pt-BR', {
+                    timeZone: 'America/Sao_Paulo'
+                  });
+                  const nameFile = `Sistema de Veículos de Publicação Acadêmica - ${date}.csv`;
                   link.href = url;
-                  link.setAttribute('download', 'resultados_consulta.csv');
+                  link.setAttribute('download', nameFile);
                   document.body.appendChild(link);
                   link.click();
                   document.body.removeChild(link);
