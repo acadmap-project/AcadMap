@@ -124,7 +124,7 @@ function ConsultaEventosPeriodicos() {
                       vinculoSBC: ev.vinculoSBC || '',
                       adequacaoDefesa: ev.adequacaoDefesa || '',
                       h5Percentil: ev.h5 || '',
-                      predatorio: ev.predatorio ? 'Sim' : 'Não',
+                      predatorio: ev.flagPredatorio ? 'Sim' : 'Não',
                     })),
                     ...(resultados.periodicos || []).map(p => ({
                       tipo: 'Periódico',
@@ -139,7 +139,7 @@ function ConsultaEventosPeriodicos() {
                         p.h5 ||
                         Math.max(p.percentilJcr, p.percentilScopus) ||
                         '',
-                      predatorio: p.predatorio ? 'Sim' : 'Não',
+                      predatorio: p.flagPredatorio ? 'Sim' : 'Não',
                     })),
                   ];
                   allItems.forEach(item => {
