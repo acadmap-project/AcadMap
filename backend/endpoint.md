@@ -871,4 +871,46 @@ GET /api/log-veiculo/historico
         "justificativaNegacao": "O veículo não possui relevância acadêmica comprovada para o programa. O índice h5 é muito baixo e não possui vínculo com a SBC."
     }
 ]
+
 ```
+
+# 📘 API - Adicionar Log de Gráficos e CSV
+
+Base URL:
+
+```
+/api/log-veiculo/adicionar
+```
+**Descrição:**  
+
+Adiciona log de requisição do csv e de gráficos. 
+"geracao_csv",
+"geracao_grafico",
+"erro_grafico"
+
+### ✅ **Enpoint**
+```
+POST /api/log-veiculo/adicionar
+```
+
+Necessita de Authentication
+
+### ✅ **Exemplo de uso**
+```json
+{
+  "acao" : "geracao_csv"
+}
+```
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                  |
+|--------|----------------------------|
+| 201    | Log registrado com sucesso |
+
+
+
+### ✅ **Resposta de Sucesso (201 CREATED)**
+Retorna o nome da ação que foi enviada
+
+

@@ -1,13 +1,16 @@
 package com.acadmap.controller;
 
+import com.acadmap.model.dto.AcaoLogDTO;
 import com.acadmap.model.dto.log_veiculo.LogVeiculoDTO;
 import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import com.acadmap.repository.UsuarioRepository;
 import com.acadmap.service.ListarLogVeiculoService;
 import java.util.List;
 import java.util.UUID;
 
+import com.acadmap.service.RegistrarLogService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -29,6 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class LogVeiculoController {
 
   private final ListarLogVeiculoService listarLogVeiculoService;
+  private final RegistrarLogService registrarLogService;
   @Autowired
   private UsuarioRepository usuarioRepository ;
 
@@ -43,6 +44,18 @@ public class LogVeiculoController {
      List<LogVeiculoDTO> logsDto = this.listarLogVeiculoService.historicoLogs();
      return ResponseEntity.ok(logsDto);
   }
+
+  @PostMapping("/adicionar")
+  public ResponseEntity<?> adicionarLog (@RequestBody AcaoLogDTO acaolog , Authentication authentication) {
+    UUID idUser = getUserIdFromAuthentication(authentication);
+    Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(idUser).orElseThrow(EntityNotFoundException::new);
+
+    AcaoLog acaoLog = AcaoLog.doValor(acaolog.acao());
+
+    registrarLogService.gerarLogUsuario(usuario, acaoLog);
+    return ResponseEntity.status(HttpStatus.CREATED).body(acaoLog);
+  }
+
 
   private boolean isPesquisador(UUID idUser){
     Usuario usuario = usuarioRepository.findById(idUser).orElseThrow(EntityNotFoundException::new);
