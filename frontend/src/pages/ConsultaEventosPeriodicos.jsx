@@ -148,7 +148,7 @@ function ConsultaEventosPeriodicos() {
                       item.vinculoSBC,
                       item.adequacaoDefesa,
                       item.h5Percentil,
-                    ].map(field => `"${String(field).replace(/"/g, '""')}`);
+                    ].map(field => `${String(field).replace(/"/g, '""')}`);
                     csvRows.push(row.join(','));
                   });
                   const csvContent = csvRows.join('\n');
