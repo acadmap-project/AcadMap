@@ -111,19 +111,40 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
 
     let eventosData = [];
     let periodicosData = [];
+    
+    // Considera o filtro de tipo de veículo
+    const tipoVeiculo = normalizedData.tipoVeiculo || 'ambos';
+    
     try {
-      const [eventosRes, periodicosRes] = await Promise.all([
-        fetch(eventosUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        }),
-        fetch(periodicosUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        }),
-      ]);
+      const requests = [];
+      
+      // Adiciona requisição para eventos se necessário
+      if (tipoVeiculo === 'ambos' || tipoVeiculo === 'eventos') {
+        requests.push(
+          fetch(eventosUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        );
+      } else {
+        requests.push(Promise.resolve({ ok: false }));
+      }
+      
+      // Adiciona requisição para periódicos se necessário
+      if (tipoVeiculo === 'ambos' || tipoVeiculo === 'periodicos') {
+        requests.push(
+          fetch(periodicosUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        );
+      } else {
+        requests.push(Promise.resolve({ ok: false }));
+      }
+
+      const [eventosRes, periodicosRes] = await Promise.all(requests);
 
       if (eventosRes.ok) {
         const json = await eventosRes.json();
@@ -185,6 +206,20 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
           </button>
           {open && (
             <div className={'mt-4 grid grid-cols-1 gap-6 text-left'}>
+              <div>
+                <label className="block font-semibold uppercase text-xs mb-1">
+                  Veículos
+                </label>
+                <select
+                  className="w-full border border-gray-400 rounded px-2 py-2"
+                  {...register('tipoVeiculo')}
+                  defaultValue="ambos"
+                >
+                  <option value="ambos">Ambos</option>
+                  <option value="eventos">Eventos</option>
+                  <option value="periodicos">Periódicos</option>
+                </select>
+              </div>
               <div>
                 <label
                   htmlFor="areasPesquisaIds"
@@ -363,7 +398,9 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
           <button
             type="button"
             onClick={async () => {
-              reset();
+              reset({
+                tipoVeiculo: 'ambos'
+              });
               if (onFiltrosChange) {
                 onFiltrosChange({});
               }
