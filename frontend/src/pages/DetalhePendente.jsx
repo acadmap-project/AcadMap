@@ -100,7 +100,7 @@ function DetalhePendenteContent() {
         return;
       }
 
-      let errorMessage = 'Erro ao aprovar registro';
+      let errorMessage = 'Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.';
 
       if (error.response?.status === 405) {
         errorMessage = 'Não foi possível aprovar este registro.';
