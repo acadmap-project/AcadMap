@@ -7,6 +7,7 @@ import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import ListaFiltrosEventosPeriodicos from '../components/ListaFiltrosEventosPeriodicos';
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
+import { useLogger } from '../hooks/useLogger.js';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
@@ -15,6 +16,8 @@ function ConsultaEventosPeriodicos() {
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
   const [showNoResults, setShowNoResults] = useState(false);
   const areas = useAreas();
+
+  const { logCsv, logChart, logChartError } = useLogger();
 
   const navigate = useNavigate();
   
@@ -207,6 +210,8 @@ function ConsultaEventosPeriodicos() {
                   link.click();
                   document.body.removeChild(link);
                   URL.revokeObjectURL(url);
+                  
+                  logCsv();
                 }}
               >
                 Exportar
@@ -356,11 +361,16 @@ function ConsultaEventosPeriodicos() {
               </table>
             </div>
             <button
-              onClick={() =>
-                navigate('/visualizar-graficos', {
-                  state: { resultados, filtros: filtrosAtivos },
-                })
-              }
+              onClick={() => {
+                try {
+                  navigate('/visualizar-graficos', {
+                    state: { resultados, filtros: filtrosAtivos },
+                  });
+                  logChart();
+                } catch (error) {
+                  logChartError();
+                }
+              }}
               className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8"
             >
               Visualizar Gráficos

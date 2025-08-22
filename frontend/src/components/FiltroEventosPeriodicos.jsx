@@ -1,5 +1,5 @@
 import { API_URL } from '../utils/apiUrl';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
@@ -44,10 +44,17 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
   ];
 
   const watchedValues = watch();
+  const previousValues = useRef();
 
   useEffect(() => {
     if (onFiltrosChange) {
-      onFiltrosChange(watchedValues);
+      const currentValues = JSON.stringify(watchedValues);
+      const prevValues = JSON.stringify(previousValues.current);
+      
+      if (currentValues !== prevValues) {
+        onFiltrosChange(watchedValues);
+        previousValues.current = watchedValues;
+      }
     }
   }, [watchedValues, onFiltrosChange]);
 
