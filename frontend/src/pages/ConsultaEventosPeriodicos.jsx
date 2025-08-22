@@ -13,6 +13,7 @@ function ConsultaEventosPeriodicos() {
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const [showBusca, setShowBusca] = useState(true);
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
+  const [showNoResults, setShowNoResults] = useState(false);
   const areas = useAreas();
 
   const navigate = useNavigate();
@@ -30,8 +31,10 @@ function ConsultaEventosPeriodicos() {
       (Array.isArray(periodicos) && periodicos.length > 0)
     ) {
       setShowBusca(false);
+      setShowNoResults(false);
     } else {
       setShowBusca(true);
+      setShowNoResults(true);
     }
   };
   const { loggedIn } = useLogin();
@@ -70,6 +73,38 @@ function ConsultaEventosPeriodicos() {
 
   return (
     <>
+      {showNoResults && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-yellow-100 border-2 border-yellow-500 rounded-xl shadow-2xl max-w-2xl w-full mx-4">
+            <div className="p-8">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-12 w-12 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-6 flex-1">
+                  <h3 className="text-2xl font-bold text-yellow-800 mb-4">
+                    Nenhum resultado encontrado
+                  </h3>
+                  <p className="text-lg text-yellow-700 leading-relaxed">
+                    Nenhum evento ou periódico aprovado foi encontrado com os critérios de busca informados. 
+                    Tente ajustar os filtros aplicados para ampliar a pesquisa e obter mais resultados.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowNoResults(false)}
+                  className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 flex-shrink-0 ml-4 px-4 py-2"
+                  aria-label="Fechar"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <HeaderSistema
         userName={loggedIn ? loggedIn.userName : 'Usuário Desconhecido'}
         userType={loggedIn ? loggedIn.userType : 'NÃO LOGADO'}
@@ -90,6 +125,7 @@ function ConsultaEventosPeriodicos() {
                   setShowBusca(true);
                   setResultados({ eventos: [], periodicos: [] });
                   setBusca(false);
+                  setShowNoResults(false);
                   // limpa qualquer restauração salva
                   sessionStorage.removeItem('consultaResultados');
                   sessionStorage.removeItem('consultaRestore');
@@ -203,15 +239,6 @@ function ConsultaEventosPeriodicos() {
             filtrosAtivos={filtrosAtivos}
             onFiltrosChange={setFiltrosAtivos}
           />
-
-          {!hasResultados && busca && (
-            <div className="flex justify-center mt-4">
-              <p className="text-center bg-white bg-opacity-90 px-4 py-2 rounded shadow">
-                Nenhum evento ou periódico aprovado foi encontrado com os
-                critérios informados
-              </p>
-            </div>
-          )}
         </div>
         {!showBusca && hasResultados && (
           <div className="w-full md:flex-1 md:max-w-5xl">
