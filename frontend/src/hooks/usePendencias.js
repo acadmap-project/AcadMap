@@ -107,7 +107,7 @@ function usePendencias() {
       const response = await put(`/api/veiculo/aprovar-veiculo/${id}`, {
         flagPredatorio,
       });
-      if (!response.ok) throw new Error('Erro ao aprovar pendencia');
+      if (!response.ok) throw new Error('Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.');
       const data = await response.json();
       console.log('Approve pendencia response:', data);
       return data;

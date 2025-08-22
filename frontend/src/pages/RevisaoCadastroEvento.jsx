@@ -419,6 +419,9 @@ function RevisaoCadastroEventoContent() {
                         <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
                           Classificação
                         </th>
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Link
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -433,8 +436,23 @@ function RevisaoCadastroEventoContent() {
                           <td className="px-3 py-2 text-center">
                             {ev.classificacao ? (
                               <span className="text-gray-800">
-                                {ev.classificacao}
+                                {ev.classificacao.toUpperCase()}
                               </span>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {ev.linkGoogleScholar ? (
+                              <a
+                                href={ev.linkGoogleScholar}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 underline"
+                                title={ev.linkGoogleScholar}
+                              >
+                                {ev.linkGoogleScholar}
+                              </a>
                             ) : (
                               <span className="text-gray-400">-</span>
                             )}

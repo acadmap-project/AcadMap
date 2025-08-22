@@ -7,6 +7,7 @@ import com.acadmap.repository.LogRepository;
 import com.acadmap.repository.LogVeiculoRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class RegistrarLogService {
   public LogVeiculo gerarLogVeiculo(VeiculoPublicacao veiculoPublicacao, Usuario usuario, AcaoLog acaoLog) {
     LogVeiculo logVeiculo = new LogVeiculo();
     logVeiculo.setUsuario(usuario);
-    logVeiculo.setDataHora(LocalDateTime.now());
+    logVeiculo.setDataHora(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
     logVeiculo.setAcao(acaoLog);
     logVeiculo.setVeiculo(veiculoPublicacao);
     this.logVeiculoRepository.save(logVeiculo);
@@ -38,7 +39,7 @@ public class RegistrarLogService {
   public void gerarLogUsuario(Usuario usuario, AcaoLog acaoLog) {
     Log log = new Log();
     log.setUsuario(usuario);
-    log.setDataHora(LocalDateTime.now());
+    log.setDataHora(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
     log.setAcao(acaoLog);
     this.logRepository.save(log);
   }

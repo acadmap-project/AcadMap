@@ -19,4 +19,7 @@ public interface EventoRepository extends JpaRepository<Evento, UUID>, JpaSpecif
 
     // New method to find by exact name (ignore case) filtering only by specific statuses
     List<Evento> findByNomeIgnoreCaseAndStatusIn(String nome, List<StatusVeiculo> statuses);
+    
+    // Methods to find by links for duplicate validation
+    List<Evento> findByLinkGoogleScholarAndStatusIn(String linkGoogleScholar, List<StatusVeiculo> statuses);
 }
