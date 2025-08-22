@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import HeaderSistema from '../components/HeaderSistema';
+import ErrorPopup from '../components/ErrorPopup';
 import useLogin from '../hooks/userAuth';
 import { get } from '../utils/authFetch';
 
@@ -24,6 +26,12 @@ const formatarStatus = status => {
 
 function VisualizarHistorico() {
   const { loggedIn } = useLogin();
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorInfo, setErrorInfo] = useState({
+    title: '',
+    message: '',
+    type: 'error',
+  });
 
   const { data: logs, isLoading } = useQuery({
     queryKey: ['logs'],
@@ -33,18 +41,52 @@ function VisualizarHistorico() {
 
         if (!response.ok) {
           if (response.status === 405) {
+            setErrorInfo({
+              title: 'Acesso Negado',
+              message: 'Usuário não possui acesso ao histórico',
+              type: 'error',
+            });
+            setShowErrorPopup(true);
             throw new Error('Usuário não possui acesso ao histórico');
           }
+          if (response.status === 500) {
+            setErrorInfo({
+              title: 'Erro no Servidor',
+              message: 'Não foi possível acessar o Log do Sistema. Tente novamente mais tarde.',
+              type: 'error',
+            });
+            setShowErrorPopup(true);
+            throw new Error('Erro interno do servidor');
+          }
+          setErrorInfo({
+            title: 'Erro ao Carregar',
+            message: 'Não foi possível acessar o Log do Sistema. Tente novamente mais tarde.',
+            type: 'error',
+          });
+          setShowErrorPopup(true);
           throw new Error('Erro ao carregar histórico');
         }
 
         return response.json();
       } catch (error) {
         console.error('Erro na requisição:', error);
+        // Se o erro ainda não foi tratado acima (ex: erro de rede)
+        if (!showErrorPopup) {
+          setErrorInfo({
+            title: 'Erro de Conexão',
+            message: 'Não foi possível acessar o Log do Sistema. Tente novamente mais tarde.',
+            type: 'error',
+          });
+          setShowErrorPopup(true);
+        }
         throw error;
       }
     },
   });
+
+  const closeErrorPopup = () => {
+    setShowErrorPopup(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -121,6 +163,14 @@ function VisualizarHistorico() {
           )}
         </div>
       </div>
+      
+      <ErrorPopup
+        isOpen={showErrorPopup}
+        onClose={closeErrorPopup}
+        title={errorInfo.title}
+        message={errorInfo.message}
+        type={errorInfo.type}
+      />
     </div>
   );
 }
