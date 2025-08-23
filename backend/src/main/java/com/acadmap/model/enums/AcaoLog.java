@@ -13,7 +13,8 @@ public enum AcaoLog {
   exclusao_usuario("exclusao_usuario"),
   geracao_csv("geracao_csv"),
   geracao_grafico("geracao_grafico"),
-  erro_grafico("erro_grafico");
+  erro_grafico("erro_grafico"),
+  erro_requisicao("erro_requisicao");
 
   private String codigo;
 

@@ -78,8 +78,15 @@ CREATE TABLE Log (
     'exclusao_usuario',
     'geracao_csv',
     'geracao_grafico',
-    'erro_grafico'
+    'erro_grafico',
+    'erro_requisicao'
   ))
+);
+
+CREATE TABLE LogErro (
+    id_log uuid,
+    descricao_erro varchar(1000),
+    CONSTRAINT pk_log_erro PRIMARY KEY (id_log)
 );
 
 CREATE TABLE LogExclusao (
@@ -145,4 +152,4 @@ ALTER TABLE AreaPesquisaVeiculo ADD CONSTRAINT fk_areapesquisaveiculo_areapesqui
 ALTER TABLE AreaPesquisaVeiculo ADD CONSTRAINT fk_areapesquisaveiculo_veiculopublicacao FOREIGN KEY (id_veiculo) REFERENCES VeiculoPublicacao (id_veiculo);
 ALTER TABLE VeiculoPublicacao ADD CONSTRAINT fk_veiculopublicacao_usuario FOREIGN KEY (id_usuario) REFERENCES Usuario (id_usuario);
 
-
+ALTER TABLE LogErro ADD CONSTRAINT fk_logerro_log FOREIGN KEY (id_log) REFERENCES Log (id_log);
