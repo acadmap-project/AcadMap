@@ -64,7 +64,7 @@ CREATE TABLE Periodico (
 
 CREATE TABLE Log (
   id_log uuid,
-  id_usuario uuid NOT NULL,
+  id_usuario uuid,
   data_hora timestamp NOT NULL,
   acao varchar(30) NOT NULL,
   CONSTRAINT pk_log PRIMARY KEY (id_log),

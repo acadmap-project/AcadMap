@@ -63,6 +63,8 @@ public class SecurityConfig {
                     authorize.requestMatchers("/api/eventos/*").permitAll();
                     authorize.requestMatchers("api/areas/listar").permitAll();
                     authorize.requestMatchers("api/programa/listar").permitAll();
+                    authorize.requestMatchers("api/log-erro/adicionar").permitAll();
+                    authorize.requestMatchers("api/log/adicionar").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults())

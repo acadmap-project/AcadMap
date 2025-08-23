@@ -12,7 +12,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "log_erro")
+@Table(name = "logerro")
 @PrimaryKeyJoinColumn(name = "id_log") // Relaciona a PK de LogErro com a PK de Log
 public class LogErro extends Log {
 
