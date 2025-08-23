@@ -45,17 +45,6 @@ public class LogVeiculoController {
      return ResponseEntity.ok(logsDto);
   }
 
-  @PostMapping("/adicionar")
-  public ResponseEntity<?> adicionarLog (@RequestBody AcaoLogDTO acaolog , Authentication authentication) {
-    UUID idUser = getUserIdFromAuthentication(authentication);
-    Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(idUser).orElseThrow(EntityNotFoundException::new);
-
-    AcaoLog acaoLog = AcaoLog.doValor(acaolog.acao());
-
-    registrarLogService.gerarLogUsuario(usuario, acaoLog);
-    return ResponseEntity.status(HttpStatus.CREATED).body(acaoLog);
-  }
-
 
   private boolean isPesquisador(UUID idUser){
     Usuario usuario = usuarioRepository.findById(idUser).orElseThrow(EntityNotFoundException::new);

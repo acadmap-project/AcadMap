@@ -879,7 +879,7 @@ GET /api/log-veiculo/historico
 Base URL:
 
 ```
-/api/log-veiculo/adicionar
+/api/log/adicionar
 ```
 **Descrição:**  
 
@@ -890,10 +890,13 @@ Adiciona log de requisição do csv e de gráficos.
 
 ### ✅ **Enpoint**
 ```
-POST /api/log-veiculo/adicionar
+POST /api/log/adicionar
 ```
 
-Necessita de Authentication
+```
+Authentication para registrar o usuário. Aceita não passar authentication,
+usuário fica null, ou seja, usuário não logado
+```
 
 ### ✅ **Exemplo de uso**
 ```json
@@ -912,5 +915,110 @@ Necessita de Authentication
 
 ### ✅ **Resposta de Sucesso (201 CREATED)**
 Retorna o nome da ação que foi enviada
+
+# 📘 API - Listar Logs de Gráficos e Csv
+
+Base URL:
+
+```
+/api/log/historico
+```
+**Descrição:**
+
+Retorna lista com logs de csv e gráficos
+
+### ✅ **Enpoint**
+```
+GET /api/log/historico
+```
+
+```
+Authentication para que somente usários de administrador possa usar o enpoint. 
+```
+
+### ✅ **Exemplo de uso**
+```json
+{
+  "descricaoerro" : "Erro : problema com cadastro de usuario "
+}
+```
+
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | OK        |
+
+
+
+### ✅ **Resposta de Sucesso (200 OK)**
+Retorna os logs de csv e gráficos
+
+# 📘 API - Adicionar logs de erro
+
+Base URL:
+
+```
+/api/log-erro/adicionar
+```
+**Descrição:**
+
+Adiciona logs para erro
+
+### ✅ **Enpoint**
+```
+POST /api/log-erro/adicionar
+```
+
+```
+Authentication para registrar o usuário. Aceita não passar authentication,
+usuário fica null, ou seja, usuário não logado
+```
+
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | OK        |
+
+
+
+### ✅ **Resposta de Sucesso (201 CREATED)**
+Mensagem "Log registrado"
+
+
+# 📘 API - Listar logs de erro
+
+Base URL:
+
+```
+/api/log-erro/historico
+```
+**Descrição:**
+
+Retorna logs de erro
+
+### ✅ **Enpoint**
+```
+GET /api/log-erro/historico
+```
+
+```
+Authentication para que somente usários de administrador possa usar o enpoint. 
+```
+
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | OK        |
+
+
+
+### ✅ **Resposta de Sucesso (201 CREATED)**
+Retornar os logs de erros
 
 

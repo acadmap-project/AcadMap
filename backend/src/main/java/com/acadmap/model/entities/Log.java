@@ -30,7 +30,7 @@ public class Log {
   private UUID idLog;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_usuario")
+  @JoinColumn(name = "id_usuario", nullable = true)
   private Usuario usuario;
 
   @Column(name = "data_hora", nullable = false)
