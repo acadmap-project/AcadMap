@@ -294,6 +294,7 @@ function ConsultaEventosPeriodicos() {
                       vinculoSBC: ev.vinculoSBC || '',
                       adequacaoDefesa: ev.adequacaoDefesa || '',
                       h5Percentil: ev.h5 || '',
+                      flagPredatorio: false, // Eventos não são predatórios
                     })),
                     ...(resultados.periodicos || []).map(p => ({
                       id: p.idVeiculo,
@@ -307,10 +308,23 @@ function ConsultaEventosPeriodicos() {
                         p.h5 ||
                         Math.max(p.percentilJcr, p.percentilScopus) ||
                         '',
+                      flagPredatorio: p.flagPredatorio,
                     })),
                   ].map(item => (
                     <tr key={item.tipo + '-' + item.id}>
-                      <td className="border px-2 py-1">{item.tipo}</td>
+                      <td className="border px-2 py-1">
+                        <div className="flex items-center justify-center gap-2">
+                          {item.tipo === 'Periódico' && item.flagPredatorio && (
+                            <span 
+                              className="text-red-600 font-bold text-lg" 
+                              title="Periódico Predatório"
+                            >
+                              ⚠️
+                            </span>
+                          )}
+                          <span>{item.tipo}</span>
+                        </div>
+                      </td>
                       <td className="border px-2 py-1">
                         <Link
                           className="underline decoration-solid cursor-pointer"
