@@ -14,6 +14,7 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 import '../styles/App.css';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ const postPeriodico = async ({ periodicoData, userId, forcar }) => {
       'Percentil Scopus'
     );
   } catch (error) {
+    Logger.logError(`Erro de validação de periódico: ${error.message}`);
     throw new Error(`Erro de validação: ${error.message}`);
   }
 
@@ -531,7 +533,7 @@ function ValidacaoPeriodicoContent() {
             >
               <div className="bg-white border border-red-300 rounded shadow-md p-4 w-full">
                 <span className="block text-red-700 font-bold mb-2">
-                  Eventos similares detectados:
+                  Periódicos similares detectados:
                 </span>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm border border-gray-200">
@@ -542,6 +544,9 @@ function ValidacaoPeriodicoContent() {
                         </th>
                         <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
                           Classificação
+                        </th>
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Links
                         </th>
                       </tr>
                     </thead>
@@ -554,7 +559,7 @@ function ValidacaoPeriodicoContent() {
                           <td className="px-3 py-2 font-semibold text-red-700">
                             {ev.nome}
                           </td>
-                          <td className="px-3 py-2">
+                          <td className="px-3 py-2 text-center">
                             {ev.classificacao ? (
                               <span className="text-gray-800">
                                 {ev.classificacao.toUpperCase()}
@@ -562,6 +567,46 @@ function ValidacaoPeriodicoContent() {
                             ) : (
                               <span className="text-gray-400">-</span>
                             )}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex flex-col gap-1">
+                              {ev.linkGoogleScholar && (
+                                <a
+                                  href={ev.linkGoogleScholar}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                                  title={ev.linkGoogleScholar}
+                                >
+                                  {ev.linkGoogleScholar}
+                                </a>
+                              )}
+                              {ev.linkJcr && (
+                                <a
+                                  href={ev.linkJcr}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                                  title={ev.linkJcr}
+                                >
+                                  {ev.linkJcr}
+                                </a>
+                              )}
+                              {ev.linkScopus && (
+                                <a
+                                  href={ev.linkScopus}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                                  title={ev.linkScopus}
+                                >
+                                  {ev.linkScopus}
+                                </a>
+                              )}
+                              {!ev.linkGoogleScholar && !ev.linkJcr && !ev.linkScopus && (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}

@@ -13,6 +13,7 @@ import {
   QueryClientProvider,
   useMutation,
 } from '@tanstack/react-query';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ function DetalhePendenteContent() {
     },
     onError: error => {
       console.error('Error in aprovarMutation:', error);
+      Logger.logError(`Erro em aprovarMutation - ID: ${id} - ${error.message}`);
 
       // Treat 500 as success (backend quirk)
       if (error.response?.status === 500) {
@@ -100,7 +102,7 @@ function DetalhePendenteContent() {
         return;
       }
 
-      let errorMessage = 'Erro ao aprovar registro';
+      let errorMessage = 'Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.';
 
       if (error.response?.status === 405) {
         errorMessage = 'Não foi possível aprovar este registro.';
@@ -133,6 +135,7 @@ function DetalhePendenteContent() {
     },
     onError: error => {
       console.error('Error in rejeitarMutation:', error);
+      Logger.logError(`Erro em rejeitarMutation - ID: ${id} - ${error.message}`);
 
       // Treat 500 as success (backend quirk)
       if (error.response?.status === 500) {

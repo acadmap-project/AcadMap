@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -76,10 +77,28 @@ public class CriarPeriodicoService {
                     "É obrigatório informar um dos seguintes indicadores: JCR, Scopus, Google Scholar ou Qualis Antigo, respeitando a ordem de prioridade.");
         }
         try {
-            List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
+            List<StatusVeiculo> statusesParaChecar = List.of(StatusVeiculo.pendente, StatusVeiculo.aceito);
+            Set<Periodico> periodicosSimilares = new HashSet<>(this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome()));
+            
+            // Check for duplicate links
+            if (dto.linkGoogleScholar() != null && !dto.linkGoogleScholar().trim().isEmpty()) {
+                List<Periodico> periodicosComLinkDuplicado = this.periodicoRepository.findByLinkGoogleScholarAndStatusIn(dto.linkGoogleScholar(), statusesParaChecar);
+                periodicosSimilares.addAll(periodicosComLinkDuplicado);
+            }
+            
+            if (dto.linkJcr() != null && !dto.linkJcr().trim().isEmpty()) {
+                List<Periodico> periodicosComLinkDuplicado = this.periodicoRepository.findByLinkJcrAndStatusIn(dto.linkJcr(), statusesParaChecar);
+                periodicosSimilares.addAll(periodicosComLinkDuplicado);
+            }
+            
+            if (dto.linkScopus() != null && !dto.linkScopus().trim().isEmpty()) {
+                List<Periodico> periodicosComLinkDuplicado = this.periodicoRepository.findByLinkScopusAndStatusIn(dto.linkScopus(), statusesParaChecar);
+                periodicosSimilares.addAll(periodicosComLinkDuplicado);
+            }
+            
             if (!periodicosSimilares.isEmpty() && !forcar) {
                     throw new PeriodicoDuplicadoException("Erro de duplicidade de periódico detectado.",
-                            periodicosSimilares);
+                            new ArrayList<>(periodicosSimilares));
             }
 
             Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.areasPesquisaIds());

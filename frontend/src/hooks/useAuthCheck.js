@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLogin from './userAuth';
 import tokenManager from '../utils/tokenManager';
+import Logger from '../utils/logger';
 
 /**
  * Hook to handle automatic token validation and refresh on app startup
@@ -29,6 +30,7 @@ function useAuthCheck() {
         }
       } catch (error) {
         console.error('Token refresh failed:', error);
+        Logger.logError(`Falha na renovação do token: ${error.message}`);
 
         // If refresh fails, logout user and redirect to login
         logout();

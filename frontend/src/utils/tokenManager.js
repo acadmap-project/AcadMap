@@ -1,4 +1,5 @@
 import { API_URL } from './apiUrl';
+import Logger from './logger.js';
 
 /**
  * Token Management Utility
@@ -24,6 +25,7 @@ class TokenManager {
       }
     } catch (error) {
       console.error('Error getting tokens:', error);
+      Logger.logError(`Erro ao obter tokens: ${error.message}`);
     }
     return { accessToken: null, refreshTokenUUID: null };
   }
@@ -45,6 +47,7 @@ class TokenManager {
       }
     } catch (error) {
       console.error('Error updating tokens:', error);
+      Logger.logError(`Erro ao atualizar tokens: ${error.message}`);
     }
   }
 
@@ -63,6 +66,7 @@ class TokenManager {
       return decodedPayload.exp < currentTime + 300;
     } catch (error) {
       console.error('Error decoding token:', error);
+      Logger.logError(`Erro ao decodificar token: ${error.message}`);
       return true;
     }
   }
@@ -119,6 +123,7 @@ class TokenManager {
       return tokenData.accessToken;
     } catch (error) {
       console.error('Token refresh error:', error);
+      Logger.logError(`Erro na renovação do token: ${error.message}`);
       throw error;
     }
   }
@@ -165,6 +170,7 @@ class TokenManager {
       }
     } catch (error) {
       console.error('Error clearing tokens:', error);
+      Logger.logError(`Erro ao limpar tokens: ${error.message}`);
     }
   }
 }

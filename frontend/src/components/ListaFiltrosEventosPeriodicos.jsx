@@ -9,6 +9,7 @@ function ListaFiltrosEventosPeriodicos({ filtros, areas = [] }) {
 
   const labels = {
     nome: 'Nome',
+    tipoVeiculo: 'Tipo de Veículo',
     areasPesquisaIds: 'Área',
     vinculoSbcCheckbox: 'Vínculo SBC',
     h5Minimo: 'H5 Mínimo',
@@ -20,6 +21,31 @@ function ListaFiltrosEventosPeriodicos({ filtros, areas = [] }) {
 
   const renderFiltros = () => {
     const items = [];
+
+    if (
+      filtrosAtivos.nome &&
+      filtrosAtivos.nome.trim() !== ''
+    ) {
+      items.push(
+        <li key="nome" className="bg-gray-200 px-3 py-1 rounded text-xs">
+          {labels.nome}: {filtrosAtivos.nome}
+        </li>
+      );
+    }
+
+    if (
+      filtrosAtivos.tipoVeiculo &&
+      filtrosAtivos.tipoVeiculo !== 'ambos'
+    ) {
+      const tipoLabel = filtrosAtivos.tipoVeiculo === 'eventos' ? 'Eventos' : 
+                       filtrosAtivos.tipoVeiculo === 'periodicos' ? 'Periódicos' : 
+                       filtrosAtivos.tipoVeiculo;
+      items.push(
+        <li key="tipoVeiculo" className="bg-gray-200 px-3 py-1 rounded text-xs">
+          {labels.tipoVeiculo}: {tipoLabel}
+        </li>
+      );
+    }
 
     if (
       filtrosAtivos.areasPesquisaIds &&

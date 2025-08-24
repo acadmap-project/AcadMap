@@ -7,11 +7,14 @@ import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
+import Logger from '../utils/logger';
 
 const fetcheventoData = async id => {
   const response = await get(`/api/eventos/${id}`, {}, false); // requireAuth = false
   if (!response.ok) {
-    throw new Error('Erro ao buscar dados do evento');
+    const error = new Error('Erro ao buscar dados do evento');
+    Logger.logError(`Erro ao buscar dados do evento ID ${id}: ${error.message}`);
+    throw error;
   }
   return await response.json();
 };
@@ -80,7 +83,14 @@ const VisualizarPeriodico = () => {
             {eventoData.linkSolSbc && (
               <div className="text-sm text-gray-900">
                 <span className="font-medium">LINK DO SOL-SBC:</span>{' '}
-                {eventoData.linkSolSbc}
+                <a
+                  href={eventoData.linkSolSbc}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {eventoData.linkSolSbc}
+                </a>
               </div>
             )}
 

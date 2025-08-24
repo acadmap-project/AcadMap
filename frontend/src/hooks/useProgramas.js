@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import renomearKey from '../utils/renomearKey';
 import { get } from '../utils/authFetch';
+import Logger from '../utils/logger.js';
 
 function toTitleCase(str) {
   return str.replace(
@@ -26,6 +27,7 @@ function useProgramas() {
         setProgramas(dados);
       } catch (error) {
         console.error('Erro ao carregar programas:', error);
+        Logger.logError(`Erro ao carregar programas: ${error.message}`);
       }
     };
 

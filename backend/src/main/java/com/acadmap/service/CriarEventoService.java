@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,10 +36,17 @@ public class CriarEventoService {
 
       // Consider duplicates only among active/pending events, ignore rejected/excluded
       List<StatusVeiculo> statusesParaChecar = List.of(StatusVeiculo.pendente, StatusVeiculo.aceito);
-      List<Evento> eventosSimilares = this.eventoRepository.findByNomeIgnoreCaseAndStatusIn(dto.getNome(), statusesParaChecar);
+      Set<Evento> eventosSimilares = new HashSet<>(this.eventoRepository.findByNomeIgnoreCaseAndStatusIn(dto.getNome(), statusesParaChecar));
+      
+      // Check for duplicate links
+      if (dto.getLinkGoogleScholar() != null && !dto.getLinkGoogleScholar().trim().isEmpty()) {
+        List<Evento> eventosComLinkDuplicado = this.eventoRepository.findByLinkGoogleScholarAndStatusIn(dto.getLinkGoogleScholar(), statusesParaChecar);
+        eventosSimilares.addAll(eventosComLinkDuplicado);
+      }
+      
       if (!eventosSimilares.isEmpty() && !forcar) {
         throw new EventoDuplicadoException("Erro de duplicidade de evento detectado.",
-            eventosSimilares);
+            new ArrayList<>(eventosSimilares));
       }
 
       Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.getAreasPesquisaIds());

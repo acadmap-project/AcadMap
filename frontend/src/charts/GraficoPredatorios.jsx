@@ -33,7 +33,7 @@ const GraficoPredatorios = ({ data }) => {
   let naoPredatorio = 0;
 
   todos.forEach(item => {
-    if (item.predatorio) {
+    if (item.flagPredatorio) {
       predatorio += 1;
     } else {
       naoPredatorio += 1;

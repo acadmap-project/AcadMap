@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import tokenManager from '../utils/tokenManager';
+import Logger from '../utils/logger.js';
 
 function useLogin() {
   const [loggedIn, setLoggedState] = useState(() => {
@@ -47,6 +48,7 @@ function useLogin() {
       };
     } catch (error) {
       console.error('Error parsing login data from localStorage:', error);
+      Logger.logError(`Erro ao analisar dados de login do localStorage: ${error.message}`);
       localStorage.removeItem('login');
       return {
         isLoggedIn: false,
@@ -69,6 +71,7 @@ function useLogin() {
       }
     } catch (error) {
       console.error('Error writing login data to localStorage:', error);
+      Logger.logError(`Erro ao escrever dados de login no localStorage: ${error.message}`);
     }
   }, [loggedIn]);
 
@@ -105,6 +108,7 @@ function useLogin() {
         }
       } catch (e) {
         console.error('Error syncing login state:', e);
+        Logger.logError(`Erro ao sincronizar estado de login: ${e.message}`);
       }
     };
 
@@ -216,6 +220,7 @@ function useLogin() {
       return !tokenManager.isTokenExpired(loggedIn.accessToken);
     } catch (error) {
       console.error('Error checking token validity:', error);
+      Logger.logError(`Erro ao verificar validade do token: ${error.message}`);
       return false;
     }
   }, [loggedIn]);

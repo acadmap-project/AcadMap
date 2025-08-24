@@ -8,18 +8,12 @@ import {
   CartesianGrid,
   Label,
 } from 'recharts';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 
 const COLORS = [
   '#F9B673', // laranja
   '#53C3C3', // azul
 ];
-
-const ADEQUACAO_LABELS = {
-  mestrado: 'Apenas Mestrado',
-  doutorado: 'Apenas Doutorado',
-  mestrado_doutorado: 'Mestrado e Doutorado',
-  nenhuma: 'Nenhuma',
-};
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -31,14 +25,14 @@ const CustomTooltip = ({ active, payload }) => {
             className="inline-block w-3 h-3 rounded"
             style={{ backgroundColor: COLORS[0] }}
           ></span>
-          Sim: {payload[0].payload['Com Vínculo SBC']}
+          Com Vínculo SBC: {payload[0].payload['Com Vínculo SBC']}
         </div>
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-3 h-3 rounded"
             style={{ backgroundColor: COLORS[1] }}
           ></span>
-          Não: {payload[0].payload['Sem Vínculo SBC']}
+          Sem Vínculo SBC: {payload[0].payload['Sem Vínculo SBC']}
         </div>
       </div>
     );
@@ -46,39 +40,26 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-const getAdequacaoLabel = adequacao => {
-  if (!adequacao || adequacao.length === 0) return ADEQUACAO_LABELS['nenhuma'];
-  if (adequacao.includes('mestrado_doutorado'))
-    return ADEQUACAO_LABELS['mestrado_doutorado'];
-  if (adequacao.includes('mestrado') && adequacao.length === 1)
-    return ADEQUACAO_LABELS['mestrado'];
-  if (adequacao.includes('doutorado') && adequacao.length === 1)
-    return ADEQUACAO_LABELS['doutorado'];
-  return adequacao.join(', ');
-};
-
 const GraficoAdequacaoDefesa = ({ data }) => {
   // Agrupa por adequação e vínculo SBC
   const contagem = {};
 
   [...data.eventos, ...data.periodicos].forEach(item => {
-    const adequacao = Array.isArray(item.adequacaoDefesa)
-      ? item.adequacaoDefesa.map(a => a.toLowerCase())
-      : typeof item.adequacaoDefesa === 'string'
-        ? [item.adequacaoDefesa.toLowerCase()]
-        : [];
+    // Formatar adequação para defesa
+    const adequacaoFormatada = formatAdequacaoDefesa(item.adequacaoDefesa);
+    
+    // Determinar se tem vínculo SBC (qualquer tipo exceto 'sem_vinculo')
+    const temVinculoSBC = item.vinculoSBC && item.vinculoSBC !== 'sem_vinculo';
+    const vinculo = temVinculoSBC ? 'Com Vínculo SBC' : 'Sem Vínculo SBC';
 
-    const label = getAdequacaoLabel(adequacao);
-    const vinculo = item.vinculoSBC ? 'Com Vínculo SBC' : 'Sem Vínculo SBC';
-
-    if (!contagem[label]) {
-      contagem[label] = {
-        adequacao: label,
+    if (!contagem[adequacaoFormatada]) {
+      contagem[adequacaoFormatada] = {
+        adequacao: adequacaoFormatada,
         'Com Vínculo SBC': 0,
         'Sem Vínculo SBC': 0,
       };
     }
-    contagem[label][vinculo]++;
+    contagem[adequacaoFormatada][vinculo]++;
   });
 
   const chartData = Object.values(contagem);

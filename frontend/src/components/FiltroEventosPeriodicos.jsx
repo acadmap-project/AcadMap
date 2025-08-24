@@ -1,9 +1,10 @@
 import { API_URL } from '../utils/apiUrl';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import { Controller, useForm } from 'react-hook-form';
+import Logger from '../utils/logger';
 
 const normalizeToNull = obj => {
   if (!obj || typeof obj !== 'object') return obj;
@@ -44,10 +45,17 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
   ];
 
   const watchedValues = watch();
+  const previousValues = useRef();
 
   useEffect(() => {
     if (onFiltrosChange) {
-      onFiltrosChange(watchedValues);
+      const currentValues = JSON.stringify(watchedValues);
+      const prevValues = JSON.stringify(previousValues.current);
+      
+      if (currentValues !== prevValues) {
+        onFiltrosChange(watchedValues);
+        previousValues.current = watchedValues;
+      }
     }
   }, [watchedValues, onFiltrosChange]);
 
@@ -111,19 +119,40 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
 
     let eventosData = [];
     let periodicosData = [];
+    
+    // Considera o filtro de tipo de veículo
+    const tipoVeiculo = normalizedData.tipoVeiculo || 'ambos';
+    
     try {
-      const [eventosRes, periodicosRes] = await Promise.all([
-        fetch(eventosUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        }),
-        fetch(periodicosUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        }),
-      ]);
+      const requests = [];
+      
+      // Adiciona requisição para eventos se necessário
+      if (tipoVeiculo === 'ambos' || tipoVeiculo === 'eventos') {
+        requests.push(
+          fetch(eventosUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        );
+      } else {
+        requests.push(Promise.resolve({ ok: false }));
+      }
+      
+      // Adiciona requisição para periódicos se necessário
+      if (tipoVeiculo === 'ambos' || tipoVeiculo === 'periodicos') {
+        requests.push(
+          fetch(periodicosUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        );
+      } else {
+        requests.push(Promise.resolve({ ok: false }));
+      }
+
+      const [eventosRes, periodicosRes] = await Promise.all(requests);
 
       if (eventosRes.ok) {
         const json = await eventosRes.json();
@@ -144,6 +173,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
       eventosData = [];
       periodicosData = [];
       console.error('Erro ao buscar eventos e periódicos:', err);
+      Logger.logError(`Erro ao buscar eventos e periódicos: ${err.message}`);
     }
 
     if (onResultados) {
@@ -185,6 +215,20 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
           </button>
           {open && (
             <div className={'mt-4 grid grid-cols-1 gap-6 text-left'}>
+              <div>
+                <label className="block font-semibold uppercase text-xs mb-1">
+                  Veículos
+                </label>
+                <select
+                  className="w-full border border-gray-400 rounded px-2 py-2"
+                  {...register('tipoVeiculo')}
+                  defaultValue="ambos"
+                >
+                  <option value="ambos">Ambos</option>
+                  <option value="eventos">Eventos</option>
+                  <option value="periodicos">Periódicos</option>
+                </select>
+              </div>
               <div>
                 <label
                   htmlFor="areasPesquisaIds"
@@ -363,7 +407,9 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
           <button
             type="button"
             onClick={async () => {
-              reset();
+              reset({
+                tipoVeiculo: 'ambos'
+              });
               if (onFiltrosChange) {
                 onFiltrosChange({});
               }
@@ -407,6 +453,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                 eventosData = [];
                 periodicosData = [];
                 console.error('Erro ao buscar eventos e periódicos:', err);
+                Logger.logError(`Erro ao buscar eventos e periódicos (submit): ${err.message}`);
               }
 
               if (onResultados) {

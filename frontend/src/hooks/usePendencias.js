@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useLogin from './userAuth';
 import { get, put } from '../utils/authFetch';
+import Logger from '../utils/logger';
 
 function usePendencias() {
   const [pendencias, setPendencias] = useState([]);
@@ -15,6 +16,7 @@ function usePendencias() {
         setPendencias(dados);
       } catch (error) {
         console.error('Erro ao carregar pendencias:', error);
+        Logger.logError(`Erro ao carregar pendencias: ${error.message}`);
       }
     };
 
@@ -59,6 +61,7 @@ function usePendencias() {
       return data;
     } catch (error) {
       console.error('Error in negarPendencias:', error);
+      Logger.logError(`Erro em negarPendencias - ID: ${id} - ${error.message}`);
 
       // Handle different types of errors
       if (error.code === 'ECONNABORTED') {
@@ -107,12 +110,13 @@ function usePendencias() {
       const response = await put(`/api/veiculo/aprovar-veiculo/${id}`, {
         flagPredatorio,
       });
-      if (!response.ok) throw new Error('Erro ao aprovar pendencia');
+      if (!response.ok) throw new Error('Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.');
       const data = await response.json();
       console.log('Approve pendencia response:', data);
       return data;
     } catch (error) {
       console.error('Error in aprovarPendencias:', error);
+      Logger.logError(`Erro em aprovarPendencias - ID: ${id} - ${error.message}`);
 
       // Handle different types of errors
       if (error.code === 'ECONNABORTED') {
