@@ -1,0 +1,60 @@
+networks:
+  acadmap-simple:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  maven_cache:
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: acadmap-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dev
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: 87654321
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/docker-volumes/scripts-sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      - acadmap-simple
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usuario -d dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: acadmap-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/dev
+      SPRING_DATASOURCE_USERNAME: usuario
+      SPRING_DATASOURCE_PASSWORD: 87654321
+      SERVER_PORT: 8080
+    volumes:
+      - maven_cache:/root/.m2
+    networks:
+      - acadmap-simple
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: acadmap-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    networks:
+      - acadmap-simple
+    depends_on:
+      - backend
