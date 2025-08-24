@@ -5,9 +5,9 @@ import Logger from '../utils/logger.js';
  */
 export function useLogger() {
   return {
-    logError: Logger.logError,
-    logCsv: Logger.logCsvGeneration, 
-    logChart: Logger.logChartGeneration,
-    logChartError: Logger.logChartError
+    logError: (descricaoErro) => Logger.logError(descricaoErro),
+    logCsv: () => Logger.logCsvGeneration(), 
+    logChart: () => Logger.logChartGeneration(),
+    logChartError: () => Logger.logChartError()
   };
 }

@@ -32,7 +32,7 @@ public class ListarLogsAcaoesService {
         private LogDTO logDTO (Log log) {
             LogDTO dto = new LogDTO();
             dto.setIdLog(log.getIdLog());
-            dto.setDataHora(log.getDataHora());
+            dto.setTimestamp(log.getDataHora());
             dto.setAcao(log.getAcao());
             dto.setIdUsuario(log.getUsuario() != null ? log.getUsuario().getIdUsuario() : null);
             return dto;

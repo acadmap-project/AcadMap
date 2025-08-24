@@ -14,6 +14,7 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 import '../styles/App.css';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ const postPeriodico = async ({ periodicoData, userId, forcar }) => {
       'Percentil Scopus'
     );
   } catch (error) {
+    Logger.logError(`Erro de validação de periódico: ${error.message}`);
     throw new Error(`Erro de validação: ${error.message}`);
   }
 

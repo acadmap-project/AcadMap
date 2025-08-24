@@ -1,5 +1,6 @@
 import { API_URL } from './apiUrl';
 import tokenManager from './tokenManager';
+import Logger from './logger.js';
 
 /**
  * Authenticated fetch wrapper that handles token management automatically
@@ -33,6 +34,7 @@ export class AuthenticatedFetch {
         headers['Authorization'] = `Bearer ${accessToken}`;
       } catch (error) {
         console.error('Authentication failed:', error);
+        Logger.logError(`Falha na autenticação: ${error.message}`);
         // Redirect to login or handle authentication error
         this._handleAuthError(error);
         throw error;
@@ -72,6 +74,7 @@ export class AuthenticatedFetch {
           return retryResponse;
         } catch (refreshError) {
           console.error('Token refresh failed:', refreshError);
+          Logger.logError(`Falha na renovação do token: ${refreshError.message}`);
           tokenManager.clearTokens();
           this._handleAuthError(refreshError);
           throw refreshError;
@@ -81,6 +84,7 @@ export class AuthenticatedFetch {
       return response;
     } catch (error) {
       console.error('Request failed:', error);
+      Logger.logError(`Falha na requisição: ${error.message}`);
       throw error;
     }
   }
@@ -153,6 +157,7 @@ export class AuthenticatedFetch {
       return loginData ? JSON.parse(loginData) : null;
     } catch (error) {
       console.error('Error getting login data:', error);
+      Logger.logError(`Erro ao obter dados de login: ${error.message}`);
       return null;
     }
   }

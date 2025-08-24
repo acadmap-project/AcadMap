@@ -17,7 +17,7 @@ import VisualizarEvento from './pages/VisualizarEvento';
 import Login from './pages/Login';
 import HeaderSistema from './components/HeaderSistema';
 import VisualizarGraficos from './pages/VisualizarGraficos';
-import VisualizarHistorico from './pages/VisualizarHistorico';
+import AuditoriaLogs from './pages/AuditoriaLogs';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,8 +77,8 @@ const App = () => {
                 />
                 <Route path="/evento/:id" element={<VisualizarEvento />} />
                 <Route
-                  path="/historico-auditoria"
-                  element={<VisualizarHistorico />}
+                  path="/auditoria-logs"
+                  element={<AuditoriaLogs />}
                 />
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<NotFound />} />

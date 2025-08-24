@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import useLogin from './userAuth';
 import { get, put } from '../utils/authFetch';
+import Logger from '../utils/logger';
 
 function usePendencias() {
   const [pendencias, setPendencias] = useState([]);
@@ -15,6 +16,7 @@ function usePendencias() {
         setPendencias(dados);
       } catch (error) {
         console.error('Erro ao carregar pendencias:', error);
+        Logger.logError(`Erro ao carregar pendencias: ${error.message}`);
       }
     };
 
@@ -59,6 +61,7 @@ function usePendencias() {
       return data;
     } catch (error) {
       console.error('Error in negarPendencias:', error);
+      Logger.logError(`Erro em negarPendencias - ID: ${id} - ${error.message}`);
 
       // Handle different types of errors
       if (error.code === 'ECONNABORTED') {
@@ -113,6 +116,7 @@ function usePendencias() {
       return data;
     } catch (error) {
       console.error('Error in aprovarPendencias:', error);
+      Logger.logError(`Erro em aprovarPendencias - ID: ${id} - ${error.message}`);
 
       // Handle different types of errors
       if (error.code === 'ECONNABORTED') {

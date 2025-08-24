@@ -4,6 +4,7 @@ import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import { Controller, useForm } from 'react-hook-form';
+import Logger from '../utils/logger';
 
 const normalizeToNull = obj => {
   if (!obj || typeof obj !== 'object') return obj;
@@ -172,6 +173,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
       eventosData = [];
       periodicosData = [];
       console.error('Erro ao buscar eventos e periódicos:', err);
+      Logger.logError(`Erro ao buscar eventos e periódicos: ${err.message}`);
     }
 
     if (onResultados) {
@@ -451,6 +453,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                 eventosData = [];
                 periodicosData = [];
                 console.error('Erro ao buscar eventos e periódicos:', err);
+                Logger.logError(`Erro ao buscar eventos e periódicos (submit): ${err.message}`);
               }
 
               if (onResultados) {

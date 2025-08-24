@@ -70,11 +70,22 @@ function HeaderSistema({ userType, userName }) {
               {userType === 'ADMINISTRADOR' && (
                 <li>
                   <Link
-                    to="/historico-auditoria"
+                    to="/auditoria-logs"
                     className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
                     aria-current="page"
                   >
-                    Histórico
+                    Auditoria do Sistema
+                  </Link>
+                </li>
+              )}
+              {userType === 'ADMINISTRADOR' && (
+                <li>
+                  <Link
+                    to="/auditoria-logs"
+                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                    aria-current="page"
+                  >
+                    Logs do Sistema
                   </Link>
                 </li>
               )}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { get } from '../utils/authFetch';
 import renomearKey from '../utils/renomearKey';
+import Logger from '../utils/logger.js';
 
 function useAreas() {
   const [areas, setAreas] = useState([]);
@@ -18,6 +19,7 @@ function useAreas() {
         setAreas(dados);
       } catch (error) {
         console.error('Erro ao carregar áreas:', error);
+        Logger.logError(`Erro ao carregar áreas: ${error.message}`);
       }
     };
 

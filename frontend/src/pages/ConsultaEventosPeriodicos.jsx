@@ -8,6 +8,7 @@ import ListaFiltrosEventosPeriodicos from '../components/ListaFiltrosEventosPeri
 import useAreas from '../hooks/useAreas';
 import { useNavigate } from 'react-router-dom';
 import { useLogger } from '../hooks/useLogger.js';
+import Logger from '../utils/logger.js';
 
 function ConsultaEventosPeriodicos() {
   const [busca, setBusca] = useState(false);
@@ -369,6 +370,7 @@ function ConsultaEventosPeriodicos() {
                   logChart();
                 } catch (error) {
                   logChartError();
+                  Logger.logError(`Erro ao navegar para visualização de gráficos: ${error.message}`);
                 }
               }}
               className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8"

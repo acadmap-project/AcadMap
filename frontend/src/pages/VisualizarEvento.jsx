@@ -7,11 +7,14 @@ import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
 import { useQuery } from '@tanstack/react-query';
 import '../styles/App.css';
+import Logger from '../utils/logger';
 
 const fetcheventoData = async id => {
   const response = await get(`/api/eventos/${id}`, {}, false); // requireAuth = false
   if (!response.ok) {
-    throw new Error('Erro ao buscar dados do evento');
+    const error = new Error('Erro ao buscar dados do evento');
+    Logger.logError(`Erro ao buscar dados do evento ID ${id}: ${error.message}`);
+    throw error;
   }
   return await response.json();
 };

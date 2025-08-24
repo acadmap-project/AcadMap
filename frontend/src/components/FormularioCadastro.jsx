@@ -17,6 +17,7 @@ import {
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 import Popup from './Popup';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
@@ -95,6 +96,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     },
     onError: error => {
       console.error('Erro ao cadastrar usuário:', error);
+      Logger.logError(`Erro ao cadastrar usuário: ${error.message || 'Erro desconhecido'}`);
 
       // Extract the actual error message from the response
       let errorMessage = 'Erro desconhecido ao cadastrar usuário';
