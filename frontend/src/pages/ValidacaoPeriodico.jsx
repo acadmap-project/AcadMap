@@ -307,22 +307,6 @@ function ValidacaoPeriodicoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO*:</span>{' '}
-              {periodicoData.link ? (
-                <a
-                  href={periodicoData.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.link}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
               <span className="font-medium">
                 LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
               </span>{' '}
@@ -381,6 +365,12 @@ function ValidacaoPeriodicoContent() {
               <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
               {periodicoData.percentilScopus || 'N/A'}
             </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">H5:</span>{' '}
+              {periodicoData.h5 || 'N/A'}
+            </div>
+
             <div className="text-sm text-gray-900">
               <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
               {periodicoData.qualisAntigo
