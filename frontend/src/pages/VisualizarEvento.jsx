@@ -119,11 +119,6 @@ const VisualizarPeriodico = () => {
               </span>{' '}
               {formatAdequacaoDefesa(eventoData.adequacaoDefesa)}
             </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">INDICAÇÃO SE É PREDATÓRIO:</span>{' '}
-              {eventoData.flagPredatorio ? 'Sim' : 'Não'}
-            </div>
           </div>
 
           <div className="w-full flex justify-center mt-6 gap-3">
