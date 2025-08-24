@@ -77,8 +77,6 @@ services:
         hD4kH8YsX2bbpCQYSXhBcI5xnJ7zR34CyRGViulJcNMH2uJSYaQZ3ZUakarhwt1l
         uQIDAQAB
         -----END PUBLIC KEY-----
-    ports:
-      - "3001:8080"
     volumes:
       - maven_cache:/root/.m2
     networks:
@@ -95,8 +93,6 @@ services:
     restart: unless-stopped
     environment:
       - VITE_API_URL=${BACK_API_URL:-https://backend:8080}
-    ports:
-      - "3000:80"
     networks:
       - acadmap-simple
     depends_on:

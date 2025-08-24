@@ -118,7 +118,7 @@ export const calcularClassificacaoEvento = (h5, vinculoSbc) => {
  * @param {number} niveis - Número de níveis para elevar
  * @returns {string} - A classificação elevada
  */
-const elevarClassificacao = (classificacaoBase, niveis) => {
+export const elevarClassificacao = (classificacaoBase, niveis) => {
   const classificacoes = ['a8', 'a7', 'a6', 'a5', 'a4', 'a3', 'a2', 'a1'];
   const indiceAtual = classificacoes.indexOf(classificacaoBase.toLowerCase());
 

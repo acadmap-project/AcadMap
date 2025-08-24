@@ -7,6 +7,8 @@ import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import {
   calcularClassificacaoPeriodico,
   calcularClassificacaoPorQualis,
+  calcClassEventoSemSBC,
+  elevarClassificacao
 } from '../utils/classificacaoBase';
 import { useState } from 'react';
 import React from 'react';
@@ -37,6 +39,8 @@ function FormularioPeriodicoContent() {
   const googleScholarValue = watch('linkGoogleScholar');
   const linkJcrValue = watch('linkJcr');
   const linkScopusValue = watch('linkScopus');
+  const vinculoSBC = watch('vinculoSbcCheckbox');
+  const tipoVinculoSBC = watch('vinculoSbc');
 
   // Update hasQualisSelected state when qualisValue changes
   React.useEffect(() => {
@@ -101,7 +105,7 @@ function FormularioPeriodicoContent() {
     // Priority order: H5 > Percentil > Qualis Antigo
     if (h5Value && h5Value > 0) {
       // Use H5 for classification (same as periodico percentil logic)
-      classificacao = calcularClassificacaoPeriodico(h5Value);
+      classificacao = calcClassEventoSemSBC(h5Value);
     } else if (percentilJcrNum > 0 || percentilScopusNum > 0) {
       // Use percentil for classification
       classificacao = calcularClassificacaoPeriodico(
