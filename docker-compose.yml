@@ -68,7 +68,7 @@ services:
     networks:
       - acadmap-net
     depends_on:
-      backend:
+      postgres:
         condition: service_healthy
 
   postgres:
