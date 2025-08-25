@@ -7,8 +7,7 @@ import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import {
   calcularClassificacaoPeriodico,
   calcularClassificacaoPorQualis,
-  calcClassEventoSemSBC,
-  elevarClassificacao
+  calcClassEventoSemSBC
 } from '../utils/classificacaoBase';
 import { useState } from 'react';
 import React from 'react';

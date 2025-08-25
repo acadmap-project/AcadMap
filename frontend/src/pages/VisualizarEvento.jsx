@@ -13,7 +13,9 @@ const fetcheventoData = async id => {
   const response = await get(`/api/eventos/${id}`, {}, false); // requireAuth = false
   if (!response.ok) {
     const error = new Error('Erro ao buscar dados do evento');
-    Logger.logError(`Erro ao buscar dados do evento ID ${id}: ${error.message}`);
+    Logger.logError(
+      `Erro ao buscar dados do evento ID ${id}: ${error.message}`
+    );
     throw error;
   }
   return await response.json();

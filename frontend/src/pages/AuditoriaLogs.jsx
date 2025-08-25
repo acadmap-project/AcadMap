@@ -44,12 +44,12 @@ const formatarData = timestamp => {
 const filtrarLogsPorData = (logs, dataInicio, dataFim) => {
   if (!logs) return [];
   if (!dataInicio && !dataFim) return logs;
-  
+
   return logs.filter(log => {
     const dataLog = new Date(log.timestamp);
     const inicio = dataInicio ? new Date(dataInicio) : null;
     const fim = dataFim ? new Date(dataFim) : null;
-    
+
     if (inicio && fim) {
       return dataLog >= inicio && dataLog <= fim;
     } else if (inicio) {
@@ -74,11 +74,7 @@ function AuditoriaLogs() {
   });
 
   // Query para logs de atividades (CSV e gráficos)
-  const { 
-    data: logsAtividades, 
-    isLoading: loadingAtividades, 
-    error: errorAtividades 
-  } = useQuery({
+  const { data: logsAtividades, isLoading: loadingAtividades } = useQuery({
     queryKey: ['logs-atividades'],
     queryFn: async () => {
       try {
@@ -97,7 +93,8 @@ function AuditoriaLogs() {
           if (response.status === 500) {
             setErrorInfo({
               title: 'Erro no Servidor',
-              message: 'Não foi possível acessar os Logs de Atividades. Tente novamente mais tarde.',
+              message:
+                'Não foi possível acessar os Logs de Atividades. Tente novamente mais tarde.',
               type: 'error',
             });
             setShowErrorPopup(true);
@@ -105,7 +102,8 @@ function AuditoriaLogs() {
           }
           setErrorInfo({
             title: 'Erro ao Carregar',
-            message: 'Não foi possível acessar os Logs de Atividades. Tente novamente mais tarde.',
+            message:
+              'Não foi possível acessar os Logs de Atividades. Tente novamente mais tarde.',
             type: 'error',
           });
           setShowErrorPopup(true);
@@ -115,11 +113,14 @@ function AuditoriaLogs() {
         return response.json();
       } catch (error) {
         console.error('Erro na requisição de logs de atividades:', error);
-        Logger.logError(`Erro ao carregar logs de atividades: ${error.message}`);
+        Logger.logError(
+          `Erro ao carregar logs de atividades: ${error.message}`
+        );
         if (!showErrorPopup) {
           setErrorInfo({
             title: 'Erro de Conexão',
-            message: 'Não foi possível acessar os Logs de Atividades. Tente novamente mais tarde.',
+            message:
+              'Não foi possível acessar os Logs de Atividades. Tente novamente mais tarde.',
             type: 'error',
           });
           setShowErrorPopup(true);
@@ -131,11 +132,7 @@ function AuditoriaLogs() {
   });
 
   // Query para logs de erro
-  const { 
-    data: logsErros, 
-    isLoading: loadingErros, 
-    error: errorErros 
-  } = useQuery({
+  const { data: logsErros, isLoading: loadingErros } = useQuery({
     queryKey: ['logs-erros'],
     queryFn: async () => {
       try {
@@ -154,7 +151,8 @@ function AuditoriaLogs() {
           if (response.status === 500) {
             setErrorInfo({
               title: 'Erro no Servidor',
-              message: 'Não foi possível acessar os Logs de Erro. Tente novamente mais tarde.',
+              message:
+                'Não foi possível acessar os Logs de Erro. Tente novamente mais tarde.',
               type: 'error',
             });
             setShowErrorPopup(true);
@@ -162,7 +160,8 @@ function AuditoriaLogs() {
           }
           setErrorInfo({
             title: 'Erro ao Carregar',
-            message: 'Não foi possível acessar os Logs de Erro. Tente novamente mais tarde.',
+            message:
+              'Não foi possível acessar os Logs de Erro. Tente novamente mais tarde.',
             type: 'error',
           });
           setShowErrorPopup(true);
@@ -176,7 +175,8 @@ function AuditoriaLogs() {
         if (!showErrorPopup) {
           setErrorInfo({
             title: 'Erro de Conexão',
-            message: 'Não foi possível acessar os Logs de Erro. Tente novamente mais tarde.',
+            message:
+              'Não foi possível acessar os Logs de Erro. Tente novamente mais tarde.',
             type: 'error',
           });
           setShowErrorPopup(true);
@@ -188,11 +188,7 @@ function AuditoriaLogs() {
   });
 
   // Query para logs de veículos (auditoria de veículos)
-  const { 
-    data: logsVeiculos, 
-    isLoading: loadingVeiculos, 
-    error: errorVeiculos 
-  } = useQuery({
+  const { data: logsVeiculos, isLoading: loadingVeiculos } = useQuery({
     queryKey: ['logs-veiculos'],
     queryFn: async () => {
       try {
@@ -202,7 +198,8 @@ function AuditoriaLogs() {
           if (response.status === 405) {
             setErrorInfo({
               title: 'Acesso Negado',
-              message: 'Usuário não possui acesso ao histórico de auditoria de veículos',
+              message:
+                'Usuário não possui acesso ao histórico de auditoria de veículos',
               type: 'error',
             });
             setShowErrorPopup(true);
@@ -211,7 +208,8 @@ function AuditoriaLogs() {
           if (response.status === 500) {
             setErrorInfo({
               title: 'Erro no Servidor',
-              message: 'Não foi possível acessar os Logs de Auditoria de Veículos. Tente novamente mais tarde.',
+              message:
+                'Não foi possível acessar os Logs de Auditoria de Veículos. Tente novamente mais tarde.',
               type: 'error',
             });
             setShowErrorPopup(true);
@@ -219,7 +217,8 @@ function AuditoriaLogs() {
           }
           setErrorInfo({
             title: 'Erro ao Carregar',
-            message: 'Não foi possível acessar os Logs de Auditoria de Veículos. Tente novamente mais tarde.',
+            message:
+              'Não foi possível acessar os Logs de Auditoria de Veículos. Tente novamente mais tarde.',
             type: 'error',
           });
           setShowErrorPopup(true);
@@ -233,7 +232,8 @@ function AuditoriaLogs() {
         if (!showErrorPopup) {
           setErrorInfo({
             title: 'Erro de Conexão',
-            message: 'Não foi possível acessar os Logs de Auditoria de Veículos. Tente novamente mais tarde.',
+            message:
+              'Não foi possível acessar os Logs de Auditoria de Veículos. Tente novamente mais tarde.',
             type: 'error',
           });
           setShowErrorPopup(true);
@@ -249,10 +249,18 @@ function AuditoriaLogs() {
   };
 
   // Determina qual conjunto de dados usar e aplica filtros
-  const isLoading = tipoLog === 'atividades' ? loadingAtividades : 
-                   tipoLog === 'erros' ? loadingErros : loadingVeiculos;
-  const rawLogs = tipoLog === 'atividades' ? logsAtividades : 
-                 tipoLog === 'erros' ? logsErros : logsVeiculos;
+  const isLoading =
+    tipoLog === 'atividades'
+      ? loadingAtividades
+      : tipoLog === 'erros'
+        ? loadingErros
+        : loadingVeiculos;
+  const rawLogs =
+    tipoLog === 'atividades'
+      ? logsAtividades
+      : tipoLog === 'erros'
+        ? logsErros
+        : logsVeiculos;
   const currentLogs = filtrarLogsPorData(rawLogs, dataInicio, dataFim);
 
   const limparFiltros = () => {
@@ -272,7 +280,7 @@ function AuditoriaLogs() {
           <h1 className="text-3xl font-bold text-gray-800 mb-6">
             Histórico de Auditoria
           </h1>
-          
+
           {/* Controles de Filtro */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -283,11 +291,15 @@ function AuditoriaLogs() {
                 </label>
                 <select
                   value={tipoLog}
-                  onChange={(e) => setTipoLog(e.target.value)}
+                  onChange={e => setTipoLog(e.target.value)}
                   className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="veiculos">Logs de Auditoria de Veículos</option>
-                  <option value="atividades">Logs de Atividades (CSV/Gráficos)</option>
+                  <option value="veiculos">
+                    Logs de Auditoria de Veículos
+                  </option>
+                  <option value="atividades">
+                    Logs de Atividades (CSV/Gráficos)
+                  </option>
                   <option value="erros">Logs de Erros</option>
                 </select>
               </div>
@@ -300,7 +312,7 @@ function AuditoriaLogs() {
                 <input
                   type="date"
                   value={dataInicio}
-                  onChange={(e) => setDataInicio(e.target.value)}
+                  onChange={e => setDataInicio(e.target.value)}
                   className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -313,7 +325,7 @@ function AuditoriaLogs() {
                 <input
                   type="date"
                   value={dataFim}
-                  onChange={(e) => setDataFim(e.target.value)}
+                  onChange={e => setDataFim(e.target.value)}
                   className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -331,10 +343,13 @@ function AuditoriaLogs() {
 
             {/* Resumo dos filtros aplicados */}
             <div className="mt-4 text-sm text-gray-600">
-              <span className="font-medium">Filtros aplicados:</span> 
+              <span className="font-medium">Filtros aplicados:</span>
               <span className="ml-2">
-                {tipoLog === 'atividades' ? 'Atividades (CSV/Gráficos)' : 
-                 tipoLog === 'erros' ? 'Logs de Erro' : 'Auditoria de Veículos'}
+                {tipoLog === 'atividades'
+                  ? 'Atividades (CSV/Gráficos)'
+                  : tipoLog === 'erros'
+                    ? 'Logs de Erro'
+                    : 'Auditoria de Veículos'}
               </span>
               {(dataInicio || dataFim) && (
                 <span className="ml-2">
@@ -400,24 +415,29 @@ function AuditoriaLogs() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentLogs.map((log, index) => (
-                    <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={index}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <span className="font-mono text-xs">
                           {formatarData(log.timestamp)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                          tipoLog === 'erros' || log.acao?.includes('erro')
-                            ? 'bg-red-100 text-red-800'
-                            : log.acao?.includes('geracao')
-                            ? 'bg-blue-100 text-blue-800'
-                            : log.acao?.includes('aceito')
-                            ? 'bg-green-100 text-green-800'
-                            : log.acao?.includes('recusado')
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
+                        <span
+                          className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                            tipoLog === 'erros' || log.acao?.includes('erro')
+                              ? 'bg-red-100 text-red-800'
+                              : log.acao?.includes('geracao')
+                                ? 'bg-blue-100 text-blue-800'
+                                : log.acao?.includes('aceito')
+                                  ? 'bg-green-100 text-green-800'
+                                  : log.acao?.includes('recusado')
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
                           {formatarAcao(log.acao)}
                         </span>
                       </td>
@@ -438,7 +458,10 @@ function AuditoriaLogs() {
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 max-w-md">
                             {log.descricaoErro ? (
-                              <div className="break-words" title={log.descricaoErro}>
+                              <div
+                                className="break-words"
+                                title={log.descricaoErro}
+                              >
                                 <span className="text-xs bg-red-50 text-red-800 px-2 py-1 rounded inline-block">
                                   {log.descricaoErro}
                                 </span>
@@ -461,19 +484,24 @@ function AuditoriaLogs() {
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                              log.statusVeiculo.toUpperCase() === 'APROVADO' 
-                                ? 'bg-green-100 text-green-800'
-                                : log.statusVeiculo.toUpperCase() === 'NEGADO'
-                                ? 'bg-red-100 text-red-800'
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
+                            <span
+                              className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                                log.statusVeiculo.toUpperCase() === 'APROVADO'
+                                  ? 'bg-green-100 text-green-800'
+                                  : log.statusVeiculo.toUpperCase() === 'NEGADO'
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-yellow-100 text-yellow-800'
+                              }`}
+                            >
                               {formatarStatus(log.statusVeiculo)}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 max-w-md">
                             {log.justificativaNegacao ? (
-                              <div className="break-words" title={log.justificativaNegacao}>
+                              <div
+                                className="break-words"
+                                title={log.justificativaNegacao}
+                              >
                                 <span className="text-xs bg-red-50 text-red-800 px-2 py-1 rounded inline-block">
                                   {log.justificativaNegacao}
                                 </span>
@@ -492,14 +520,15 @@ function AuditoriaLogs() {
           ) : (
             <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg">
               <div className="text-6xl mb-4">📊</div>
-              <p className="text-xl font-medium mb-2">Nenhum registro encontrado</p>
+              <p className="text-xl font-medium mb-2">
+                Nenhum registro encontrado
+              </p>
               <p className="text-sm">
-                {tipoLog === 'atividades' 
+                {tipoLog === 'atividades'
                   ? 'Não há logs de atividades (CSV/Gráficos) para exibir com os filtros aplicados'
                   : tipoLog === 'erros'
-                  ? 'Não há logs de erro para exibir com os filtros aplicados'
-                  : 'Não há logs de auditoria de veículos para exibir com os filtros aplicados'
-                }
+                    ? 'Não há logs de erro para exibir com os filtros aplicados'
+                    : 'Não há logs de auditoria de veículos para exibir com os filtros aplicados'}
               </p>
               {(dataInicio || dataFim) && (
                 <button
@@ -513,7 +542,7 @@ function AuditoriaLogs() {
           )}
         </div>
       </div>
-      
+
       <ErrorPopup
         isOpen={showErrorPopup}
         onClose={closeErrorPopup}

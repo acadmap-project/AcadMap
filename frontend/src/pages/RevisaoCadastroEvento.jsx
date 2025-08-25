@@ -16,7 +16,7 @@ import '../styles/App.css';
 
 const queryClient = new QueryClient();
 
-const postEvent = async ({ eventData, userId, forcar }) => {
+const postEvent = async ({ eventData, forcar }) => {
   console.log(eventData);
   let endpoint = '/api/eventos';
   if (forcar) {

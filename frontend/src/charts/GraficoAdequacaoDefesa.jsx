@@ -8,7 +8,7 @@ import {
   CartesianGrid,
   Label,
 } from 'recharts';
-import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
+import { formatAdequacaoDefesa } from '../utils/format';
 
 const COLORS = [
   '#F9B673', // laranja
@@ -47,7 +47,7 @@ const GraficoAdequacaoDefesa = ({ data }) => {
   [...data.eventos, ...data.periodicos].forEach(item => {
     // Formatar adequação para defesa
     const adequacaoFormatada = formatAdequacaoDefesa(item.adequacaoDefesa);
-    
+
     // Determinar se tem vínculo SBC (qualquer tipo exceto 'sem_vinculo')
     const temVinculoSBC = item.vinculoSBC && item.vinculoSBC !== 'sem_vinculo';
     const vinculo = temVinculoSBC ? 'Com Vínculo SBC' : 'Sem Vínculo SBC';
