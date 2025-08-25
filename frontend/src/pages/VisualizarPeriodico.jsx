@@ -14,7 +14,9 @@ const fetchPeriodicoData = async id => {
   const response = await get(`/api/periodicos/${id}`, {}, false); // requireAuth = false
   if (!response.ok) {
     const error = new Error('Erro ao buscar dados do periódico');
-    Logger.logError(`Erro ao buscar dados do periódico ID ${id}: ${error.message}`);
+    Logger.logError(
+      `Erro ao buscar dados do periódico ID ${id}: ${error.message}`
+    );
     throw error;
   }
   return await response.json();

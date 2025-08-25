@@ -25,7 +25,7 @@ function useAuthCheck() {
           console.log('Token expired, attempting refresh...');
 
           // Try to refresh the token
-          const newToken = await tokenManager.refreshToken();
+          await tokenManager.refreshToken();
           console.log('Token refreshed successfully');
         }
       } catch (error) {
