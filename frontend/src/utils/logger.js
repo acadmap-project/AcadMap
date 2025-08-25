@@ -127,6 +127,7 @@ class LoggerClass {
     } catch (error) {
       console.warn(`[${logType}] Erro ao enviar log para o backend:`, error);
       console.warn(`[${logType}] Log será reenviado em 30 segundos...`);
+
       // Adiciona à fila de pendentes
       this._addToPendingQueue(endpoint, payload, logType);
     }
