@@ -12,13 +12,16 @@ export const CadastrarEventoSchema = z
       .string()
       .optional()
       .or(z.literal(''))
-      .refine(val => {
-        if (!val || val === '') return true;
-        const cleanVal = val.replace(',', '.');
-        return !isNaN(Number(cleanVal));
-      }, {
-        message: 'O índice deve ser um número',
-      })
+      .refine(
+        val => {
+          if (!val || val === '') return true;
+          const cleanVal = val.replace(',', '.');
+          return !isNaN(Number(cleanVal));
+        },
+        {
+          message: 'O índice deve ser um número',
+        }
+      )
       .transform(val => {
         if (val && val !== '') {
           const cleanVal = val.replace(',', '.');

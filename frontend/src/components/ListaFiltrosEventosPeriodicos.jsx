@@ -22,10 +22,7 @@ function ListaFiltrosEventosPeriodicos({ filtros, areas = [] }) {
   const renderFiltros = () => {
     const items = [];
 
-    if (
-      filtrosAtivos.nome &&
-      filtrosAtivos.nome.trim() !== ''
-    ) {
+    if (filtrosAtivos.nome && filtrosAtivos.nome.trim() !== '') {
       items.push(
         <li key="nome" className="bg-gray-200 px-3 py-1 rounded text-xs">
           {labels.nome}: {filtrosAtivos.nome}
@@ -33,13 +30,13 @@ function ListaFiltrosEventosPeriodicos({ filtros, areas = [] }) {
       );
     }
 
-    if (
-      filtrosAtivos.tipoVeiculo &&
-      filtrosAtivos.tipoVeiculo !== 'ambos'
-    ) {
-      const tipoLabel = filtrosAtivos.tipoVeiculo === 'eventos' ? 'Eventos' : 
-                       filtrosAtivos.tipoVeiculo === 'periodicos' ? 'Periódicos' : 
-                       filtrosAtivos.tipoVeiculo;
+    if (filtrosAtivos.tipoVeiculo && filtrosAtivos.tipoVeiculo !== 'ambos') {
+      const tipoLabel =
+        filtrosAtivos.tipoVeiculo === 'eventos'
+          ? 'Eventos'
+          : filtrosAtivos.tipoVeiculo === 'periodicos'
+            ? 'Periódicos'
+            : filtrosAtivos.tipoVeiculo;
       items.push(
         <li key="tipoVeiculo" className="bg-gray-200 px-3 py-1 rounded text-xs">
           {labels.tipoVeiculo}: {tipoLabel}

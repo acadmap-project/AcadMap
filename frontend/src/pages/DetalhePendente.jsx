@@ -102,7 +102,8 @@ function DetalhePendenteContent() {
         return;
       }
 
-      let errorMessage = 'Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.';
+      let errorMessage =
+        'Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.';
 
       if (error.response?.status === 405) {
         errorMessage = 'Não foi possível aprovar este registro.';
@@ -135,7 +136,9 @@ function DetalhePendenteContent() {
     },
     onError: error => {
       console.error('Error in rejeitarMutation:', error);
-      Logger.logError(`Erro em rejeitarMutation - ID: ${id} - ${error.message}`);
+      Logger.logError(
+        `Erro em rejeitarMutation - ID: ${id} - ${error.message}`
+      );
 
       // Treat 500 as success (backend quirk)
       if (error.response?.status === 500) {

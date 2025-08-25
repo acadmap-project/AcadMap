@@ -76,10 +76,7 @@ const App = () => {
                   element={<VisualizarPeriodico />}
                 />
                 <Route path="/evento/:id" element={<VisualizarEvento />} />
-                <Route
-                  path="/auditoria-logs"
-                  element={<AuditoriaLogs />}
-                />
+                <Route path="/auditoria-logs" element={<AuditoriaLogs />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
