@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { get } from '../utils/authFetch';
 import renomearKey from '../utils/renomearKey';
+import Logger from '../utils/logger.js';
 
 function useAreas() {
   const [areas, setAreas] = useState([]);
@@ -8,10 +9,9 @@ function useAreas() {
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:8080/api/areas/listar'
-        );
-        let dados = response.data;
+        const response = await get('/api/areas/listar', {}, false); // This endpoint might not require auth
+        if (!response.ok) throw new Error('Erro ao carregar áreas');
+        let dados = await response.json();
         for (let i = 0; i < dados.length; i++) {
           dados[i] = renomearKey(dados[i], 'nome', 'label');
           dados[i] = renomearKey(dados[i], 'id', 'value');
@@ -19,6 +19,7 @@ function useAreas() {
         setAreas(dados);
       } catch (error) {
         console.error('Erro ao carregar áreas:', error);
+        Logger.logError(`Erro ao carregar áreas: ${error.message}`);
       }
     };
 

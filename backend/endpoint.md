@@ -1,3 +1,113 @@
+# Autenticação via JWT
+
+Para acessar os **endpoints da API**, é necessário utilizar um **token JWT** válido em todas as requisições.  
+O token deve ser enviado no cabeçalho HTTP da seguinte forma:
+```http
+Authorization: Bearer <token_jwt>
+```
+
+
+## Endpoints públicos (não exigem autenticação)
+
+Os seguintes endpoints estão liberados e **não precisam e nem devem ter token JWT**:
+
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/periodicos/listar`
+- `GET /api/eventos/listar`
+
+## Endpoints protegidos
+
+Qualquer outro endpoint **exige autenticação**. Caso o token não seja enviado ou seja inválido/expirado, a requisição será rejeitada com código **401 Unauthorized**.
+
+
+## Login
+
+### Endpoint
+`POST /api/auth/login`
+
+### Descrição
+Realiza a autenticação do usuário e retorna um **token JWT** junto com o id do **refresh token**.  
+Este é o primeiro passo para acessar os endpoints protegidos da API.
+
+### Requisição
+- **Header**
+```http
+Authorization: Basic <usuario:senha>
+```
+
+> **Atenção:** <usuario:senha> deve estar codificado em Base64
+
+### Exemplo de Requisição
+
+```shell
+curl --location --request POST 'http://localhost:8080/api/auth/login' --header 'Authorization: Basic <usuario:senha>'
+````
+
+> Para testes acesse a tabela usuários no banco de dados
+
+## Refresh Token
+
+### Endpoint
+`POST /api/auth/refresh-token`
+
+### Descrição
+Este endpoint é utilizado para **gerar um novo token JWT** com o **tempo de expiração estendido**.  
+Ele deve ser usado quando o token atual estiver próximo de expirar, evitando a necessidade de realizar um novo login.
+
+### Requisição
+
+**Parâmetros**
+>`refreshTokenUUID` (UUID) → Identificador único do *refresh token* associado ao usuário.
+
+**Header**
+```http
+Authorization: Bearer <token_jwt>
+```
+
+### Exemplo de Requisição
+```shell
+curl --location --request POST 'http://localhost:8080/api/auth/refresh-token?refreshTokenUUID=<id_token>' \
+--header 'Authorization: Bearer <token_jwt>'
+```
+
+
+### Resposta
+
+**200 OK**
+
+Retorna um objeto `TokenDTO` contendo o novo JWT e informações relacionadas.
+
+```json
+{
+  "accessToken": "<token_kwt>",
+  "refreshTokenUUID": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+## Erros
+> Caso o token esteja expirado ou o ID refreshTokenUUID será retornado uma exceção
+
+## Logout
+
+### Endpoint
+`POST /api/auth/logout`
+
+### Descrição
+Revoga o **refresh token** do usuário, invalidando sua utilização futura para renovação de JWT.  
+Após o logout, o usuário precisará realizar um novo login para obter um novo token.
+
+### Requisição
+
+**Parâmetros**
+- `refreshToken` (UUID) → Identificador do *refresh token* que será revogado.
+
+### Exemplo de Requisição
+```shell
+curl --location --request POST 'http://localhost:8080/api/auth/logout?refreshToken=<token_id>'
+```
+**Resposta:**
+`200 Ok`
 
 # 📘 API - Veículo de Publicação
 
@@ -63,7 +173,8 @@ X-User-Id: <UUID do usuário que está tentando negar>
 **Corpo esperado:**
 ```json
 {
-  "flagPredatorio": true
+  "flagPredatorio": true,
+  "justificativa": "Texto"
 }
 ```
 
@@ -194,25 +305,37 @@ X-User-Id: <UUID do usuário solicitante>
 
 ---
 
-# 📘 API - Cadastro de Evento
+# 📘 API - Evento
+
+Base URL:
+
+```
+/api/eventos
+```
+
+## ➕ 1. **Cadastrar Evento**
 
 **Endpoint:**
+
 ```
-POST /api/eventos/cadastro/
+POST /api/eventos
 ```
 
 **Descrição:**  
-Cria um novo evento no sistema, *deve ser um usuario já cadastrado no sistema*.
+Cria um novo evento no sistema, _deve ser um usuario já cadastrado no sistema_.
 
 **Headers obrigatórios:**
+
 ```http
 X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 **Path Parameters:**
+
 - `id` – UUID do usuário que está tentando inserir o evento.
 
 **Resposta:**
+
 - `202 Accepted` – Evento criado com sucesso.
 - `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
 - `400 Bad Request` – Erro na requisição.
@@ -239,6 +362,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
@@ -246,6 +370,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `linkEvento` (string): Link do evento o qual está sendo inserido.
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao evento o qual está sendo inserido
 - `linkSolSbc` (string) : Link repositório SOL-SBC referente ao evento o qual está sendo inserido.
+
 ---
 
 ## ✅ Resposta
@@ -278,6 +403,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `classificacao`, `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
@@ -285,33 +411,180 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 - `h5`, `linkEvento`, `linkGoogleScholar`, `linkSolSbc` , `areaPesquisaIds`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `usuario` : Informação de Id e Nome do usuário o qual inseriu Evento.
 
-### Forçar inserção mesmo com erro de duplicação : 
+### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/eventos/cadastro?forcar=true
+POST /api/eventos?forcar=true
+```
+
+---
+## 📋 2. **Detalhar evento por ID**
+
+**Endpoint:**
+
+```
+GET /api/eventos/{id}
+```
+**Descrição:**  
+Retorna os detalhes do evento solicitado via ID.
+
+---
+
+### ✅ **Exemplo de uso**
+```
+GET /api/eventos/4e8f5b70-92f3-4c21-b07b-6a5d5c6f901a
+```
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+{
+    "nome": "Symposium on Distributed Computing",
+    "h5": 50,
+    "classificacao": "a2",
+    "areasPesquisas": [
+        "Ciência da Computação",
+        "Engenharia Elétrica"
+    ],
+    "vinculoSbc": "vinculo_top_10",
+    "linkGoogleScholar": "http://scholar.google.com/sdc",
+    "linkSolSbc": "https://sol-sbc/sdc",
+    "adequacaoDefesa": "doutorado"
+}
 ```
 
 ---
 
-# 📘 API - Cadastro de Periodico
+### ❌ **Possíveis Erros**
+
+#### **1. Evento não encontrado**  
+Status: `404 NOT FOUND`  
+**Resposta:**
+```json
+{
+    "path": "/api/eventos/66666666-6666-6666-6666-666666666661",
+    "error": "EVENTO_NAO_ENCONTRADO",
+    "timestamp": "2025-07-17T21:30:44.281158971",
+    "status": 404
+}
+```
+---
+
+#### **2. Evento não aceito**
+**Status:** `400 BAD REQUEST`  
+**Resposta:**
+```json
+{
+    "path": "/api/eventos/66666666-6666-6666-6666-666666666666",
+    "error": "NAO_ACEITO",
+    "timestamp": "2025-07-17T21:31:39.378190018",
+    "status": 400
+}
+```
+
+---
+
+### ✅ **Códigos de resposta**
+| Código | Descrição                                 |
+|--------|-------------------------------------------|
+| 200    | Detalhes do evento retornados com sucesso |
+| 400    | Evento existe, mas não está aceito        |
+| 404    | Evento não encontrado                     |
+
+---
+# 📋 3. Listar e Filtrar Eventos Aprovados
+**Endpoint:**
+
+```
+POST /api/eventos/listar
+```
+
+**Descrição:**
+
+Retorna uma lista resumida de todos os eventos com status 'aceito', com base num conjunto complexo de filtros enviados no corpo da requisição. Se um corpo vazio ou nulo for enviado, retorna todos os veículos aprovados. Este endpoint substitui o antigo GET /listar.
+
+---
+### 🔸 Requisição
+
+**Content-Type:** application/json
+
+Corpo (Body) esperado:
+```
+O corpo da requisição é um objeto JSON onde todos os campos são opcionais.
+```
+Exemplo de Corpo (Body):
+
+```
+JSON
+
+{
+"nome": "Conference",
+"areasPesquisaNomes": ["Ciência da Computação", "Engenharia Elétrica"],
+"vinculoSbc": true,
+"adequacaoDefesa": ["MESTRADO", "DOUTORADO"],
+"h5Minimo": 50,
+"classificacaoMinima": "a2",
+"correspondenciaExata": false
+}
+
+```
+Campos do Filtro:
+
+- ``nome (string)``: Filtra veículos cujo nome contenha o texto informado.
+- ``areasPesquisaNomes (array de strings)``: Retorna veículos que pertençam a pelo menos uma das áreas de pesquisa listadas.
+- ``vinculoSbc (boolean)``:
+  - ``true``: Retorna apenas veículos que possuem algum vínculo com a SBC.
+  - ``false``: Retorna apenas veículos sem vínculo com a SBC.
+- ``adequacaoDefesa (array de strings)``: Retorna veículos adequados para as defesas listadas. Valores possíveis no Enum: "MESTRADO", "DOUTORADO", "MESTRADO_DOUTORADO", "NENHUM".
+- ``h5Minimo (integer)``: Retorna veículos com índice H5 igual ou superior ao valor especificado.
+- ``classificacaoMinima (string)``: Retorna veículos com classificação igual ou superior à especificada. A ordem é: a8 (mais baixa) até a1 (mais alta). Valores possíveis: "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8".
+- ``correspondenciaExata (boolean)``: Define como os filtros são combinados.
+  - ``false (padrão)``: Lógica OR (inclusiva). Retorna veículos que correspondam a qualquer um dos filtros preenchidos.
+  - ``true``: Lógica AND (excludente). Retorna veículos que correspondam a todos os filtros preenchidos.
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso.   |
+| 500    | Erro interno no servidor.                    |
+Nota para Desenvolvedores: O antigo endpoint GET /listar?nome=... foi marcado como obsoleto (@Deprecated) no backend. Ele continua a funcionar por retrocompatibilidade, mas todo o novo desenvolvimento deve usar o endpoint POST /listar com o corpo JSON.
+
+---
+
+# 📘 API - Periodico
+
+Base URL:
+
+```
+/api/periodicos
+```
+
+---
+
+## ➕ 1. **Cadastrar Periodico**
 
 **Endpoint:**
+
 ```
-POST /api/periodicos/cadastro
+POST /api/periodicos
 ```
 
 **Descrição:**  
-Cria um novo periódico no sistema, *deve ser um usuario já cadastrado no sistema*.
+Cria um novo periódico no sistema, _deve ser um usuario já cadastrado no sistema_.
 
 **Headers obrigatórios:**
+
 ```http
 X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 **Path Parameters:**
+
 - `id` – UUID do usuário que está tentando inserir o evento.
 
 **Resposta:**
+
 - `202 Accepted` – Evento criado com sucesso.
 - `409 Conflit` – Tentativa de cadastrar um evento ja cadastrado, duplicação de evento.
 - `400 Bad Request` – Erro na requisição.
@@ -340,17 +613,19 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `nome` (string): Nome do evento.
 - `vinculoSbc` (string): Tipo de vinculo com a sbc (Enum = "sem_vinculo", "vinculo_top_10", "vinculo_top_20", "vinculo_comum" ).
-- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação. 
+- `issn` (string): Número Internacional Normalizado para Publicações Seriadas, limitado a 8 números. Deve ser único em cada cadastro, acusa duplicação.
 - `percentilJcr` (Integer): Valor numérico.
 - `percentilScopus` (Integer): Valor numérico.
 - `linkJrc` (string) : Link do Jrc referente ao periódico o qual está sendo inserido
 - `linkScopus` (string) : Link repositório Scopus referente ao periodico o qual está sendo inserido.
-- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8") 
+- `classificacao` (string) : Classificação do veículo (Enum = "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8")
 - `linkGoogleScholar` (string) : Link do googlescholar referente ao periódico o qual está sendo inserido
 - `qualisAntigo` (string) : Pontuação do Qualis antigo (Enum= "a1", "a2", "b1", "b2", "b3", "b4", "b5', "c").
 - `areasPesquisaIds`(array de UUIDs): IDs das áreas de pesquisa associadas ao evento.
+
 ---
 
 ## ✅ Resposta
@@ -386,6 +661,7 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ```
 
 ### Campos:
+
 - `idVeiculo` (UUID): Identificador único do evento criado.
 - `nome` , `vinculoSbc`: Mesmos campos enviados, com confirmação do que foi salvo.
 - `adequacaoDefesa` : a8, nenhum como padrão, no entanto ainda será modificado atraves de calculos. Será implementado a partir de outras RFS.
@@ -396,10 +672,353 @@ X-User-Id: <UUID do usuário que está tentando aprovar>
 ### Forçar inserção mesmo com erro de duplicação :
 
 ```
-POST /api/periodicos/cadastro?forcar=true
+POST /api/periodicos?forcar=true
+```
+
+---
+ ## 📋 2. **Detalhar periódico por ID**
+
+**Endpoint:**
+
+```
+GET /api/periodicos/{id}
+```
+
+**Descrição:**  
+Retorna os detalhes do periódico solicitado via ID.
+
+---
+
+### ✅ **Exemplo de uso**
+```
+GET /api/periodicos/4e8f5b70-92f3-4c21-b07b-6a5d5c6f901a
+```
+
+---
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+{
+  "nome": "IEEE Transactions on Information Theory",
+  "issn": "99887766",
+  "percentilJcr": null,
+  "percentilScopus": null,
+  "areasPesquisas": [
+    "Ciência da Computação",
+    "Engenharia Elétrica"
+  ],
+  "vinculoSbc": "vinculo_top_10",
+  "linkJcr": null,
+  "linkScopus": null,
+  "linkGoogleScholar": "http://scholar.google.com",
+  "qualisAntigo": "a1",
+  "classificacao": "a1",
+  "flagPredatorio": false,
+  "adequacaoDefesa": "doutorado"
+}
+```
+
+---
+
+### ❌ **Possíveis Erros**
+
+#### **1. Periódico não encontrado**  
+Status: `404 NOT FOUND`  
+**Resposta:**
+```json
+{
+  "path": "/api/periodicos/11111111-1111-1111-1111-111111111105",
+  "error": "PERIODICO_NAO_ENCONTRADO",
+  "timestamp": "2025-07-17T22:47:49.740520044",
+  "status": 404
+}
 ```
 ---
 
+#### **2. Periódico não aceito**
+Status: `400 BAD REQUEST`  
+**Resposta:**
+```json
+{
+  "path": "/api/periodicos/88888888-cccc-cccc-cccc-cccccccccccc",
+  "error": "NAO_ACEITO",
+  "timestamp": "2025-07-17T22:48:44.87700495",
+  "status": 400
+}
+```
 
+---
+
+### ✅ **Códigos de resposta**
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Detalhes do periódico retornados com sucesso |
+| 400    | Periódico existe, mas não está aceito        |
+| 404    | Periódico não encontrado                     |
+
+---
+# 📋 3. Listar e Filtrar Periódicos Aprovados
+**Endpoint:**
+
+```
+POST /api/periodicos/listar
+```
+
+**Descrição:** 
+
+Retorna uma lista resumida de todos os periódicos com status 'aceito', com base num conjunto complexo de filtros enviados no corpo da requisição. Se um corpo vazio ou nulo for enviado, retorna todos os veículos aprovados. Este endpoint substitui o antigo GET /listar.
+
+---
+## 🔸 Requisição
+
+**Content-Type:** application/json
+
+Corpo (Body) esperado:
+```
+O corpo da requisição é um objeto JSON onde todos os campos são opcionais.
+```
+Exemplo de Corpo (Body):
+
+```
+JSON
+
+{
+"nome": "Conference",
+"areasPesquisaNomes": ["Ciência da Computação", "Engenharia Elétrica"],
+"vinculoSbc": true,
+"adequacaoDefesa": ["MESTRADO", "DOUTORADO"],
+"h5Minimo": 50,
+"classificacaoMinima": "a2",
+"correspondenciaExata": false
+}
+
+```
+Campos do Filtro:
+
+- ``nome (string)``: Filtra veículos cujo nome contenha o texto informado.
+- ``areasPesquisaNomes (array de strings)``: Retorna veículos que pertençam a pelo menos uma das áreas de pesquisa listadas.
+- ``vinculoSbc (boolean)``:
+  - ``true``: Retorna apenas veículos que possuem algum vínculo com a SBC.
+  - ``false``: Retorna apenas veículos sem vínculo com a SBC.
+- ``adequacaoDefesa (array de strings)``: Retorna veículos adequados para as defesas listadas. Valores possíveis no Enum: "MESTRADO", "DOUTORADO", "MESTRADO_DOUTORADO", "NENHUM".
+- ``h5Minimo (integer)``: Retorna veículos com índice H5 igual ou superior ao valor especificado.
+- ``classificacaoMinima (string)``: Retorna veículos com classificação igual ou superior à especificada. A ordem é: a8 (mais baixa) até a1 (mais alta). Valores possíveis: "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8".
+- ``correspondenciaExata (boolean)``: Define como os filtros são combinados.
+  - ``false (padrão)``: Lógica OR (inclusiva). Retorna veículos que correspondam a qualquer um dos filtros preenchidos.
+  - ``true``: Lógica AND (excludente). Retorna veículos que correspondam a todos os filtros preenchidos.
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                    |
+|--------|----------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso.   |
+| 500    | Erro interno no servidor.                    |
+
+Nota para Desenvolvedores: O antigo endpoint GET /listar?nome=... foi marcado como obsoleto (@Deprecated) no backend. Ele continua a funcionar por retrocompatibilidade, mas todo o novo desenvolvimento deve usar o endpoint POST /listar com o corpo JSON.
+
+# 📘 API - Histórico de Auditoria
+
+Base URL:
+
+```
+/api/log-veiculo/historico
+```
+**Descrição:**  
+Retorna uma lista com informações sobre os logs da auditoria de veículos. Somente para usuários com acesso de administrador. 
+
+**Headers obrigatórios:**
+```http
+X-User-Id: <UUID do usuário solicitante>
+```
+
+### ✅ **Exemplo de uso**
+```
+GET /api/log-veiculo/historico
+```
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                                  |
+|--------|--------------------------------------------|
+| 200    | Lista de periódicos retornada com sucesso. |
+| 405    | Usuário não possui acesso.                 |
+
+
+### ✅ **Resposta de Sucesso (200 OK)**
+```json
+[
+    {
+        "idUsuario": "11111111-1111-1111-1111-111111111111",
+        "idVeiculo": "55555555-5555-5555-5555-555555555555",
+        "acao": "Submissão",
+        "statusVeiculo": "Pendente",
+        "timestamp": "2025-08-07T13:22:47.080348",
+        "justificativaNegacao": null
+    },
+    {
+        "idUsuario": "00000000-0000-0000-0000-000000000001",
+        "idVeiculo": "55555555-5555-5555-5555-555555555555",
+        "acao": "Aprovação",
+        "statusVeiculo": "Aprovado",
+        "timestamp": "2025-08-08T13:22:47.080348",
+        "justificativaNegacao": null
+    },
+    {
+        "idUsuario": "33333333-3333-3333-3333-333333333333",
+        "idVeiculo": "77777777-7777-7777-7777-777777777777",
+        "acao": "Negação",
+        "statusVeiculo": "Negado",
+        "timestamp": "2025-08-09T13:22:47.080348",
+        "justificativaNegacao": "O veículo não possui relevância acadêmica comprovada para o programa. O índice h5 é muito baixo e não possui vínculo com a SBC."
+    }
+]
+
+```
+
+# 📘 API - Adicionar Log de Gráficos e CSV
+
+Base URL:
+
+```
+/api/log/adicionar
+```
+**Descrição:**  
+
+Adiciona log de requisição do csv e de gráficos. 
+"geracao_csv",
+"geracao_grafico",
+"erro_grafico"
+
+### ✅ **Enpoint**
+```
+POST /api/log/adicionar
+```
+
+```
+Authentication para registrar o usuário. Aceita não passar authentication,
+usuário fica null, ou seja, usuário não logado
+```
+
+### ✅ **Exemplo de uso**
+```json
+{
+  "acao" : "geracao_csv"
+}
+```
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição                  |
+|--------|----------------------------|
+| 201    | Log registrado com sucesso |
+
+
+
+### ✅ **Resposta de Sucesso (201 CREATED)**
+Retorna o nome da ação que foi enviada
+
+# 📘 API - Listar Logs de Gráficos e Csv
+
+Base URL:
+
+```
+/api/log/historico
+```
+**Descrição:**
+
+Retorna lista com logs de csv e gráficos
+
+### ✅ **Enpoint**
+```
+GET /api/log/historico
+```
+
+```
+Authentication para que somente usários de administrador possa usar o enpoint. 
+```
+
+### ✅ **Exemplo de uso**
+```json
+{
+  "descricaoerro" : "Erro : problema com cadastro de usuario "
+}
+```
+
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | OK        |
+
+
+
+### ✅ **Resposta de Sucesso (200 OK)**
+Retorna os logs de csv e gráficos
+
+# 📘 API - Adicionar logs de erro
+
+Base URL:
+
+```
+/api/log-erro/adicionar
+```
+**Descrição:**
+
+Adiciona logs para erro
+
+### ✅ **Enpoint**
+```
+POST /api/log-erro/adicionar
+```
+
+```
+Authentication para registrar o usuário. Aceita não passar authentication,
+usuário fica null, ou seja, usuário não logado
+```
+
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | OK        |
+
+
+
+### ✅ **Resposta de Sucesso (201 CREATED)**
+Mensagem "Log registrado"
+
+
+# 📘 API - Listar logs de erro
+
+Base URL:
+
+```
+/api/log-erro/historico
+```
+**Descrição:**
+
+Retorna logs de erro
+
+### ✅ **Enpoint**
+```
+GET /api/log-erro/historico
+```
+
+```
+Authentication para que somente usários de administrador possa usar o enpoint. 
+```
+
+
+### ✅ **Códigos de resposta**
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | OK        |
+
+
+
+### ✅ **Resposta de Sucesso (201 CREATED)**
+Retornar os logs de erros
 
 

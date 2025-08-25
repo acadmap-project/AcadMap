@@ -6,12 +6,12 @@ public enum QualisAntigo {
 
     a1("a1"),
     a2("a2"),
+    a3("a3"),
+    a4("a4"),
     b1("b1"),
     b2("b2"),
     b3("b3"),
-    b4("b4"),
-    b5("b5"),
-    c("c");
+    b4("b4");
 
     private String codigo;
 

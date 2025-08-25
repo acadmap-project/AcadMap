@@ -3,6 +3,7 @@ package com.acadmap.service;
 import com.acadmap.model.dto.periodico.ClassificacaoPeriodicoRequestDTO;
 import com.acadmap.model.entities.Periodico;
 import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.entities.VeiculoPublicacao;
 import com.acadmap.model.enums.TipoPerfilUsuario;
 import com.acadmap.repository.PeriodicoRepository;
 import com.acadmap.repository.UsuarioRepository;
@@ -16,27 +17,27 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class ClassificarPeriodicoService {
+public class ClassificarPeriodicoPredatorioService {
 
     private final PeriodicoRepository periodicoRepository;
     private final UsuarioRepository usuarioRepository;
 
     @Transactional
-    public Periodico classificarPeriodico(UUID idPeriodico, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser) {
+    public Periodico classificarPeriodico(VeiculoPublicacao veiculoPublicacao, ClassificacaoPeriodicoRequestDTO classificacaoPeriodicoRequestDTO, UUID idUser) {
         Usuario usuario = usuarioRepository.findById(idUser).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
 
-        if (verificaTipoUsuario(usuario)) {
+        if (isPesquisador(usuario)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado. Apenas administradores e auditores podem classificar periódicos.");
         }
 
-        Periodico periodico = periodicoRepository.findById(idPeriodico).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Periódico não encontrado."));
+        Periodico periodico = periodicoRepository.findById(veiculoPublicacao.getIdVeiculo()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Periódico não encontrado."));
 
         periodico.setFlagPredatorio(classificacaoPeriodicoRequestDTO.isFlagPredatorio());
 
         return periodicoRepository.save(periodico);
     }
 
-    private boolean verificaTipoUsuario(Usuario usuario){
+    private boolean isPesquisador(Usuario usuario){
         TipoPerfilUsuario tipoPerfilUsuario = usuario.getTipoPerfil();
         return tipoPerfilUsuario == TipoPerfilUsuario.pesquisador;
     }

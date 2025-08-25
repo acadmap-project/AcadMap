@@ -38,11 +38,18 @@ import java.util.UUID;
 public abstract class VeiculoPublicacao {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "id_veiculo", columnDefinition = "uuid")
   private UUID idVeiculo;
 
   @Column(name = "nome", nullable = false, length = 255)
   private String nome;
+
+  @Column(name = "h5")
+  private Integer h5;
+
+  @Column(name = "link_google_scholar", length = 255)
+  private String linkGoogleScholar;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "classificacao", nullable = false, length = 2)
@@ -62,9 +69,8 @@ public abstract class VeiculoPublicacao {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status", length = 10)
-  @ColumnDefault("PENDENTE")
+  @ColumnDefault("pendente")
   private StatusVeiculo status;
-
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "id_usuario", nullable = false)

@@ -40,23 +40,23 @@ BEGIN
 
 -- Usuário Administrador
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_admin, id_programa_computacao, 'Admin Mestre', 'admin@email.com', 'hash_senha_admin', 'administrador');
+VALUES (id_usuario_admin, id_programa_computacao, 'Admin Mestre', 'admin@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'administrador');
 
 -- Pesquisador 1 (Ativo)
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_pesquisador_1, id_programa_computacao, 'Dra. Ada Lovelace', 'ada.lovelace@email.com', 'hash_senha_ada', 'pesquisador');
+VALUES (id_usuario_pesquisador_1, id_programa_computacao, 'Dra. Ada Lovelace', 'ada.lovelace@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador');
 
 -- Pesquisador 2 (Ativo)
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_pesquisador_2, id_programa_computacao, 'Dr. Alan Turing', 'alan.turing@email.com', 'hash_senha_turing', 'pesquisador');
+VALUES (id_usuario_pesquisador_2, id_programa_computacao, 'Dr. Alan Turing', 'alan.turing@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador');
 
 -- Usuário Auditor
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil)
-VALUES (id_usuario_auditor, id_programa_computacao, 'Grace Hopper', 'grace.hopper@email.com', 'hash_senha_grace', 'auditor');
+VALUES (id_usuario_auditor, id_programa_computacao, 'Grace Hopper', 'grace.hopper@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'auditor');
 
 -- Usuário que será "excluído" (será marcado como inativo e terá um log de exclusão)
 INSERT INTO Usuario (id_usuario, id_programa, nome, email, senha, tipo_perfil, flag_ativo)
-VALUES (id_usuario_a_ser_excluido, id_programa_computacao, 'Usuário Antigo', 'antigo@email.com', 'hash_senha_antiga', 'pesquisador', false);
+VALUES (id_usuario_a_ser_excluido, id_programa_computacao, 'Usuário Antigo', 'antigo@email.com', '$2a$12$crLybWRZ3IrM2zF5FOsL6uXqWftAWiXwnaWRJ/PGjKcb2s4hYeC0e', 'pesquisador', false);
 
 
 -- ====================================================================
@@ -76,25 +76,25 @@ INSERT INTO AreaPesquisaUsuario (id_usuario, id_area_pesquisa) VALUES (id_usuari
 -- ====================================================================
 
 -- Cenário 1: Periódico submetido pela Dra. Ada e ACEITO pelo admin
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
-VALUES (id_veiculo_periodico_aceito, id_usuario_pesquisador_1, 'Journal of Advanced AI', 'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_periodico_aceito, id_usuario_pesquisador_1, 'Journal of Advanced AI', 10 , 'http://scholar.google.com/ica' ,  'a1', 'vinculo_top_10', 'doutorado', 'periodico', 'aceito');
 
 INSERT INTO Periodico (id_veiculo, ISSN, percentil_jcr,	percentil_scopus, link_jcr, link_scopus, flag_predatorio)
-VALUES (id_veiculo_periodico_aceito, '12345678', 95, 83, 'http://jcr.com/jai', 'http://scopus.com/jai', false);
+VALUES (id_veiculo_periodico_aceito, '12345678', null, null, null, null, false);
 
 -- Cenário 2: Evento submetido pelo Dr. Alan e ainda PENDENTE
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
-VALUES (id_veiculo_evento_pendente, id_usuario_pesquisador_2, 'International Conference on Algorithms', 'a2', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'pendente');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, link_google_scholar, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_evento_pendente, id_usuario_pesquisador_2, 'International Conference on Algorithms', 42, 'http://scholar.google.com/ica', 'a2', 'vinculo_comum', 'mestrado_doutorado', 'evento', 'pendente');
 
-INSERT INTO Evento (id_veiculo, h5, link_evento, link_google_scholar)
-VALUES (id_veiculo_evento_pendente, 42, 'http://ica.com/2024', 'http://scholar.google.com/ica');
+INSERT INTO Evento (id_veiculo)
+VALUES (id_veiculo_evento_pendente);
 
 -- Cenário 3: Evento submetido pela Dra. Ada e NEGADO pelo auditor
-INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
-VALUES (id_veiculo_evento_negado, id_usuario_pesquisador_1, 'Workshop on Obscure Topics', 'a8', 'sem_vinculo', 'nenhum', 'evento', 'negado');
+INSERT INTO VeiculoPublicacao (id_veiculo, id_usuario, nome, h5, classificacao, vinculo_sbc, adequado_defesa, tipo, status)
+VALUES (id_veiculo_evento_negado, id_usuario_pesquisador_1, 'Workshop on Obscure Topics', 5 ,'a8', 'sem_vinculo', 'nenhum', 'evento', 'negado');
 
-INSERT INTO Evento (id_veiculo, h5, link_evento)
-VALUES (id_veiculo_evento_negado, 5, 'http://woto.com/2023');
+INSERT INTO Evento (id_veiculo)
+VALUES (id_veiculo_evento_negado);
 
 
 -- ====================================================================

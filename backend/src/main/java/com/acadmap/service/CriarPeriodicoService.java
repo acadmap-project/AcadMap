@@ -13,11 +13,13 @@ import com.acadmap.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,56 +41,73 @@ public class CriarPeriodicoService {
         if ((dto.linkJcr() != null) ^ (dto.percentilJcr() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se preencher linkJcr, deve-se preencher percentilJcr e vice‑versa");
+                    "Para JCR, é obrigatório preencher o Link e o Percentil.");
         }
         if ((dto.linkScopus() != null) ^ (dto.percentilScopus() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se preencher linkScopus, deve-se preencher percentilScopus e vice‑versa");
+                    "Para Scopus, é obrigatório preencher o Link e o Percentil.");
         }
-        boolean hasJcrOrScopus = dto.linkJcr() != null || dto.linkScopus() != null;
-        if (hasJcrOrScopus && (dto.qualisAntigo() != null)) {
+        if ((dto.linkGoogleScholar() != null) ^ (dto.h5() != null)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Não pode cadastrar QualisAntigo quando há JCR ou Scopus");
+                    "Para Google Scholar, é obrigatório preencher o Link e o h5.");
         }
-        if (dto.linkGoogleScholar() != null ^ dto.vinculoSBC() != VinculoSBC.sem_vinculo) {
+
+        boolean temJcr = dto.linkJcr() != null;
+        boolean temScopus = dto.linkScopus() != null;
+        boolean temGoogleScholar = dto.linkGoogleScholar() != null;
+        boolean temQualisAntigo = dto.qualisAntigo() != null;
+
+        if ((temJcr || temScopus) && temGoogleScholar) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Se o periódico tiver vínculo com a SBC, deve-se preencher linkGoogleScholar e vice‑versa");
+                    "Não é permitido cadastrar Google Scholar quando JCR e/ou Scopus já foram informados.");
+        }
+
+        if ((temJcr || temScopus || temGoogleScholar) && temQualisAntigo) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é permitido cadastrar Qualis Antigo quando JCR, Scopus ou Google Scholar já foram informados.");
+        }
+
+        if (!temJcr && !temScopus && !temGoogleScholar && !temQualisAntigo) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "É obrigatório informar um dos seguintes indicadores: JCR, Scopus, Google Scholar ou Qualis Antigo, respeitando a ordem de prioridade.");
         }
         try {
-            List<Periodico> periodicosSimilares = this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome());
+            List<StatusVeiculo> statusesParaChecar = List.of(StatusVeiculo.pendente, StatusVeiculo.aceito);
+            Set<Periodico> periodicosSimilares = new HashSet<>(this.periodicoRepository.findByNomeContainingIgnoreCase(dto.nome()));
+            
+            // Check for duplicate links
+            if (dto.linkGoogleScholar() != null && !dto.linkGoogleScholar().trim().isEmpty()) {
+                List<Periodico> periodicosComLinkDuplicado = this.periodicoRepository.findByLinkGoogleScholarAndStatusIn(dto.linkGoogleScholar(), statusesParaChecar);
+                periodicosSimilares.addAll(periodicosComLinkDuplicado);
+            }
+            
+            if (dto.linkJcr() != null && !dto.linkJcr().trim().isEmpty()) {
+                List<Periodico> periodicosComLinkDuplicado = this.periodicoRepository.findByLinkJcrAndStatusIn(dto.linkJcr(), statusesParaChecar);
+                periodicosSimilares.addAll(periodicosComLinkDuplicado);
+            }
+            
+            if (dto.linkScopus() != null && !dto.linkScopus().trim().isEmpty()) {
+                List<Periodico> periodicosComLinkDuplicado = this.periodicoRepository.findByLinkScopusAndStatusIn(dto.linkScopus(), statusesParaChecar);
+                periodicosSimilares.addAll(periodicosComLinkDuplicado);
+            }
+            
             if (!periodicosSimilares.isEmpty() && !forcar) {
-                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periodico detectado.",
-                            periodicosSimilares);
+                    throw new PeriodicoDuplicadoException("Erro de duplicidade de periódico detectado.",
+                            new ArrayList<>(periodicosSimilares));
             }
 
             Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.areasPesquisaIds());
 
-            Periodico periodico = new Periodico();
-            periodico.setIdVeiculo(UUID.randomUUID());
-            periodico.setAdequadoDefesa(AdequacaoDefesa.nenhum);
-            periodico.setClassificacao(dto.classificacao());
-            periodico.setNome(dto.nome());
-            periodico.setVinculoSbc(dto.vinculoSBC());
-            periodico.setTipo(TipoVeiculo.periodico);
-            periodico.setStatus(dto.status() != null ? dto.status() : StatusVeiculo.pendente);
-            periodico.setAreasPesquisa(areasPesquisa);
             Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(uuid).orElseThrow(EntityNotFoundException::new);
-            periodico.setUsuario(usuario);
 
-            periodico.setIssn(dto.issn());
-            periodico.setPercentilJcr(dto.percentilJcr());
-            periodico.setPercentilScopus(dto.percentilScopus());
-            periodico.setLinkJcr(dto.linkJcr());
-            periodico.setLinkScopus(dto.linkScopus());
-            periodico.setLinkGoogleScholar(dto.linkGoogleScholar());
-            periodico.setQualisAntigo(dto.qualisAntigo());
+            Periodico periodicoSavo = salvarPeriodico(dto, areasPesquisa, usuario);
 
-            Periodico periodicoSavo = this.periodicoRepository.save(periodico);
-
-            this.registrarLogService.registrarCadastroPeriodico(periodicoSavo, usuario);
+            this.registrarLogService.gerarLogVeiculo(periodicoSavo, usuario, AcaoLog.adicao_veiculo);
 
             return new PeriodicoResponseDTO(periodicoSavo);
 
@@ -120,5 +139,19 @@ public class CriarPeriodicoService {
 
         return new HashSet<>(areas);
         }
+
+    private Periodico salvarPeriodico(PeriodicoRequestDTO dto, Set<AreaPesquisa> areasPesquisa, Usuario usuario){
+
+        Periodico periodico = new Periodico();
+        BeanUtils.copyProperties(dto, periodico, "adequadoDefesa", "tipo", "status", "areasPesquisaIds");
+        periodico.setAdequadoDefesa(AdequacaoDefesa.nenhum);
+        periodico.setTipo(TipoVeiculo.periodico);
+        periodico.setStatus(dto.status() != null ? dto.status() : StatusVeiculo.pendente);
+        periodico.setAreasPesquisa(areasPesquisa);
+        periodico.setUsuario(usuario);
+
+        return periodicoRepository.save(periodico);
+
+    }
 
     }

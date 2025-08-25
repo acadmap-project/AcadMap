@@ -5,6 +5,7 @@ import com.acadmap.model.dto.usuario.UsuarioResponseDTO;
 import com.acadmap.model.entities.AreaPesquisa;
 import com.acadmap.model.entities.Programa;
 import com.acadmap.model.entities.Usuario;
+import com.acadmap.model.enums.AcaoLog;
 import com.acadmap.repository.AreaPesquisaRepository;
 import com.acadmap.repository.ProgramaRepository;
 import com.acadmap.repository.UsuarioRepository;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +28,7 @@ public class CriarUsuarioService {
   private final AreaPesquisaRepository areaPesquisaRepository;
   private final ProgramaRepository programaRepository;
   private final RegistrarLogService registrarLogService;
+  private final PasswordEncoder passwordEncoder;
 
   public UsuarioResponseDTO criarUsuario(UsuarioRequestDTO usuarioRequestDTO) {
     Programa programa = this.buscaPrograma(usuarioRequestDTO.idPrograma());
@@ -36,11 +40,12 @@ public class CriarUsuarioService {
     }
 
     Usuario usuario = new Usuario();
-    BeanUtils.copyProperties(usuarioRequestDTO, usuario, "idPrograma", "idsAreasPesquisa");
+    BeanUtils.copyProperties(usuarioRequestDTO, usuario, "idPrograma", "idsAreasPesquisa", "senha");
+    usuario.setSenha(passwordEncoder.encode(usuarioRequestDTO.senha()));
     usuario.setPrograma(programa);
     usuario.setAreasPesquisa(areas);
     Usuario usuarioPersistido = this.usuarioRepository.save(usuario);
-    this.registrarLogService.registraCadastroUsuario(usuarioPersistido);
+    this.registrarLogService.gerarLogUsuario(usuarioPersistido, AcaoLog.cadastro_usuario);
 
     return new UsuarioResponseDTO(usuarioPersistido);
   }

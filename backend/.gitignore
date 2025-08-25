@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### chaves token
+src/main/resources/keys

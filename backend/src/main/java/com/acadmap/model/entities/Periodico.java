@@ -22,23 +22,20 @@ import org.hibernate.annotations.ColumnDefault;
 @PrimaryKeyJoinColumn(name = "id_veiculo")
 public class Periodico extends VeiculoPublicacao {
 
-  @Column(name = "ISSN", nullable = false, length = 8, unique = true)
+  @Column(name = "ISSN", length = 255)
   private String issn;
 
   @Column(name = "percentil_jcr")
-  private Integer percentilJcr;
+  private Double percentilJcr;
 
   @Column(name = "percentil_scopus")
-  private Integer percentilScopus;
+  private Double percentilScopus;
 
   @Column(name = "link_jcr", length = 255)
   private String linkJcr;
 
   @Column(name = "link_scopus", length = 255)
   private String linkScopus;
-
-  @Column(name = "link_google_scholar", length = 255)
-  private String linkGoogleScholar;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "qualis_antigo", length = 2)

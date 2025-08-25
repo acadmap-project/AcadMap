@@ -1,3 +1,4 @@
+import { post } from '../utils/authFetch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import GerarSenha from './GerarSenha';
 import useAreas from '../hooks/useAreas';
@@ -16,19 +17,13 @@ import {
 import { useState } from 'react';
 import ErrorPopup from './ErrorPopup';
 import Popup from './Popup';
-import { criptografarSenha } from './CriptografiaSenha';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
 const postUser = async userData => {
   console.log('Sending user data:', userData);
-  const response = await fetch('http://localhost:8080/api/usuario/cadastro', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  });
+  const response = await post('/api/usuario/cadastro', userData, {}, false);
 
   if (!response.ok) {
     let errorData;
@@ -69,6 +64,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     message: '',
     type: 'success',
   });
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
 
   const methods = useForm({
     resolver: zodResolver(
@@ -100,6 +96,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     },
     onError: error => {
       console.error('Erro ao cadastrar usuário:', error);
+      Logger.logError(`Erro ao cadastrar usuário: ${error.message || 'Erro desconhecido'}`);
 
       // Extract the actual error message from the response
       let errorMessage = 'Erro desconhecido ao cadastrar usuário';
@@ -132,6 +129,13 @@ function FormularioCadastroContent({ isAdmin = false }) {
             'Já existe um usuário cadastrado com este email. Por favor, use um email diferente.',
           type: 'warning',
         });
+      } else if (errorMessage == 'EMAIL_DUPLICADO') {
+        setErrorInfo({
+          title: 'Erro ao Cadastrar Usuário',
+          message: 'Já existe um cadastro com esse e-mail.',
+          type: 'error',
+        });
+        setEmailErrorMessage('Já existe um cadastro com esse e-mail.');
       } else if (error.status === 400) {
         setErrorInfo({
           title: 'Dados Inválidos',
@@ -140,10 +144,20 @@ function FormularioCadastroContent({ isAdmin = false }) {
             'Verifique se todos os campos foram preenchidos corretamente.',
           type: 'error',
         });
+      } else if (error.status === 404) {
+        setErrorInfo({
+          title: 'Erro ao Cadastrar Usuário',
+          message:
+            errorMessage ||
+            'Programa ou área de pesquisa não encontrados. Verifique os dados selecionados.',
+          type: 'error',
+        });
       } else {
         setErrorInfo({
           title: 'Erro ao Cadastrar Usuário',
-          message: errorMessage,
+          message:
+            errorMessage ||
+            'Ocorreu um erro inesperado ao cadastrar o usuário. Tente novamente mais tarde.',
           type: 'error',
         });
       }
@@ -163,7 +177,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     const userData = {
       nome: data.fullName,
       email: data.email,
-      senha: criptografarSenha(data.password), // Criptografia de senha antes de enviar ao backend
+      senha: data.password, // Senha enviada sem criptografia
       tipoPerfil: isAdmin ? data.tipoPerfil : 'PESQUISADOR', // Use selected type if admin, default to PESQUISADOR
       idPrograma: data.program,
       idsAreasPesquisa: data.searchArea || [],
@@ -271,12 +285,19 @@ function FormularioCadastroContent({ isAdmin = false }) {
               type="email"
               className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Digite..."
-              {...register('email')}
+              {...register('email', {
+                onChange: () => setEmailErrorMessage(''), // Clear error when user types
+              })}
             />{' '}
             <div className="h-6">
               {errors.email && (
                 <p className="text-red-600 text-sm text-left">
                   {errors.email.message}
+                </p>
+              )}
+              {emailErrorMessage && !errors.email && (
+                <p className="text-red-600 text-sm text-left">
+                  {emailErrorMessage}
                 </p>
               )}
             </div>

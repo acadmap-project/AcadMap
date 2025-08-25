@@ -9,9 +9,11 @@ import com.acadmap.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,35 +34,28 @@ public class CriarEventoService {
   public EventoResponseDTO criarEvento(EventoCreateDTO dto, UUID uuid, boolean forcar) {
     try {
 
-      List<Evento> eventosSimilares = this.eventoRepository.findByNomeContainingIgnoreCase(dto.getNome());
+      // Consider duplicates only among active/pending events, ignore rejected/excluded
+      List<StatusVeiculo> statusesParaChecar = List.of(StatusVeiculo.pendente, StatusVeiculo.aceito);
+      Set<Evento> eventosSimilares = new HashSet<>(this.eventoRepository.findByNomeIgnoreCaseAndStatusIn(dto.getNome(), statusesParaChecar));
+      
+      // Check for duplicate links
+      if (dto.getLinkGoogleScholar() != null && !dto.getLinkGoogleScholar().trim().isEmpty()) {
+        List<Evento> eventosComLinkDuplicado = this.eventoRepository.findByLinkGoogleScholarAndStatusIn(dto.getLinkGoogleScholar(), statusesParaChecar);
+        eventosSimilares.addAll(eventosComLinkDuplicado);
+      }
+      
       if (!eventosSimilares.isEmpty() && !forcar) {
         throw new EventoDuplicadoException("Erro de duplicidade de evento detectado.",
-            eventosSimilares);
+            new ArrayList<>(eventosSimilares));
       }
 
       Set<AreaPesquisa> areasPesquisa = this.carregarAreasPesquisa(dto.getAreasPesquisaIds());
 
-      Evento evento = new Evento();
-      evento.setIdVeiculo(UUID.randomUUID());
-      evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
-      evento.setClassificacao(dto.getClassificacao());
-      evento.setNome(dto.getNome());
-      evento.setVinculoSbc(dto.getVinculoSbc());
-      evento.setTipo(TipoVeiculo.evento);
-      evento.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusVeiculo.pendente);
-      evento.setAreasPesquisa(areasPesquisa);
       Usuario usuario = usuarioRepository.findByIdAndFetchProgramaEagerly(uuid).orElseThrow(EntityNotFoundException::new);
-      evento.setUsuario(usuario);
 
-      evento.setH5(dto.getH5());
-      evento.setLinkEvento(dto.getLinkEvento());
-      evento.setLinkGoogleScholar(dto.getLinkGoogleScholar());
-      evento.setLinkSolSbc(dto.getLinkSolSbc());
+      Evento eventoSalvo =  salvarEvento(dto, areasPesquisa, usuario);
 
-
-      Evento eventoSalvo =  this.eventoRepository.save(evento);
-
-      this.registrarLogService.registrarCadastroEvento(eventoSalvo, usuario);
+      this.registrarLogService.gerarLogVeiculo(eventoSalvo, usuario, AcaoLog.adicao_veiculo);
 
       return new EventoResponseDTO(eventoSalvo);
 
@@ -73,7 +68,7 @@ public class CriarEventoService {
     } catch (DataAccessException e) {
       throw new RuntimeException("Erro ao acessar o banco de dados: " + e.getMessage());
     } catch (Exception e) {
-      throw new RuntimeException("Erro inesperado ao criar evento: " + e.getMessage());
+      throw new RuntimeException("Erro inesperado ao criar evento: " + e);
     }
   }
 
@@ -89,5 +84,19 @@ public class CriarEventoService {
     }
 
     return new HashSet<>(areas);
+  }
+
+
+  private Evento salvarEvento(EventoCreateDTO dto, Set<AreaPesquisa> areasPesquisa, Usuario usuario){
+
+    Evento evento = new Evento();
+    BeanUtils.copyProperties(dto, evento, "adequadoDefesa", "tipo", "status", "areasPesquisaIds");
+    evento.setAdequadoDefesa(AdequacaoDefesa.nenhum);
+    evento.setTipo(TipoVeiculo.evento);
+    evento.setStatus(dto.getStatus() != null ? dto.getStatus() : StatusVeiculo.pendente);
+    evento.setAreasPesquisa(areasPesquisa);
+    evento.setUsuario(usuario);
+    return eventoRepository.save(evento);
+
   }
 }

@@ -15,6 +15,10 @@ public class EventoCreateDTO {
 
   private String nome;
 
+  private Integer h5;
+
+  private String linkGoogleScholar;
+
   private ClassificacaoVeiculo classificacao;
 
   private VinculoSBC vinculoSbc;
@@ -26,12 +30,6 @@ public class EventoCreateDTO {
   private StatusVeiculo status;
 
   private Set<UUID> areasPesquisaIds;
-
-  private Integer h5;
-
-  private String linkEvento;
-
-  private String linkGoogleScholar;
 
   private String linkSolSbc;
 }

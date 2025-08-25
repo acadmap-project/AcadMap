@@ -13,6 +13,7 @@ import {
   QueryClientProvider,
   useMutation,
 } from '@tanstack/react-query';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
@@ -22,8 +23,11 @@ function DetalhePendenteContent() {
   const location = useLocation();
   // Get registro data from location state or set default
   const registro = useMemo(() => location.state || {}, [location.state]);
+  console.log('registro:', registro);
 
   const navigate = useNavigate();
+  const [showJustificacaoPopup, setShowJustificacaoPopup] = useState(false);
+  const [justificacaoRecusa, setJustificacaoRecusa] = useState('');
   const [isPredatorio, setIsPredatorio] = useState(false);
   const { negarPendencias, aprovarPendencias } = usePendencias();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -81,6 +85,7 @@ function DetalhePendenteContent() {
     },
     onError: error => {
       console.error('Error in aprovarMutation:', error);
+      Logger.logError(`Erro em aprovarMutation - ID: ${id} - ${error.message}`);
 
       // Treat 500 as success (backend quirk)
       if (error.response?.status === 500) {
@@ -97,7 +102,7 @@ function DetalhePendenteContent() {
         return;
       }
 
-      let errorMessage = 'Erro ao aprovar registro';
+      let errorMessage = 'Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.';
 
       if (error.response?.status === 405) {
         errorMessage = 'Não foi possível aprovar este registro.';
@@ -130,6 +135,7 @@ function DetalhePendenteContent() {
     },
     onError: error => {
       console.error('Error in rejeitarMutation:', error);
+      Logger.logError(`Erro em rejeitarMutation - ID: ${id} - ${error.message}`);
 
       // Treat 500 as success (backend quirk)
       if (error.response?.status === 500) {
@@ -175,17 +181,23 @@ function DetalhePendenteContent() {
     });
   };
 
-  const handleRejeitar = registroId => {
+  const handleRejeitar = () => {
+    setShowJustificacaoPopup(true);
+  };
+
+  const confirmarRejeicao = registroId => {
+    setShowJustificacaoPopup(false);
     console.log('Attempting to reject registro with userID:', registroId);
     console.log('User type:', loggedIn.userType);
     console.log('User ID being used:', loggedIn.id);
     console.log('isPredatorio:', isPredatorio);
 
     rejeitarMutation.mutate({
-      id: registroId,
+      id: id,
       userId: loggedIn.id,
-      flagPredatorio: isPredatorio,
+      justificativa: justificacaoRecusa, // Envia o justificativa para a mutação
     });
+    setJustificacaoRecusa(''); // Limpa o justificativa após rejeitar
   };
   // If no registro data, show error message
   if (!registro || Object.keys(registro).length === 0) {
@@ -259,21 +271,6 @@ function DetalhePendenteContent() {
                 )}
               </div>
             </div>
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO:</span>{' '}
-              {registro.linkEvento ? (
-                <a
-                  href={registro.linkEvento}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {registro.linkEvento}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
             {registro.tipo === 'periodico' && (
               <div className="text-sm text-gray-900 mt-2">
                 <label className="flex items-center cursor-pointer">
@@ -311,7 +308,7 @@ function DetalhePendenteContent() {
               </button>
 
               <button
-                onClick={() => handleRejeitar(id)}
+                onClick={handleRejeitar}
                 disabled={
                   aprovarMutation.isPending ||
                   rejeitarMutation.isPending ||
@@ -327,6 +324,38 @@ function DetalhePendenteContent() {
               >
                 {rejeitarMutation.isPending ? 'Rejeitando...' : 'Rejeitar'}
               </button>
+              {/* Popup para justificativa da recusa */}
+              {showJustificacaoPopup && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                  <div className="bg-white rounded shadow-lg p-6 w-full max-w-md">
+                    <h2 className="text-lg font-bold mb-4">
+                      Justificacao da recusa
+                    </h2>
+                    <textarea
+                      className="w-full border border-gray-300 rounded p-2 mb-4"
+                      rows={4}
+                      placeholder="Descreva a justificacao da recusa..."
+                      value={justificacaoRecusa}
+                      onChange={e => setJustificacaoRecusa(e.target.value)}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
+                        onClick={() => setShowJustificacaoPopup(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
+                        onClick={() => confirmarRejeicao(id)}
+                        disabled={!justificacaoRecusa.trim()}
+                      >
+                        Confirmar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <ErrorPopup

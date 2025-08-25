@@ -1,3 +1,4 @@
+import { post } from '../utils/authFetch';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HeaderSistema from '../components/HeaderSistema';
@@ -13,6 +14,7 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 import '../styles/App.css';
+import Logger from '../utils/logger';
 
 const queryClient = new QueryClient();
 
@@ -58,7 +60,7 @@ const validateAndConvertPercentile = (value, fieldName) => {
   return numericValue;
 };
 
-const postPeriodico = async ({ periodicoData, userId }) => {
+const postPeriodico = async ({ periodicoData, userId, forcar }) => {
   // Normalize all empty/undefined values to null
   const normalizedData = normalizeToNull(periodicoData);
 
@@ -73,22 +75,18 @@ const postPeriodico = async ({ periodicoData, userId }) => {
       'Percentil Scopus'
     );
   } catch (error) {
+    Logger.logError(`Erro de validação de periódico: ${error.message}`);
     throw new Error(`Erro de validação: ${error.message}`);
   }
 
-  // The backend expects vinculoSBC (uppercase), so keep it as is
-  console.log('Sending data to API:', normalizedData);
-  const response = await fetch(
-    'http://localhost:8080/api/periodicos/cadastro',
-    {
-      method: 'POST',
-      headers: {
-        'X-User-Id': userId,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(normalizedData),
-    }
-  );
+  // The backend expects vinculoSbc (camelCase), so keep it as is
+  let endpoint = '/api/periodicos';
+  if (forcar) {
+    endpoint += `?forcar=${forcar}`;
+  }
+  console.log('Sending data to API:', normalizedData, ' Endpoint:', endpoint);
+
+  const response = await post(endpoint, normalizedData);
 
   if (!response.ok) {
     const errorData = await response.text();
@@ -108,6 +106,7 @@ function ValidacaoPeriodicoContent() {
   const areas = useAreas();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(null);
   const [errorInfo, setErrorInfo] = useState({
     title: '',
     message: '',
@@ -125,7 +124,8 @@ function ValidacaoPeriodicoContent() {
   const createPeriodicoMutation = useMutation({
     mutationFn: postPeriodico,
     onSuccess: data => {
-      console.log('Periódico cadastrado com sucesso:', data);
+      setErrorStatus(null);
+      console.log('[BACKEND SUCCESS]', data);
       setSuccessInfo({
         title: 'Periódico Cadastrado',
         message: 'O periódico foi cadastrado com sucesso no sistema.',
@@ -134,48 +134,87 @@ function ValidacaoPeriodicoContent() {
       setShowSuccessPopup(true);
     },
     onError: error => {
-      console.error('Erro ao cadastrar periódico:', error);
+      console.log('[BACKEND ERROR]', error);
+      setErrorStatus(error.status || 500);
+      // Garante que apenas um popup de erro seja exibido por vez
+      if (showErrorPopup) return;
 
-      // Handle 500 Internal Server Error
-      if (error.status === 500) {
+      // Se for erro de rede (failed to fetch), só mostra o popup de erro
+      if (error.message && error.message.includes('failed to fetch')) {
         setErrorInfo({
-          title: 'Erro no Servidor',
+          title: 'Erro',
           message:
-            'Ocorreu um erro ao tentar salvar os dados do periódico. Por favor, tente novamente mais tarde.',
+            'Erro de conexão com o servidor. Tente novamente mais tarde.',
           type: 'error',
         });
         setShowErrorPopup(true);
         return;
       }
 
-      // Extract error message from backend response for other errors
-      let errorMessage = 'Erro desconhecido ao processar o cadastro';
-
-      if (error.response?.data) {
+      if (error.status === 409) {
+        let similares = [];
         try {
-          // Try to parse JSON response and extract the "message" field
-          const errorData = JSON.parse(error.response.data);
-          errorMessage =
-            errorData.message || errorData.error || error.response.data;
+          const json = JSON.parse(error.response.data);
+          console.log('[BACKEND 409 BODY]', json);
+          similares = json.periodicosSimilares || [];
         } catch {
-          // If parsing fails, use the raw response data
-          errorMessage = error.response.data;
+          console.log('[BACKEND 409 BODY PARSE ERROR]', error.response.data);
+          similares = [];
         }
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
+        setErrorInfo(prev => ({
+          ...prev,
+          title: 'Possível Duplicidade Detectada',
+          message:
+            'Foram encontrados eventos similares pelo nome. Confira abaixo e escolha se deseja prosseguir ou cancelar.',
+          type: 'warning',
+          similares,
+        }));
+        setShowErrorPopup(true);
+      } else if (error.status === 500 || error.message.status === 500) {
+        setErrorInfo(prev => ({
+          ...prev,
+          title: 'Erro no Servidor',
+          message:
+            'Ocorreu um erro ao tentar salvar os dados do periódico. Por favor, tente novamente mais tarde.',
+          type: 'error',
+        }));
+        setShowErrorPopup(true);
+        return;
+      } else {
+        // Extract error message from backend response for other errors
+        let errorMessage = 'Erro desconhecido ao processar o cadastro';
 
-      setErrorInfo({
-        title: 'Erro!',
-        message: errorMessage,
-        type: 'error',
-      });
-      setShowErrorPopup(true);
+        if (error.response?.data) {
+          try {
+            // Try to parse JSON response and extract the "message" or "error" field
+            const errorData = JSON.parse(error.response.data);
+            if (error.status === 400 && errorData.error) {
+              errorMessage = errorData.error;
+            } else {
+              errorMessage =
+                errorData.message || errorData.error || error.response.data;
+            }
+          } catch {
+            // If parsing fails, use the raw response data
+            errorMessage = error.response.data;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+
+        setErrorInfo({
+          title: 'Erro!',
+          message: errorMessage,
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+      }
     },
   });
 
   const closeErrorPopup = () => {
     setShowErrorPopup(false);
+    setErrorStatus(null);
   };
 
   const closeSuccessPopup = () => {
@@ -195,12 +234,19 @@ function ValidacaoPeriodicoContent() {
   };
 
   const handleConfirm = () => {
-    // Handle confirmation logic here
-    console.log('Periodico confirmed:', periodicoData);
     createPeriodicoMutation.mutate({
       periodicoData: periodicoData,
       userId: loggedIn.id,
     });
+  };
+
+  const handleForceConfirm = () => {
+    createPeriodicoMutation.mutate({
+      periodicoData: periodicoData,
+      userId: loggedIn.id,
+      forcar: true,
+    });
+    setShowErrorPopup(false);
   };
 
   if (!periodicoData) {
@@ -251,29 +297,13 @@ function ValidacaoPeriodicoContent() {
             </div>
 
             <div className="text-sm text-gray-900">
-              <span className="font-medium">ISSN*:</span>{' '}
+              <span className="font-medium">ISSN:</span>{' '}
               {periodicoData.issn || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
               <span className="font-medium">Vínculo com a SBC:</span>{' '}
-              {periodicoData.vinculoSBC || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE ACESSO*:</span>{' '}
-              {periodicoData.link ? (
-                <a
-                  href={periodicoData.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.link}
-                </a>
-              ) : (
-                ' N/A'
-              )}
+              {periodicoData.vinculoSbc || 'N/A'}
             </div>
 
             <div className="text-sm text-gray-900">
@@ -335,6 +365,12 @@ function ValidacaoPeriodicoContent() {
               <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
               {periodicoData.percentilScopus || 'N/A'}
             </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">H5:</span>{' '}
+              {periodicoData.h5 || 'N/A'}
+            </div>
+
             <div className="text-sm text-gray-900">
               <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
               {periodicoData.qualisAntigo
@@ -361,13 +397,215 @@ function ValidacaoPeriodicoContent() {
             </div>
           </div>
 
-          <ErrorPopup
-            isOpen={showErrorPopup}
-            onClose={closeErrorPopup}
-            title={errorInfo.title}
-            message={errorInfo.message}
-            type={errorInfo.type}
-          />
+          {showErrorPopup &&
+            (errorStatus === 409 ? (
+              <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+                <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                  <div className="flex-shrink-0 mr-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                      <svg
+                        className="w-5 h-5 text-yellow-100"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-red-700 font-semibold text-lg">
+                      "Cadastro potencialmente duplicado. Continuar mesmo
+                      assim?"
+                    </span>
+                  </div>
+                  <div className="flex ml-4 gap-2">
+                    <button
+                      onClick={closeErrorPopup}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Não
+                    </button>
+                    <button
+                      onClick={handleForceConfirm}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Sim
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
+                <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
+                  <div className="flex-shrink-0 mr-4">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-700">
+                      <svg
+                        className="w-5 h-5 text-yellow-100"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8.75-3a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0V7zm.75 7a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-red-700 font-semibold text-lg">
+                      {errorInfo.message}
+                    </span>
+                  </div>
+                  <div className="flex ml-4 gap-2">
+                    <button
+                      onClick={closeErrorPopup}
+                      style={{
+                        fontFamily: 'Poppins',
+                        fontWeight: '400',
+                        background: '#FFD580',
+                        color: '#A30000',
+                        border: 'none',
+                        borderRadius: '2px',
+                        padding: '12px 32px',
+                        fontSize: '18px',
+                        minWidth: '100px',
+                      }}
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+          {/* Eventos similares desconectados, abaixo do popup, apenas se erro 409 e houver similares */}
+          {errorStatus === 409 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '30%',
+                left: '50%',
+                transform: 'translate(-50%, 0)',
+                zIndex: 40,
+                fontFamily: 'Poppins',
+                fontWeight: '400',
+                width: '80vw',
+                minWidth: '500px',
+                maxWidth: '900px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <div className="bg-white border border-red-300 rounded shadow-md p-4 w-full">
+                <span className="block text-red-700 font-bold mb-2">
+                  Periódicos similares detectados:
+                </span>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border border-gray-200">
+                    <thead>
+                      <tr className="bg-red-100">
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Nome
+                        </th>
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Classificação
+                        </th>
+                        <th className="px-3 py-2 border-b border-gray-200 text-center text-red-700">
+                          Links
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {errorInfo.similares.map(ev => (
+                        <tr
+                          key={ev.idVeiculo}
+                          className="border-b border-gray-100"
+                        >
+                          <td className="px-3 py-2 font-semibold text-red-700">
+                            {ev.nome}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {ev.classificacao ? (
+                              <span className="text-gray-800">
+                                {ev.classificacao.toUpperCase()}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex flex-col gap-1">
+                              {ev.linkGoogleScholar && (
+                                <a
+                                  href={ev.linkGoogleScholar}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                                  title={ev.linkGoogleScholar}
+                                >
+                                  {ev.linkGoogleScholar}
+                                </a>
+                              )}
+                              {ev.linkJcr && (
+                                <a
+                                  href={ev.linkJcr}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                                  title={ev.linkJcr}
+                                >
+                                  {ev.linkJcr}
+                                </a>
+                              )}
+                              {ev.linkScopus && (
+                                <a
+                                  href={ev.linkScopus}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                                  title={ev.linkScopus}
+                                >
+                                  {ev.linkScopus}
+                                </a>
+                              )}
+                              {!ev.linkGoogleScholar && !ev.linkJcr && !ev.linkScopus && (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
 
           <Popup
             isOpen={showSuccessPopup}

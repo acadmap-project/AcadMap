@@ -30,6 +30,31 @@ export const calcularClassificacaoPeriodico = percentil => {
   if (percentilNumber >= 50) return 'a4';
   if (percentilNumber >= 37.5) return 'a5';
   if (percentilNumber >= 25) return 'a6';
+  if (percentilNumber >= 13) return 'a7';
+  return 'a8';
+};
+
+/**
+ * Calcula a classificação baseada no antigo Qualis
+ * @param {string} qualisAntigo - A nota do antigo Qualis (a1, a2, a3, a4, b1, b2, b3, b4)
+ * @returns {string} - A classificação correspondente
+ */
+export const calcularClassificacaoPorQualis = qualisAntigo => {
+  if (!qualisAntigo) return 'a8';
+
+  const qualis = qualisAntigo.toLowerCase();
+
+  // A1 e A4 mantêm o mesmo valor
+  if (qualis === 'a1') return 'a1';
+  if (qualis === 'a2') return 'a2';
+  if (qualis === 'a3') return 'a3';
+  if (qualis === 'a4') return 'a4';
+
+  // B1 se torna A5, B2 se torna A6, B3 se torna A7, B4 se torna A8
+  if (qualis === 'b1') return 'a5';
+  if (qualis === 'b2') return 'a6';
+  if (qualis === 'b3') return 'a7';
+  if (qualis === 'b4') return 'a8';
 
   return 'a8';
 };
@@ -40,12 +65,7 @@ export const calcularClassificacaoPeriodico = percentil => {
  * @returns {string} - A classificação formatada para exibição
  */
 export const formatarClassificacaoParaExibicao = classificacao => {
-  if (!classificacao) return 'N/A';
-
-  if (classificacao.toLowerCase() === 'a8') {
-    return 'NÃO CONSIDERADO';
-  }
-
+  if (!classificacao) return 'NÃO CONSIDERADO';
   return classificacao.toUpperCase();
 };
 
@@ -74,6 +94,10 @@ export const calcularClassificacaoEvento = (h5, vinculoSbc) => {
   if (h5Number > 0) {
     const classificacaoBase = calcClassEventoSemSBC(h5Number);
 
+    if (classificacaoBase === 'a2' || classificacaoBase === 'a1') {
+      return classificacaoBase;
+    }
+
     if (vinculoSbc === 'vinculo_top_10') {
       return elevarClassificacao(classificacaoBase, 2);
     }
@@ -94,7 +118,7 @@ export const calcularClassificacaoEvento = (h5, vinculoSbc) => {
  * @param {number} niveis - Número de níveis para elevar
  * @returns {string} - A classificação elevada
  */
-const elevarClassificacao = (classificacaoBase, niveis) => {
+export const elevarClassificacao = (classificacaoBase, niveis) => {
   const classificacoes = ['a8', 'a7', 'a6', 'a5', 'a4', 'a3', 'a2', 'a1'];
   const indiceAtual = classificacoes.indexOf(classificacaoBase.toLowerCase());
 

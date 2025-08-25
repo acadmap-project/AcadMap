@@ -1,0 +1,150 @@
+import { get } from '../utils/authFetch';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import HeaderSistema from '../components/HeaderSistema';
+import useLogin from '../hooks/userAuth';
+import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
+import { formatVinculoSBC, formatAdequacaoDefesa } from '../utils/format';
+import { useQuery } from '@tanstack/react-query';
+import '../styles/App.css';
+import Logger from '../utils/logger';
+
+const fetcheventoData = async id => {
+  const response = await get(`/api/eventos/${id}`, {}, false); // requireAuth = false
+  if (!response.ok) {
+    const error = new Error('Erro ao buscar dados do evento');
+    Logger.logError(`Erro ao buscar dados do evento ID ${id}: ${error.message}`);
+    throw error;
+  }
+  return await response.json();
+};
+
+const VisualizarPeriodico = () => {
+  const { loggedIn } = useLogin();
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const { data: eventoData } = useQuery({
+    queryKey: ['periodico', id],
+    queryFn: () => fetcheventoData(id),
+  });
+
+  useEffect(() => {
+    console.log('Dados do periódico:', eventoData);
+  }, [eventoData]);
+
+  const voltarParaConsultas = () => {
+    // sinaliza para restaurar a tabela na tela de consultas
+    sessionStorage.setItem('consultaRestore', '1');
+    navigate('/');
+  };
+
+  return (
+    <>
+      <HeaderSistema
+        userType={loggedIn?.userType}
+        userName={loggedIn?.userName}
+      />
+      {eventoData && (
+        <>
+          <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
+
+          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
+            Dados completos do Evento {eventoData.nome}
+          </div>
+
+          <div
+            className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
+            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+          >
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">NOME DO EVENTO:</span>{' '}
+              {eventoData.nome || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">ÍNDICE H5:</span>{' '}
+              {eventoData.h5 || 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
+              {eventoData.areasPesquisas && eventoData.areasPesquisas.length > 0
+                ? eventoData.areasPesquisas.join(', ')
+                : 'N/A'}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
+              {formatVinculoSBC(eventoData.vinculoSbc) || 'N/A'}
+            </div>
+
+            {eventoData.linkSolSbc && (
+              <div className="text-sm text-gray-900">
+                <span className="font-medium">LINK DO SOL-SBC:</span>{' '}
+                <a
+                  href={eventoData.linkSolSbc}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {eventoData.linkSolSbc}
+                </a>
+              </div>
+            )}
+
+            {eventoData.linkGoogleScholar && (
+              <div className="text-sm text-gray-900">
+                <span className="font-medium">LINK DO GOOGLE SCHOLAR:</span>{' '}
+                <a
+                  href={eventoData.linkGoogleScholar}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                >
+                  {eventoData.linkGoogleScholar}
+                </a>
+              </div>
+            )}
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
+              {formatarClassificacaoParaExibicao(eventoData.classificacao)}
+            </div>
+
+            <div className="text-sm text-gray-900">
+              <span className="font-medium">
+                ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO):
+              </span>{' '}
+              {formatAdequacaoDefesa(eventoData.adequacaoDefesa)}
+            </div>
+          </div>
+
+          <div className="w-full flex justify-center mt-6 gap-3">
+            <button
+              onClick={voltarParaConsultas}
+              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+            >
+              Voltar para consultas
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem('consultaResultados');
+                sessionStorage.removeItem('consultaRestore');
+                navigate('/');
+              }}
+              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+            >
+              Voltar ao início
+            </button>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+export default VisualizarPeriodico;

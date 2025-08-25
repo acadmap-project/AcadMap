@@ -7,17 +7,25 @@ import com.acadmap.exception.veiculo.VeiculoVinculadoException;
 import com.acadmap.model.dto.evento.EventoSimplesDTO;
 import com.acadmap.model.dto.periodico.PeriodicoSimplesDTO;
 import com.acadmap.model.dto.veiculo.VeiculoPublicacaoDTO;
+import com.acadmap.model.entities.VeiculoPublicacao;
+import com.acadmap.repository.VeiculoPublicacaoRepository;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 @Getter
+@AllArgsConstructor
 public class GlobalExceptionHandler {
+
+  private final VeiculoPublicacaoRepository veiculoPublicacaoRepository;
 
   @ExceptionHandler(EventoDuplicadoException.class)
   public ResponseEntity<PersonalizedListResponse<EventoSimplesDTO>> handleEventoDuplicado(
@@ -51,7 +59,9 @@ public class GlobalExceptionHandler {
   public ResponseEntity<PersonalizedResponse<VeiculoPublicacaoDTO>> handleVeiculoVinculado(
           VeiculoVinculadoException ex
   ){
-    VeiculoPublicacaoDTO veiculoPublicacaoDTO = VeiculoPublicacaoDTO.buildVeiculoDto(ex.getVeiculoPublicacao());
+    VeiculoPublicacao veiculoPublicacao = veiculoPublicacaoRepository.findAllByFetchVeiculoPublicacaoEagerly(ex.getVeiculoPublicacao().getIdVeiculo())
+            .orElseThrow();
+    VeiculoPublicacaoDTO veiculoPublicacaoDTO = VeiculoPublicacaoDTO.buildVeiculoDto(veiculoPublicacao);
     PersonalizedResponse<VeiculoPublicacaoDTO> veiculoVinculadoResponse =
             new PersonalizedResponse<>(ex.getMessage(), veiculoPublicacaoDTO);
 
