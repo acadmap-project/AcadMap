@@ -44,12 +44,10 @@ const formatarData = timestamp => {
 const filtrarLogsPorData = (logs, dataInicio, dataFim) => {
   if (!logs) return [];
   if (!dataInicio && !dataFim) return logs;
-
   return logs.filter(log => {
     const dataLog = new Date(log.timestamp);
     const inicio = dataInicio ? new Date(dataInicio) : null;
     const fim = dataFim ? new Date(dataFim) : null;
-
     if (inicio && fim) {
       return dataLog >= inicio && dataLog <= fim;
     } else if (inicio) {
@@ -280,7 +278,6 @@ function AuditoriaLogs() {
           <h1 className="text-3xl font-bold text-gray-800 mb-6">
             Histórico de Auditoria
           </h1>
-
           {/* Controles de Filtro */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -542,7 +539,6 @@ function AuditoriaLogs() {
           )}
         </div>
       </div>
-
       <ErrorPopup
         isOpen={showErrorPopup}
         onClose={closeErrorPopup}

@@ -25,7 +25,6 @@ class LoggerClass {
       if (!loginData || loginData === 'undefined' || loginData === 'null') {
         return false;
       }
-
       const parsed = JSON.parse(loginData);
       return parsed?.isLoggedIn && parsed?.accessToken;
     } catch (error) {
@@ -51,7 +50,6 @@ class LoggerClass {
       this._startRetryTimer();
     }
   }
-
   /**
    * Inicia o timer para reenvio de logs pendentes
    */
@@ -60,7 +58,6 @@ class LoggerClass {
       this._processRetryQueue();
     }, this._retryTimeout);
   }
-
   /**
    * Processa a fila de logs pendentes tentando reenviar
    */
@@ -114,7 +111,6 @@ class LoggerClass {
       this._retryTimer = null;
     }
   }
-
   /**
    * Método auxiliar para envio de logs com retry automático
    * Agora verifica se o usuário está autenticado e envia com ou sem auth
@@ -136,7 +132,6 @@ class LoggerClass {
       this._addToPendingQueue(endpoint, payload, logType);
     }
   }
-
   // Log de erros
   logError(descricaoErro = 'Erro não especificado') {
     this._sendLog('/api/log-erro/adicionar', descricaoErro, 'ERRO');
@@ -190,7 +185,6 @@ class LoggerClass {
     }
     console.warn('[LOGGER] Fila de logs pendentes limpa');
   }
-
   /**
    * Retorna informações sobre logs pendentes
    */
