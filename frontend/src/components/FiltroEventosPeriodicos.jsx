@@ -51,7 +51,6 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     if (onFiltrosChange) {
       const currentValues = JSON.stringify(watchedValues);
       const prevValues = JSON.stringify(previousValues.current);
-
       if (currentValues !== prevValues) {
         onFiltrosChange(watchedValues);
         previousValues.current = watchedValues;
@@ -138,7 +137,6 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
       } else {
         requests.push(Promise.resolve({ ok: false }));
       }
-
       // Adiciona requisição para periódicos se necessário
       if (tipoVeiculo === 'ambos' || tipoVeiculo === 'periodicos') {
         requests.push(

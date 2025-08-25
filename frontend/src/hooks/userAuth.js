@@ -158,7 +158,6 @@ function useLogin() {
           userId = '000';
           userName = 'Usuário Desconhecido';
       }
-
       const nextState = {
         isLoggedIn: true,
         userType: userType,

@@ -40,10 +40,12 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./frontend
-        file: ./frontend/Dockerfile.prod
+        file: ./frontend/Dockerfile
         push: true
         # Construct the tag dynamically
         tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.FRONTEND_IMAGE }}:${{ github.sha }}
+        build-args: |
+          VITE_API_URL=${{ secrets.BACK_API_URL }}
         cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ secrets.FRONTEND_IMAGE }}:latest
         cache-to: type=inline
 
@@ -60,5 +62,7 @@ jobs:
           echo "BACKEND_IMAGE_TAG=${{ github.sha }}" > .env
           echo "FRONTEND_IMAGE_TAG=${{ github.sha }}" >> .env
           echo "REGISTRY_USER=${{ github.repository_owner }}" >> .env
+          echo "BACK_API_URL=${{ secrets.BACK_API_URL }}" >> .env
+          
           docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans --build
           docker image prune -af

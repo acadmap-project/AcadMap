@@ -13,6 +13,6 @@ services:
     environment:
       - VITE_API_URL=${BACK_API_URL}
     ports:
-      - "80:80"
+      - "8081:80"
     restart: always
     pull_policy: always

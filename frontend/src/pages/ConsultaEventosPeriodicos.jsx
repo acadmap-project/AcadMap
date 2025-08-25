@@ -21,7 +21,6 @@ function ConsultaEventosPeriodicos() {
   const { logCsv, logChart, logChartError } = useLogger();
 
   const navigate = useNavigate();
-
   const onResultados = ({ eventos, periodicos }) => {
     // Limpa resultados antigos antes de adicionar os novos
     setResultados({
@@ -220,7 +219,6 @@ function ConsultaEventosPeriodicos() {
                   link.click();
                   document.body.removeChild(link);
                   URL.revokeObjectURL(url);
-
                   logCsv();
                 }}
               >
