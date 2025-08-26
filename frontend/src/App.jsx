@@ -36,28 +36,6 @@ const LoadingComponent = () => (
     <div className="text-lg">Carregando...</div>
   </div>
 );
-import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
-import VisualizarPeriodico from './pages/VisualizarPeriodico';
-import VisualizarEvento from './pages/VisualizarEvento';
-import Login from './pages/Login';
-import HeaderSistema from './components/HeaderSistema';
-import VisualizarGraficos from './pages/VisualizarGraficos';
-import AuditoriaLogs from './pages/AuditoriaLogs';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
-const LoadingComponent = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-lg">Carregando...</div>
-  </div>
-);
 
 const App = () => {
   return (
