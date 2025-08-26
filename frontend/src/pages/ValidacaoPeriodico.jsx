@@ -60,7 +60,7 @@ const validateAndConvertPercentile = (value, fieldName) => {
   return numericValue;
 };
 
-const postPeriodico = async ({ periodicoData, userId, forcar }) => {
+const postPeriodico = async ({ periodicoData, forcar }) => {
   // Normalize all empty/undefined values to null
   const normalizedData = normalizeToNull(periodicoData);
 
@@ -593,9 +593,11 @@ function ValidacaoPeriodicoContent() {
                                   {ev.linkScopus}
                                 </a>
                               )}
-                              {!ev.linkGoogleScholar && !ev.linkJcr && !ev.linkScopus && (
-                                <span className="text-gray-400">-</span>
-                              )}
+                              {!ev.linkGoogleScholar &&
+                                !ev.linkJcr &&
+                                !ev.linkScopus && (
+                                  <span className="text-gray-400">-</span>
+                                )}
                             </div>
                           </td>
                         </tr>

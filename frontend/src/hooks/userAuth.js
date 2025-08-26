@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import tokenManager from '../utils/tokenManager';
 import Logger from '../utils/logger.js';
 
@@ -48,7 +47,9 @@ function useLogin() {
       };
     } catch (error) {
       console.error('Error parsing login data from localStorage:', error);
-      Logger.logError(`Erro ao analisar dados de login do localStorage: ${error.message}`);
+      Logger.logError(
+        `Erro ao analisar dados de login do localStorage: ${error.message}`
+      );
       localStorage.removeItem('login');
       return {
         isLoggedIn: false,
@@ -71,7 +72,9 @@ function useLogin() {
       }
     } catch (error) {
       console.error('Error writing login data to localStorage:', error);
-      Logger.logError(`Erro ao escrever dados de login no localStorage: ${error.message}`);
+      Logger.logError(
+        `Erro ao escrever dados de login no localStorage: ${error.message}`
+      );
     }
   }, [loggedIn]);
 
@@ -155,7 +158,6 @@ function useLogin() {
           userId = '000';
           userName = 'Usuário Desconhecido';
       }
-      
       const nextState = {
         isLoggedIn: true,
         userType: userType,
@@ -195,10 +197,10 @@ function useLogin() {
     }
     broadcastChange();
   }, [broadcastChange]);
-  
+
   // Listen for authentication errors and handle logout
   useEffect(() => {
-    const handleAuthError = event => {
+    const handleAuthError = () => {
       console.log('Authentication error detected, logging out user');
       logout();
     };

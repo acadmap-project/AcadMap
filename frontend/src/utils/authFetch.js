@@ -41,7 +41,6 @@ export class AuthenticatedFetch {
       }
     }
 
-
     const requestOptions = {
       ...options,
       headers,
@@ -74,7 +73,9 @@ export class AuthenticatedFetch {
           return retryResponse;
         } catch (refreshError) {
           console.error('Token refresh failed:', refreshError);
-          Logger.logError(`Falha na renovação do token: ${refreshError.message}`);
+          Logger.logError(
+            `Falha na renovação do token: ${refreshError.message}`
+          );
           tokenManager.clearTokens();
           this._handleAuthError(refreshError);
           throw refreshError;

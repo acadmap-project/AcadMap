@@ -110,13 +110,18 @@ function usePendencias() {
       const response = await put(`/api/veiculo/aprovar-veiculo/${id}`, {
         flagPredatorio,
       });
-      if (!response.ok) throw new Error('Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.');
+      if (!response.ok)
+        throw new Error(
+          'Ocorreu um erro ao registrar a ação. A operação foi cancelada para garantir a integridade dos dados.'
+        );
       const data = await response.json();
       console.log('Approve pendencia response:', data);
       return data;
     } catch (error) {
       console.error('Error in aprovarPendencias:', error);
-      Logger.logError(`Erro em aprovarPendencias - ID: ${id} - ${error.message}`);
+      Logger.logError(
+        `Erro em aprovarPendencias - ID: ${id} - ${error.message}`
+      );
 
       // Handle different types of errors
       if (error.code === 'ECONNABORTED') {

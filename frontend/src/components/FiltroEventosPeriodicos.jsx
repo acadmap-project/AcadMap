@@ -1,5 +1,5 @@
 import { API_URL } from '../utils/apiUrl';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useAreas from '../hooks/useAreas';
 import ErrorPopup from './ErrorPopup';
 import { MultiSelectDropdown } from './MultipleSelectDropdown';
@@ -51,7 +51,6 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     if (onFiltrosChange) {
       const currentValues = JSON.stringify(watchedValues);
       const prevValues = JSON.stringify(previousValues.current);
-      
       if (currentValues !== prevValues) {
         onFiltrosChange(watchedValues);
         previousValues.current = watchedValues;
@@ -119,13 +118,13 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
 
     let eventosData = [];
     let periodicosData = [];
-    
+
     // Considera o filtro de tipo de veículo
     const tipoVeiculo = normalizedData.tipoVeiculo || 'ambos';
-    
+
     try {
       const requests = [];
-      
+
       // Adiciona requisição para eventos se necessário
       if (tipoVeiculo === 'ambos' || tipoVeiculo === 'eventos') {
         requests.push(
@@ -138,7 +137,6 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
       } else {
         requests.push(Promise.resolve({ ok: false }));
       }
-      
       // Adiciona requisição para periódicos se necessário
       if (tipoVeiculo === 'ambos' || tipoVeiculo === 'periodicos') {
         requests.push(
@@ -408,7 +406,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
             type="button"
             onClick={async () => {
               reset({
-                tipoVeiculo: 'ambos'
+                tipoVeiculo: 'ambos',
               });
               if (onFiltrosChange) {
                 onFiltrosChange({});
@@ -453,7 +451,9 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                 eventosData = [];
                 periodicosData = [];
                 console.error('Erro ao buscar eventos e periódicos:', err);
-                Logger.logError(`Erro ao buscar eventos e periódicos (submit): ${err.message}`);
+                Logger.logError(
+                  `Erro ao buscar eventos e periódicos (submit): ${err.message}`
+                );
               }
 
               if (onResultados) {

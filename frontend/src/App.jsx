@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { Suspense } from 'react';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
@@ -11,6 +14,28 @@ import RegistrosPendentes from './pages/RegistrosPendentes';
 import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
 import CadastroPeriodico from './pages/CadastroPeriodico';
 import DetalhePendente from './pages/DetalhePendente';
+import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
+import VisualizarPeriodico from './pages/VisualizarPeriodico';
+import VisualizarEvento from './pages/VisualizarEvento';
+import Login from './pages/Login';
+import HeaderSistema from './components/HeaderSistema';
+import VisualizarGraficos from './pages/VisualizarGraficos';
+import AuditoriaLogs from './pages/AuditoriaLogs';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const LoadingComponent = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-lg">Carregando...</div>
+  </div>
+);
 import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
@@ -76,10 +101,7 @@ const App = () => {
                   element={<VisualizarPeriodico />}
                 />
                 <Route path="/evento/:id" element={<VisualizarEvento />} />
-                <Route
-                  path="/auditoria-logs"
-                  element={<AuditoriaLogs />}
-                />
+                <Route path="/auditoria-logs" element={<AuditoriaLogs />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

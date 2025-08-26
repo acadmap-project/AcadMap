@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLogin from '../hooks/userAuth';
 
@@ -8,7 +8,7 @@ import useLogin from '../hooks/userAuth';
  */
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const { loggedIn, logout } = useLogin();
+  const { logout } = useLogin();
 
   useEffect(() => {
     // Listen for authentication errors

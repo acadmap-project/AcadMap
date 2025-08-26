@@ -11,7 +11,7 @@ import { useLogger } from '../hooks/useLogger.js';
 import Logger from '../utils/logger.js';
 
 function ConsultaEventosPeriodicos() {
-  const [busca, setBusca] = useState(false);
+  const [_, setBusca] = useState(false);
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const [showBusca, setShowBusca] = useState(true);
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
@@ -21,7 +21,6 @@ function ConsultaEventosPeriodicos() {
   const { logCsv, logChart, logChartError } = useLogger();
 
   const navigate = useNavigate();
-  
   const onResultados = ({ eventos, periodicos }) => {
     // Limpa resultados antigos antes de adicionar os novos
     setResultados({
@@ -83,8 +82,16 @@ function ConsultaEventosPeriodicos() {
             <div className="p-8">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <svg className="h-12 w-12 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  <svg
+                    className="h-12 w-12 text-yellow-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <div className="ml-6 flex-1">
@@ -92,8 +99,9 @@ function ConsultaEventosPeriodicos() {
                     Nenhum resultado encontrado
                   </h3>
                   <p className="text-lg text-yellow-700 leading-relaxed">
-                    Nenhum evento ou periódico aprovado foi encontrado com os critérios de busca informados. 
-                    Tente ajustar os filtros aplicados para ampliar a pesquisa e obter mais resultados.
+                    Nenhum evento ou periódico aprovado foi encontrado com os
+                    critérios de busca informados. Tente ajustar os filtros
+                    aplicados para ampliar a pesquisa e obter mais resultados.
                   </p>
                 </div>
                 <button
@@ -202,7 +210,7 @@ function ConsultaEventosPeriodicos() {
                   const url = URL.createObjectURL(blob);
                   const link = document.createElement('a');
                   const date = new Date().toLocaleString('pt-BR', {
-                    timeZone: 'America/Sao_Paulo'
+                    timeZone: 'America/Sao_Paulo',
                   });
                   const nameFile = `Sistema de Veículos de Publicação Acadêmica - ${date}.csv`;
                   link.href = url;
@@ -211,7 +219,6 @@ function ConsultaEventosPeriodicos() {
                   link.click();
                   document.body.removeChild(link);
                   URL.revokeObjectURL(url);
-                  
                   logCsv();
                 }}
               >
@@ -315,8 +322,8 @@ function ConsultaEventosPeriodicos() {
                       <td className="border px-2 py-1">
                         <div className="flex items-center justify-center gap-2">
                           {item.tipo === 'Periódico' && item.flagPredatorio && (
-                            <span 
-                              className="text-red-600 font-bold text-lg" 
+                            <span
+                              className="text-red-600 font-bold text-lg"
                               title="Periódico Predatório"
                             >
                               ⚠️
@@ -384,7 +391,9 @@ function ConsultaEventosPeriodicos() {
                   logChart();
                 } catch (error) {
                   logChartError();
-                  Logger.logError(`Erro ao navegar para visualização de gráficos: ${error.message}`);
+                  Logger.logError(
+                    `Erro ao navegar para visualização de gráficos: ${error.message}`
+                  );
                 }
               }}
               className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 mt-8"
