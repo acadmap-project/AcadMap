@@ -12,7 +12,7 @@ function HeaderSistema({ userType, userName }) {
   // Determine effective user info, prioritizing current auth state
   const effectiveUserName =
     loggedIn?.userName ?? userName ?? 'Usuário Desconhecido';
-  const effectiveUserType = loggedIn?.userType ?? userType ?? 'NÃO LOGADO';
+  const effectiveUserType = loggedIn?.userType ?? userType ?? 'Visitante';
   const isLoggedIn = !!loggedIn?.isLoggedIn;
 
   // Handle logout with redirect to home
@@ -24,29 +24,20 @@ function HeaderSistema({ userType, userName }) {
   return (
     <>
       <header>
-        <nav className="flex items-center justify-between bg-white border-2 border-black dark:bg-white px-4 py-2">
+        <nav className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center">
             <Link
               to="/"
-              className="flex items-center space-x-3"
+              className="text-xl font-bold text-primary"
               aria-current="page"
             >
-              <img
-                className="w-10 h-10 rounded-full"
-                src={pfpImage}
-                alt="Rounded avatar"
-              />
-              <span
-                className="text-black text-sm"
-                style={{ fontFamily: 'Poppins', fontWeight: '300' }}
-              >
-                {effectiveUserName} - {effectiveUserType}
-              </span>
+              AcadMap
             </Link>
+          </div>
 
+          <div className="flex items-center">
             <ul
-              className="flex flex-row space-x-4 items-center ml-6"
-              style={{ fontFamily: 'Poppins', fontWeight: '300' }}
+              className="flex flex-row space-x-4 items-center"
             >
               {(effectiveUserType === 'AUDITOR' ||
                 effectiveUserType === 'PESQUISADOR' ||
@@ -60,7 +51,7 @@ function HeaderSistema({ userType, userName }) {
                 <li>
                   <Link
                     to="/registros-pendentes"
-                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                    className="block py-2 px-3 btn btn-outline"
                     aria-current="page"
                   >
                     Registros Pendentes
@@ -71,64 +62,64 @@ function HeaderSistema({ userType, userName }) {
                 <li>
                   <Link
                     to="/auditoria-logs"
-                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                    className="block py-2 px-3 btn btn-outline"
                     aria-current="page"
                   >
                     Auditoria do Sistema
                   </Link>
                 </li>
               )}
-              {userType === 'ADMINISTRADOR' && (
-                <li>
-                  <Link
-                    to="/auditoria-logs"
-                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                    aria-current="page"
-                  >
-                    Logs do Sistema
-                  </Link>
-                </li>
-              )}
               <li>
                 <Link
                   to="/cadastro-usuario"
-                  className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
+                  className="block py-2 px-3 btn btn-outline"
                   aria-current="page"
                 >
                   Cadastrar Usuário
                 </Link>
               </li>
-              {location.pathname !== '/' && (
-                <li>
-                  <Link
-                    to="/"
-                    className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors"
-                    aria-current="page"
-                  >
-                    Consultar Eventos e Periódicos
-                  </Link>
-                </li>
-              )}
             </ul>
           </div>
-          {isLoggedIn ? (
-            <button
-              type="button"
-              onClick={handleLogout}
-              aria-current="page"
-              className="!px-4 !py-2 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
-            >
-              Deslogar
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              aria-current="page"
-              className="!px-4 !py-2 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
-            >
-              Logar
-            </Link>
-          )}
+
+          {/* Right: User Info and Login/Logout */}
+          <div className="flex items-center space-x-3">
+            {isLoggedIn && (
+              <div className="flex items-center space-x-3">
+                <div className="avatar avatar-placeholder">
+                  <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                    <span className="text-xs">{effectiveUserName[0]+effectiveUserName[1]}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="text-sm">
+                    {effectiveUserName} 
+                  </span>
+                  <span className="text-xs">
+                    {effectiveUserType}
+                  </span>
+                </div>
+              </div>
+            )}
+            
+            {isLoggedIn ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-current="page"
+                className="btn btn-primary"
+              >
+                Deslogar
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                aria-current="page"
+                className="btn btn-primary"
+              >
+                Logar
+              </Link>
+            )}
+          </div>
         </nav>
       </header>
     </>

@@ -25,7 +25,7 @@ export default function EventPeriodDropdown() {
   return (
     <div className="relative" ref={dropdownRef}>
       <div
-        className="block py-2 px-3 text-black bg-white border border-black rounded-none hover:bg-gray-100 transition-colors cursor-pointer"
+        className="block py-2 px-3 btn btn-outline"
         onClick={() => setOpen(prev => !prev)}
         role="button"
         tabIndex={0}
@@ -42,10 +42,10 @@ export default function EventPeriodDropdown() {
         </span>
       </div>
       {open && (
-        <div className="absolute left-0 mt-2 min-w-full bg-white border border-black rounded-none shadow-lg z-50">
+        <div className="absolute left-0 w-4/5">
           <Link
             to="/cadastro-evento"
-            className="block px-4 py-2 text-black hover:bg-gray-100"
+            className="px-4 py-2 min-w-full btn btn-outline rounded-none"
             onClick={() => setOpen(false)}
             aria-current="page"
           >
@@ -53,7 +53,7 @@ export default function EventPeriodDropdown() {
           </Link>
           <Link
             to="/cadastro-periodico"
-            className="block px-4 py-2 text-black hover:bg-gray-100"
+            className="block px-4 py-2 btn btn-outline rounded-none"
             onClick={() => setOpen(false)}
             aria-current="page"
           >

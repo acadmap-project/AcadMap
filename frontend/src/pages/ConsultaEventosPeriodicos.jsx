@@ -119,7 +119,7 @@ function ConsultaEventosPeriodicos() {
 
       <HeaderSistema
         userName={loggedIn ? loggedIn.userName : 'Usuário Desconhecido'}
-        userType={loggedIn ? loggedIn.userType : 'NÃO LOGADO'}
+        userType={loggedIn ? loggedIn.userType : 'Visitante'}
       />
 
       <div

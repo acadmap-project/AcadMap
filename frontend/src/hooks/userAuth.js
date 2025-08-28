@@ -26,8 +26,8 @@ function useLogin() {
               userName = 'Grace Hopper';
               break;
             default:
-              userId = '0';
-              userName = 'Usuário Desconhecido';
+              userId = Null;
+              userName = Null;
           }
           parsedData.id = userId;
           if (!parsedData.userName) {
@@ -155,8 +155,8 @@ function useLogin() {
           userName = 'Grace Hopper';
           break;
         default:
-          userId = '000';
-          userName = 'Usuário Desconhecido';
+          userId = Null;
+          userName = Null;
       }
       const nextState = {
         isLoggedIn: true,
