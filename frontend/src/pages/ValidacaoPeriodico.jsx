@@ -5,7 +5,6 @@ import HeaderSistema from '../components/HeaderSistema';
 import SemPermissao from '../components/SemPermissao';
 import useLogin from '../hooks/userAuth';
 import useAreas from '../hooks/useAreas';
-import ErrorPopup from '../components/ErrorPopup';
 import Popup from '../components/Popup';
 import { formatarClassificacaoParaExibicao } from '../utils/classificacaoBase';
 import {
@@ -15,6 +14,7 @@ import {
 } from '@tanstack/react-query';
 import '../styles/App.css';
 import Logger from '../utils/logger';
+import { formatVinculoSBC } from '../utils/format'
 
 const queryClient = new QueryClient();
 
@@ -251,153 +251,196 @@ function ValidacaoPeriodicoContent() {
 
   if (!periodicoData) {
     return (
-      <>
+      <div className="min-h-screen bg-gray-100">
         <HeaderSistema
           userType={loggedIn.userType}
           userName={loggedIn.userName}
         />
-        <div className="max-w-4xl mx-auto mt-8 p-6">
-          <p className="text-center">Carregando dados do periódico...</p>
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <p className="text-center">Carregando dados do periódico...</p>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
+      
       {!['AUDITOR', 'ADMINISTRADOR', 'PESQUISADOR'].includes(
         loggedIn.userType
       ) ? (
         <SemPermissao />
       ) : (
-        <>
-          <h1 className="mt-8 mb-8">Cadastro de Periódicos</h1>
+        <div className="container mx-auto px-4 py-8 max-w-5xl">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
+              Revisão do Cadastro de Periódico
+            </h1>
+            
+            <div className="bg-gray-50 rounded-lg p-6">
+              <div className="space-y-6">
+                {/* Row 1: Nome do Periódico + Área de Conhecimento */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">NOME DO PERIÓDICO*</span>
+                    <span className="text-gray-900">{periodicoData.nome || 'N/A'}</span>
+                  </div>
 
-          <div
-            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
-            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-          >
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO PERIÓDICO*:</span>{' '}
-              {periodicoData.nome || 'N/A'}
-            </div>
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">ÁREA DE CONHECIMENTO (CNPQ)*</span>
+                    <span className="text-gray-900">
+                      {periodicoData.areasPesquisaIds &&
+                      periodicoData.areasPesquisaIds.length > 0
+                        ? periodicoData.areasPesquisaIds
+                            .map(areaId => getAreaName(areaId))
+                            .join(', ')
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
-              {periodicoData.areasPesquisaIds &&
-              periodicoData.areasPesquisaIds.length > 0
-                ? periodicoData.areasPesquisaIds
-                    .map(areaId => getAreaName(areaId))
-                    .join(', ')
-                : 'N/A'}
-            </div>
+                {/* Row 2: ISSN + Vínculo com SBC */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">ISSN</span>
+                    <span className="text-gray-900">{periodicoData.issn || 'N/A'}</span>
+                  </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ISSN:</span>{' '}
-              {periodicoData.issn || 'N/A'}
-            </div>
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">VÍNCULO COM A SBC</span>
+                    <span className="text-gray-900">{formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}</span>
+                  </div>
+                </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">Vínculo com a SBC:</span>{' '}
-              {periodicoData.vinculoSbc || 'N/A'}
-            </div>
+                {/* Row 3: Link JCR (full width) */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">LINK DE REPOSITÓRIO (JCR)</span>
+                    <span className="text-gray-900">
+                      {periodicoData.linkJcr ? (
+                        <a
+                          href={periodicoData.linkJcr}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline break-all"
+                        >
+                          {periodicoData.linkJcr}
+                        </a>
+                      ) : (
+                        'N/A'
+                      )}
+                    </span>
+                  </div>
+                </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
-              </span>{' '}
-              {periodicoData.linkGoogleScholar ? (
-                <a
-                  href={periodicoData.linkGoogleScholar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+                {/* Row 4: Link Scopus (full width) */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">LINK DE REPOSITÓRIO (SCOPUS)</span>
+                    <span className="text-gray-900">
+                      {periodicoData.linkScopus ? (
+                        <a
+                          href={periodicoData.linkScopus}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline break-all"
+                        >
+                          {periodicoData.linkScopus}
+                        </a>
+                      ) : (
+                        'N/A'
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Row 5: Link Google Scholar (full width) */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)</span>
+                    <span className="text-gray-900">
+                      {periodicoData.linkGoogleScholar ? (
+                        <a
+                          href={periodicoData.linkGoogleScholar}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline break-all"
+                        >
+                          {periodicoData.linkGoogleScholar}
+                        </a>
+                      ) : (
+                        'N/A'
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Row 4: Percentis, H5, Qualis (4 columns) */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">PERCENTIL (JCR)</span>
+                    <span className="text-gray-900">{periodicoData.percentilJcr || 'N/A'}</span>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">PERCENTIL (SCOPUS)</span>
+                    <span className="text-gray-900">{periodicoData.percentilScopus || 'N/A'}</span>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">H5</span>
+                    <span className="text-gray-900">{periodicoData.h5 || 'N/A'}</span>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">NOTA NO ANTIGO QUALIS</span>
+                    <span className="text-gray-900">
+                      {periodicoData.qualisAntigo
+                        ? periodicoData.qualisAntigo.toUpperCase()
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Row 5: Classificação Base (full width) */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">CLASSIFICAÇÃO BASE</span>
+                    <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
+                      {formatarClassificacaoParaExibicao(periodicoData.classificacao)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={handleConfirm}
+                  disabled={createPeriodicoMutation.isPending}
+                  className="btn btn-primary px-8 min-h-12"
                 >
-                  {periodicoData.linkGoogleScholar}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE REPOSITÓRIO (JCR):</span>{' '}
-              {periodicoData.linkJcr ? (
-                <a
-                  href={periodicoData.linkJcr}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.linkJcr}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DE REPOSITÓRIO (SCOPUS):</span>{' '}
-              {periodicoData.linkScopus ? (
-                <a
-                  href={periodicoData.linkScopus}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.linkScopus}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">PERCENTIL (JCR):</span>{' '}
-              {periodicoData.percentilJcr || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">PERCENTIL (SCOPUS):</span>{' '}
-              {periodicoData.percentilScopus || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">H5:</span>{' '}
-              {periodicoData.h5 || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">NOTA NO ANTIGO QUALIS:</span>{' '}
-              {periodicoData.qualisAntigo
-                ? periodicoData.qualisAntigo.toUpperCase()
-                : 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">CLASSIFICAÇÃO BASE:</span>{' '}
-              {formatarClassificacaoParaExibicao(periodicoData.classificacao)}
-            </div>
-
-            <div className="w-full flex justify-center mt-6">
-              <button
-                onClick={handleConfirm}
-                disabled={createPeriodicoMutation.isPending}
-                className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-              >
-                {createPeriodicoMutation.isPending
-                  ? 'Salvando...'
-                  : 'Salvar e Continuar'}
-              </button>
+                  {createPeriodicoMutation.isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      Salvando...
+                    </>
+                  ) : (
+                    'Salvar e Continuar'
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-
-          {showErrorPopup &&
+        </div>
+      )}
+      
+      {showErrorPopup &&
             (errorStatus === 409 ? (
               <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
                 <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
@@ -609,16 +652,14 @@ function ValidacaoPeriodicoContent() {
             </div>
           )}
 
-          <Popup
-            isOpen={showSuccessPopup}
-            onClose={closeSuccessPopup}
-            title={successInfo.title}
-            message={successInfo.message}
-            type={successInfo.type}
-          />
-        </>
-      )}
-    </>
+      <Popup
+        isOpen={showSuccessPopup}
+        onClose={closeSuccessPopup}
+        title={successInfo.title}
+        message={successInfo.message}
+        type={successInfo.type}
+      />
+    </div>
   );
 }
 
