@@ -58,7 +58,6 @@ const Login = () => {
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState('light');
   const { loggedIn, login } = useLogin();
   const navigate = useNavigate();
 
@@ -67,22 +66,6 @@ const Login = () => {
       navigate('/');
     }
   }, [loggedIn, navigate]);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-        e.preventDefault();
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -121,24 +104,15 @@ const Login = () => {
       <div className="mt-24 flex items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2
-              className="text-center text-3xl font-semibold"
-            >
-              Login
-            </h2>
-            <p
-              className="mt-2 text-center text-sm font-light"
-            >
+            <h2 className="text-center text-3xl font-semibold">Login</h2>
+            <p className="mt-2 text-center text-sm font-light">
               Entre com suas credenciais para acessar o sistema
             </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label
-                  htmlFor="username"
-                  className="fieldset-legend"
-                >
+                <label htmlFor="username" className="fieldset-legend">
                   Email
                 </label>
                 <input
@@ -154,10 +128,7 @@ const Login = () => {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="password"
-                  className="fieldset-legend"
-                >
+                <label htmlFor="password" className="fieldset-legend">
                   Senha
                 </label>
                 <input
@@ -174,11 +145,7 @@ const Login = () => {
             </div>
 
             {error && (
-              <div
-                className="text-red-600 text-sm text-center"
-              >
-                {error}
-              </div>
+              <div className="text-red-600 text-sm text-center">{error}</div>
             )}
 
             <div>

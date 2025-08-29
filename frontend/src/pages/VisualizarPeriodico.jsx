@@ -66,32 +66,32 @@ const VisualizarPeriodico = () => {
             className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">NOME DO PERIÓDICO:</span>{' '}
               {periodicoData.nome || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">ISSN:</span>{' '}
               {periodicoData.issn || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">PERCENTIL JCR:</span>{' '}
               {periodicoData.percentilJcr || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
               {periodicoData.percentilScopus || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">H5:</span>{' '}
               {periodicoData.h5 || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
               {periodicoData.areasPesquisaIds &&
               periodicoData.areasPesquisaIds.length > 0
@@ -101,12 +101,12 @@ const VisualizarPeriodico = () => {
                 : 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
               {formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">LINK DO PERIÓDICO:</span>{' '}
               {periodicoData.link ? (
                 <a
@@ -122,7 +122,7 @@ const VisualizarPeriodico = () => {
               )}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">
                 LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
               </span>{' '}
@@ -141,7 +141,7 @@ const VisualizarPeriodico = () => {
             </div>
 
             {periodicoData.linkJcr && (
-              <div className="text-sm text-gray-900">
+              <div className="text-sm">
                 <span className="font-medium">LINK JCR:</span>{' '}
                 <a
                   href={periodicoData.linkJcr}
@@ -155,7 +155,7 @@ const VisualizarPeriodico = () => {
             )}
 
             {periodicoData.linkScopus && (
-              <div className="text-sm text-gray-900">
+              <div className="text-sm">
                 <span className="font-medium">
                   LINK DE REPOSITÓRIO (SCOPUS):
                 </span>{' '}
@@ -171,7 +171,7 @@ const VisualizarPeriodico = () => {
             )}
 
             {periodicoData.qualisAntigo && (
-              <div className="text-sm text-gray-900">
+              <div className="text-sm">
                 <span className="font-medium">
                   NOTA NO ANTIGO QUALIS CAPES:
                 </span>
@@ -179,19 +179,19 @@ const VisualizarPeriodico = () => {
               </div>
             )}
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
               {formatarClassificacaoParaExibicao(periodicoData.classificacao)}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">
                 ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
               </span>{' '}
               {formatAdequacaoDefesa(periodicoData.adequacaoDefesa)}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">INDICAÇÃO SE É PREDATÓRIO:</span>{' '}
               {periodicoData.flagPredatorio ? 'Sim' : 'Não'}
             </div>
@@ -200,7 +200,7 @@ const VisualizarPeriodico = () => {
           <div className="w-full flex justify-center mt-6 gap-3">
             <button
               onClick={voltarParaConsultas}
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              className="!px-8 !py-3 !bg-black !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar para consultas
@@ -211,7 +211,7 @@ const VisualizarPeriodico = () => {
                 sessionStorage.removeItem('consultaRestore');
                 navigate('/');
               }}
-              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              className="!px-8 !py-3 !bg-gray-700 !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar ao início

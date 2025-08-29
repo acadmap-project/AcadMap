@@ -24,7 +24,7 @@ function HeaderSistema({ userType, userName }) {
   return (
     <>
       <header>
-        <nav className="flex items-center justify-between px-4 py-2">
+        <nav className="navbar bg-base-100 shadow-sm flex items-center justify-between px-4 py-2">
           <div className="flex items-center">
             <Link
               to="/"
@@ -36,9 +36,7 @@ function HeaderSistema({ userType, userName }) {
           </div>
 
           <div className="flex items-center">
-            <ul
-              className="flex flex-row space-x-4 items-center"
-            >
+            <ul className="flex flex-row space-x-4 items-center">
               {(effectiveUserType === 'AUDITOR' ||
                 effectiveUserType === 'PESQUISADOR' ||
                 effectiveUserType === 'ADMINISTRADOR') && (
@@ -51,7 +49,7 @@ function HeaderSistema({ userType, userName }) {
                 <li>
                   <Link
                     to="/registros-pendentes"
-                    className="block py-2 px-3 btn btn-outline"
+                    className="block py-2 px-3 btn btn-soft btn-primary"
                     aria-current="page"
                   >
                     Registros Pendentes
@@ -62,7 +60,7 @@ function HeaderSistema({ userType, userName }) {
                 <li>
                   <Link
                     to="/auditoria-logs"
-                    className="block py-2 px-3 btn btn-outline"
+                    className="block py-2 px-3 btn btn-soft btn-primary"
                     aria-current="page"
                   >
                     Auditoria do Sistema
@@ -72,7 +70,7 @@ function HeaderSistema({ userType, userName }) {
               <li>
                 <Link
                   to="/cadastro-usuario"
-                  className="block py-2 px-3 btn btn-outline"
+                  className="block py-2 px-3 btn btn-soft btn-primary"
                   aria-current="page"
                 >
                   Cadastrar Usuário
@@ -87,20 +85,18 @@ function HeaderSistema({ userType, userName }) {
               <div className="flex items-center space-x-3">
                 <div className="avatar avatar-placeholder">
                   <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                    <span className="text-xs">{effectiveUserName[0]+effectiveUserName[1]}</span>
+                    <span className="text-xs">
+                      {effectiveUserName[0] + effectiveUserName[1]}
+                    </span>
                   </div>
                 </div>
                 <div className="flex flex-col justify-center">
-                  <span className="text-sm">
-                    {effectiveUserName} 
-                  </span>
-                  <span className="text-xs">
-                    {effectiveUserType}
-                  </span>
+                  <span className="text-sm">{effectiveUserName}</span>
+                  <span className="text-xs">{effectiveUserType}</span>
                 </div>
               </div>
             )}
-            
+
             {isLoggedIn ? (
               <button
                 type="button"
@@ -111,11 +107,7 @@ function HeaderSistema({ userType, userName }) {
                 Deslogar
               </button>
             ) : (
-              <Link
-                to="/login"
-                aria-current="page"
-                className="btn btn-primary"
-              >
+              <Link to="/login" aria-current="page" className="btn btn-primary">
                 Logar
               </Link>
             )}

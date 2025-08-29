@@ -191,19 +191,16 @@ function FormularioCadastroContent({ isAdmin = false }) {
   };
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="max-w-4xl mx-auto"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl mx-auto">
         {isAdmin && (
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <div className="rounded-lg p-4">
             <div className="form-control w-full max-w-xs">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">Tipo de Cadastro</span>
+                <span className="label-text font-medium">Tipo de Cadastro</span>
               </label>
               <select
                 id="tipoPerfil"
-                className="select select-bordered w-full bg-white"
+                className="select select-bordered w-full"
                 {...register('tipoPerfil')}
                 defaultValue=""
               >
@@ -224,15 +221,15 @@ function FormularioCadastroContent({ isAdmin = false }) {
           </div>
         )}
 
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="rounded-lg p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">NOME COMPLETO</span>
+                <span className="label-text font-medium">NOME COMPLETO</span>
               </label>
               <input
                 type="text"
-                className="input input-bordered w-full bg-white"
+                className="input input-bordered w-full"
                 placeholder="Digite..."
                 {...register('fullName')}
               />
@@ -247,7 +244,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">ÁREA DE PESQUISA</span>
+                <span className="label-text font-medium">ÁREA DE PESQUISA</span>
               </label>
               <Controller
                 control={control}
@@ -272,11 +269,11 @@ function FormularioCadastroContent({ isAdmin = false }) {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">EMAIL</span>
+                <span className="label-text font-medium">EMAIL</span>
               </label>
               <input
                 type="email"
-                className="input input-bordered w-full bg-white"
+                className="input input-bordered w-full"
                 placeholder="Digite..."
                 {...register('email', {
                   onChange: () => setEmailErrorMessage(''),
@@ -300,11 +297,11 @@ function FormularioCadastroContent({ isAdmin = false }) {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">PROGRAMA</span>
+                <span className="label-text font-medium">PROGRAMA</span>
               </label>
               <select
                 id="program"
-                className="select select-bordered w-full bg-white"
+                className="select select-bordered w-full"
                 {...register('program')}
                 defaultValue=""
               >
@@ -328,25 +325,55 @@ function FormularioCadastroContent({ isAdmin = false }) {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">SENHA</span>
+                <span className="label-text font-medium">SENHA</span>
               </label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <input
-                    type={showPassword ? "text" : "password"}
-                    className="input input-bordered w-full bg-white pr-10"
+                    type={showPassword ? 'text' : 'password'}
+                    className="input input-bordered w-full pr-10"
                     placeholder="Digite..."
                     {...register('password')}
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-eye-icon lucide-eye"
+                      >
+                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
                     ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off-icon lucide-eye-off"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-eye-off-icon lucide-eye-off"
+                      >
+                        <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                        <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                        <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+                        <path d="m2 2 20 20" />
+                      </svg>
                     )}
                   </button>
                 </div>
@@ -370,12 +397,12 @@ function FormularioCadastroContent({ isAdmin = false }) {
 
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">CONFIRMAR SENHA</span>
+                <span className="label-text font-medium">CONFIRMAR SENHA</span>
               </label>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
-                  className="input input-bordered w-full bg-white pr-10"
+                  type={showPassword ? 'text' : 'password'}
+                  className="input input-bordered w-full pr-10"
                   placeholder="Digite..."
                   {...register('confirmPassword')}
                 />

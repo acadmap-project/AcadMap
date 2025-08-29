@@ -49,19 +49,16 @@ function FormularioEventoContent() {
 
   return (
     <FormProvider {...methods}>
-      <form
-        className="max-w-5xl mx-auto"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="bg-gray-50 rounded-lg p-6">
+      <form className="max-w-5xl mx-auto" onSubmit={handleSubmit(onSubmit)}>
+        <div className="rounded-lg p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">NOME DO EVENTO*</span>
+                <span className="label-text font-medium">NOME DO EVENTO*</span>
               </label>
               <input
                 type="text"
-                className="input input-bordered w-full bg-white"
+                className="input input-bordered w-full"
                 placeholder="Digite..."
                 {...register('nome')}
               />
@@ -73,10 +70,12 @@ function FormularioEventoContent() {
                 </label>
               )}
             </div>
-            
+
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">ÁREA DE CONHECIMENTO (CNPQ)*</span>
+                <span className="label-text font-medium">
+                  ÁREA DE CONHECIMENTO (CNPQ)*
+                </span>
               </label>
               <Controller
                 control={control}
@@ -103,11 +102,11 @@ function FormularioEventoContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">ÍNDICE H5</span>
+                <span className="label-text font-medium">ÍNDICE H5</span>
               </label>
               <input
                 type="text"
-                className="input input-bordered w-full bg-white"
+                className="input input-bordered w-full"
                 placeholder="Valor numérico"
                 {...register('h5')}
               />
@@ -121,7 +120,9 @@ function FormularioEventoContent() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">VÍNCULO COM A SBC</span>
+                <span className="label-text font-medium">
+                  VÍNCULO COM A SBC
+                </span>
               </label>
               <div className="flex items-center gap-4 w-full">
                 <div className="form-control">
@@ -142,7 +143,7 @@ function FormularioEventoContent() {
                 <div className="flex-1">
                   <select
                     id="vinculoSbc"
-                    className={`select select-bordered w-full bg-white transition-opacity duration-300 ${
+                    className={`select select-bordered w-full transition-opacity duration-300 ${
                       vinculoSbcCheckbox
                         ? 'opacity-100'
                         : 'opacity-50 pointer-events-none'
@@ -171,15 +172,17 @@ function FormularioEventoContent() {
               </div>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)</span>
+                <span className="label-text font-medium">
+                  LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
+                </span>
               </label>
               <input
                 type="text"
-                className="input input-bordered w-full bg-white"
+                className="input input-bordered w-full"
                 placeholder="URL válida"
                 {...register('linkGoogleScholar')}
               />
@@ -191,14 +194,16 @@ function FormularioEventoContent() {
                 </label>
               )}
             </div>
-            
+
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (SOL-SBC)</span>
+                <span className="label-text font-medium">
+                  LINK DE REPOSITÓRIO (SOL-SBC)
+                </span>
               </label>
               <input
                 type="text"
-                className="input input-bordered w-full bg-white"
+                className="input input-bordered w-full"
                 placeholder="URL válida"
                 {...register('linkSolSbc')}
               />
@@ -213,10 +218,7 @@ function FormularioEventoContent() {
           </div>
 
           <div className="flex justify-center mt-8">
-            <button
-              type="submit"
-              className="btn btn-primary px-8 min-h-12"
-            >
+            <button type="submit" className="btn btn-primary px-8 min-h-12">
               Salvar e Continuar
             </button>
           </div>
@@ -230,7 +232,7 @@ function FormularioEvento() {
   return (
     <div>
       <div className="mb-6">
-        <p className="text-sm text-center font-medium text-gray-600 mb-4">
+        <p className="text-sm text-center font-medium mb-4">
           Campos Obrigatórios (*)
         </p>
       </div>

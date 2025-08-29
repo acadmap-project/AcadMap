@@ -205,16 +205,16 @@ function DetalhePendenteContent() {
   // If no registro data, show error message
   if (!registro || Object.keys(registro).length === 0) {
     return (
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-base-100">
         <HeaderSistema
           userType={loggedIn.userType}
           userName={loggedIn.userName}
         />
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full bg-base-100 shadow-sm">
+          <div className="rounded-lg shadow-md p-6">
             <div className="text-center">
               <h1 className="text-xl font-bold text-error mb-4">Erro</h1>
-              <p className="text-gray-600">Nenhum registro encontrado. Redirecionando...</p>
+              <p>Nenhum registro encontrado. Redirecionando...</p>
             </div>
           </div>
         </div>
@@ -223,84 +223,91 @@ function DetalhePendenteContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      
+
       {!['AUDITOR', 'ADMINISTRADOR'].includes(loggedIn.userType) ? (
         <SemPermissao />
       ) : (
-        <div className="container mx-auto py-4 max-w-4xl">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full">
+          <div className="rounded-box border-2 border-primary bg-base-100 shadow-xl p-0 md:p-2">
+            <h1 className="text-3xl text-center font-bold mb-6 pt-6">
               Detalhes do Registro Pendente
             </h1>
-            
-            <div className="bg-gray-50 rounded-lg p-6">
-              <div className="space-y-4">
-                <div className="bg-white p-4 rounded-md">
-                  <span className="block text-sm font-medium text-gray-700 mb-1">USUÁRIO QUE CADASTROU</span>
-                  <div className="text-gray-900">
-                    <div className="font-medium">{registro.usuario?.nome || 'N/A'}</div>
+            <div className="rounded-box bg-base-200 p-4 md:p-8 mx-2 md:mx-6 mb-6">
+              <div className="space-y-2 md:space-y-4">
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    USUÁRIO QUE CADASTROU
+                  </span>
+                  <div>
+                    <div className="font-medium">
+                      {registro.usuario?.nome || 'N/A'}
+                    </div>
                     {registro.usuario?.email && (
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs mt-1">
                         {registro.usuario.email}
                       </div>
                     )}
                   </div>
                 </div>
-
-                <div className="bg-white p-4 rounded-md">
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
                     NOME DO {registro.tipo?.toUpperCase() || 'VEÍCULO'}
                   </span>
-                  <div className="text-gray-900">
+                  <div>
                     <div className="font-medium break-words">
                       {registro.nome}
                     </div>
                     {registro.issn && (
-                      <div className="text-xs text-gray-500 mt-1">
-                        ISSN: {registro.issn}
-                      </div>
+                      <div className="text-xs mt-1">ISSN: {registro.issn}</div>
                     )}
                   </div>
                 </div>
-
-                <div className="bg-white p-4 rounded-md">
-                  <span className="block text-sm font-medium text-gray-700 mb-1">INFORMAÇÕES DE CLASSIFICAÇÃO</span>
-                  <div className="text-gray-900 space-y-2">
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    INFORMAÇÕES DE CLASSIFICAÇÃO
+                  </span>
+                  <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="text-sm">Classificação:</span>
                       <span className="badge badge-primary">
-                        {formatarClassificacaoParaExibicao(registro.classificacao)}
+                        {formatarClassificacaoParaExibicao(
+                          registro.classificacao
+                        )}
                       </span>
                     </div>
                     {registro.areaPesquisa && (
                       <div className="text-sm">
-                        <span className="font-medium">Área de Pesquisa:</span> {registro.areaPesquisa.nome}
+                        <span className="font-medium">Área de Pesquisa:</span>{' '}
+                        {registro.areaPesquisa.nome}
                       </div>
                     )}
                     {registro.programa && (
                       <div className="text-sm">
-                        <span className="font-medium">Programa:</span> {registro.programa.nome}
+                        <span className="font-medium">Programa:</span>{' '}
+                        {registro.programa.nome}
                       </div>
                     )}
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white p-4 rounded-md">
-                    <span className="block text-sm font-medium text-gray-700 mb-1">STATUS ATUAL</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      STATUS ATUAL
+                    </span>
                     <span className="badge badge-warning capitalize text-base">
                       {registro.status}
                     </span>
                   </div>
-
                   {registro.tipo === 'periodico' && (
-                    <div className="bg-white p-4 rounded-md">
-                      <span className="block text-sm font-medium text-gray-700 mb-2">OPÇÕES ESPECIAIS</span>
+                    <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                      <span className="block text-sm font-medium mb-2">
+                        OPÇÕES ESPECIAIS
+                      </span>
                       <label className="flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -308,7 +315,7 @@ function DetalhePendenteContent() {
                           onChange={e => setIsPredatorio(e.target.checked)}
                           className="checkbox checkbox-primary mr-3"
                         />
-                        <span className="text-gray-900">Marcar como periódico predatório</span>
+                        <span>Marcar como periódico predatório</span>
                       </label>
                     </div>
                   )}
@@ -369,40 +376,36 @@ function DetalhePendenteContent() {
         </div>
       )}
 
-      {/* Popup para justificativa da recusa */}
-      {showJustificacaoPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
-              Justificativa da Recusa
-            </h2>
-            <div className="form-control">
-              <textarea
-                className="textarea textarea-bordered w-full resize-none"
-                rows={4}
-                placeholder="Descreva a justificativa da recusa..."
-                value={justificacaoRecusa}
-                onChange={e => setJustificacaoRecusa(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                className="btn btn-ghost"
-                onClick={() => setShowJustificacaoPopup(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="btn btn-error"
-                onClick={() => confirmarRejeicao(id)}
-                disabled={!justificacaoRecusa.trim()}
-              >
-                Confirmar
-              </button>
-            </div>
+      {/* Modal para justificativa da recusa */}
+      <div className={`modal ${showJustificacaoPopup ? 'modal-open' : ''}`}>
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">Justificativa da Recusa</h3>
+          <div className="form-control">
+            <textarea
+              className="textarea textarea-bordered w-full resize-none"
+              rows={4}
+              placeholder="Descreva a justificativa da recusa..."
+              value={justificacaoRecusa}
+              onChange={e => setJustificacaoRecusa(e.target.value)}
+            />
+          </div>
+          <div className="modal-action">
+            <button
+              className="btn btn-ghost"
+              onClick={() => setShowJustificacaoPopup(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              className="btn btn-error"
+              onClick={() => confirmarRejeicao(id)}
+              disabled={!justificacaoRecusa.trim()}
+            >
+              Confirmar
+            </button>
           </div>
         </div>
-      )}
+      </div>
       <ErrorPopup
         isOpen={showErrorPopup}
         onClose={() => setShowErrorPopup(false)}

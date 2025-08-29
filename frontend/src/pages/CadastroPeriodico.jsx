@@ -10,20 +10,20 @@ function CadastroPeriodico() {
     Exibe o formulário para cadastro de periódicos.
   */ const { loggedIn } = useLogin();
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
-      
+
       {!['AUDITOR', 'ADMINISTRADOR', 'PESQUISADOR'].includes(
         loggedIn.userType
       ) ? (
         <SemPermissao />
       ) : (
-        <div className="container mx-auto px-4 py-4 max-w-6xl">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
+        <div className="container mt-4 mx-auto max-w-6xl max-h-full bg-base-100 shadow-sm">
+          <div className="rounded-lg shadow-md p-6">
+            <h1 className="text-3xl text-center font-bold mb-6">
               Cadastro de Periódico
             </h1>
             <FormularioPeriodico />

@@ -60,30 +60,30 @@ const VisualizarPeriodico = () => {
             className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
             style={{ fontFamily: 'Poppins', fontWeight: '400' }}
           >
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">NOME DO EVENTO:</span>{' '}
               {eventoData.nome || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">ÍNDICE H5:</span>{' '}
               {eventoData.h5 || 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
               {eventoData.areasPesquisas && eventoData.areasPesquisas.length > 0
                 ? eventoData.areasPesquisas.join(', ')
                 : 'N/A'}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
               {formatVinculoSBC(eventoData.vinculoSbc) || 'N/A'}
             </div>
 
             {eventoData.linkSolSbc && (
-              <div className="text-sm text-gray-900">
+              <div className="text-sm">
                 <span className="font-medium">LINK DO SOL-SBC:</span>{' '}
                 <a
                   href={eventoData.linkSolSbc}
@@ -97,7 +97,7 @@ const VisualizarPeriodico = () => {
             )}
 
             {eventoData.linkGoogleScholar && (
-              <div className="text-sm text-gray-900">
+              <div className="text-sm">
                 <span className="font-medium">LINK DO GOOGLE SCHOLAR:</span>{' '}
                 <a
                   href={eventoData.linkGoogleScholar}
@@ -110,12 +110,12 @@ const VisualizarPeriodico = () => {
               </div>
             )}
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
               {formatarClassificacaoParaExibicao(eventoData.classificacao)}
             </div>
 
-            <div className="text-sm text-gray-900">
+            <div className="text-sm">
               <span className="font-medium">
                 ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO):
               </span>{' '}
@@ -126,7 +126,7 @@ const VisualizarPeriodico = () => {
           <div className="w-full flex justify-center mt-6 gap-3">
             <button
               onClick={voltarParaConsultas}
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              className="!px-8 !py-3 !bg-black !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar para consultas
@@ -137,7 +137,7 @@ const VisualizarPeriodico = () => {
                 sessionStorage.removeItem('consultaRestore');
                 navigate('/');
               }}
-              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
+              className="!px-8 !py-3 !bg-gray-700 !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
               style={{ fontFamily: 'Poppins', fontWeight: '400' }}
             >
               Voltar ao início

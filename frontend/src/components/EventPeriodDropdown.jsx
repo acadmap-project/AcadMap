@@ -25,7 +25,7 @@ export default function EventPeriodDropdown() {
   return (
     <div className="relative" ref={dropdownRef}>
       <div
-        className="block py-2 px-3 btn btn-outline"
+        className="block py-2 px-3 btn btn-soft btn-primary"
         onClick={() => setOpen(prev => !prev)}
         role="button"
         tabIndex={0}
@@ -45,7 +45,7 @@ export default function EventPeriodDropdown() {
         <div className="absolute left-0 w-4/5">
           <Link
             to="/cadastro-evento"
-            className="px-4 py-2 min-w-full btn btn-outline rounded-none"
+            className="px-4 py-2 min-w-full btn btn-soft btn-primary rounded-none"
             onClick={() => setOpen(false)}
             aria-current="page"
           >
@@ -53,7 +53,7 @@ export default function EventPeriodDropdown() {
           </Link>
           <Link
             to="/cadastro-periodico"
-            className="block px-4 py-2 btn btn-outline rounded-none"
+            className="block px-4 py-2 btn btn-soft btn-primary rounded-none"
             onClick={() => setOpen(false)}
             aria-current="page"
           >

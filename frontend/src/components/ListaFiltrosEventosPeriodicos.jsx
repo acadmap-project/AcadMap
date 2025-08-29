@@ -125,7 +125,7 @@ function ListaFiltrosEventosPeriodicos({ filtros, areas = [] }) {
     }
 
     if (items.length === 0) {
-      return <li className="text-xs text-gray-500">Nenhum filtro aplicado</li>;
+      return <li className="text-xs">Nenhum filtro aplicado</li>;
     }
 
     return items;

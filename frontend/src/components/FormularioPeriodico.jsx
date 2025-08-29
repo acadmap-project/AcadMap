@@ -7,7 +7,7 @@ import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import {
   calcularClassificacaoPeriodico,
   calcularClassificacaoPorQualis,
-  calcClassEventoSemSBC
+  calcClassEventoSemSBC,
 } from '../utils/classificacaoBase';
 import { useState } from 'react';
 import React from 'react';
@@ -144,25 +144,24 @@ function FormularioPeriodicoContent() {
   return (
     <div>
       <div className="mb-6">
-        <p className="text-sm text-center font-medium text-gray-600 mb-4">
+        <p className="text-sm text-center font-medium mb-4">
           Campos Obrigatórios (*)
         </p>
       </div>
       <FormProvider {...methods}>
-        <form
-          className="max-w-6xl mx-auto"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="bg-gray-50 rounded-lg p-6">
+        <form className="max-w-6xl mx-auto" onSubmit={handleSubmit(onSubmit)}>
+          <div className="rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">NOME DO PERIÓDICO*</span>
+                  <span className="label-text font-medium">
+                    NOME DO PERIÓDICO*
+                  </span>
                 </label>
                 <input
                   type="text"
                   id="nome"
-                  className="input input-bordered w-full bg-white"
+                  className="input input-bordered w-full"
                   placeholder="Digite o nome do periódico..."
                   {...register('nome')}
                 />
@@ -174,10 +173,12 @@ function FormularioPeriodicoContent() {
                   </label>
                 )}
               </div>
-              
+
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">ÁREA DE CONHECIMENTO (CNPQ)*</span>
+                  <span className="label-text font-medium">
+                    ÁREA DE CONHECIMENTO (CNPQ)*
+                  </span>
                 </label>
                 <Controller
                   control={control}
@@ -203,12 +204,12 @@ function FormularioPeriodicoContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">ISSN</span>
+                  <span className="label-text font-medium">ISSN</span>
                 </label>
                 <input
                   type="text"
                   id="issn"
-                  className="input input-bordered w-full bg-white"
+                  className="input input-bordered w-full"
                   placeholder="Ex: 1234-5678"
                   {...register('issn')}
                 />
@@ -220,10 +221,12 @@ function FormularioPeriodicoContent() {
                   </label>
                 )}
               </div>
-              
+
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">VÍNCULO COM A SBC</span>
+                  <span className="label-text font-medium">
+                    VÍNCULO COM A SBC
+                  </span>
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="form-control">
@@ -259,19 +262,15 @@ function FormularioPeriodicoContent() {
                       id="qualisAntigo"
                       className={`select select-bordered w-full transition-all duration-300 ${
                         !isEnableSBC || hasH5OrGoogleScholar
-                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                          : 'bg-white'
+                          ? 'bg-base-100 cursor-not-allowed'
+                          : 'bg-base'
                       }`}
                       {...register('qualisAntigo')}
                       defaultValue=""
                       disabled={!isEnableSBC || hasH5OrGoogleScholar}
                     >
-                      <option value="">
-                        Selecione a nota do QUALIS
-                      </option>
-                      <option value="">
-                        -- Limpar seleção --
-                      </option>
+                      <option value="">Selecione a nota do QUALIS</option>
+                      <option value="">-- Limpar seleção --</option>
                       {qualisOptions.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -292,15 +291,15 @@ function FormularioPeriodicoContent() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (JCR)</span>
+                  <span className="label-text font-medium">
+                    LINK DE REPOSITÓRIO (JCR)
+                  </span>
                 </label>
                 <input
                   type="text"
                   id="linkJcr"
                   className={`input input-bordered w-full transition-all duration-300 ${
-                    isEnableSBC
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white'
+                    isEnableSBC ? 'bg-base-100 cursor-not-allowed' : 'bg-base'
                   }`}
                   placeholder="Digite uma URL válida..."
                   disabled={isEnableSBC}
@@ -314,18 +313,18 @@ function FormularioPeriodicoContent() {
                   </label>
                 )}
               </div>
-              
+
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (SCOPUS)</span>
+                  <span className="label-text font-medium">
+                    LINK DE REPOSITÓRIO (SCOPUS)
+                  </span>
                 </label>
                 <input
                   type="text"
                   id="linkScopus"
                   className={`input input-bordered w-full transition-all duration-300 ${
-                    isEnableSBC
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white'
+                    isEnableSBC ? 'bg-base-100 cursor-not-allowed' : 'bg-base'
                   }`}
                   placeholder="Digite uma URL válida..."
                   disabled={isEnableSBC}
@@ -339,18 +338,20 @@ function FormularioPeriodicoContent() {
                   </label>
                 )}
               </div>
-              
+
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)</span>
+                  <span className="label-text font-medium">
+                    LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
+                  </span>
                 </label>
                 <input
                   type="text"
                   id="linkGoogleScholar"
                   className={`input input-bordered w-full transition-all duration-300 ${
                     !isEnableSBC || hasQualisSelected
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white'
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
                   }`}
                   placeholder="Digite uma URL válida..."
                   disabled={!isEnableSBC || hasQualisSelected}
@@ -368,15 +369,15 @@ function FormularioPeriodicoContent() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">PERCENTIL JCR</span>
+                  <span className="label-text font-medium">PERCENTIL JCR</span>
                 </label>
                 <input
                   type="text"
                   id="percentilJcr"
                   className={`input input-bordered w-full transition-all duration-300 ${
                     isEnableSBC || !linkJcrValue || linkJcrValue === ''
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white'
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
                   }`}
                   placeholder="Digite o percentil do periódico (0-100)..."
                   disabled={isEnableSBC || !linkJcrValue || linkJcrValue === ''}
@@ -390,18 +391,20 @@ function FormularioPeriodicoContent() {
                   </label>
                 )}
               </div>
-              
+
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">PERCENTIL SCOPUS</span>
+                  <span className="label-text font-medium">
+                    PERCENTIL SCOPUS
+                  </span>
                 </label>
                 <input
                   type="text"
                   id="percentilScopus"
                   className={`input input-bordered w-full transition-all duration-300 ${
                     isEnableSBC || !linkScopusValue || linkScopusValue === ''
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white'
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
                   }`}
                   placeholder="Digite o percentil do periódico (0-100)..."
                   disabled={
@@ -417,10 +420,10 @@ function FormularioPeriodicoContent() {
                   </label>
                 )}
               </div>
-              
+
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-700">ÍNDICE H5</span>
+                  <span className="label-text font-medium">ÍNDICE H5</span>
                 </label>
                 <input
                   type="text"
@@ -430,8 +433,8 @@ function FormularioPeriodicoContent() {
                     hasQualisSelected ||
                     !googleScholarValue ||
                     googleScholarValue === ''
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white'
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
                   }`}
                   placeholder="Valor numérico"
                   disabled={
@@ -453,10 +456,7 @@ function FormularioPeriodicoContent() {
             </div>
 
             <div className="flex justify-center mt-8">
-              <button
-                type="submit"
-                className="btn btn-primary px-8 min-h-12"
-              >
+              <button type="submit" className="btn btn-primary px-8 min-h-12">
                 Salvar e Continuar
               </button>
             </div>

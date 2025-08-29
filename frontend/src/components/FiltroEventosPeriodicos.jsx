@@ -230,7 +230,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
               <div>
                 <label
                   htmlFor="areasPesquisaIds"
-                  className="block mb-2 text-sm text-gray-900 text-start"
+                  className="block mb-2 text-sm text-start"
                 >
                   ÁREA DE CONHECIMENTO (CNPQ)
                 </label>
@@ -249,7 +249,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
               </div>
 
               <div className="flex flex-col items-center w-48 flex-shrink-0">
-                <span className="mb-2 text-sm text-gray-900 w-full text-left">
+                <span className="mb-2 text-sm w-full text-left">
                   VÍNCULO COM A SBC
                 </span>
                 <label className="cursor-pointer w-full flex justify-left">
@@ -265,7 +265,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                         },
                       })}
                     />
-                    <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:bg-white transition-all duration-300 ease-in-out" />
+                    <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:transition-all duration-300 ease-in-out" />
                     <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
                   </div>
                 </label>
@@ -396,10 +396,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
           )}
         </div>
         <div className="flex justify-center items-center gap-4 md:col-span-2">
-          <button
-            type="submit"
-            className="btn"
-          >
+          <button type="submit" className="btn btn-primary">
             Buscar
           </button>
           <button
@@ -463,7 +460,7 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
                 });
               }
             }}
-            className="!px-8 !py-3 !bg-gray-500 !text-white !border-0 !rounded-none hover:!bg-gray-600 focus:!outline-none focus:!ring-2 focus:!ring-gray-400 focus:!ring-opacity-50"
+            className="btn btn-secondary"
           >
             Limpar Filtros
           </button>
