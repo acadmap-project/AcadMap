@@ -20,7 +20,7 @@ function CadastroUsuario() {
         userName={loggedIn?.userName}
       />
       
-      <div className="container mx-auto px-4 py-8 max-w-4xl max-h-full">
+      <div className="container mx-auto px-4 py-4 max-w-4xl max-h-full">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
             Cadastro de Usuário

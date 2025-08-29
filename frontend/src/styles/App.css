@@ -3,4 +3,5 @@
 
 #root {
   font-family: 'Poppins';
+  overflow-x: hidden;
 }
