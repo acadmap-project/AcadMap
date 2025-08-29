@@ -172,116 +172,137 @@ function RevisaoCadastroEventoContent() {
 
   if (!eventData) {
     return (
-      <>
+      <div className="min-h-screen bg-gray-100">
         <HeaderSistema
           userType={loggedIn.userType}
           userName={loggedIn.userName}
         />
-        <div className="max-w-4xl mx-auto mt-8 p-6">
-          <p className="text-center">Carregando dados do evento...</p>
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <p className="text-center">Carregando dados do evento...</p>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
+      
       {!['AUDITOR', 'ADMINISTRADOR', 'PESQUISADOR'].includes(
         loggedIn.userType
       ) ? (
         <SemPermissao />
       ) : (
-        <>
-          <h1 className="mt-8 mb-25">Cadastro de Evento</h1>
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
+              Revisão do Cadastro de Evento
+            </h1>
+            
+            <div className="bg-gray-50 rounded-lg p-6">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">NOME DO EVENTO*</span>
+                    <span className="text-gray-900">{eventData.nome || 'N/A'}</span>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">ÁREA DE CONHECIMENTO (CNPQ)*</span>
+                    <span className="text-gray-900">
+                      {eventData.areasPesquisaIds &&
+                      eventData.areasPesquisaIds.length > 0
+                        ? eventData.areasPesquisaIds
+                            .map(areaId => getAreaName(areaId))
+                            .join(', ')
+                        : 'N/A'}
+                    </span>
+                  </div>
 
-          <div
-            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
-            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-          >
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO EVENTO*:</span>{' '}
-              {eventData.nome || 'N/A'}
-            </div>
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">ÍNDICE H5</span>
+                    <span className="text-gray-900">{eventData.h5 || 'N/A'}</span>
+                  </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ)*:</span>{' '}
-              {eventData.areasPesquisaIds &&
-              eventData.areasPesquisaIds.length > 0
-                ? eventData.areasPesquisaIds
-                    .map(areaId => getAreaName(areaId))
-                    .join(', ')
-                : 'N/A'}
-            </div>
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">VÍNCULO COM A SBC</span>
+                    <span className="text-gray-900">{formatVinculoSbc(eventData.vinculoSbc)}</span>
+                  </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ÍNDICE H5:</span>{' '}
-              {eventData.h5 || 'N/A'}
-            </div>
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)</span>
+                    <span className="text-gray-900">
+                      {eventData.linkGoogleScholar ? (
+                        <a
+                          href={eventData.linkGoogleScholar}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline break-all"
+                        >
+                          {eventData.linkGoogleScholar}
+                        </a>
+                      ) : (
+                        'N/A'
+                      )}
+                    </span>
+                  </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {formatVinculoSbc(eventData.vinculoSbc)}
-            </div>
+                  <div className="bg-white p-4 rounded-md">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">LINK DE REPOSITÓRIO (SOL-SBC)</span>
+                    <span className="text-gray-900">
+                      {eventData.linkSolSbc ? (
+                        <a
+                          href={eventData.linkSolSbc}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline break-all"
+                        >
+                          {eventData.linkSolSbc}
+                        </a>
+                      ) : (
+                        'N/A'
+                      )}
+                    </span>
+                  </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
-              </span>{' '}
-              {eventData.linkGoogleScholar ? (
-                <a
-                  href={eventData.linkGoogleScholar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {eventData.linkGoogleScholar}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
+                  <div className="bg-white p-4 rounded-md md:col-span-2">
+                    <span className="block text-sm font-medium text-gray-700 mb-1">CLASSIFICAÇÃO BASE</span>
+                    <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
+                      {eventData.classificacao
+                        ? eventData.classificacao.toUpperCase()
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </div>
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                LINK DE REPOSITÓRIO (SOL-SBC):
-              </span>{' '}
-              {eventData.linkSolSbc ? (
-                <a
-                  href={eventData.linkSolSbc}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {eventData.linkSolSbc}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">CLASSIFICAÇÃO BASE:</span>{' '}
-              {eventData.classificacao
-                ? eventData.classificacao.toUpperCase()
-                : 'N/A'}
-            </div>
-            <div className="w-full flex justify-center mt-6">
-              <button
-                onClick={handleConfirm}
-                disabled={createEventMutation.isPending}
-                className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-              >
-                {createEventMutation.isPending ? 'Salvando...' : 'Confirmar'}
-              </button>
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={handleConfirm}
+                    disabled={createEventMutation.isPending}
+                    className="btn btn-primary px-8 min-h-12"
+                  >
+                    {createEventMutation.isPending ? (
+                      <>
+                        <span className="loading loading-spinner loading-sm"></span>
+                        Salvando...
+                      </>
+                    ) : (
+                      'Confirmar'
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
-          {showErrorPopup &&
+        </div>
+      )}
+      
+      {showErrorPopup &&
             (errorStatus === 409 ? (
               <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-8 bg-transparent">
                 <div className="flex items-center border-l-8 border-red-700 bg-yellow-100 px-6 py-4 rounded shadow-lg w-[80vw] min-w-[500px] max-w-[900px]">
@@ -466,16 +487,14 @@ function RevisaoCadastroEventoContent() {
             </div>
           )}
 
-          <Popup
-            isOpen={showSuccessPopup}
-            onClose={closeSuccessPopup}
-            title={successInfo.title}
-            message={successInfo.message}
-            type={successInfo.type}
-          />
-        </>
-      )}
-    </>
+      <Popup
+        isOpen={showSuccessPopup}
+        onClose={closeSuccessPopup}
+        title={successInfo.title}
+        message={successInfo.message}
+        type={successInfo.type}
+      />
+    </div>
   );
 }
 

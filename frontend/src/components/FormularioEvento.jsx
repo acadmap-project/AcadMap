@@ -50,87 +50,85 @@ function FormularioEventoContent() {
   return (
     <FormProvider {...methods}>
       <form
-        className="flex flex-col gap-5 max-w-4xl mx-auto mt-8"
+        className="max-w-5xl mx-auto"
         onSubmit={handleSubmit(onSubmit)}
-        style={{ fontFamily: 'Poppins', fontWeight: '400' }}
       >
-        <div className="w-3/4 mx-auto flex gap-5">
-          <div className="flex-[1] flex flex-col items-start">
-            <label
-              htmlFor="nome"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              NOME DO EVENTO*
-            </label>
-            <input
-              type="text"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Digite..."
-              {...register('nome')}
-            />
-            {errors.nome && (
-              <p className="text-red-600 text-sm mt-1 text-left">
-                {errors.nome.message}
-              </p>
-            )}
-          </div>
-          <div className="flex-1 flex flex-col items-start">
-            <label
-              htmlFor="areasPesquisaIds"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              ÁREA DE CONHECIMENTO (CNPQ)*
-            </label>
-            <Controller
-              control={control}
-              name="areasPesquisaIds"
-              defaultValue={[]}
-              render={({ field }) => (
-                <MultiSelectDropdown
-                  options={areas}
-                  value={field.value || []}
-                  onChange={field.onChange}
-                />
+        <div className="bg-gray-50 rounded-lg p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">NOME DO EVENTO*</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full bg-white"
+                placeholder="Digite..."
+                {...register('nome')}
+              />
+              {errors.nome && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.nome.message}
+                  </span>
+                </label>
               )}
-            />
-            {errors.areasPesquisaIds && (
-              <p className="text-red-500 text-sm mt-1 text-left">
-                {errors.areasPesquisaIds.message}
-              </p>
-            )}
+            </div>
+            
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">ÁREA DE CONHECIMENTO (CNPQ)*</span>
+              </label>
+              <Controller
+                control={control}
+                name="areasPesquisaIds"
+                defaultValue={[]}
+                render={({ field }) => (
+                  <MultiSelectDropdown
+                    options={areas}
+                    value={field.value || []}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.areasPesquisaIds && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.areasPesquisaIds.message}
+                  </span>
+                </label>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="w-3/4 mx-auto flex gap-5">
-          <div className="flex-1 flex flex-col items-start">
-            <label
-              htmlFor="h5"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              ÍNDICE H5
-            </label>
-            <input
-              type="text"
-              className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-              placeholder="númerico (campo)"
-              {...register('h5')}
-            />
-            {errors.h5 && (
-              <p className="text-red-500 text-sm mt-1 text-left">
-                {errors.h5.message}
-              </p>
-            )}
-          </div>
-          <div className="flex-1 flex flex-col items-start">
-            <span className="mb-2 text-sm text-gray-900">
-              VÍNCULO COM A SBC
-            </span>
-            <div className="flex items-center gap-4 w-full">
-              <div className="flex justify-center w-16 flex-shrink-0">
-                <label className="cursor-pointer">
-                  <div className="relative">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">ÍNDICE H5</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full bg-white"
+                placeholder="Valor numérico"
+                {...register('h5')}
+              />
+              {errors.h5 && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.h5.message}
+                  </span>
+                </label>
+              )}
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">VÍNCULO COM A SBC</span>
+              </label>
+              <div className="flex items-center gap-4 w-full">
+                <div className="form-control">
+                  <label className="label cursor-pointer">
                     <input
                       type="checkbox"
-                      className="sr-only peer"
+                      className="toggle toggle-primary"
                       {...register('vinculoSbcCheckbox', {
                         onChange: e => {
                           if (!e.target.checked) {
@@ -139,89 +137,89 @@ function FormularioEventoContent() {
                         },
                       })}
                     />
-                    <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:bg-white transition-all duration-300 ease-in-out" />
-                    <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
-                  </div>
-                </label>
-              </div>
-              <div className="flex-1">
-                <select
-                  id="vinculoSbc"
-                  className={`bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-opacity duration-300 ${
-                    vinculoSbcCheckbox
-                      ? 'opacity-100'
-                      : 'opacity-0 pointer-events-none'
-                  }`}
-                  {...register('vinculoSbc')}
-                  defaultValue=""
-                  disabled={!vinculoSbcCheckbox}
-                >
-                  <option value="" disabled className="text-gray-500">
-                    Selecione tipo de vínculo
-                  </option>
-                  {sbcOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  </label>
+                </div>
+                <div className="flex-1">
+                  <select
+                    id="vinculoSbc"
+                    className={`select select-bordered w-full bg-white transition-opacity duration-300 ${
+                      vinculoSbcCheckbox
+                        ? 'opacity-100'
+                        : 'opacity-50 pointer-events-none'
+                    }`}
+                    {...register('vinculoSbc')}
+                    defaultValue=""
+                    disabled={!vinculoSbcCheckbox}
+                  >
+                    <option value="" disabled>
+                      Selecione tipo de vínculo
                     </option>
-                  ))}
-                </select>
-                {errors.vinculoSbc && vinculoSbcCheckbox && (
-                  <p className="text-red-500 text-sm mt-1 text-left">
-                    {errors.vinculoSbc.message}
-                  </p>
-                )}
+                    {sbcOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.vinculoSbc && vinculoSbcCheckbox && (
+                    <label className="label">
+                      <span className="label-text-alt text-error">
+                        {errors.vinculoSbc.message}
+                      </span>
+                    </label>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-3/4 mx-auto flex gap-5">
-          <div className="flex-1 flex flex-col items-start">
-            <label
-              htmlFor="linkGoogleScholar"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
-            </label>
-            <input
-              type="text"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="URL válida"
-              {...register('linkGoogleScholar')}
-            />
-            {errors.linkGoogleScholar && (
-              <p className="text-red-500 text-sm mt-1 text-left">
-                {errors.linkGoogleScholar.message}
-              </p>
-            )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full bg-white"
+                placeholder="URL válida"
+                {...register('linkGoogleScholar')}
+              />
+              {errors.linkGoogleScholar && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.linkGoogleScholar.message}
+                  </span>
+                </label>
+              )}
+            </div>
+            
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">LINK DE REPOSITÓRIO (SOL-SBC)</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full bg-white"
+                placeholder="URL válida"
+                {...register('linkSolSbc')}
+              />
+              {errors.linkSolSbc && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.linkSolSbc.message}
+                  </span>
+                </label>
+              )}
+            </div>
           </div>
-          <div className="flex-1 flex flex-col items-start">
-            <label
-              htmlFor="linkSolSbc"
-              className="block mb-2 text-sm text-gray-900 text-start"
+
+          <div className="flex justify-center mt-8">
+            <button
+              type="submit"
+              className="btn btn-primary px-8 min-h-12"
             >
-              LINK DE REPOSITÓRIO (SOL-SBC)
-            </label>
-            <input
-              type="text"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="URL válida"
-              {...register('linkSolSbc')}
-            />
-            {errors.linkSolSbc && (
-              <p className="text-red-500 text-sm mt-1 text-left">
-                {errors.linkSolSbc.message}
-              </p>
-            )}
+              Salvar e Continuar
+            </button>
           </div>
-        </div>
-        <div className="w-full flex justify-center mt-6">
-          <button
-            type="submit"
-            className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
-            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-          >
-            Salvar e Continuar
-          </button>
         </div>
       </form>
     </FormProvider>
@@ -231,13 +229,10 @@ function FormularioEventoContent() {
 function FormularioEvento() {
   return (
     <div>
-      <div className="max-w-6xl mx-auto mt-4">
-        <h2
-          className="text-gray-900 text-lg mb-4"
-          style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-        >
+      <div className="mb-6">
+        <p className="text-sm text-center font-medium text-gray-600 mb-4">
           Campos Obrigatórios (*)
-        </h2>
+        </p>
       </div>
       <FormularioEventoContent />
     </div>
