@@ -65,6 +65,7 @@ function FormularioCadastroContent({ isAdmin = false }) {
     type: 'success',
   });
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const methods = useForm({
     resolver: zodResolver(
@@ -192,208 +193,217 @@ function FormularioCadastroContent({ isAdmin = false }) {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col max-w-xl mx-auto mt-8"
+        className="max-w-4xl mx-auto"
       >
         {isAdmin && (
-          <div className="w-3/5 mx-auto flex flex-col items-start">
-            {' '}
-            <label
-              htmlFor="tipoPerfil"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              CADASTRAR
-            </label>
-            <select
-              id="tipoPerfil"
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-              {...register('tipoPerfil')}
-              defaultValue=""
-            >
-              <option value="" disabled className="text-gray-500">
-                Selecione
-              </option>
-              <option value="PESQUISADOR">Pesquisador</option>
-              <option value="AUDITOR">Auditor</option>
-            </select>{' '}
-            <div className="h-6">
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">Tipo de Cadastro</span>
+              </label>
+              <select
+                id="tipoPerfil"
+                className="select select-bordered w-full bg-white"
+                {...register('tipoPerfil')}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Selecione
+                </option>
+                <option value="PESQUISADOR">Pesquisador</option>
+                <option value="AUDITOR">Auditor</option>
+              </select>
               {errors.tipoPerfil && (
-                <p className="text-red-500 text-sm text-left">
-                  {errors.tipoPerfil.message}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.tipoPerfil.message}
+                  </span>
+                </label>
               )}
             </div>
           </div>
         )}
 
-        <div className="grid grid-cols-2 items-end gap-x-15">
-          {' '}
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="fullName"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              NOME COMPLETO
-            </label>
-            <input
-              type="text"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Digite..."
-              {...register('fullName')}
-            />{' '}
-            <div className="h-6">
+        <div className="bg-gray-50 rounded-lg p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">NOME COMPLETO</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full bg-white"
+                placeholder="Digite..."
+                {...register('fullName')}
+              />
               {errors.fullName && (
-                <p className="text-red-600 text-sm text-left">
-                  {errors.fullName.message}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.fullName.message}
+                  </span>
+                </label>
               )}
             </div>
-          </div>{' '}
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="searchArea"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              ÁREA DE PESQUISA
-            </label>
-            <Controller
-              control={control}
-              name="searchArea"
-              defaultValue={[]}
-              render={({ field }) => (
-                <MultiSelectDropdown
-                  options={areas}
-                  value={field.value || []}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-            <div className="h-6">
+
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">ÁREA DE PESQUISA</span>
+              </label>
+              <Controller
+                control={control}
+                name="searchArea"
+                defaultValue={[]}
+                render={({ field }) => (
+                  <MultiSelectDropdown
+                    options={areas}
+                    value={field.value || []}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
               {errors.searchArea && (
-                <p className="text-red-500 text-sm text-left">
-                  {errors.searchArea.message}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.searchArea.message}
+                  </span>
+                </label>
               )}
             </div>
-          </div>
-          <div className="flex flex-col items-start">
-            {' '}
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              EMAIL
-            </label>
-            <input
-              type="email"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Digite..."
-              {...register('email', {
-                onChange: () => setEmailErrorMessage(''), // Clear error when user types
-              })}
-            />{' '}
-            <div className="h-6">
+
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">EMAIL</span>
+              </label>
+              <input
+                type="email"
+                className="input input-bordered w-full bg-white"
+                placeholder="Digite..."
+                {...register('email', {
+                  onChange: () => setEmailErrorMessage(''),
+                })}
+              />
               {errors.email && (
-                <p className="text-red-600 text-sm text-left">
-                  {errors.email.message}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.email.message}
+                  </span>
+                </label>
               )}
               {emailErrorMessage && !errors.email && (
-                <p className="text-red-600 text-sm text-left">
-                  {emailErrorMessage}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {emailErrorMessage}
+                  </span>
+                </label>
               )}
             </div>
-          </div>
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="program"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              PROGRAMA
-            </label>
-            <select
-              id="program"
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500"
-              {...register('program')}
-              defaultValue=""
-            >
-              <option value="" disabled className="text-gray-500">
-                Selecione
-              </option>
-              {programas.map(programa => (
-                <option key={programa.value} value={programa.value}>
-                  {programa.label}
+
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">PROGRAMA</span>
+              </label>
+              <select
+                id="program"
+                className="select select-bordered w-full bg-white"
+                {...register('program')}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Selecione
                 </option>
-              ))}
-            </select>{' '}
-            <div className="h-6">
+                {programas.map(programa => (
+                  <option key={programa.value} value={programa.value}>
+                    {programa.label}
+                  </option>
+                ))}
+              </select>
               {errors.program && (
-                <p className="text-red-500 text-sm text-left">
-                  {errors.program.message}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.program.message}
+                  </span>
+                </label>
               )}
             </div>
-          </div>
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              SENHA
-            </label>
-            <div className="flex items-center w-full gap-2">
-              <input
-                type="password"
-                className="border text-sm rounded-none block flex-1 p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Digite..."
-                {...register('password')}
-              />
-              <div className="w-1/4">
-                <GerarSenha
-                  onGerar={senha => {
-                    setValue('password', senha);
-                    setValue('confirmPassword', senha);
-                  }}
+
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">SENHA</span>
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="input input-bordered w-full bg-white pr-10"
+                    placeholder="Digite..."
+                    {...register('password')}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off-icon lucide-eye-off"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+                    )}
+                  </button>
+                </div>
+                <div className="w-12">
+                  <GerarSenha
+                    onGerar={senha => {
+                      setValue('password', senha);
+                      setValue('confirmPassword', senha);
+                    }}
+                  />
+                </div>
+              </div>
+              {errors.password && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.password.message}
+                  </span>
+                </label>
+              )}
+            </div>
+
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">CONFIRMAR SENHA</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input input-bordered w-full bg-white pr-10"
+                  placeholder="Digite..."
+                  {...register('confirmPassword')}
                 />
               </div>
-            </div>{' '}
-            <div className="h-6">
-              {errors.password && (
-                <p className="text-red-600 text-sm text-left">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="confirmPassword"
-              className="block mb-2 text-sm text-gray-900 text-start"
-            >
-              CONFIRMAR SENHA
-            </label>
-            <input
-              type="password"
-              className="border text-sm rounded-none block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Digite..."
-              {...register('confirmPassword')}
-            />{' '}
-            <div className="h-6">
               {errors.confirmPassword && (
-                <p className="text-red-600 text-sm text-left">
-                  {errors.confirmPassword.message}
-                </p>
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.confirmPassword.message}
+                  </span>
+                </label>
               )}
             </div>
           </div>
-          <div className="col-span-2 flex justify-center mt-6">
+
+          <div className="flex justify-center mt-8">
             <button
               type="submit"
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+              className="btn btn-primary px-8 min-h-12"
               disabled={createUserMutation.isPending}
             >
-              {createUserMutation.isPending ? 'Cadastrando...' : 'Cadastrar'}
+              {createUserMutation.isPending ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Cadastrando...
+                </>
+              ) : (
+                'Cadastrar'
+              )}
             </button>
           </div>
         </div>

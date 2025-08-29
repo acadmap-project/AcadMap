@@ -84,7 +84,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
         <input
           type="text"
           placeholder="Digite para buscar..."
-          className="px-4 py-2 w-full"
+          className="px-4 py-2 w-full input"
           onClick={() => setActive(true)}
           onChange={e => setSearchText(e.target.value)}
           value={searchText}
