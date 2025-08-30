@@ -38,8 +38,8 @@ function FormularioPeriodicoContent() {
   const googleScholarValue = watch('linkGoogleScholar');
   const linkJcrValue = watch('linkJcr');
   const linkScopusValue = watch('linkScopus');
-  const vinculoSBC = watch('vinculoSbcCheckbox');
-  const tipoVinculoSBC = watch('vinculoSbc');
+  //const vinculoSBC = watch('vinculoSbcCheckbox');
+  //const tipoVinculoSBC = watch('vinculoSbc');
 
   // Update hasQualisSelected state when qualisValue changes
   React.useEffect(() => {
