@@ -48,7 +48,7 @@ const VisualizarPeriodico = () => {
         userType={loggedIn?.userType}
         userName={loggedIn?.userName}
       />
-      {eventoData && (
+      {eventoData ? (
         <>
           <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
 
@@ -144,6 +144,14 @@ const VisualizarPeriodico = () => {
             </button>
           </div>
         </>
+      ) : (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="ml-6 flex-1">
+            <h3 className="text-2xl font-bold text-red-800 mb-4">
+              Erro ao recuperar dados do banco
+            </h3>
+          </div>
+        </div>
       )}
     </>
   );
