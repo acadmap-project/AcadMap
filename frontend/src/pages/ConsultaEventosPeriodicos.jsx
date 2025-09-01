@@ -115,17 +115,16 @@ function ConsultaEventosPeriodicos() {
         userType={loggedIn ? loggedIn.userType : 'Visitante'}
       />
 
-      <div className="container items-center mt-4 mx-auto max-w-full max-h-full bg-base-100 shadow-sm">
-        <div className="rounded-lg shadow-md p-6">
-          <h1 className="text-3xl text-center font-bold mb-6">
-            Consulta de Eventos e Periódicos
-          </h1>
+      {hasResultados && !showBusca ? (
+        // Layout with results - existing grid layout
+        <div className="container items-center mt-4 mx-auto max-w-full max-h-full bg-base-100 shadow-sm">
+          <div className="rounded-lg shadow-md p-6">
+            <h1 className="text-3xl text-center font-bold mb-6">
+              Consulta de Eventos e Periódicos
+            </h1>
 
-          <div
-            className={`${hasResultados ? 'grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6' : 'flex justify-center'}`}
-          >
-            {/* Coluna da Esquerda - Card de Filtros */}
-            {hasResultados && !showBusca ? (
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
+              {/* Coluna da Esquerda - Card de Filtros */}
               <div className="lg:col-span-1">
                 <div className="card bg-base-200 shadow-xl">
                   <div className="card-actions flex-col gap-2 mx-auto">
@@ -259,19 +258,8 @@ function ConsultaEventosPeriodicos() {
                   </div>
                 </div>
               </div>
-            ) : (
-              /* Tela inicial - filtros centralizados */
-              <div className="w-full max-w-2xl mx-auto">
-                <FiltroEventosPeriodicos
-                  onResultados={onResultados}
-                  filtrosAtivos={filtrosAtivos}
-                  onFiltrosChange={setFiltrosAtivos}
-                />
-              </div>
-            )}
 
-            {/* Coluna da Direita - Tabela de Resultados */}
-            {!showBusca && hasResultados && (
+              {/* Coluna da Direita - Tabela de Resultados */}
               <div className="lg:col-span-3">
                 <div className="card bg-base-100 shadow-xl">
                   <div className="card-body p-4">
@@ -417,10 +405,32 @@ function ConsultaEventosPeriodicos() {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        // Initial search layout - centered and constrained
+        <div
+          className="flex items-center justify-center p-4"
+          style={{ minHeight: 'calc(100vh - 80px)' }}
+        >
+          <div className="container mx-auto max-w-4xl">
+            <div className="rounded-box border-2 border-primary bg-base-100 shadow-xl p-0 md:p-2">
+              <h1 className="text-3xl text-center font-bold mb-6 pt-6">
+                Consulta de Eventos e Periódicos
+              </h1>
+
+              <div className="rounded-box bg-base-200 p-4 md:p-8 mx-2 md:mx-6 mb-6">
+                <FiltroEventosPeriodicos
+                  onResultados={onResultados}
+                  filtrosAtivos={filtrosAtivos}
+                  onFiltrosChange={setFiltrosAtivos}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
