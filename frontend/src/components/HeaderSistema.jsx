@@ -24,8 +24,8 @@ function HeaderSistema({ userType, userName }) {
   return (
     <>
       <header>
-        <nav className="navbar bg-base-100 shadow-sm flex items-center justify-between px-4 py-2">
-          <div className="flex items-center">
+        <nav className="navbar bg-base-100 shadow-sm px-4 py-2">
+          <div className="navbar-start">
             <Link
               to="/"
               className="text-xl font-bold text-primary"
@@ -35,54 +35,47 @@ function HeaderSistema({ userType, userName }) {
             </Link>
           </div>
 
-          <div className="flex items-center">
-            <ul className="flex flex-row space-x-4 items-center">
+          {/* Desktop Navigation */}
+          <div className="navbar-center hidden lg:flex">
+            <div className="flex items-center space-x-4">
               {(effectiveUserType === 'AUDITOR' ||
                 effectiveUserType === 'PESQUISADOR' ||
                 effectiveUserType === 'ADMINISTRADOR') && (
-                <li>
-                  <EventPeriodDropdown />
-                </li>
+                <EventPeriodDropdown />
               )}
+              <Link
+                to="/cadastro-usuario"
+                className="block py-2 px-3 btn btn-soft btn-primary"
+                aria-current="page"
+              >
+                Cadastrar Usuário
+              </Link>
               {(effectiveUserType === 'AUDITOR' ||
                 effectiveUserType === 'ADMINISTRADOR') && (
-                <li>
-                  <Link
-                    to="/registros-pendentes"
-                    className="block py-2 px-3 btn btn-soft btn-primary"
-                    aria-current="page"
-                  >
-                    Registros Pendentes
-                  </Link>
-                </li>
-              )}
-              {userType === 'ADMINISTRADOR' && (
-                <li>
-                  <Link
-                    to="/auditoria-logs"
-                    className="block py-2 px-3 btn btn-soft btn-primary"
-                    aria-current="page"
-                  >
-                    Auditoria do Sistema
-                  </Link>
-                </li>
-              )}
-              <li>
                 <Link
-                  to="/cadastro-usuario"
+                  to="/registros-pendentes"
                   className="block py-2 px-3 btn btn-soft btn-primary"
                   aria-current="page"
                 >
-                  Cadastrar Usuário
+                  Registros Pendentes
                 </Link>
-              </li>
-            </ul>
+              )}
+              {userType === 'ADMINISTRADOR' && (
+                <Link
+                  to="/auditoria-logs"
+                  className="block py-2 px-3 btn btn-soft btn-primary"
+                  aria-current="page"
+                >
+                  Auditoria do Sistema
+                </Link>
+              )}
+            </div>
           </div>
 
-          {/* Right: User Info and Login/Logout */}
-          <div className="flex items-center space-x-3">
+          <div className="navbar-end">
+            {/* User Info - Desktop */}
             {isLoggedIn && (
-              <div className="flex items-center space-x-3">
+              <div className="hidden sm:flex items-center space-x-3 mr-3">
                 <div className="avatar avatar-placeholder">
                   <div className="bg-neutral text-neutral-content w-8 rounded-full">
                     <span className="text-xs">
@@ -97,6 +90,7 @@ function HeaderSistema({ userType, userName }) {
               </div>
             )}
 
+            {/* Login/Logout Button */}
             {isLoggedIn ? (
               <button
                 type="button"
@@ -111,6 +105,81 @@ function HeaderSistema({ userType, userName }) {
                 Logar
               </Link>
             )}
+
+            {/* Mobile Menu Button */}
+            <div className="dropdown dropdown-end lg:hidden ml-2">
+              <label tabIndex={0} className="btn btn-ghost btn-circle">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64"
+              >
+                {isLoggedIn && (
+                  <li className="sm:hidden mb-2">
+                    <div className="flex items-center space-x-3 p-3 bg-base-200 rounded-lg pointer-events-none">
+                      <div className="avatar avatar-placeholder">
+                        <div className="bg-primary text-primary-content w-8 rounded-full">
+                          <span className="text-xs font-medium">
+                            {effectiveUserName[0] + effectiveUserName[1]}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          {effectiveUserName}
+                        </span>
+                        <span className="text-xs opacity-70">
+                          {effectiveUserType}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                )}
+                {(effectiveUserType === 'AUDITOR' ||
+                  effectiveUserType === 'PESQUISADOR' ||
+                  effectiveUserType === 'ADMINISTRADOR') && (
+                  <>
+                    <li className="menu-title">
+                      <span>Cadastrar</span>
+                    </li>
+                    <li>
+                      <Link to="/cadastro-evento">Cadastrar Eventos</Link>
+                    </li>
+                    <li>
+                      <Link to="/cadastro-periodico">Cadastrar Periódicos</Link>
+                    </li>
+                    <div className="divider my-1"></div>
+                  </>
+                )}
+                <li>
+                  <Link to="/cadastro-usuario">Cadastrar Usuário</Link>
+                </li>
+                {(effectiveUserType === 'AUDITOR' ||
+                  effectiveUserType === 'ADMINISTRADOR') && (
+                  <li>
+                    <Link to="/registros-pendentes">Registros Pendentes</Link>
+                  </li>
+                )}
+                {userType === 'ADMINISTRADOR' && (
+                  <li>
+                    <Link to="/auditoria-logs">Auditoria do Sistema</Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
         </nav>
       </header>

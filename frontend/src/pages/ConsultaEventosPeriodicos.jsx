@@ -16,6 +16,7 @@ function ConsultaEventosPeriodicos() {
   const [showBusca, setShowBusca] = useState(true);
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
   const [showNoResults, setShowNoResults] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const areas = useAreas();
 
   const { logCsv, logChart, logChartError } = useLogger();
@@ -43,6 +44,17 @@ function ConsultaEventosPeriodicos() {
   const { loggedIn } = useLogin();
   const hasResultados =
     resultados.eventos.length > 0 || resultados.periodicos.length > 0;
+
+  // Handle responsive breakpoint
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 1480);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   // Restaura a última tabela de resultados quando vier da tela de detalhes
   useEffect(() => {
@@ -118,14 +130,16 @@ function ConsultaEventosPeriodicos() {
       {hasResultados && !showBusca ? (
         // Layout with results - existing grid layout
         <div className="container items-center mt-4 mx-auto max-w-full max-h-full bg-base-100 shadow-sm">
-          <div className="rounded-lg shadow-md p-6">
+          <div className="rounded-lg shadow-md p-4 md:p-6">
             <h1 className="text-3xl text-center font-bold mb-6">
               Consulta de Eventos e Periódicos
             </h1>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
+            <div
+              className={`${isMobile ? 'flex flex-col' : 'grid grid-cols-4'} gap-6 mt-6`}
+            >
               {/* Coluna da Esquerda - Card de Filtros */}
-              <div className="lg:col-span-1">
+              <div className={`${isMobile ? 'order-1' : 'col-span-1 order-1'}`}>
                 <div className="card bg-base-200 shadow-xl">
                   <div className="card-actions flex-col gap-2 mx-auto">
                     <button
@@ -142,9 +156,11 @@ function ConsultaEventosPeriodicos() {
                       ← Voltar ao Início
                     </button>
 
-                    <div className="flex flex-row">
+                    <div
+                      className={`${isMobile ? 'flex flex-col' : 'flex flex-row'}`}
+                    >
                       <button
-                        className="btn btn-success btn-block w-1/2"
+                        className={`btn btn-success btn-block ${isMobile ? '' : 'w-1/2'}`}
                         onClick={() => {
                           // Função para exportar resultados em CSV
                           const csvRows = [];
@@ -239,7 +255,7 @@ function ConsultaEventosPeriodicos() {
                             );
                           }
                         }}
-                        className="btn btn-primary btn-block w-1/2"
+                        className={`btn btn-primary btn-block ${isMobile ? '' : 'w-1/2'}`}
                       >
                         📈 Visualizar Gráficos
                       </button>
@@ -260,7 +276,7 @@ function ConsultaEventosPeriodicos() {
               </div>
 
               {/* Coluna da Direita - Tabela de Resultados */}
-              <div className="lg:col-span-3">
+              <div className={`${isMobile ? 'order-2' : 'col-span-3 order-2'}`}>
                 <div className="card bg-base-100 shadow-xl">
                   <div className="card-body p-4">
                     <div className="flex justify-between items-center mb-4">
@@ -278,7 +294,10 @@ function ConsultaEventosPeriodicos() {
                     />
 
                     <div className="mt-6">
-                      <div className="overflow-x-auto">
+                      {/* Desktop Table View */}
+                      <div
+                        className={`${isMobile ? 'hidden' : 'block'} overflow-x-auto`}
+                      >
                         <table className="table table-zebra">
                           <thead>
                             <tr className="bg-base-200">
@@ -400,6 +419,125 @@ function ConsultaEventosPeriodicos() {
                             ))}
                           </tbody>
                         </table>
+                      </div>
+
+                      {/* Mobile Card View */}
+                      <div
+                        className={`${isMobile ? 'block' : 'hidden'} space-y-4`}
+                      >
+                        {[
+                          ...(resultados.eventos || []).map(ev => ({
+                            id: ev.idVeiculo,
+                            tipo: 'Evento',
+                            nome: ev.nome,
+                            areaConhecimento: ev.areaPesquisa || '',
+                            classificacao: ev.classificacao || '',
+                            vinculoSBC: ev.vinculoSBC || '',
+                            adequacaoDefesa: ev.adequacaoDefesa || '',
+                            h5Percentil: ev.h5 || '',
+                            flagPredatorio: false, // Eventos não são predatórios
+                          })),
+                          ...(resultados.periodicos || []).map(p => ({
+                            id: p.idVeiculo,
+                            tipo: 'Periódico',
+                            nome: p.nome,
+                            areaConhecimento: p.areaPesquisa || '',
+                            classificacao: p.classificacao || '',
+                            vinculoSBC: p.vinculoSBC || '',
+                            adequacaoDefesa: p.adequacaoDefesa || '',
+                            h5Percentil:
+                              p.h5 ||
+                              Math.max(p.percentilJcr, p.percentilScopus) ||
+                              '',
+                            flagPredatorio: p.flagPredatorio,
+                          })),
+                        ].map(item => (
+                          <div
+                            key={item.tipo + '-' + item.id}
+                            className={`card bg-base-200 shadow-md ${
+                              item.tipo === 'Periódico' && item.flagPredatorio
+                                ? 'border-l-4 border-error'
+                                : ''
+                            }`}
+                          >
+                            <div className="card-body p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <span
+                                  className={`badge ${
+                                    item.tipo === 'Periódico' &&
+                                    item.flagPredatorio
+                                      ? 'badge-error'
+                                      : 'badge-outline'
+                                  }`}
+                                >
+                                  {item.tipo}
+                                </span>
+                                <span className="badge badge-primary">
+                                  {String(item.classificacao).toUpperCase()}
+                                </span>
+                              </div>
+
+                              <h3 className="font-bold text-lg mb-3">
+                                <Link
+                                  className="link link-primary"
+                                  to={
+                                    item.tipo === 'Evento'
+                                      ? `/evento/${item.id}`
+                                      : `/periodico/${item.id}`
+                                  }
+                                  onClick={() => {
+                                    try {
+                                      sessionStorage.setItem(
+                                        'consultaResultados',
+                                        JSON.stringify(resultados)
+                                      );
+                                      sessionStorage.setItem(
+                                        'consultaRestore',
+                                        '1'
+                                      );
+                                    } catch {
+                                      // ignora errors de armazenamento
+                                    }
+                                  }}
+                                >
+                                  {item.nome}
+                                </Link>
+                              </h3>
+
+                              <div className="space-y-2 text-sm">
+                                <div>
+                                  <span className="font-semibold">Área: </span>
+                                  {Array.isArray(item.areaConhecimento)
+                                    ? item.areaConhecimento.join(', ')
+                                    : item.areaConhecimento}
+                                </div>
+
+                                <div>
+                                  <span className="font-semibold">
+                                    Vínculo SBC:{' '}
+                                  </span>
+                                  {formatVinculoSBC(item.vinculoSBC)}
+                                </div>
+
+                                <div>
+                                  <span className="font-semibold">
+                                    Adequação para Defesas:{' '}
+                                  </span>
+                                  {formatAdequacaoDefesa(item.adequacaoDefesa)}
+                                </div>
+
+                                {item.h5Percentil && (
+                                  <div>
+                                    <span className="font-semibold">
+                                      H5 ou Percentil:{' '}
+                                    </span>
+                                    {item.h5Percentil}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
