@@ -341,19 +341,20 @@ function ConsultaEventosPeriodicos() {
                                 flagPredatorio: p.flagPredatorio,
                               })),
                             ].map(item => (
-                              <tr key={item.tipo + '-' + item.id}>
+                              <tr
+                                key={item.tipo + '-' + item.id}
+                                className={
+                                  item.tipo === 'Periódico' &&
+                                  item.flagPredatorio
+                                    ? 'bg-error/20 hover:bg-error/30'
+                                    : ''
+                                }
+                              >
                                 <td className="text-center">
                                   <div className="flex items-center justify-center gap-2">
-                                    {item.tipo === 'Periódico' &&
-                                      item.flagPredatorio && (
-                                        <span
-                                          className="text-error text-lg"
-                                          title="Periódico Predatório"
-                                        >
-                                          ⚠️
-                                        </span>
-                                      )}
-                                    <span className="badge badge-outline">
+                                    <span
+                                      className={`badge ${item.tipo === 'Periódico' && item.flagPredatorio ? 'badge-error' : 'badge-outline'}`}
+                                    >
                                       {item.tipo}
                                     </span>
                                   </div>
