@@ -49,177 +49,244 @@ const VisualizarPeriodico = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn?.userType}
         userName={loggedIn?.userName}
       />
-      {periodicoData && (
-        <>
-          <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
+      {periodicoData ? (
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full">
+          <div className="rounded-box border-2 border-primary bg-base-100 shadow-xl p-0 md:p-2">
+            <h1 className="text-3xl text-center font-bold mb-6 pt-6">
+              Consulta de Eventos e Periódicos
+            </h1>
 
-          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
-            Dados completos do Periódico {periodicoData.nome}
-          </div>
-
-          <div
-            className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
-            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-          >
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO PERIÓDICO:</span>{' '}
-              {periodicoData.nome || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ISSN:</span>{' '}
-              {periodicoData.issn || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">PERCENTIL JCR:</span>{' '}
-              {periodicoData.percentilJcr || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">PERCENTIL SCOPUS:</span>{' '}
-              {periodicoData.percentilScopus || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">H5:</span>{' '}
-              {periodicoData.h5 || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
-              {periodicoData.areasPesquisaIds &&
-              periodicoData.areasPesquisaIds.length > 0
-                ? periodicoData.areasPesquisaIds
-                    .map(areaId => getAreaName(areaId))
-                    .join(', ')
-                : 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">LINK DO PERIÓDICO:</span>{' '}
-              {periodicoData.link ? (
-                <a
-                  href={periodicoData.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.link}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                LINK DE REPOSITÓRIO (GOOGLE SCHOLAR):
-              </span>{' '}
-              {periodicoData.linkGoogleScholar ? (
-                <a
-                  href={periodicoData.linkGoogleScholar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.linkGoogleScholar}
-                </a>
-              ) : (
-                ' N/A'
-              )}
-            </div>
-
-            {periodicoData.linkJcr && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">LINK JCR:</span>{' '}
-                <a
-                  href={periodicoData.linkJcr}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {periodicoData.linkJcr}
-                </a>
+            <div className="rounded-box bg-base-200 p-4 md:p-8 mx-2 md:mx-6 mb-6">
+              <div className="p-3 md:p-4 rounded-md border border-primary bg-base-100 mb-6">
+                <h2 className="text-xl font-medium text-center">
+                  Dados completos do Periódico {periodicoData.nome}
+                </h2>
               </div>
-            )}
 
-            {periodicoData.linkScopus && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">
-                  LINK DE REPOSITÓRIO (SCOPUS):
-                </span>{' '}
-                <a
-                  href={periodicoData.linkScopus}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
+              <div className="space-y-2 md:space-y-4">
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    NOME DO PERIÓDICO
+                  </span>
+                  <div className="font-medium break-words">
+                    {periodicoData.nome || 'N/A'}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">ISSN</span>
+                  <div className="font-medium">
+                    {periodicoData.issn || 'N/A'}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      PERCENTIL JCR
+                    </span>
+                    <div className="font-medium">
+                      {periodicoData.percentilJcr || 'N/A'}
+                    </div>
+                  </div>
+
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      PERCENTIL SCOPUS
+                    </span>
+                    <div className="font-medium">
+                      {periodicoData.percentilScopus || 'N/A'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">H5</span>
+                  <div className="font-medium">{periodicoData.h5 || 'N/A'}</div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    ÁREA DE CONHECIMENTO (CNPQ)
+                  </span>
+                  <div className="font-medium">
+                    {periodicoData.areasPesquisaIds &&
+                    periodicoData.areasPesquisaIds.length > 0
+                      ? periodicoData.areasPesquisaIds
+                          .map(areaId => getAreaName(areaId))
+                          .join(', ')
+                      : 'N/A'}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    VÍNCULO COM A SBC
+                  </span>
+                  <div className="font-medium">
+                    {formatVinculoSBC(periodicoData.vinculoSbc, true) || 'N/A'}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    LINK DO PERIÓDICO
+                  </span>
+                  <div>
+                    {periodicoData.link ? (
+                      <a
+                        href={periodicoData.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link link-primary break-all"
+                      >
+                        {periodicoData.link}
+                      </a>
+                    ) : (
+                      'N/A'
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
+                  </span>
+                  <div>
+                    {periodicoData.linkGoogleScholar ? (
+                      <a
+                        href={periodicoData.linkGoogleScholar}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link link-primary break-all"
+                      >
+                        {periodicoData.linkGoogleScholar}
+                      </a>
+                    ) : (
+                      'N/A'
+                    )}
+                  </div>
+                </div>
+
+                {periodicoData.linkJcr && (
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      LINK JCR
+                    </span>
+                    <div>
+                      <a
+                        href={periodicoData.linkJcr}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link link-primary break-all"
+                      >
+                        {periodicoData.linkJcr}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {periodicoData.linkScopus && (
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      LINK DE REPOSITÓRIO (SCOPUS)
+                    </span>
+                    <div>
+                      <a
+                        href={periodicoData.linkScopus}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link link-primary break-all"
+                      >
+                        {periodicoData.linkScopus}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {periodicoData.qualisAntigo && (
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      NOTA NO ANTIGO QUALIS CAPES
+                    </span>
+                    <div className="font-medium">
+                      {periodicoData.qualisAntigo.toUpperCase()}
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    CLASSIFICAÇÃO FINAL
+                  </span>
+                  <div>
+                    <span className="badge badge-primary">
+                      {formatarClassificacaoParaExibicao(
+                        periodicoData.classificacao
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO)
+                  </span>
+                  <div className="font-medium">
+                    {formatAdequacaoDefesa(periodicoData.adequacaoDefesa)}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    INDICAÇÃO SE É PREDATÓRIO
+                  </span>
+                  <div>
+                    <span
+                      className={`badge ${periodicoData.flagPredatorio ? 'badge-error' : 'badge-success'}`}
+                    >
+                      {periodicoData.flagPredatorio ? 'Sim' : 'Não'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-8">
+                <button
+                  onClick={voltarParaConsultas}
+                  className="btn btn-primary w-full sm:w-auto px-6 sm:px-8 min-h-12"
                 >
-                  {periodicoData.linkScopus}
-                </a>
+                  Voltar para consultas
+                </button>
+                <button
+                  onClick={() => {
+                    sessionStorage.removeItem('consultaResultados');
+                    sessionStorage.removeItem('consultaRestore');
+                    navigate('/');
+                  }}
+                  className="btn btn-secondary w-full sm:w-auto px-6 sm:px-8 min-h-12"
+                >
+                  Voltar ao início
+                </button>
               </div>
-            )}
-
-            {periodicoData.qualisAntigo && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">
-                  NOTA NO ANTIGO QUALIS CAPES:
-                </span>
-                {periodicoData.qualisAntigo.toUpperCase()}
-              </div>
-            )}
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
-              {formatarClassificacaoParaExibicao(periodicoData.classificacao)}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                ADEQUAÇÃO PARA DEFESAS ACADÊMCIAS (MESTRADO E/OU DOUTORADO):
-              </span>{' '}
-              {formatAdequacaoDefesa(periodicoData.adequacaoDefesa)}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">INDICAÇÃO SE É PREDATÓRIO:</span>{' '}
-              {periodicoData.flagPredatorio ? 'Sim' : 'Não'}
             </div>
           </div>
-
-          <div className="w-full flex justify-center mt-6 gap-3">
-            <button
-              onClick={voltarParaConsultas}
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-            >
-              Voltar para consultas
-            </button>
-            <button
-              onClick={() => {
-                sessionStorage.removeItem('consultaResultados');
-                sessionStorage.removeItem('consultaRestore');
-                navigate('/');
-              }}
-              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-            >
-              Voltar ao início
-            </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="ml-6 flex-1">
+            <h3 className="text-2xl font-bold text-red-800 mb-4">
+              Erro ao recuperar dados do banco
+            </h3>
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

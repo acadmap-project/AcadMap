@@ -6,7 +6,6 @@ import NotFound from './pages/NotFound';
 import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroEvento from './pages/CadastroEvento';
 import ValidacaoPeriodico from './pages/ValidacaoPeriodico';
-import GerenciadorCadastros from './pages/GerenciadorCadastros';
 import RegistrosPendentes from './pages/RegistrosPendentes';
 import RevisaoCadastroEvento from './pages/RevisaoCadastroEvento';
 import CadastroPeriodico from './pages/CadastroPeriodico';
@@ -15,7 +14,6 @@ import ConsultaEventosPeriodicos from './pages/ConsultaEventosPeriodicos';
 import VisualizarPeriodico from './pages/VisualizarPeriodico';
 import VisualizarEvento from './pages/VisualizarEvento';
 import Login from './pages/Login';
-import HeaderSistema from './components/HeaderSistema';
 import VisualizarGraficos from './pages/VisualizarGraficos';
 import AuditoriaLogs from './pages/AuditoriaLogs';
 
@@ -38,7 +36,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <div className="App w-screen h-screen">
+        <div className="App w-screen min-h-screen bg-base-300">
           <main>
             <Suspense fallback={<LoadingComponent />}>
               <Routes>
@@ -61,10 +59,6 @@ const App = () => {
                 <Route
                   path="/validacao-cadastro"
                   element={<ValidacaoPeriodico />}
-                />
-                <Route
-                  path="/cadastro-pendente"
-                  element={<GerenciadorCadastros />}
                 />
                 <Route
                   path="/visualizar-graficos"

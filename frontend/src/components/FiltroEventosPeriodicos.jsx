@@ -23,7 +23,11 @@ const normalizeToNull = obj => {
   return normalized;
 };
 
-function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
+function FiltroEventosPeriodicos({
+  onResultados,
+  onFiltrosChange,
+  onFiltrosAtivosChange,
+}) {
   const [open, setOpen] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorInfo, setErrorInfo] = useState({
@@ -31,6 +35,10 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     message: '',
     type: 'error',
   });
+  const [allEventos, setAllEventos] = useState([]);
+  const [allPeriodicos, setAllPeriodicos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filtrosAtivos, setFiltrosAtivos] = useState([]);
   const areas = useAreas();
   const { control, register, handleSubmit, watch, setValue, reset } = useForm();
   const minimalClassification = [
@@ -42,6 +50,33 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     { value: 'A6', label: 'A6' },
     { value: 'A7', label: 'A7' },
     { value: 'A8', label: 'A8' },
+  ];
+
+  const filtrosDisponiveis = [
+    { value: 'tipoVeiculo', label: 'Tipo de Veículo' },
+    { value: 'areasPesquisa', label: 'Área de Conhecimento' },
+    { value: 'vinculoSBC', label: 'Vínculo com SBC' },
+    { value: 'adequacaoDefesas', label: 'Adequação para Defesas' },
+    { value: 'h5Minimo', label: 'H5 Mínimo' },
+    { value: 'classificacaoMinima', label: 'Classificação Mínima' },
+  ];
+
+  const adequacaoDefesasOpcoes = [
+    { value: 'qualquer', label: 'Qualquer' },
+    { value: 'mestradoEDoutorado', label: 'Mestrado e Doutorado' },
+    { value: 'mestradoOuAcima', label: 'Mestrado ou Acima' },
+    { value: 'apenasMestrado', label: 'Apenas Mestrado' },
+    { value: 'nenhum', label: 'Nenhum' },
+  ];
+
+  const vinculoSbcOpcoes = [
+    { value: 'ambos', label: 'Ambos' },
+    { value: 'semVinculo', label: 'Sem Vínculo' },
+    { value: 'comVinculo', label: 'Com Vínculo (inclui Comum, Top10 e Top20)' },
+    { value: 'top20OuTop10', label: 'Top20 ou Top10 (inclui Top10 e Top20)' },
+    { value: 'somenteTop20', label: 'Somente Top20' },
+    { value: 'somenteTop10', label: 'Somente Top10' },
+    { value: 'somenteComum', label: 'Somente Comum' },
   ];
 
   const watchedValues = watch();
@@ -58,120 +93,466 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
     }
   }, [watchedValues, onFiltrosChange]);
 
-  const onSubmit = async data => {
-    const normalizedData = normalizeToNull(data);
+  // Carrega todos os dados uma única vez no início
+  useEffect(() => {
+    const loadAllData = async () => {
+      setIsLoading(true);
+      const eventosUrl = `${API_URL}/api/eventos/listar`;
+      const periodicosUrl = `${API_URL}/api/periodicos/listar`;
 
-    const body = {};
+      try {
+        const [eventosRes, periodicosRes] = await Promise.all([
+          fetch(eventosUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),
+          }),
+          fetch(periodicosUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),
+          }),
+        ]);
 
-    if (normalizedData.nome) body.nome = normalizedData.nome;
+        if (eventosRes.ok) {
+          const eventosData = await eventosRes.json();
+          setAllEventos(Array.isArray(eventosData) ? eventosData : []);
+        }
+        if (periodicosRes.ok) {
+          const periodicosData = await periodicosRes.json();
+          setAllPeriodicos(Array.isArray(periodicosData) ? periodicosData : []);
+        }
+      } catch (err) {
+        setErrorInfo({
+          title: 'Erro no Servidor',
+          message: 'Não foi possível carregar os dados iniciais.',
+          type: 'error',
+        });
+        setShowErrorPopup(true);
+        Logger.logError(`Erro ao carregar dados iniciais: ${err.message}`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    loadAllData();
+  }, []);
+
+  // Função para filtrar dados no frontend
+  const filterData = (data, normalizedData) => {
+    return data.filter(item => {
+      // Verifica se correspondência exata está ativada
+      const correspondenciaExata =
+        Array.isArray(normalizedData.modoCombinacao) &&
+        normalizedData.modoCombinacao.includes('correspondenciaExata');
+
+      // Filtro por nome (sempre ativo) - usa correspondência exata apenas para o nome
+      if (normalizedData.nome) {
+        const nomeMatch = correspondenciaExata
+          ? item.nome.toLowerCase() === normalizedData.nome.toLowerCase()
+          : item.nome.toLowerCase().includes(normalizedData.nome.toLowerCase());
+        if (!nomeMatch) return false;
+      }
+
+      // Se não há filtros ativos além do nome, retorna true
+      const filtrosAtivosAplicaveis = filtrosAtivos.filter(
+        filtro => filtro !== 'tipoVeiculo'
+      );
+      if (filtrosAtivosAplicaveis.length === 0) return true;
+
+      // Array para armazenar resultados dos filtros individuais
+      const resultadosFiltros = [];
+
+      // Filtro por área de pesquisa (apenas se ativo)
+      if (
+        filtrosAtivos.includes('areasPesquisa') &&
+        normalizedData.areasPesquisaIds &&
+        normalizedData.areasPesquisaIds.length > 0 &&
+        Array.isArray(areas)
+      ) {
+        const areasPesquisaNomes = normalizedData.areasPesquisaIds
+          .map(id => {
+            const area = areas.find(a => a.value === id);
+            return area ? area.label : null;
+          })
+          .filter(Boolean);
+
+        const itemAreas = Array.isArray(item.areaPesquisa)
+          ? item.areaPesquisa
+          : [item.areaPesquisa];
+        const hasMatchingArea = areasPesquisaNomes.some(filterArea =>
+          itemAreas.some(
+            itemArea =>
+              itemArea &&
+              itemArea.toLowerCase().includes(filterArea.toLowerCase())
+          )
+        );
+        resultadosFiltros.push(hasMatchingArea);
+      }
+
+      // Filtro por vínculo SBC (apenas se ativo)
+      if (
+        filtrosAtivos.includes('vinculoSBC') &&
+        normalizedData.vinculoSbc &&
+        normalizedData.vinculoSbc !== 'ambos'
+      ) {
+        const itemVinculo = item.vinculoSBC;
+        const filtroVinculo = normalizedData.vinculoSbc;
+        let vinculoMatch = false;
+
+        switch (filtroVinculo) {
+          case 'semVinculo':
+            vinculoMatch =
+              itemVinculo === 'sem_vinculo' ||
+              itemVinculo === null ||
+              itemVinculo === undefined ||
+              itemVinculo === '';
+            break;
+          case 'comVinculo':
+            vinculoMatch =
+              itemVinculo === 'vinculo_comum' ||
+              itemVinculo === 'vinculo_top_10' ||
+              itemVinculo === 'vinculo_top_20';
+            break;
+          case 'top20OuTop10':
+            vinculoMatch =
+              itemVinculo === 'vinculo_top_10' ||
+              itemVinculo === 'vinculo_top_20';
+            break;
+          case 'somenteTop20':
+            vinculoMatch = itemVinculo === 'vinculo_top_20';
+            break;
+          case 'somenteTop10':
+            vinculoMatch = itemVinculo === 'vinculo_top_10';
+            break;
+          case 'somenteComum':
+            vinculoMatch =
+              itemVinculo === 'vinculo_comum' ||
+              itemVinculo === 'vinculo_top_10' ||
+              itemVinculo === 'vinculo_top_20' ||
+              itemVinculo === null ||
+              itemVinculo === undefined ||
+              itemVinculo === '' ||
+              itemVinculo === 'comum' ||
+              itemVinculo === 'COMUM' ||
+              itemVinculo === 'Comum';
+            break;
+          default:
+            vinculoMatch = true;
+            break;
+        }
+        resultadosFiltros.push(vinculoMatch);
+      }
+
+      // Filtro por adequação para defesas (apenas se ativo)
+      if (
+        filtrosAtivos.includes('adequacaoDefesas') &&
+        normalizedData.adequacaoDefesa &&
+        normalizedData.adequacaoDefesa !== 'qualquer'
+      ) {
+        const itemAdequacao = item.adequacaoDefesa;
+        const filtroAdequacao = normalizedData.adequacaoDefesa;
+        let adequacaoMatch = false;
+
+        switch (filtroAdequacao) {
+          case 'mestradoEDoutorado':
+            adequacaoMatch =
+              itemAdequacao === 'mestrado_doutorado' ||
+              itemAdequacao === 'doutorado';
+            break;
+          case 'mestradoOuAcima':
+            adequacaoMatch =
+              itemAdequacao === 'mestrado' ||
+              itemAdequacao === 'doutorado' ||
+              itemAdequacao === 'mestrado_doutorado';
+            break;
+          case 'apenasMestrado':
+            adequacaoMatch = itemAdequacao === 'mestrado';
+            break;
+          case 'nenhum':
+            adequacaoMatch = !(
+              itemAdequacao === 'mestrado' ||
+              itemAdequacao === 'doutorado' ||
+              itemAdequacao === 'mestrado_doutorado'
+            );
+            break;
+          default:
+            adequacaoMatch = true;
+            break;
+        }
+        resultadosFiltros.push(adequacaoMatch);
+      }
+
+      // Filtro por H5 mínimo (apenas se ativo)
+      if (
+        filtrosAtivos.includes('h5Minimo') &&
+        normalizedData.h5Minimo !== undefined &&
+        normalizedData.h5Minimo !== null &&
+        normalizedData.h5Minimo !== '' &&
+        normalizedData.h5Minimo > 0
+      ) {
+        const itemH5 =
+          item.h5 ||
+          Math.max(item.percentilJcr || 0, item.percentilScopus || 0);
+        const h5Match = itemH5 >= normalizedData.h5Minimo;
+        resultadosFiltros.push(h5Match);
+      }
+
+      // Filtro por classificação mínima (apenas se ativo)
+      if (
+        filtrosAtivos.includes('classificacaoMinima') &&
+        normalizedData.classificacaoMinima
+      ) {
+        const classificacaoOrdem = {
+          a1: 8,
+          a2: 7,
+          a3: 6,
+          a4: 5,
+          a5: 4,
+          a6: 3,
+          a7: 2,
+          a8: 1,
+        };
+        const minima =
+          classificacaoOrdem[normalizedData.classificacaoMinima.toLowerCase()];
+        const itemClassificacao =
+          classificacaoOrdem[item.classificacao?.toLowerCase()];
+        const classificacaoMatch =
+          itemClassificacao && itemClassificacao >= minima;
+        resultadosFiltros.push(classificacaoMatch);
+      }
+
+      // Se não há filtros para avaliar, retorna true
+      if (resultadosFiltros.length === 0) return true;
+
+      // Aplica lógica AND ou OR baseada na correspondência exata
+      return correspondenciaExata
+        ? resultadosFiltros.every(resultado => resultado) // AND - todos devem ser verdadeiros
+        : resultadosFiltros.some(resultado => resultado); // OR - pelo menos um deve ser verdadeiro
+    });
+  };
+
+  // Função específica para filtrar periódicos (excluir quando filtros Top10/Top20)
+  const filterPeriodicos = (data, normalizedData) => {
+    // Se o filtro de vínculo for Top10, Top20 ou Top20OuTop10, não mostra periódicos
     if (
+      filtrosAtivos.includes('vinculoSBC') &&
+      normalizedData.vinculoSbc &&
+      (normalizedData.vinculoSbc === 'somenteTop10' ||
+        normalizedData.vinculoSbc === 'somenteTop20' ||
+        normalizedData.vinculoSbc === 'top20OuTop10')
+    ) {
+      return []; // Retorna lista vazia - periódicos não têm vínculos Top10/Top20
+    }
+
+    // Para "somenteComum", filtra de forma mais inclusiva para periódicos
+    if (
+      filtrosAtivos.includes('vinculoSBC') &&
+      normalizedData.vinculoSbc === 'somenteComum'
+    ) {
+      console.log('=== DEBUG FILTRO SOMENTE COMUM PARA PERIÓDICOS ===');
+      console.log('Total de periódicos antes do filtro:', data.length);
+
+      const resultado = data.filter(item => {
+        // Debug: informações do item
+        const itemVinculo = item.vinculoSBC;
+        const passouVinculo =
+          itemVinculo === 'vinculo_comum' ||
+          itemVinculo === 'vinculo_top_10' ||
+          itemVinculo === 'vinculo_top_20' ||
+          itemVinculo === null ||
+          itemVinculo === undefined ||
+          itemVinculo === '';
+
+        // Aplica outros filtros primeiro (nome, área, etc.)
+        const passouOutrosFiltros = filterDataSingle(item, normalizedData);
+
+        const passou = passouOutrosFiltros && passouVinculo;
+
+        // Log todos os itens para debug completo
+        console.log('Item:', {
+          nome: item.nome,
+          vinculo: itemVinculo,
+          passouVinculo,
+          passouOutrosFiltros,
+          passou,
+          // Detalhes dos outros filtros
+          nomeFilter: normalizedData.nome,
+          areasFilter: normalizedData.areasPesquisaIds,
+          adequacaoFilter: normalizedData.adequacaoDefesa,
+          h5Filter: normalizedData.h5Minimo,
+          classificacaoFilter: normalizedData.classificacaoMinima,
+        });
+
+        return passou;
+      });
+
+      console.log('Total de periódicos após filtro:', resultado.length);
+      console.log('=== FIM DEBUG ===');
+
+      return resultado;
+    }
+
+    // Para outros filtros, usa a lógica normal
+    return filterData(data, normalizedData);
+  };
+
+  // Função auxiliar extraída para reutilização (SEM filtro de vínculo SBC)
+  const filterDataSingle = (item, normalizedData) => {
+    // Verifica se correspondência exata está ativada
+    const correspondenciaExata =
+      Array.isArray(normalizedData.modoCombinacao) &&
+      normalizedData.modoCombinacao.includes('correspondenciaExata');
+
+    // Filtro por nome (sempre ativo) - usa correspondência exata apenas para o nome
+    if (normalizedData.nome) {
+      const nomeMatch = correspondenciaExata
+        ? item.nome.toLowerCase() === normalizedData.nome.toLowerCase()
+        : item.nome.toLowerCase().includes(normalizedData.nome.toLowerCase());
+      if (!nomeMatch) return false;
+    }
+
+    // Se não há filtros ativos além do nome (excluindo tipoVeiculo e vinculoSBC), retorna true
+    const filtrosAtivosAplicaveis = filtrosAtivos.filter(
+      filtro => filtro !== 'tipoVeiculo' && filtro !== 'vinculoSBC'
+    );
+    if (filtrosAtivosAplicaveis.length === 0) return true;
+
+    // Array para armazenar resultados dos filtros individuais
+    const resultadosFiltros = [];
+
+    // Filtro por área de pesquisa (apenas se ativo)
+    if (
+      filtrosAtivos.includes('areasPesquisa') &&
       normalizedData.areasPesquisaIds &&
       normalizedData.areasPesquisaIds.length > 0 &&
       Array.isArray(areas)
     ) {
-      body.areasPesquisaNomes = normalizedData.areasPesquisaIds
+      const areasPesquisaNomes = normalizedData.areasPesquisaIds
         .map(id => {
           const area = areas.find(a => a.value === id);
           return area ? area.label : null;
         })
         .filter(Boolean);
-    }
 
-    if (typeof normalizedData.vinculoSbcCheckbox === 'boolean') {
-      body.vinculoSbc = normalizedData.vinculoSbcCheckbox;
-    }
-
-    if (
-      Array.isArray(normalizedData.adequacaoDefesas) &&
-      normalizedData.adequacaoDefesas.length > 0
-    ) {
-      body.adequacaoDefesa = normalizedData.adequacaoDefesas.map(str =>
-        str.toUpperCase()
+      const itemAreas = Array.isArray(item.areaPesquisa)
+        ? item.areaPesquisa
+        : [item.areaPesquisa];
+      const hasMatchingArea = areasPesquisaNomes.some(filterArea =>
+        itemAreas.some(
+          itemArea =>
+            itemArea &&
+            itemArea.toLowerCase().includes(filterArea.toLowerCase())
+        )
       );
+      resultadosFiltros.push(hasMatchingArea);
     }
 
+    // Filtro por adequação para defesas (apenas se ativo)
     if (
+      filtrosAtivos.includes('adequacaoDefesas') &&
+      normalizedData.adequacaoDefesa &&
+      normalizedData.adequacaoDefesa !== 'qualquer'
+    ) {
+      const itemAdequacao = item.adequacaoDefesa;
+      const filtroAdequacao = normalizedData.adequacaoDefesa;
+      let adequacaoMatch = false;
+
+      switch (filtroAdequacao) {
+        case 'mestradoEDoutorado':
+          adequacaoMatch =
+            itemAdequacao === 'mestrado_doutorado' ||
+            itemAdequacao === 'doutorado';
+          break;
+        case 'mestradoOuAcima':
+          adequacaoMatch =
+            itemAdequacao === 'mestrado' ||
+            itemAdequacao === 'doutorado' ||
+            itemAdequacao === 'mestrado_doutorado';
+          break;
+        case 'apenasMestrado':
+          adequacaoMatch = itemAdequacao === 'mestrado';
+          break;
+        case 'nenhum':
+          adequacaoMatch = !(
+            itemAdequacao === 'mestrado' ||
+            itemAdequacao === 'doutorado' ||
+            itemAdequacao === 'mestrado_doutorado'
+          );
+          break;
+        default:
+          adequacaoMatch = true;
+          break;
+      }
+      resultadosFiltros.push(adequacaoMatch);
+    }
+
+    // Filtro por H5 mínimo (apenas se ativo)
+    if (
+      filtrosAtivos.includes('h5Minimo') &&
       normalizedData.h5Minimo !== undefined &&
       normalizedData.h5Minimo !== null &&
-      normalizedData.h5Minimo !== ''
+      normalizedData.h5Minimo !== '' &&
+      normalizedData.h5Minimo > 0
     ) {
-      body.h5Minimo = normalizedData.h5Minimo;
+      const itemH5 =
+        item.h5 || Math.max(item.percentilJcr || 0, item.percentilScopus || 0);
+      const h5Match = itemH5 >= normalizedData.h5Minimo;
+      resultadosFiltros.push(h5Match);
     }
 
-    if (normalizedData.classificacaoMinima) {
-      body.classificacaoMinima =
-        normalizedData.classificacaoMinima.toLowerCase();
-    }
-
+    // Filtro por classificação mínima (apenas se ativo)
     if (
-      Array.isArray(normalizedData.modoCombinacao) &&
-      normalizedData.modoCombinacao.includes('correspondenciaExata')
+      filtrosAtivos.includes('classificacaoMinima') &&
+      normalizedData.classificacaoMinima
     ) {
-      body.correspondenciaExata = true;
-    } else {
-      body.correspondenciaExata = false;
+      const classificacaoOrdem = {
+        a1: 8,
+        a2: 7,
+        a3: 6,
+        a4: 5,
+        a5: 4,
+        a6: 3,
+        a7: 2,
+        a8: 1,
+      };
+      const minima =
+        classificacaoOrdem[normalizedData.classificacaoMinima.toLowerCase()];
+      const itemClassificacao =
+        classificacaoOrdem[item.classificacao?.toLowerCase()];
+      const classificacaoMatch =
+        itemClassificacao && itemClassificacao >= minima;
+      resultadosFiltros.push(classificacaoMatch);
     }
 
-    const eventosUrl = `${API_URL}/api/eventos/listar`;
-    const periodicosUrl = `${API_URL}/api/periodicos/listar`;
+    // Se não há filtros para avaliar, retorna true
+    if (resultadosFiltros.length === 0) return true;
+
+    // Aplica lógica AND ou OR baseada na correspondência exata
+    return correspondenciaExata
+      ? resultadosFiltros.every(resultado => resultado) // AND - todos devem ser verdadeiros
+      : resultadosFiltros.some(resultado => resultado); // OR - pelo menos um deve ser verdadeiro
+  };
+
+  const onSubmit = data => {
+    const normalizedData = normalizeToNull(data);
+
+    // Considera o filtro de tipo de veículo (apenas se ativo)
+    const tipoVeiculo = filtrosAtivos.includes('tipoVeiculo')
+      ? normalizedData.tipoVeiculo || 'ambos'
+      : 'ambos';
 
     let eventosData = [];
     let periodicosData = [];
 
-    // Considera o filtro de tipo de veículo
-    const tipoVeiculo = normalizedData.tipoVeiculo || 'ambos';
+    // Filtra eventos se necessário (usa filtro normal)
+    if (tipoVeiculo === 'ambos' || tipoVeiculo === 'eventos') {
+      eventosData = filterData(allEventos, normalizedData);
+    }
 
-    try {
-      const requests = [];
-
-      // Adiciona requisição para eventos se necessário
-      if (tipoVeiculo === 'ambos' || tipoVeiculo === 'eventos') {
-        requests.push(
-          fetch(eventosUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-          })
-        );
-      } else {
-        requests.push(Promise.resolve({ ok: false }));
-      }
-      // Adiciona requisição para periódicos se necessário
-      if (tipoVeiculo === 'ambos' || tipoVeiculo === 'periodicos') {
-        requests.push(
-          fetch(periodicosUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-          })
-        );
-      } else {
-        requests.push(Promise.resolve({ ok: false }));
-      }
-
-      const [eventosRes, periodicosRes] = await Promise.all(requests);
-
-      if (eventosRes.ok) {
-        const json = await eventosRes.json();
-        eventosData = Array.isArray(json) ? json : [];
-      }
-      if (periodicosRes.ok) {
-        const json = await periodicosRes.json();
-        periodicosData = Array.isArray(json) ? json : [];
-      }
-    } catch (err) {
-      setErrorInfo({
-        title: 'Erro no Servidor',
-        message:
-          'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
-        type: 'error',
-      });
-      setShowErrorPopup(true);
-      eventosData = [];
-      periodicosData = [];
-      console.error('Erro ao buscar eventos e periódicos:', err);
-      Logger.logError(`Erro ao buscar eventos e periódicos: ${err.message}`);
+    // Filtra periódicos se necessário (usa filtro específico)
+    if (tipoVeiculo === 'ambos' || tipoVeiculo === 'periodicos') {
+      periodicosData = filterPeriodicos(allPeriodicos, normalizedData);
     }
 
     if (onResultados) {
@@ -215,152 +596,146 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
             <div className={'mt-4 grid grid-cols-1 gap-6 text-left'}>
               <div>
                 <label className="block font-semibold uppercase text-xs mb-1">
-                  Veículos
-                </label>
-                <select
-                  className="w-full border border-gray-400 rounded px-2 py-2"
-                  {...register('tipoVeiculo')}
-                  defaultValue="ambos"
-                >
-                  <option value="ambos">Ambos</option>
-                  <option value="eventos">Eventos</option>
-                  <option value="periodicos">Periódicos</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  htmlFor="areasPesquisaIds"
-                  className="block mb-2 text-sm text-gray-900 text-start"
-                >
-                  ÁREA DE CONHECIMENTO (CNPQ)
+                  Filtros Ativos
                 </label>
                 <Controller
                   control={control}
-                  name="areasPesquisaIds"
+                  name="filtrosAtivos"
                   defaultValue={[]}
                   render={({ field }) => (
                     <MultiSelectDropdown
-                      options={areas}
-                      value={field.value || []}
-                      onChange={field.onChange}
+                      options={filtrosDisponiveis}
+                      value={filtrosAtivos}
+                      onChange={selected => {
+                        setFiltrosAtivos(selected);
+                        field.onChange(selected);
+                        if (onFiltrosAtivosChange) {
+                          onFiltrosAtivosChange(selected);
+                        }
+                      }}
+                      placeholder="Selecione os filtros que deseja utilizar"
                     />
                   )}
                 />
               </div>
 
-              <div className="flex flex-col items-center w-48 flex-shrink-0">
-                <span className="mb-2 text-sm text-gray-900 w-full text-left">
-                  VÍNCULO COM A SBC
-                </span>
-                <label className="cursor-pointer w-full flex justify-left">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      {...register('vinculoSbcCheckbox', {
-                        onChange: e => {
-                          if (!e.target.checked) {
-                            setValue('vinculoSbc', '');
-                          }
-                        },
-                      })}
-                    />
-                    <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:bg-white transition-all duration-300 ease-in-out" />
-                    <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
-                  </div>
-                </label>
-              </div>
-              <div>
-                <label className="block font-semibold uppercase text-xs mb-1">
-                  Adequação para Defesas
-                </label>
+              {filtrosAtivos.includes('tipoVeiculo') && (
                 <div>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={(watch('adequacaoDefesas') || []).includes(
-                        'mestrado'
-                      )}
-                      onChange={e => {
-                        const current = watch('adequacaoDefesas') || [];
-                        if (e.target.checked) {
-                          setValue('adequacaoDefesas', [
-                            ...current,
-                            'mestrado',
-                          ]);
-                        } else {
-                          setValue(
-                            'adequacaoDefesas',
-                            current.filter(item => item !== 'mestrado')
-                          );
-                        }
-                      }}
-                    />
-                    Mestrado
+                  <label className="block font-semibold uppercase text-xs mb-1">
+                    Veículos
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={(watch('adequacaoDefesas') || []).includes(
-                        'doutorado'
-                      )}
-                      onChange={e => {
-                        const current = watch('adequacaoDefesas') || [];
-                        if (e.target.checked) {
-                          setValue('adequacaoDefesas', [
-                            ...current,
-                            'doutorado',
-                          ]);
-                        } else {
-                          setValue(
-                            'adequacaoDefesas',
-                            current.filter(item => item !== 'doutorado')
-                          );
-                        }
-                      }}
-                    />
-                    Doutorado
-                  </label>
+                  <select
+                    className="w-full border border-gray-400 rounded px-2 py-2"
+                    {...register('tipoVeiculo')}
+                    defaultValue="ambos"
+                  >
+                    <option value="ambos">Ambos</option>
+                    <option value="eventos">Eventos</option>
+                    <option value="periodicos">Periódicos</option>
+                  </select>
                 </div>
-              </div>
+              )}
+              {filtrosAtivos.includes('areasPesquisa') && (
+                <div>
+                  <label
+                    htmlFor="areasPesquisaIds"
+                    className="block mb-2 text-sm text-start"
+                  >
+                    ÁREA DE CONHECIMENTO (CNPQ)
+                  </label>
+                  <Controller
+                    control={control}
+                    name="areasPesquisaIds"
+                    defaultValue={[]}
+                    render={({ field }) => (
+                      <MultiSelectDropdown
+                        options={areas}
+                        value={field.value || []}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </div>
+              )}
 
-              <div>
-                <label className="block font-semibold uppercase text-xs mb-1">
-                  H5 Mínimo
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  className="w-full border border-gray-400 rounded px-2 py-2"
-                  defaultValue={0}
-                  {...register('h5Minimo', { valueAsNumber: true })}
-                  onChange={e => {
-                    const value = e.target.value;
-                    if (value) {
-                      setValue('h5Minimo', parseFloat(value));
+              {filtrosAtivos.includes('vinculoSBC') && (
+                <div>
+                  <label className="block font-semibold uppercase text-xs mb-1">
+                    Vínculo com SBC
+                  </label>
+                  <select
+                    className="w-full border border-gray-400 rounded px-2 py-2"
+                    {...register('vinculoSbc')}
+                    defaultValue="ambos"
+                  >
+                    {vinculoSbcOpcoes.map(opcao => (
+                      <option key={opcao.value} value={opcao.value}>
+                        {opcao.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {filtrosAtivos.includes('adequacaoDefesas') && (
+                <div>
+                  <label className="block font-semibold uppercase text-xs mb-1">
+                    Adequação para Defesas
+                  </label>
+                  <select
+                    className="w-full border border-gray-400 rounded px-2 py-2"
+                    {...register('adequacaoDefesa')}
+                    defaultValue="qualquer"
+                  >
+                    {adequacaoDefesasOpcoes.map(opcao => (
+                      <option key={opcao.value} value={opcao.value}>
+                        {opcao.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {filtrosAtivos.includes('h5Minimo') && (
+                <div>
+                  <label className="block font-semibold uppercase text-xs mb-1">
+                    H5 Mínimo
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    className="w-full border border-gray-400 rounded px-2 py-2"
+                    defaultValue={0}
+                    {...register('h5Minimo', { valueAsNumber: true })}
+                    onChange={e => {
+                      const value = e.target.value;
+                      if (value) {
+                        setValue('h5Minimo', parseFloat(value));
+                      }
+                    }}
+                  />
+                </div>
+              )}
+
+              {filtrosAtivos.includes('classificacaoMinima') && (
+                <div>
+                  <label className="block font-semibold uppercase text-xs mb-1">
+                    Classificação Mínima
+                  </label>
+                  <select
+                    className="w-full border border-gray-400 rounded px-2 py-2"
+                    onChange={e =>
+                      setValue('classificacaoMinima', e.target.value)
                     }
-                  }}
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold uppercase text-xs mb-1">
-                  Classificação Mínima
-                </label>
-                <select
-                  className="w-full border border-gray-400 rounded px-2 py-2"
-                  onChange={e =>
-                    setValue('classificacaoMinima', e.target.value)
-                  }
-                >
-                  <option>Selecione</option>
-                  {minimalClassification.map(opt => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  >
+                    <option>Selecione</option>
+                    {minimalClassification.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div>
                 <label className="block font-semibold uppercase text-xs mb-1">
@@ -398,72 +773,34 @@ function FiltroEventosPeriodicos({ onResultados, onFiltrosChange }) {
         <div className="flex justify-center items-center gap-4 md:col-span-2">
           <button
             type="submit"
-            className="!bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
+            className="btn btn-primary"
+            disabled={isLoading}
           >
-            Buscar
+            {isLoading ? 'Carregando...' : 'Buscar'}
           </button>
           <button
             type="button"
-            onClick={async () => {
+            onClick={() => {
               reset({
                 tipoVeiculo: 'ambos',
               });
+              setFiltrosAtivos([]);
               if (onFiltrosChange) {
                 onFiltrosChange({});
               }
-
-              // Faz busca imediatamente após limpar filtros
-              const eventosUrl = `${API_URL}/api/eventos/listar`;
-              const periodicosUrl = `${API_URL}/api/periodicos/listar`;
-
-              let eventosData = [];
-              let periodicosData = [];
-              try {
-                const [eventosRes, periodicosRes] = await Promise.all([
-                  fetch(eventosUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({}),
-                  }),
-                  fetch(periodicosUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({}),
-                  }),
-                ]);
-
-                if (eventosRes.ok) {
-                  const json = await eventosRes.json();
-                  eventosData = Array.isArray(json) ? json : [];
-                }
-                if (periodicosRes.ok) {
-                  const json = await periodicosRes.json();
-                  periodicosData = Array.isArray(json) ? json : [];
-                }
-              } catch (err) {
-                setErrorInfo({
-                  title: 'Erro no Servidor',
-                  message:
-                    'Os dados detalhados deste veículo de publicação não estão disponíveis no momento.',
-                  type: 'error',
-                });
-                setShowErrorPopup(true);
-                eventosData = [];
-                periodicosData = [];
-                console.error('Erro ao buscar eventos e periódicos:', err);
-                Logger.logError(
-                  `Erro ao buscar eventos e periódicos (submit): ${err.message}`
-                );
+              if (onFiltrosAtivosChange) {
+                onFiltrosAtivosChange([]);
               }
 
+              // Mostra todos os dados sem filtros
               if (onResultados) {
                 onResultados({
-                  eventos: eventosData,
-                  periodicos: periodicosData,
+                  eventos: allEventos,
+                  periodicos: allPeriodicos,
                 });
               }
             }}
-            className="!px-8 !py-3 !bg-gray-500 !text-white !border-0 !rounded-none hover:!bg-gray-600 focus:!outline-none focus:!ring-2 focus:!ring-gray-400 focus:!ring-opacity-50"
+            className="btn btn-secondary"
           >
             Limpar Filtros
           </button>

@@ -205,179 +205,222 @@ function DetalhePendenteContent() {
   // If no registro data, show error message
   if (!registro || Object.keys(registro).length === 0) {
     return (
-      <>
+      <div className="min-h-screen bg-base-100">
         <HeaderSistema
           userType={loggedIn.userType}
           userName={loggedIn.userName}
         />
-        <div className="mt-8 text-center">
-          <h1 className="text-xl font-bold text-red-600">Erro</h1>
-          <p className="mt-4">Nenhum registro encontrado. Redirecionando...</p>
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full bg-base-100 shadow-sm">
+          <div className="rounded-lg shadow-md p-6">
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-error mb-4">Erro</h1>
+              <p>Nenhum registro encontrado. Redirecionando...</p>
+            </div>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
+
       {!['AUDITOR', 'ADMINISTRADOR'].includes(loggedIn.userType) ? (
         <SemPermissao />
       ) : (
-        <>
-          <h1 className="mt-8 mb-25">Detalhes do Registro Pendente</h1>
-          <div
-            className="flex flex-col gap-4 max-w-2xl mx-auto w-1/2 text-left"
-            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-          >
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                NOME DO USUÁRIO QUE CADASTROU:
-              </span>{' '}
-              {registro.usuario?.nome || 'N/A'}
-              {registro.usuario?.email && (
-                <div className="text-xs text-gray-600 mt-1">
-                  {registro.usuario.email}
-                </div>
-              )}
-            </div>
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                NOME DO {registro.tipo?.toUpperCase() || 'VEÍCULO'}:
-              </span>{' '}
-              {registro.nome}
-              {registro.issn && (
-                <div className="text-xs text-gray-600 mt-1">
-                  ISSN: {registro.issn}
-                </div>
-              )}
-            </div>
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                CÁLCULO PARA VERIFICAÇÃO DE ÍNDICE:
-              </span>{' '}
-              <div className="mt-1">
-                <div>
-                  Classificação:{' '}
-                  {registro.tipo == 'periodico'
-                    ? formatarClassificacaoParaExibicao(registro.classificacao)
-                    : registro.classificacao}
-                </div>
-                {registro.areaPesquisa && (
-                  <div>Área de Pesquisa: {registro.areaPesquisa.nome}</div>
-                )}
-                {registro.programa && (
-                  <div>Programa: {registro.programa.nome}</div>
-                )}
-              </div>
-            </div>
-            {registro.tipo === 'periodico' && (
-              <div className="text-sm text-gray-900 mt-2">
-                <label className="flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isPredatorio}
-                    onChange={e => setIsPredatorio(e.target.checked)}
-                    className="mr-2"
-                  />
-                  Marcar como periódico predatório
-                </label>
-              </div>
-            )}
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">STATUS ATUAL:</span>{' '}
-              {registro.status}
-            </div>{' '}
-            <div className="w-full flex justify-center mt-6 gap-4">
-              <button
-                onClick={() => handleAprovar(id)}
-                disabled={
-                  aprovarMutation.isPending ||
-                  rejeitarMutation.isPending ||
-                  isCreatorSameAsCurrentUser
-                }
-                className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
-                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-                title={
-                  isCreatorSameAsCurrentUser
-                    ? 'Você não pode aprovar um registro que você criou'
-                    : ''
-                }
-              >
-                {aprovarMutation.isPending ? 'Aprovando...' : 'Aprovar'}
-              </button>
-
-              <button
-                onClick={handleRejeitar}
-                disabled={
-                  aprovarMutation.isPending ||
-                  rejeitarMutation.isPending ||
-                  isCreatorSameAsCurrentUser
-                }
-                className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-red-500 focus:!ring-opacity-50 disabled:!opacity-50"
-                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-                title={
-                  isCreatorSameAsCurrentUser
-                    ? 'Você não pode rejeitar um registro que você criou'
-                    : ''
-                }
-              >
-                {rejeitarMutation.isPending ? 'Rejeitando...' : 'Rejeitar'}
-              </button>
-              {/* Popup para justificativa da recusa */}
-              {showJustificacaoPopup && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                  <div className="bg-white rounded shadow-lg p-6 w-full max-w-md">
-                    <h2 className="text-lg font-bold mb-4">
-                      Justificacao da recusa
-                    </h2>
-                    <textarea
-                      className="w-full border border-gray-300 rounded p-2 mb-4"
-                      rows={4}
-                      placeholder="Descreva a justificacao da recusa..."
-                      value={justificacaoRecusa}
-                      onChange={e => setJustificacaoRecusa(e.target.value)}
-                    />
-                    <div className="flex justify-end gap-2">
-                      <button
-                        className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
-                        onClick={() => setShowJustificacaoPopup(false)}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-green-500 focus:!ring-opacity-50 disabled:!opacity-50"
-                        onClick={() => confirmarRejeicao(id)}
-                        disabled={!justificacaoRecusa.trim()}
-                      >
-                        Confirmar
-                      </button>
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full">
+          <div className="rounded-box border-2 border-primary bg-base-100 shadow-xl p-0 md:p-2">
+            <h1 className="text-3xl text-center font-bold mb-6 pt-6">
+              Detalhes do Registro Pendente
+            </h1>
+            <div className="rounded-box bg-base-200 p-4 md:p-8 mx-2 md:mx-6 mb-6">
+              <div className="space-y-2 md:space-y-4">
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    USUÁRIO QUE CADASTROU
+                  </span>
+                  <div>
+                    <div className="font-medium">
+                      {registro.usuario?.nome || 'N/A'}
                     </div>
+                    {registro.usuario?.email && (
+                      <div className="text-xs mt-1">
+                        {registro.usuario.email}
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    NOME DO {registro.tipo?.toUpperCase() || 'VEÍCULO'}
+                  </span>
+                  <div>
+                    <div className="font-medium break-words">
+                      {registro.nome}
+                    </div>
+                    {registro.issn && (
+                      <div className="text-xs mt-1">ISSN: {registro.issn}</div>
+                    )}
+                  </div>
+                </div>
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    INFORMAÇÕES DE CLASSIFICAÇÃO
+                  </span>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">Classificação:</span>
+                      <span className="badge badge-primary">
+                        {formatarClassificacaoParaExibicao(
+                          registro.classificacao
+                        )}
+                      </span>
+                    </div>
+                    {registro.areaPesquisa && (
+                      <div className="text-sm">
+                        <span className="font-medium">Área de Pesquisa:</span>{' '}
+                        {registro.areaPesquisa.nome}
+                      </div>
+                    )}
+                    {registro.programa && (
+                      <div className="text-sm">
+                        <span className="font-medium">Programa:</span>{' '}
+                        {registro.programa.nome}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      STATUS ATUAL
+                    </span>
+                    <span className="badge badge-warning capitalize text-base">
+                      {registro.status}
+                    </span>
+                  </div>
+                  {registro.tipo === 'periodico' && (
+                    <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                      <span className="block text-sm font-medium mb-2">
+                        OPÇÕES ESPECIAIS
+                      </span>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isPredatorio}
+                          onChange={e => setIsPredatorio(e.target.checked)}
+                          className="checkbox checkbox-primary mr-3"
+                        />
+                        <span>Marcar como periódico predatório</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-center gap-4 mt-8">
+                <button
+                  onClick={() => handleAprovar(id)}
+                  disabled={
+                    aprovarMutation.isPending ||
+                    rejeitarMutation.isPending ||
+                    isCreatorSameAsCurrentUser
+                  }
+                  className="btn btn-success px-8 min-h-12"
+                  title={
+                    isCreatorSameAsCurrentUser
+                      ? 'Você não pode aprovar um registro que você criou'
+                      : ''
+                  }
+                >
+                  {aprovarMutation.isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      Aprovando...
+                    </>
+                  ) : (
+                    'Aprovar'
+                  )}
+                </button>
+
+                <button
+                  onClick={handleRejeitar}
+                  disabled={
+                    aprovarMutation.isPending ||
+                    rejeitarMutation.isPending ||
+                    isCreatorSameAsCurrentUser
+                  }
+                  className="btn btn-error px-8 min-h-12"
+                  title={
+                    isCreatorSameAsCurrentUser
+                      ? 'Você não pode rejeitar um registro que você criou'
+                      : ''
+                  }
+                >
+                  {rejeitarMutation.isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      Rejeitando...
+                    </>
+                  ) : (
+                    'Rejeitar'
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-          <ErrorPopup
-            isOpen={showErrorPopup}
-            onClose={() => setShowErrorPopup(false)}
-            title={errorInfo.title}
-            message={errorInfo.message}
-            type={errorInfo.type}
-          />
-          <Popup
-            isOpen={showSuccessPopup}
-            onClose={() => setShowSuccessPopup(false)}
-            title={successInfo.title}
-            message={successInfo.message}
-            type={successInfo.type}
-          />
-        </>
+        </div>
       )}
-    </>
+
+      {/* Modal para justificativa da recusa */}
+      <div className={`modal ${showJustificacaoPopup ? 'modal-open' : ''}`}>
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">Justificativa da Recusa</h3>
+          <div className="form-control">
+            <textarea
+              className="textarea textarea-bordered w-full resize-none"
+              rows={4}
+              placeholder="Descreva a justificativa da recusa..."
+              value={justificacaoRecusa}
+              onChange={e => setJustificacaoRecusa(e.target.value)}
+            />
+          </div>
+          <div className="modal-action">
+            <button
+              className="btn btn-ghost"
+              onClick={() => setShowJustificacaoPopup(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              className="btn btn-error"
+              onClick={() => confirmarRejeicao(id)}
+              disabled={!justificacaoRecusa.trim()}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+      <ErrorPopup
+        isOpen={showErrorPopup}
+        onClose={() => setShowErrorPopup(false)}
+        title={errorInfo.title}
+        message={errorInfo.message}
+        type={errorInfo.type}
+      />
+      <Popup
+        isOpen={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
+        title={successInfo.title}
+        message={successInfo.message}
+        type={successInfo.type}
+      />
+    </div>
   );
 }
 

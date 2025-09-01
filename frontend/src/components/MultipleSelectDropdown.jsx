@@ -55,7 +55,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
   };
 
   return (
-    <div className="relative border border-gray-200 rounded-md" ref={selectref}>
+    <div className="relative border rounded-md" ref={selectref}>
       <div className="px-2">
         {value && value.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center text-xs">
@@ -64,7 +64,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
               return (
                 <span
                   key={opt}
-                  className="flex items-center px-2 my-1.5 rounded-md bg-gray-200"
+                  className="flex items-center px-2 my-1.5 rounded-md"
                 >
                   {option ? option.label : opt}
                   <div
@@ -84,19 +84,19 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
         <input
           type="text"
           placeholder="Digite para buscar..."
-          className="px-4 py-2 w-full"
+          className="px-4 py-2 w-full input"
           onClick={() => setActive(true)}
           onChange={e => setSearchText(e.target.value)}
           value={searchText}
         />
       </div>
       {active && (
-        <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-md shadow-lg flex flex-col gap-2 py-4 max-h-[300px] overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 z-50 bg-base-200 border rounded-md shadow-lg flex flex-col gap-2 py-4 max-h-[300px] overflow-y-auto">
           {filterOptions.length > 0 ? (
             filterOptions.map(option => (
               <div
                 key={option.value}
-                className="flex items-center gap-2 hover:bg-gray-200 cursor-pointer p-2 text-left"
+                className="flex items-center gap-2 cursor-pointer p-2 text-left"
                 onClick={() => setOption(option.value)}
               >
                 <input
@@ -109,9 +109,7 @@ export const MultiSelectDropdown = ({ options, value = [], onChange }) => {
               </div>
             ))
           ) : (
-            <div className="p-2 text-gray-500 text-center">
-              Nenhuma opção encontrada
-            </div>
+            <div className="p-2 text-center">Nenhuma opção encontrada</div>
           )}
         </div>
       )}

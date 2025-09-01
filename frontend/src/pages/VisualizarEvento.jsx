@@ -43,109 +43,153 @@ const VisualizarPeriodico = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn?.userType}
         userName={loggedIn?.userName}
       />
-      {eventoData && (
-        <>
-          <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
+      {eventoData ? (
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full">
+          <div className="rounded-box border-2 border-primary bg-base-100 shadow-xl p-0 md:p-2">
+            <h1 className="text-3xl text-center font-bold mb-6 pt-6">
+              Consulta de Eventos e Periódicos
+            </h1>
 
-          <div className="rounded-xl border-2 w-xs mx-auto text-xl p-2 mb-6">
-            Dados completos do Evento {eventoData.nome}
-          </div>
-
-          <div
-            className="flex flex-col gap-2 leading-tight max-w-2xl mx-auto w-1/2 text-left"
-            style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-          >
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">NOME DO EVENTO:</span>{' '}
-              {eventoData.nome || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ÍNDICE H5:</span>{' '}
-              {eventoData.h5 || 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
-              {eventoData.areasPesquisas && eventoData.areasPesquisas.length > 0
-                ? eventoData.areasPesquisas.join(', ')
-                : 'N/A'}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">VÍNCULO COM A SBC:</span>{' '}
-              {formatVinculoSBC(eventoData.vinculoSbc) || 'N/A'}
-            </div>
-
-            {eventoData.linkSolSbc && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">LINK DO SOL-SBC:</span>{' '}
-                <a
-                  href={eventoData.linkSolSbc}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {eventoData.linkSolSbc}
-                </a>
+            <div className="rounded-box bg-base-200 p-4 md:p-8 mx-2 md:mx-6 mb-6">
+              <div className="p-3 md:p-4 rounded-md border border-primary bg-base-100 mb-6">
+                <h2 className="text-xl font-medium text-center">
+                  Dados completos do Evento {eventoData.nome}
+                </h2>
               </div>
-            )}
 
-            {eventoData.linkGoogleScholar && (
-              <div className="text-sm text-gray-900">
-                <span className="font-medium">LINK DO GOOGLE SCHOLAR:</span>{' '}
-                <a
-                  href={eventoData.linkGoogleScholar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline ml-1"
-                >
-                  {eventoData.linkGoogleScholar}
-                </a>
+              <div className="space-y-2 md:space-y-4">
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    NOME DO EVENTO
+                  </span>
+                  <div className="font-medium break-words">
+                    {eventoData.nome || 'N/A'}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    ÍNDICE H5
+                  </span>
+                  <div className="font-medium">{eventoData.h5 || 'N/A'}</div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    ÁREA DE CONHECIMENTO (CNPQ)
+                  </span>
+                  <div className="font-medium">
+                    {eventoData.areasPesquisas &&
+                    eventoData.areasPesquisas.length > 0
+                      ? eventoData.areasPesquisas.join(', ')
+                      : 'N/A'}
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    VÍNCULO COM A SBC
+                  </span>
+                  <div className="font-medium">
+                    {formatVinculoSBC(eventoData.vinculoSbc, false) || 'N/A'}
+                  </div>
+                </div>
+
+                {eventoData.linkSolSbc && (
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      LINK DO SOL-SBC
+                    </span>
+                    <div>
+                      <a
+                        href={eventoData.linkSolSbc}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link link-primary break-all"
+                      >
+                        {eventoData.linkSolSbc}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {eventoData.linkGoogleScholar && (
+                  <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                    <span className="block text-sm font-medium mb-1">
+                      LINK DO GOOGLE SCHOLAR
+                    </span>
+                    <div>
+                      <a
+                        href={eventoData.linkGoogleScholar}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link link-primary break-all"
+                      >
+                        {eventoData.linkGoogleScholar}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    CLASSIFICAÇÃO FINAL
+                  </span>
+                  <div>
+                    <span className="badge badge-primary">
+                      {formatarClassificacaoParaExibicao(
+                        eventoData.classificacao
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 md:p-4 rounded-md border border-base-300 bg-base-100">
+                  <span className="block text-sm font-medium mb-1">
+                    ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO)
+                  </span>
+                  <div className="font-medium">
+                    {formatAdequacaoDefesa(eventoData.adequacaoDefesa)}
+                  </div>
+                </div>
               </div>
-            )}
 
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">CLASSIFICAÇÃO FINAL:</span>{' '}
-              {formatarClassificacaoParaExibicao(eventoData.classificacao)}
-            </div>
-
-            <div className="text-sm text-gray-900">
-              <span className="font-medium">
-                ADEQUAÇÃO PARA DEFESAS ACADÊMICAS (MESTRADO E/OU DOUTORADO):
-              </span>{' '}
-              {formatAdequacaoDefesa(eventoData.adequacaoDefesa)}
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-8">
+                <button
+                  onClick={voltarParaConsultas}
+                  className="btn btn-primary w-full sm:w-auto px-6 sm:px-8 min-h-12"
+                >
+                  Voltar para consultas
+                </button>
+                <button
+                  onClick={() => {
+                    sessionStorage.removeItem('consultaResultados');
+                    sessionStorage.removeItem('consultaRestore');
+                    navigate('/');
+                  }}
+                  className="btn btn-secondary w-full sm:w-auto px-6 sm:px-8 min-h-12"
+                >
+                  Voltar ao início
+                </button>
+              </div>
             </div>
           </div>
-
-          <div className="w-full flex justify-center mt-6 gap-3">
-            <button
-              onClick={voltarParaConsultas}
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-            >
-              Voltar para consultas
-            </button>
-            <button
-              onClick={() => {
-                sessionStorage.removeItem('consultaResultados');
-                sessionStorage.removeItem('consultaRestore');
-                navigate('/');
-              }}
-              className="!px-8 !py-3 !bg-gray-700 !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-            >
-              Voltar ao início
-            </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="ml-6 flex-1">
+            <h3 className="text-2xl font-bold text-red-800 mb-4">
+              Erro ao recuperar dados do banco
+            </h3>
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
