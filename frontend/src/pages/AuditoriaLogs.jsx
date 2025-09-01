@@ -267,29 +267,29 @@ function AuditoriaLogs() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">
+      <div className="container mt-4 mx-auto max-w-9/10 max-h-full bg-base-100 shadow-sm">
+        <div className="rounded-lg shadow-md p-6">
+          <h1 className="text-3xl text-center font-bold mb-6">
             Histórico de Auditoria
           </h1>
           {/* Controles de Filtro */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <div className="rounded-lg p-4 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
               {/* Dropdown para seleção do tipo de log */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium mb-2">
                   Tipo de Log:
                 </label>
                 <select
                   value={tipoLog}
                   onChange={e => setTipoLog(e.target.value)}
-                  className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="menu border border-gray-300 w-full dropdown-content bg-base-100 z-1 w-52 p-2 shadow-sm"
                 >
                   <option value="veiculos">
                     Logs de Auditoria de Veículos
@@ -303,27 +303,27 @@ function AuditoriaLogs() {
 
               {/* Filtro por Data de Início */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium mb-2">
                   Data de Início:
                 </label>
                 <input
                   type="date"
                   value={dataInicio}
                   onChange={e => setDataInicio(e.target.value)}
-                  className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               {/* Filtro por Data de Fim */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium mb-2">
                   Data de Fim:
                 </label>
                 <input
                   type="date"
                   value={dataFim}
                   onChange={e => setDataFim(e.target.value)}
-                  className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -331,7 +331,7 @@ function AuditoriaLogs() {
               <div>
                 <button
                   onClick={limparFiltros}
-                  className="w-full px-4 py-2 bg-gray-600 text-white border border-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
                 >
                   Limpar Filtros
                 </button>
@@ -339,7 +339,7 @@ function AuditoriaLogs() {
             </div>
 
             {/* Resumo dos filtros aplicados */}
-            <div className="mt-4 text-sm text-gray-600">
+            <div className="mt-4 text-sm">
               <span className="font-medium">Filtros aplicados:</span>
               <span className="ml-2">
                 {tipoLog === 'atividades'
@@ -364,75 +364,72 @@ function AuditoriaLogs() {
           {isLoading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="mt-4 text-gray-600 text-lg">Carregando logs...</p>
+              <p className="mt-4 text-lg">Carregando logs...</p>
             </div>
           ) : currentLogs?.length ? (
             <div className="overflow-x-auto rounded-lg border border-gray-200">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full table table-zebra">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                       Data/Hora
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                       Ação
                     </th>
                     {tipoLog === 'atividades' ? (
                       <>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Usuário ID
                         </th>
                       </>
                     ) : tipoLog === 'erros' ? (
                       <>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Usuário ID
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Descrição do Erro
                         </th>
                       </>
                     ) : (
                       <>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Usuário ID
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Veículo ID
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Status
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
                           Motivo de Recusa
                         </th>
                       </>
                     )}
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200">
                   {currentLogs.map((log, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-gray-50 transition-colors"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={index} className="hover:transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span className="font-mono text-xs">
                           {formatarData(log.timestamp)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span
                           className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                             tipoLog === 'erros' || log.acao?.includes('erro')
-                              ? 'bg-red-100 text-red-800'
+                              ? 'bg-error'
                               : log.acao?.includes('geracao')
-                                ? 'bg-blue-100 text-blue-800'
+                                ? 'bg-info'
                                 : log.acao?.includes('aceito')
-                                  ? 'bg-green-100 text-green-800'
+                                  ? 'bg-success'
                                   : log.acao?.includes('recusado')
-                                    ? 'bg-red-100 text-red-800'
-                                    : 'bg-gray-100 text-gray-800'
+                                    ? 'bg-error'
+                                    : 'text-base'
                           }`}
                         >
                           {formatarAcao(log.acao)}
@@ -440,20 +437,20 @@ function AuditoriaLogs() {
                       </td>
                       {tipoLog === 'atividades' ? (
                         <>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="font-mono text-xs px-2 py-1 rounded">
                               {log.idUsuario || 'Visitante'}
                             </span>
                           </td>
                         </>
                       ) : tipoLog === 'erros' ? (
                         <>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="font-mono text-xs px-2 py-1 rounded">
                               {log.idUsuario || 'Visitante'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-900 max-w-md">
+                          <td className="px-6 py-4 text-sm max-w-md">
                             {log.descricaoErro ? (
                               <div
                                 className="break-words"
@@ -464,23 +461,23 @@ function AuditoriaLogs() {
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-gray-400">N/A</span>
+                              <span>N/A</span>
                             )}
                           </td>
                         </>
                       ) : (
                         <>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="font-mono text-xs px-2 py-1 rounded">
                               {log.idUsuario || 'Visitante'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span className="font-mono text-xs bg-blue-100 px-2 py-1 rounded">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className="font-mono text-xs bg-base-300 px-2 py-1 rounded">
                               {log.idVeiculo || 'N/A'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
                             <span
                               className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                                 log.statusVeiculo.toUpperCase() === 'APROVADO'
@@ -493,7 +490,7 @@ function AuditoriaLogs() {
                               {formatarStatus(log.statusVeiculo)}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-900 max-w-md">
+                          <td className="px-6 py-4 text-sm max-w-md">
                             {log.justificativaNegacao ? (
                               <div
                                 className="break-words"
@@ -504,7 +501,7 @@ function AuditoriaLogs() {
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-gray-400">N/A</span>
+                              <span>N/A</span>
                             )}
                           </td>
                         </>
@@ -515,7 +512,7 @@ function AuditoriaLogs() {
               </table>
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg">
+            <div className="text-center py-12 rounded-lg">
               <div className="text-6xl mb-4">📊</div>
               <p className="text-xl font-medium mb-2">
                 Nenhum registro encontrado
@@ -530,7 +527,7 @@ function AuditoriaLogs() {
               {(dataInicio || dataFim) && (
                 <button
                   onClick={limparFiltros}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-4 px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   Limpar Filtros de Data
                 </button>

@@ -1,5 +1,10 @@
 // Funções utilitárias para apresentação de valores
-export function formatVinculoSBC(valor) {
+export function formatVinculoSBC(valor, isPeriodico = false) {
+  // Para periódicos, sempre retorna "Vínculo Comum"
+  if (isPeriodico) {
+    return 'Vínculo Comum';
+  }
+
   switch (valor) {
     case 'vinculo_top_10':
       return 'Vinculo Top 10';

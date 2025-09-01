@@ -7,7 +7,7 @@ import { MultiSelectDropdown } from './MultipleSelectDropdown';
 import {
   calcularClassificacaoPeriodico,
   calcularClassificacaoPorQualis,
-  calcClassEventoSemSBC
+  calcClassEventoSemSBC,
 } from '../utils/classificacaoBase';
 import { useState } from 'react';
 import React from 'react';
@@ -142,346 +142,328 @@ function FormularioPeriodicoContent() {
   ];
 
   return (
-    <>
-      {' '}
-      <div className="max-w-6xl mx-auto mt-4">
-        <h2
-          className="text-gray-900 text-lg"
-          style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-        >
+    <div>
+      <div className="mb-6">
+        <p className="text-sm text-center font-medium mb-4">
           Campos Obrigatórios (*)
-        </h2>
+        </p>
       </div>
       <FormProvider {...methods}>
-        <form
-          className="flex flex-col gap-4 max-w-6xl mx-auto mt-4"
-          onSubmit={handleSubmit(onSubmit)}
-          style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-        >
-          <div className="w-3/4 mx-auto grid grid-cols-2 gap-4">
-            {' '}
-            <div>
-              <label
-                htmlFor="nome"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                NOME DO PERIÓDICO*
-              </label>
-              <input
-                type="text"
-                id="nome"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Digite o nome do periódico..."
-                {...register('nome')}
-              />
-              {errors.nome && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.nome.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="areasPesquisaIds"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                ÁREA DE CONHECIMENTO (CNPQ)*
-              </label>
-              <Controller
-                control={control}
-                name="areasPesquisaIds"
-                defaultValue={[]}
-                render={({ field }) => (
-                  <MultiSelectDropdown
-                    options={areas}
-                    value={field.value || []}
-                    onChange={field.onChange}
-                  />
+        <form className="max-w-6xl mx-auto" onSubmit={handleSubmit(onSubmit)}>
+          <div className="rounded-lg p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    NOME DO PERIÓDICO*
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  id="nome"
+                  className="input input-bordered w-full"
+                  placeholder="Digite o nome do periódico..."
+                  {...register('nome')}
+                />
+                {errors.nome && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.nome.message}
+                    </span>
+                  </label>
                 )}
-              />
-              {errors.areasPesquisaIds && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.areasPesquisaIds.message}
-                </p>
-              )}
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    ÁREA DE CONHECIMENTO (CNPQ)*
+                  </span>
+                </label>
+                <Controller
+                  control={control}
+                  name="areasPesquisaIds"
+                  defaultValue={[]}
+                  render={({ field }) => (
+                    <MultiSelectDropdown
+                      options={areas}
+                      value={field.value || []}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                {errors.areasPesquisaIds && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.areasPesquisaIds.message}
+                    </span>
+                  </label>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="w-3/4 mx-auto grid grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="issn"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                ISSN
-              </label>
-              <input
-                type="text"
-                id="issn"
-                className="border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 bg-white border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-blue-500"
-                placeholder="Ex: 1234-5678"
-                {...register('issn')}
-              />
-              {errors.issn && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.issn.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <span className="block mb-2 text-sm text-gray-900 text-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">ISSN</span>
+                </label>
+                <input
+                  type="text"
+                  id="issn"
+                  className="input input-bordered w-full"
+                  placeholder="Ex: 1234-5678"
+                  {...register('issn')}
+                />
+                {errors.issn && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.issn.message}
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
                     VÍNCULO COM A SBC
                   </span>
-                  <div className="flex justify-center w-16">
-                    <label className="cursor-pointer">
-                      <div className="relative">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          {...register('vinculoSbcCheckbox', {
-                            onChange: e => {
-                              if (e.target.checked) {
-                                setValue('vinculoSbc', 'vinculo_comum');
-                                setIsEnableSBC(true);
-                              } else {
-                                setValue('vinculoSbc', '');
-                                setIsEnableSBC(false);
-                              }
-                              setValue('linkJcr', '');
-                              setValue('linkScopus', '');
-                              setValue('percentilJcr', '');
-                              setValue('percentilScopus', '');
-                              setValue('qualisAntigo', '');
-                              setValue('linkGoogleScholar', '');
-                              setValue('h5', '');
-                              setHasQualisSelected(false);
-                              setHasH5OrGoogleScholar(false);
-                            },
-                          })}
-                        />
-                        <div className="w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-200 peer-checked:bg-white transition-all duration-300 ease-in-out" />
-                        <div className="absolute top-1/2 w-8 h-8 rounded-full bg-gray-400 peer-checked:bg-black transform -translate-y-1/2 translate-x-0 peer-checked:translate-x-6 transition-all duration-300 ease-in-out" />
-                      </div>
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="form-control">
+                    <label className="label cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="toggle toggle-primary"
+                        {...register('vinculoSbcCheckbox', {
+                          onChange: e => {
+                            if (e.target.checked) {
+                              setValue('vinculoSbc', 'vinculo_comum');
+                              setIsEnableSBC(true);
+                            } else {
+                              setValue('vinculoSbc', '');
+                              setIsEnableSBC(false);
+                            }
+                            setValue('linkJcr', '');
+                            setValue('linkScopus', '');
+                            setValue('percentilJcr', '');
+                            setValue('percentilScopus', '');
+                            setValue('qualisAntigo', '');
+                            setValue('linkGoogleScholar', '');
+                            setValue('h5', '');
+                            setHasQualisSelected(false);
+                            setHasH5OrGoogleScholar(false);
+                          },
+                        })}
+                      />
                     </label>
                   </div>
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="qualisAntigo"
-                    className="block mb-2 text-sm text-gray-900 text-start"
-                  >
-                    NOTA NO ANTIGO QUALIS
-                  </label>
-                  <select
-                    id="qualisAntigo"
-                    className={`text-gray-900 text-sm rounded-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 transition-all duration-300 ${
-                      !isEnableSBC || hasH5OrGoogleScholar
-                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                        : 'bg-white border-gray-300'
-                    } border`}
-                    {...register('qualisAntigo')}
-                    defaultValue=""
-                    disabled={!isEnableSBC || hasH5OrGoogleScholar}
-                  >
-                    <option value="" className="text-gray-500">
-                      Selecione a nota do QUALIS
-                    </option>
-                    <option value="" className="text-gray-500">
-                      -- Limpar seleção --
-                    </option>
-                    {qualisOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.qualisAntigo && (
-                    <p className="text-red-500 text-sm mt-1 text-left">
-                      {errors.qualisAntigo.message}
-                    </p>
-                  )}
+                  <div className="flex-1">
+                    <select
+                      id="qualisAntigo"
+                      className={`select select-bordered w-full transition-all duration-300 ${
+                        !isEnableSBC || hasH5OrGoogleScholar
+                          ? 'bg-base-100 cursor-not-allowed'
+                          : 'bg-base'
+                      }`}
+                      {...register('qualisAntigo')}
+                      defaultValue=""
+                      disabled={!isEnableSBC || hasH5OrGoogleScholar}
+                    >
+                      <option value="">Selecione a nota do QUALIS</option>
+                      <option value="">-- Limpar seleção --</option>
+                      {qualisOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.qualisAntigo && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">
+                          {errors.qualisAntigo.message}
+                        </span>
+                      </label>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>{' '}
-          <div className="w-full grid grid-cols-3 gap-4">
-            <div>
-              <label
-                htmlFor="linkJcr"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE REPOSITÓRIO (JCR)
-              </label>
-              <input
-                type="text"
-                id="linkJcr"
-                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  isEnableSBC
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                }`}
-                placeholder="Digite uma URL válida..."
-                disabled={isEnableSBC}
-                {...register('linkJcr')}
-              />
-              {errors.linkJcr && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.linkJcr.message}
-                </p>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    LINK DE REPOSITÓRIO (JCR)
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  id="linkJcr"
+                  className={`input input-bordered w-full transition-all duration-300 ${
+                    isEnableSBC ? 'bg-base-100 cursor-not-allowed' : 'bg-base'
+                  }`}
+                  placeholder="Digite uma URL válida..."
+                  disabled={isEnableSBC}
+                  {...register('linkJcr')}
+                />
+                {errors.linkJcr && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.linkJcr.message}
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    LINK DE REPOSITÓRIO (SCOPUS)
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  id="linkScopus"
+                  className={`input input-bordered w-full transition-all duration-300 ${
+                    isEnableSBC ? 'bg-base-100 cursor-not-allowed' : 'bg-base'
+                  }`}
+                  placeholder="Digite uma URL válida..."
+                  disabled={isEnableSBC}
+                  {...register('linkScopus')}
+                />
+                {errors.linkScopus && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.linkScopus.message}
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  id="linkGoogleScholar"
+                  className={`input input-bordered w-full transition-all duration-300 ${
+                    !isEnableSBC || hasQualisSelected
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
+                  }`}
+                  placeholder="Digite uma URL válida..."
+                  disabled={!isEnableSBC || hasQualisSelected}
+                  {...register('linkGoogleScholar')}
+                />
+                {errors.linkGoogleScholar && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.linkGoogleScholar.message}
+                    </span>
+                  </label>
+                )}
+              </div>
             </div>
-            <div>
-              <label
-                htmlFor="linkScopus"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE REPOSITÓRIO (SCOPUS)
-              </label>
-              <input
-                type="text"
-                id="linkScopus"
-                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  isEnableSBC
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                }`}
-                placeholder="Digite uma URL válida..."
-                disabled={isEnableSBC}
-                {...register('linkScopus')}
-              />
-              {errors.linkScopus && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.linkScopus.message}
-                </p>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">PERCENTIL JCR</span>
+                </label>
+                <input
+                  type="text"
+                  id="percentilJcr"
+                  className={`input input-bordered w-full transition-all duration-300 ${
+                    isEnableSBC || !linkJcrValue || linkJcrValue === ''
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
+                  }`}
+                  placeholder="Digite o percentil do periódico (0-100)..."
+                  disabled={isEnableSBC || !linkJcrValue || linkJcrValue === ''}
+                  {...register('percentilJcr')}
+                />
+                {errors.percentilJcr && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.percentilJcr.message}
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    PERCENTIL SCOPUS
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  id="percentilScopus"
+                  className={`input input-bordered w-full transition-all duration-300 ${
+                    isEnableSBC || !linkScopusValue || linkScopusValue === ''
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
+                  }`}
+                  placeholder="Digite o percentil do periódico (0-100)..."
+                  disabled={
+                    isEnableSBC || !linkScopusValue || linkScopusValue === ''
+                  }
+                  {...register('percentilScopus')}
+                />
+                {errors.percentilScopus && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.percentilScopus.message}
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">ÍNDICE H5</span>
+                </label>
+                <input
+                  type="text"
+                  id="h5"
+                  className={`input input-bordered w-full transition-all duration-300 ${
+                    !isEnableSBC ||
+                    hasQualisSelected ||
+                    !googleScholarValue ||
+                    googleScholarValue === ''
+                      ? 'bg-base-100 cursor-not-allowed'
+                      : 'bg-base'
+                  }`}
+                  placeholder="Valor numérico"
+                  disabled={
+                    !isEnableSBC ||
+                    hasQualisSelected ||
+                    !googleScholarValue ||
+                    googleScholarValue === ''
+                  }
+                  {...register('h5')}
+                />
+                {errors.h5 && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">
+                      {errors.h5.message}
+                    </span>
+                  </label>
+                )}
+              </div>
             </div>
-            <div>
-              <label
-                htmlFor="linkGoogleScholar"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                LINK DE REPOSITÓRIO (GOOGLE SCHOLAR)
-              </label>
-              <input
-                type="text"
-                id="linkGoogleScholar"
-                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  !isEnableSBC || hasQualisSelected
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                }`}
-                placeholder="Digite uma URL válida..."
-                disabled={!isEnableSBC || hasQualisSelected}
-                {...register('linkGoogleScholar')}
-              />
-              {errors.linkGoogleScholar && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.linkGoogleScholar.message}
-                </p>
-              )}
+
+            <div className="flex justify-center mt-8">
+              <button type="submit" className="btn btn-primary px-8 min-h-12">
+                Salvar e Continuar
+              </button>
             </div>
-          </div>
-          <div className="w-full grid grid-cols-3 gap-4">
-            {' '}
-            <div>
-              <label
-                htmlFor="percentilJcr"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                PERCENTIL JCR
-              </label>{' '}
-              <input
-                type="text"
-                id="percentilJcr"
-                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  isEnableSBC || !linkJcrValue || linkJcrValue === ''
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                }`}
-                placeholder="Digite o percentil do periódico (0-100)..."
-                disabled={isEnableSBC || !linkJcrValue || linkJcrValue === ''}
-                {...register('percentilJcr')}
-              />
-              {errors.percentilJcr && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.percentilJcr.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="percentilScopus"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                PERCENTIL SCOPUS
-              </label>{' '}
-              <input
-                type="text"
-                id="percentilScopus"
-                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  isEnableSBC || !linkScopusValue || linkScopusValue === ''
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                }`}
-                placeholder="Digite o percentil do periódico (0-100)..."
-                disabled={
-                  isEnableSBC || !linkScopusValue || linkScopusValue === ''
-                }
-                {...register('percentilScopus')}
-              />
-              {errors.percentilScopus && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.percentilScopus.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="h5"
-                className="block mb-2 text-sm text-gray-900 text-start"
-              >
-                ÍNDICE H5
-              </label>
-              <input
-                type="text"
-                id="h5"
-                className={`border text-sm rounded-none focus:border-blue-500 block w-full p-2.5 placeholder-gray-500 text-gray-900 focus:ring-blue-500 transition-all duration-300 ${
-                  !isEnableSBC ||
-                  hasQualisSelected ||
-                  !googleScholarValue ||
-                  googleScholarValue === ''
-                    ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border-gray-300'
-                }`}
-                placeholder="númerico (campo)"
-                disabled={
-                  !isEnableSBC ||
-                  hasQualisSelected ||
-                  !googleScholarValue ||
-                  googleScholarValue === ''
-                }
-                {...register('h5')}
-              />
-              {errors.h5 && (
-                <p className="text-red-500 text-sm mt-1 text-left">
-                  {errors.h5.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="w-full flex justify-center mt-6">
-            <button
-              type="submit"
-              className="!px-8 !py-3 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50 disabled:!opacity-50"
-              style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-            >
-              Salvar e Continuar
-            </button>
           </div>
         </form>
       </FormProvider>
-    </>
+    </div>
   );
 }
 

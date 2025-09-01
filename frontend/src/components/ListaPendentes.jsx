@@ -81,7 +81,7 @@ export default function TabelaPublicacoes() {
       <div className="max-w-6xl mx-auto border border-gray-700 rounded overflow-hidden">
         <div className="overflow-x-auto">
           <div className="max-h-[500px] overflow-y-auto">
-            <table className="min-w-full text-white">
+            <table className="min-w-full">
               <thead className="bg-black text-sm sticky top-0 z-10">
                 <tr>
                   <th className="px-4 py-3 border-r border-gray-700 text-center w-1/3">
