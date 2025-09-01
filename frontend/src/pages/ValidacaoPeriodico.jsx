@@ -318,7 +318,8 @@ function ValidacaoPeriodicoContent() {
                       VÍNCULO COM A SBC
                     </span>
                     <span>
-                      {formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}
+                      {formatVinculoSBC(periodicoData.vinculoSbc, true) ||
+                        'N/A'}
                     </span>
                   </div>
                 </div>

@@ -129,7 +129,7 @@ const VisualizarPeriodico = () => {
                     VÍNCULO COM A SBC
                   </span>
                   <div className="font-medium">
-                    {formatVinculoSBC(periodicoData.vinculoSbc) || 'N/A'}
+                    {formatVinculoSBC(periodicoData.vinculoSbc, true) || 'N/A'}
                   </div>
                 </div>
 

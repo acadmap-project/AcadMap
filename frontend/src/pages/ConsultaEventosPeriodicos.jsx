@@ -15,6 +15,7 @@ function ConsultaEventosPeriodicos() {
   const [resultados, setResultados] = useState({ eventos: [], periodicos: [] });
   const [showBusca, setShowBusca] = useState(true);
   const [filtrosAtivos, setFiltrosAtivos] = useState({});
+  const [filtrosAtivosDropdown, setFiltrosAtivosDropdown] = useState([]);
   const [showNoResults, setShowNoResults] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const areas = useAreas();
@@ -210,7 +211,10 @@ function ConsultaEventosPeriodicos() {
                               item.nome,
                               item.areaConhecimento,
                               String(item.classificacao).toUpperCase(),
-                              formatVinculoSBC(item.vinculoSBC),
+                              formatVinculoSBC(
+                                item.vinculoSBC,
+                                item.tipo === 'Periódico'
+                              ),
                               formatAdequacaoDefesa(item.adequacaoDefesa),
                               item.h5Percentil,
                               item.predatorio,
@@ -270,6 +274,7 @@ function ConsultaEventosPeriodicos() {
                       onResultados={onResultados}
                       filtrosAtivos={filtrosAtivos}
                       onFiltrosChange={setFiltrosAtivos}
+                      onFiltrosAtivosChange={setFiltrosAtivosDropdown}
                     />
                   </div>
                 </div>
@@ -291,6 +296,7 @@ function ConsultaEventosPeriodicos() {
                     <ListaFiltrosEventosPeriodicos
                       filtros={filtrosAtivos}
                       areas={areas}
+                      filtrosAtivosDropdown={filtrosAtivosDropdown}
                     />
 
                     <div className="mt-6">
@@ -407,7 +413,10 @@ function ConsultaEventosPeriodicos() {
                                   </span>
                                 </td>
                                 <td className="text-center">
-                                  {formatVinculoSBC(item.vinculoSBC)}
+                                  {formatVinculoSBC(
+                                    item.vinculoSBC,
+                                    item.tipo === 'Periódico'
+                                  )}
                                 </td>
                                 <td className="text-center">
                                   {formatAdequacaoDefesa(item.adequacaoDefesa)}
@@ -516,7 +525,10 @@ function ConsultaEventosPeriodicos() {
                                   <span className="font-semibold">
                                     Vínculo SBC:{' '}
                                   </span>
-                                  {formatVinculoSBC(item.vinculoSBC)}
+                                  {formatVinculoSBC(
+                                    item.vinculoSBC,
+                                    item.tipo === 'Periódico'
+                                  )}
                                 </div>
 
                                 <div>
@@ -563,6 +575,7 @@ function ConsultaEventosPeriodicos() {
                   onResultados={onResultados}
                   filtrosAtivos={filtrosAtivos}
                   onFiltrosChange={setFiltrosAtivos}
+                  onFiltrosAtivosChange={setFiltrosAtivosDropdown}
                 />
               </div>
             </div>
