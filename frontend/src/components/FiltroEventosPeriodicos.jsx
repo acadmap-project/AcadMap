@@ -141,17 +141,27 @@ function FiltroEventosPeriodicos({
   // Função para filtrar dados no frontend
   const filterData = (data, normalizedData) => {
     return data.filter(item => {
-      // Filtro por nome (sempre ativo)
-      if (normalizedData.nome) {
-        const correspondenciaExata =
-          Array.isArray(normalizedData.modoCombinacao) &&
-          normalizedData.modoCombinacao.includes('correspondenciaExata');
+      // Verifica se correspondência exata está ativada
+      const correspondenciaExata =
+        Array.isArray(normalizedData.modoCombinacao) &&
+        normalizedData.modoCombinacao.includes('correspondenciaExata');
 
+      // Filtro por nome (sempre ativo) - usa correspondência exata apenas para o nome
+      if (normalizedData.nome) {
         const nomeMatch = correspondenciaExata
           ? item.nome.toLowerCase() === normalizedData.nome.toLowerCase()
           : item.nome.toLowerCase().includes(normalizedData.nome.toLowerCase());
         if (!nomeMatch) return false;
       }
+
+      // Se não há filtros ativos além do nome, retorna true
+      const filtrosAtivosAplicaveis = filtrosAtivos.filter(
+        filtro => filtro !== 'tipoVeiculo'
+      );
+      if (filtrosAtivosAplicaveis.length === 0) return true;
+
+      // Array para armazenar resultados dos filtros individuais
+      const resultadosFiltros = [];
 
       // Filtro por área de pesquisa (apenas se ativo)
       if (
@@ -177,7 +187,7 @@ function FiltroEventosPeriodicos({
               itemArea.toLowerCase().includes(filterArea.toLowerCase())
           )
         );
-        if (!hasMatchingArea) return false;
+        resultadosFiltros.push(hasMatchingArea);
       }
 
       // Filtro por vínculo SBC (apenas se ativo)
@@ -188,57 +198,50 @@ function FiltroEventosPeriodicos({
       ) {
         const itemVinculo = item.vinculoSBC;
         const filtroVinculo = normalizedData.vinculoSbc;
+        let vinculoMatch = false;
 
         switch (filtroVinculo) {
           case 'semVinculo':
-            if (
-              itemVinculo !== 'sem_vinculo' &&
-              itemVinculo !== null &&
-              itemVinculo !== undefined &&
-              itemVinculo !== ''
-            )
-              return false;
+            vinculoMatch =
+              itemVinculo === 'sem_vinculo' ||
+              itemVinculo === null ||
+              itemVinculo === undefined ||
+              itemVinculo === '';
             break;
           case 'comVinculo':
-            if (
-              itemVinculo !== 'vinculo_comum' &&
-              itemVinculo !== 'vinculo_top_10' &&
-              itemVinculo !== 'vinculo_top_20'
-            )
-              return false;
+            vinculoMatch =
+              itemVinculo === 'vinculo_comum' ||
+              itemVinculo === 'vinculo_top_10' ||
+              itemVinculo === 'vinculo_top_20';
             break;
           case 'top20OuTop10':
-            if (
-              itemVinculo !== 'vinculo_top_10' &&
-              itemVinculo !== 'vinculo_top_20'
-            )
-              return false;
+            vinculoMatch =
+              itemVinculo === 'vinculo_top_10' ||
+              itemVinculo === 'vinculo_top_20';
             break;
           case 'somenteTop20':
-            if (itemVinculo !== 'vinculo_top_20') return false;
+            vinculoMatch = itemVinculo === 'vinculo_top_20';
             break;
           case 'somenteTop10':
-            if (itemVinculo !== 'vinculo_top_10') return false;
+            vinculoMatch = itemVinculo === 'vinculo_top_10';
             break;
           case 'somenteComum':
-            // Para periódicos, top10 e top20 são apresentados como "Vínculo Comum" na interface
-            // Considera vínculo comum: vinculo_comum, vinculo_top_10, vinculo_top_20 e valores nulos/vazios
-            if (
-              itemVinculo !== 'vinculo_comum' &&
-              itemVinculo !== 'vinculo_top_10' &&
-              itemVinculo !== 'vinculo_top_20' &&
-              itemVinculo !== null &&
-              itemVinculo !== undefined &&
-              itemVinculo !== '' &&
-              itemVinculo !== 'comum' &&
-              itemVinculo !== 'COMUM' &&
-              itemVinculo !== 'Comum'
-            )
-              return false;
+            vinculoMatch =
+              itemVinculo === 'vinculo_comum' ||
+              itemVinculo === 'vinculo_top_10' ||
+              itemVinculo === 'vinculo_top_20' ||
+              itemVinculo === null ||
+              itemVinculo === undefined ||
+              itemVinculo === '' ||
+              itemVinculo === 'comum' ||
+              itemVinculo === 'COMUM' ||
+              itemVinculo === 'Comum';
             break;
           default:
+            vinculoMatch = true;
             break;
         }
+        resultadosFiltros.push(vinculoMatch);
       }
 
       // Filtro por adequação para defesas (apenas se ativo)
@@ -249,41 +252,35 @@ function FiltroEventosPeriodicos({
       ) {
         const itemAdequacao = item.adequacaoDefesa;
         const filtroAdequacao = normalizedData.adequacaoDefesa;
+        let adequacaoMatch = false;
 
         switch (filtroAdequacao) {
           case 'mestradoEDoutorado':
-            // Filtra apenas itens com 'mestrado_doutorado' ou 'doutorado' (ambos formatados como "Mestrado e Doutorado")
-            if (
-              itemAdequacao !== 'mestrado_doutorado' &&
-              itemAdequacao !== 'doutorado'
-            )
-              return false;
+            adequacaoMatch =
+              itemAdequacao === 'mestrado_doutorado' ||
+              itemAdequacao === 'doutorado';
             break;
           case 'mestradoOuAcima':
-            // Filtra itens com mestrado, doutorado ou mestrado_doutorado
-            if (
-              itemAdequacao !== 'mestrado' &&
-              itemAdequacao !== 'doutorado' &&
-              itemAdequacao !== 'mestrado_doutorado'
-            )
-              return false;
+            adequacaoMatch =
+              itemAdequacao === 'mestrado' ||
+              itemAdequacao === 'doutorado' ||
+              itemAdequacao === 'mestrado_doutorado';
             break;
           case 'apenasMestrado':
-            // Filtra apenas itens com 'mestrado'
-            if (itemAdequacao !== 'mestrado') return false;
+            adequacaoMatch = itemAdequacao === 'mestrado';
             break;
           case 'nenhum':
-            // Filtra itens que não são mestrado, doutorado ou mestrado_doutorado (formatados como "Nenhum")
-            if (
+            adequacaoMatch = !(
               itemAdequacao === 'mestrado' ||
               itemAdequacao === 'doutorado' ||
               itemAdequacao === 'mestrado_doutorado'
-            )
-              return false;
+            );
             break;
           default:
+            adequacaoMatch = true;
             break;
         }
+        resultadosFiltros.push(adequacaoMatch);
       }
 
       // Filtro por H5 mínimo (apenas se ativo)
@@ -297,7 +294,8 @@ function FiltroEventosPeriodicos({
         const itemH5 =
           item.h5 ||
           Math.max(item.percentilJcr || 0, item.percentilScopus || 0);
-        if (itemH5 < normalizedData.h5Minimo) return false;
+        const h5Match = itemH5 >= normalizedData.h5Minimo;
+        resultadosFiltros.push(h5Match);
       }
 
       // Filtro por classificação mínima (apenas se ativo)
@@ -319,10 +317,18 @@ function FiltroEventosPeriodicos({
           classificacaoOrdem[normalizedData.classificacaoMinima.toLowerCase()];
         const itemClassificacao =
           classificacaoOrdem[item.classificacao?.toLowerCase()];
-        if (!itemClassificacao || itemClassificacao < minima) return false;
+        const classificacaoMatch =
+          itemClassificacao && itemClassificacao >= minima;
+        resultadosFiltros.push(classificacaoMatch);
       }
 
-      return true;
+      // Se não há filtros para avaliar, retorna true
+      if (resultadosFiltros.length === 0) return true;
+
+      // Aplica lógica AND ou OR baseada na correspondência exata
+      return correspondenciaExata
+        ? resultadosFiltros.every(resultado => resultado) // AND - todos devem ser verdadeiros
+        : resultadosFiltros.some(resultado => resultado); // OR - pelo menos um deve ser verdadeiro
     });
   };
 
@@ -393,17 +399,27 @@ function FiltroEventosPeriodicos({
 
   // Função auxiliar extraída para reutilização (SEM filtro de vínculo SBC)
   const filterDataSingle = (item, normalizedData) => {
-    // Filtro por nome (sempre ativo)
-    if (normalizedData.nome) {
-      const correspondenciaExata =
-        Array.isArray(normalizedData.modoCombinacao) &&
-        normalizedData.modoCombinacao.includes('correspondenciaExata');
+    // Verifica se correspondência exata está ativada
+    const correspondenciaExata =
+      Array.isArray(normalizedData.modoCombinacao) &&
+      normalizedData.modoCombinacao.includes('correspondenciaExata');
 
+    // Filtro por nome (sempre ativo) - usa correspondência exata apenas para o nome
+    if (normalizedData.nome) {
       const nomeMatch = correspondenciaExata
         ? item.nome.toLowerCase() === normalizedData.nome.toLowerCase()
         : item.nome.toLowerCase().includes(normalizedData.nome.toLowerCase());
       if (!nomeMatch) return false;
     }
+
+    // Se não há filtros ativos além do nome (excluindo tipoVeiculo e vinculoSBC), retorna true
+    const filtrosAtivosAplicaveis = filtrosAtivos.filter(
+      filtro => filtro !== 'tipoVeiculo' && filtro !== 'vinculoSBC'
+    );
+    if (filtrosAtivosAplicaveis.length === 0) return true;
+
+    // Array para armazenar resultados dos filtros individuais
+    const resultadosFiltros = [];
 
     // Filtro por área de pesquisa (apenas se ativo)
     if (
@@ -429,7 +445,7 @@ function FiltroEventosPeriodicos({
             itemArea.toLowerCase().includes(filterArea.toLowerCase())
         )
       );
-      if (!hasMatchingArea) return false;
+      resultadosFiltros.push(hasMatchingArea);
     }
 
     // Filtro por adequação para defesas (apenas se ativo)
@@ -440,37 +456,35 @@ function FiltroEventosPeriodicos({
     ) {
       const itemAdequacao = item.adequacaoDefesa;
       const filtroAdequacao = normalizedData.adequacaoDefesa;
+      let adequacaoMatch = false;
 
       switch (filtroAdequacao) {
         case 'mestradoEDoutorado':
-          if (
-            itemAdequacao !== 'mestrado_doutorado' &&
-            itemAdequacao !== 'doutorado'
-          )
-            return false;
+          adequacaoMatch =
+            itemAdequacao === 'mestrado_doutorado' ||
+            itemAdequacao === 'doutorado';
           break;
         case 'mestradoOuAcima':
-          if (
-            itemAdequacao !== 'mestrado' &&
-            itemAdequacao !== 'doutorado' &&
-            itemAdequacao !== 'mestrado_doutorado'
-          )
-            return false;
+          adequacaoMatch =
+            itemAdequacao === 'mestrado' ||
+            itemAdequacao === 'doutorado' ||
+            itemAdequacao === 'mestrado_doutorado';
           break;
         case 'apenasMestrado':
-          if (itemAdequacao !== 'mestrado') return false;
+          adequacaoMatch = itemAdequacao === 'mestrado';
           break;
         case 'nenhum':
-          if (
+          adequacaoMatch = !(
             itemAdequacao === 'mestrado' ||
             itemAdequacao === 'doutorado' ||
             itemAdequacao === 'mestrado_doutorado'
-          )
-            return false;
+          );
           break;
         default:
+          adequacaoMatch = true;
           break;
       }
+      resultadosFiltros.push(adequacaoMatch);
     }
 
     // Filtro por H5 mínimo (apenas se ativo)
@@ -483,7 +497,8 @@ function FiltroEventosPeriodicos({
     ) {
       const itemH5 =
         item.h5 || Math.max(item.percentilJcr || 0, item.percentilScopus || 0);
-      if (itemH5 < normalizedData.h5Minimo) return false;
+      const h5Match = itemH5 >= normalizedData.h5Minimo;
+      resultadosFiltros.push(h5Match);
     }
 
     // Filtro por classificação mínima (apenas se ativo)
@@ -505,10 +520,18 @@ function FiltroEventosPeriodicos({
         classificacaoOrdem[normalizedData.classificacaoMinima.toLowerCase()];
       const itemClassificacao =
         classificacaoOrdem[item.classificacao?.toLowerCase()];
-      if (!itemClassificacao || itemClassificacao < minima) return false;
+      const classificacaoMatch =
+        itemClassificacao && itemClassificacao >= minima;
+      resultadosFiltros.push(classificacaoMatch);
     }
 
-    return true;
+    // Se não há filtros para avaliar, retorna true
+    if (resultadosFiltros.length === 0) return true;
+
+    // Aplica lógica AND ou OR baseada na correspondência exata
+    return correspondenciaExata
+      ? resultadosFiltros.every(resultado => resultado) // AND - todos devem ser verdadeiros
+      : resultadosFiltros.some(resultado => resultado); // OR - pelo menos um deve ser verdadeiro
   };
 
   const onSubmit = data => {
