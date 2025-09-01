@@ -54,7 +54,7 @@ const VisualizarPeriodico = () => {
         userType={loggedIn?.userType}
         userName={loggedIn?.userName}
       />
-      {periodicoData && (
+      {periodicoData ? (
         <>
           <h1 className="mt-8 mb-8">Consulta de Eventos e Periódicos</h1>
 
@@ -94,10 +94,10 @@ const VisualizarPeriodico = () => {
             <div className="text-sm text-gray-900">
               <span className="font-medium">ÁREA DE CONHECIMENTO (CNPQ):</span>{' '}
               {periodicoData.areasPesquisaIds &&
-              periodicoData.areasPesquisaIds.length > 0
+                periodicoData.areasPesquisaIds.length > 0
                 ? periodicoData.areasPesquisaIds
-                    .map(areaId => getAreaName(areaId))
-                    .join(', ')
+                  .map(areaId => getAreaName(areaId))
+                  .join(', ')
                 : 'N/A'}
             </div>
 
@@ -218,7 +218,13 @@ const VisualizarPeriodico = () => {
             </button>
           </div>
         </>
-      )}
+      ) : (<div className="flex items-center justify-center min-h-[60vh]">
+        <div className="ml-6 flex-1">
+          <h3 className="text-2xl font-bold text-red-800 mb-4">
+            Erro ao recuperar dados do banco
+          </h3>
+        </div>
+      </div>)}
     </>
   );
 };
