@@ -179,7 +179,7 @@ const VisualizarPeriodico = () => {
               </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="ml-6 flex-1">

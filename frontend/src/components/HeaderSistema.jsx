@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
-import pfpImage from '../assets/pfp.svg';
 import EventPeriodDropdown from './EventPeriodDropdown';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useLogin from '../hooks/userAuth.js';
 
 function HeaderSistema({ userType, userName }) {
-  const location = useLocation();
   const navigate = useNavigate();
   const { loggedIn, logout } = useLogin();
 
