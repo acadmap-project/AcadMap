@@ -21,10 +21,8 @@ const AdequacaoDefesa = ({ adequacaoDefesa }) => {
   };
 
   return (
-    <div className="p-4 rounded-lg shadow-sm bg-white my-4">
-      <h4 className="text-gray-800 font-semibold text-lg mb-2">
-        Adequação para Defesa
-      </h4>
+    <div className="p-4 rounded-lg shadow-sm my-4">
+      <h4 className="font-semibold text-lg mb-2">Adequação para Defesa</h4>
       <p className={getAdequacaoStyle(adequacaoDefesa)}>
         {formatarAdequacao(adequacaoDefesa)}
       </p>

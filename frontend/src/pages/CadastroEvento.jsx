@@ -11,22 +11,27 @@ function CadastroEvento() {
   */ const { loggedIn } = useLogin();
   console.log(loggedIn);
   return (
-    <>
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn.userType}
         userName={loggedIn.userName}
       />
+
       {!['AUDITOR', 'ADMINISTRADOR', 'PESQUISADOR'].includes(
         loggedIn.userType
       ) ? (
         <SemPermissao />
       ) : (
-        <>
-          <h1 className="mt-8 mb-12">Cadastro de Eventos</h1>
-          <FormularioEvento />
-        </>
+        <div className="container mt-4 mx-auto max-w-4xl max-h-full bg-base-100 shadow-sm">
+          <div className="rounded-lg shadow-md p-6">
+            <h1 className="text-3xl text-center font-bold mb-6">
+              Cadastro de Eventos
+            </h1>
+            <FormularioEvento />
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 }
 

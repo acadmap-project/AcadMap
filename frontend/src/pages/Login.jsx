@@ -101,30 +101,18 @@ const Login = () => {
   return (
     <>
       <HeaderSistema />
-      <div className="mt-24 bg-white flex items-center justify-center px-4">
+      <div className="mt-24 flex items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2
-              className="text-center text-3xl text-black"
-              style={{ fontFamily: 'Poppins', fontWeight: '600' }}
-            >
-              Login
-            </h2>
-            <p
-              className="mt-2 text-center text-sm text-gray-600"
-              style={{ fontFamily: 'Poppins', fontWeight: '300' }}
-            >
+            <h2 className="text-center text-3xl font-semibold">Login</h2>
+            <p className="mt-2 text-center text-sm font-light">
               Entre com suas credenciais para acessar o sistema
             </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm text-black mb-2"
-                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-                >
+                <label htmlFor="username" className="fieldset-legend">
                   Email
                 </label>
                 <input
@@ -135,17 +123,12 @@ const Login = () => {
                   onChange={handleChange}
                   required
                   autoFocus
-                  className="w-full px-3 py-2 border-2 border-black rounded-none text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                  style={{ fontFamily: 'Poppins', fontWeight: '300' }}
+                  className="w-full input"
                   placeholder="Digite seu usuário"
                 />
               </div>
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm text-black mb-2"
-                  style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-                >
+                <label htmlFor="password" className="fieldset-legend">
                   Senha
                 </label>
                 <input
@@ -155,28 +138,21 @@ const Login = () => {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border-2 border-black rounded-none text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                  style={{ fontFamily: 'Poppins', fontWeight: '300' }}
+                  className="w-full input"
                   placeholder="Digite sua senha"
                 />
               </div>
             </div>
 
             {error && (
-              <div
-                className="text-red-600 text-sm text-center"
-                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
-              >
-                {error}
-              </div>
+              <div className="text-red-600 text-sm text-center">{error}</div>
             )}
 
             <div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full !px-4 !py-2 !bg-black !text-white !border-0 !rounded-none hover:!bg-gray-800 focus:!outline-none focus:!ring-2 focus:!ring-gray-500 focus:!ring-opacity-50"
-                style={{ fontFamily: 'Poppins', fontWeight: '400' }}
+                className="w-full btn btn-primary"
               >
                 {loading ? 'Entrando...' : 'Entrar'}
               </button>

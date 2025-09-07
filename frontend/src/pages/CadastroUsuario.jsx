@@ -14,14 +14,21 @@ function CadastroUsuario() {
   const isAdmin = loggedIn?.userType === 'ADMINISTRADOR';
 
   return (
-    <>
+    <div className="min-h-screen">
       <HeaderSistema
         userType={loggedIn?.userType}
         userName={loggedIn?.userName}
       />
-      <h1 className="mt-8 mb-12">Cadastro de Usuário</h1>
-      <FormularioCadastro isAdmin={isAdmin} />
-    </>
+
+      <div className="container mt-4 mx-auto max-w-4xl max-h-full bg-base-100 shadow-sm">
+        <div className="rounded-lg shadow-md p-6">
+          <h1 className="text-3xl text-center font-bold mb-6">
+            Cadastro de Usuário
+          </h1>
+          <FormularioCadastro isAdmin={isAdmin} />
+        </div>
+      </div>
+    </div>
   );
 }
 
